@@ -31,6 +31,13 @@
                         :value="skinSignature"
                     ></copy-text-field>
                 </v-row>
+                <v-row>
+                    <copy-text-field
+                        label="Texture URL"
+                        readonly
+                        :value="skinTextureUrl"
+                    ></copy-text-field>
+                </v-row>
             </v-col>
             {{ skin }}
         </v-row>
@@ -68,8 +75,8 @@ const skinSignature = computed(()=>{
     return skin.value.texture.data.signature;
 });
 
-function copyToClipboard(text: string) {
-    navigator.clipboard.writeText(text);
-}
+const skinTextureUrl = computed(()=>{
+    return skin.value.texture.url.skin;
+});
 
 </script>
