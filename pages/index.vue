@@ -16,8 +16,19 @@
                 <GeneratePanel/>
             </v-col>
         </v-row>
+<!--        <v-btn @click="testNotify()">Notify Test</v-btn>-->
     </v-container>
 </template>
 <script setup lang="ts">
 import GeneratePanel from "~/components/GeneratePanel.vue";
+// import { useNuxtApp } from "#app";
+
+// const {$notify} = useNuxtApp();
+//
+// function testNotify() {
+//     $notify({
+//         text: 'Hello World',
+//         color: 'success'
+//     });
+// }
 </script>

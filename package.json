@@ -10,6 +10,7 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@mineskin/types": "git+ssh://git@github.com/MineSkin/mineskin-types.git",
     "nuxt": "^3.13.0",
     "vue": "latest",
     "vue-router": "latest",

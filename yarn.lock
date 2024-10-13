@@ -991,6 +991,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@mineskin/types@git+ssh://git@github.com/MineSkin/mineskin-types.git":
+  version: 1.0.1
+  resolution: "@mineskin/types@git+ssh://git@github.com/MineSkin/mineskin-types.git#commit=396186926440a22e81dadacacd08eeaaa0c7aedf"
+  checksum: 10c0/a88991216fcf8b56f52c8ef9f553ac6c91a6c6e8dc75dfafec8203c84852ae7096cc796b4c235deb946d249edb3dfc3e2874531fe7220d5edf2c76a62d735f0e
+  languageName: node
+  linkType: hard
+
 "@netlify/functions@npm:^2.8.0":
   version: 2.8.2
   resolution: "@netlify/functions@npm:2.8.2"
@@ -5347,6 +5354,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "nuxt-app@workspace:."
   dependencies:
+    "@mineskin/types": "git+ssh://git@github.com/MineSkin/mineskin-types.git"
     nuxt: "npm:^3.13.0"
     vue: "npm:latest"
     vue-router: "npm:latest"
