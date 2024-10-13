@@ -13,12 +13,10 @@
                 <v-spacer></v-spacer>
 
                 <v-tabs
-                    v-model="tab"
                     align-tabs="center"
                 >
-                    <v-tab value="one">Generate</v-tab>
-                    <v-tab value="two">Gallery</v-tab>
-                    <v-tab value="three">Item Three</v-tab>
+                    <v-tab to="/">Generate</v-tab>
+                    <v-tab to="/gallery">Gallery</v-tab>
                 </v-tabs>
 
 
