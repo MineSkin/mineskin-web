@@ -7,14 +7,8 @@
             <v-row>
                 <template v-for="(item, index) in skins" :key="item">
                     <v-col cols="2">
-                        <v-sheet @click="viewSkin(item.uuid)">
-                            <v-img
-                                lazy-src="/img/questionhead.png"
-                                :src="renderSkinHead(item.texture)"
-                                aspect-ratio="1"
-                            />
-                            {{ item.uuid.substring(0,8) }}
-                        </v-sheet>
+                        <skin-link-img :skin="item" @click="viewSkin(item.uuid)">
+                        </skin-link-img>
                     </v-col>
                 </template>
             </v-row>
@@ -31,6 +25,7 @@
 <script setup lang="ts">
 import { useNuxtApp } from "#app";
 import { renderSkinHead } from "~/util/render";
+import SkinLinkImg from "~/components/SkinLinkImg.vue";
 
 const router = useRouter()
 
