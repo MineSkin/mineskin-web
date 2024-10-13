@@ -13,6 +13,7 @@ export default defineNuxtConfig({
             /* module specific options */
         },
         vuetifyOptions: {
+            labComponents: 'VSnackbarQueue',
             theme: {
                 defaultTheme: 'dark'
             },

@@ -1,6 +1,7 @@
 <template>
     <NuxtLayout>
         <v-app>
+            <Snackbars/>
             <v-app-bar density="comfortable">
                 <v-app-bar-title>
                     MineSkin

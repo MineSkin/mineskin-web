@@ -16,19 +16,21 @@
                 <GeneratePanel/>
             </v-col>
         </v-row>
-<!--        <v-btn @click="testNotify()">Notify Test</v-btn>-->
+        <v-btn @click="testNotify()">Notify Test</v-btn>
     </v-container>
 </template>
 <script setup lang="ts">
 import GeneratePanel from "~/components/GeneratePanel.vue";
-// import { useNuxtApp } from "#app";
+import { useNuxtApp, useState } from "#app";
+import type { SnackbarConfig } from "~/types/SnackbarConfig";
 
-// const {$notify} = useNuxtApp();
-//
-// function testNotify() {
-//     $notify({
-//         text: 'Hello World',
-//         color: 'success'
-//     });
-// }
+const {$notify} = useNuxtApp();
+
+function testNotify() {
+    $notify({
+        text: 'Hello World',
+        color: 'success',
+        timeout: 1000
+    });
+}
 </script>

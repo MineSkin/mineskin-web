@@ -1,15 +1,14 @@
-import { defineNuxtPlugin } from "#app";
+import { defineNuxtPlugin, useState } from "#app";
 import type { SnackbarConfig } from "~/types/SnackbarConfig";
 
 export default defineNuxtPlugin(nuxtApp => {
     const conf: SnackbarConfig = {
-        show: false,
         color: '',
         text: '',
         timeout: -1,
         closable: true
     }
-    const snackbar = useState<SnackbarConfig>('snackbar', () => conf)
+    const queue = useState<Array<SnackbarConfig>>('snackbars', () => ([]));
 
     let timer: number | any = 0;
 
@@ -17,14 +16,19 @@ export default defineNuxtPlugin(nuxtApp => {
         provide: {
             notify: (conf: Partial<SnackbarConfig>) => {
                 console.debug("notify", conf);
-                snackbar.value.text = conf.text || '';
-                snackbar.value.color = conf.color || '';
-                snackbar.value.timeout = conf.timeout || 5000;
-                snackbar.value.closable = conf.closable || true;
+                const snackbar: SnackbarConfig = conf;
+                snackbar.text = conf.text || '';
+                snackbar.color = conf.color || '';
+                snackbar.timeout = conf.timeout || 5000;
+                snackbar.closable = conf.closable || true;
 
-                snackbar.value.show = true;
-                if (timer) clearTimeout(timer);
-                timer = setTimeout(() => snackbar.value.show = false, snackbar.value.timeout);
+                queue.value.push(snackbar);
+
+                // snackbar.show = true;
+                // if (timer) clearTimeout(timer);
+                // timer = setTimeout(() => snackbar.show = false, snackbar.timeout);
+
+                console.log(queue.value)
             }
         }
     }
