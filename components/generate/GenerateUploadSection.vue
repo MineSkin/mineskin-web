@@ -1,6 +1,5 @@
 <template>
-    <v-col
-        class="mx-4"
+    <div
     >
         <v-row justify="center" class="mb-2">
             UPLOAD
@@ -16,7 +15,7 @@
                 </v-icon>
             </v-sheet>
         </v-row>
-    </v-col>
+    </div>
 </template>
 <script setup lang="ts">
 </script>

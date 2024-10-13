@@ -1,7 +1,5 @@
 <template>
-    <v-col
-        class="mx-4"
-    >
+    <div>
         <v-row justify="center" class="mb-2">
             URL
         </v-row>
@@ -21,7 +19,7 @@
             ></v-btn>
         </v-row>
         <dbg :data="urls"/>
-    </v-col>
+    </div>
 </template>
 <script setup lang="ts">
 const urls = defineModel<string[]>(['']);

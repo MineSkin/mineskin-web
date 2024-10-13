@@ -1,3 +1,11 @@
+<style scoped>
+.section-col {
+    transition: max-width 1s;
+}
+
+.section-upload, .section-url, .section-user {
+}
+</style>
 <template>
     <v-sheet
         rounded
@@ -8,16 +16,38 @@
         @drop.prevent="onDrop"
         :color="dragging ? 'primary' : ''"
     >
-        <v-row class="my-2 d-flex">
-            <GenerateUrlSection
-                v-model="urls"
-            />
-            <v-divider vertical/>
-            <GenerateUploadSection/>
-            <v-divider vertical/>
-            <GenerateUserSection
-                v-model="users"
-            />
+        <v-row class="my-2 d-flex" :justify="generateType === GenerateType.UPLOAD ? 'center':generateType===GenerateType.USER?'end':'start'">
+            <v-col
+                :cols="!generateType ? 4:generateType === GenerateType.URL ? 6 : 'auto'"
+                class="mx-4 section-col"
+            >
+                <GenerateUrlSection
+                    class="section-url"
+                    v-show="!generateType || generateType === GenerateType.URL"
+                    v-model="urls"
+                />
+            </v-col>
+            <v-divider vertical v-show="!generateType"/>
+            <v-col
+                class="mx-4 section-col"
+                :cols="!generateType?'':generateType === GenerateType.UPLOAD ? 6 : 4"
+            >
+                <GenerateUploadSection
+                    class="section-upload"
+                    v-show="!generateType || generateType === GenerateType.UPLOAD"
+                />
+            </v-col>
+            <v-divider vertical v-show="!generateType"/>
+            <v-col
+                :cols="!generateType ? 4 : generateType === GenerateType.USER ? 6 : 'auto'"
+                class="mx-4 section-col"
+            >
+                <GenerateUserSection
+                    class="section-user"
+                    v-show="!generateType || generateType === GenerateType.USER"
+                    v-model="users"
+                />
+            </v-col>
         </v-row>
         <v-row>
             <dbg :data="{users,uploadFiles,urls,generateType}"/>

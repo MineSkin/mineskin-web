@@ -1,6 +1,5 @@
 <template>
-    <v-col
-        class="mx-4"
+    <div
     >
         <v-row justify="center" class="mb-2">
             USER
@@ -21,7 +20,7 @@
             ></v-btn>
         </v-row>
         <dbg :data="users"/>
-    </v-col>
+    </div>
 </template>
 <script setup lang="ts">
 const users = defineModel<string[]>([''])
