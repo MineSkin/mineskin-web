@@ -25,6 +25,7 @@
                     class="section-url"
                     v-show="!generateType || generateType === GenerateType.URL"
                     v-model="urls"
+                    @continue="cont"
                 />
             </v-col>
             <v-divider vertical v-show="!generateType"/>
@@ -36,6 +37,7 @@
                     class="section-upload"
                     v-show="!generateType || generateType === GenerateType.UPLOAD"
                     v-model="uploadFiles"
+                    @continue="cont"
                 />
             </v-col>
             <v-divider vertical v-show="!generateType"/>
@@ -47,6 +49,7 @@
                     class="section-user"
                     v-show="!generateType || generateType === GenerateType.USER"
                     v-model="users"
+                    @continue="cont"
                 />
             </v-col>
         </v-row>
@@ -60,6 +63,8 @@
 import { GenerateType, type Maybe } from "@mineskin/types";
 import GenerateUrlSection from "~/components/generate/GenerateUrlSection.vue";
 import GenerateUploadSection from "~/components/generate/GenerateUploadSection.vue";
+
+const {$mineskin} = useNuxtApp();
 
 const generateType = computed<Maybe<GenerateType>>(() => {
     if (urls.value.filter(url => url.length > 0).length > 0) {
@@ -83,6 +88,21 @@ function onDrop(e: DragEvent) {
     console.log(e)
     dragging.value = false;
     uploadFiles.value.push(...Array.from(e.dataTransfer.files));
+}
+
+function cont(){
+    console.log('continue');
+    switch (generateType.value) {
+        case GenerateType.UPLOAD:
+            $mineskin.queue.upload(uploadFiles.value[0],{
+                visibility: 'unlisted'
+            })
+            break;
+        case GenerateType.URL:
+            break;
+        case GenerateType.USER:
+            break;
+    }
 }
 
 </script>

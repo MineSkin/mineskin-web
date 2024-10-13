@@ -39,9 +39,7 @@ export class MineSkinAPI {
                 formData.append('name', options.name);
             }
             return fetch(`${ this.api.BASE }/v2/generate`, {
-                ...INIT,
                 headers: {
-                    'Content-Type': 'multipart/form-data'
                 },
                 method: 'POST',
                 body: formData
@@ -90,9 +88,7 @@ export class MineSkinAPI {
                 formData.append('name', options.name);
             }
             return fetch(`${ this.api.BASE }/v2/queue`, {
-                ...INIT,
                 headers: {
-                    'Content-Type': 'multipart/form-data'
                 },
                 method: 'POST',
                 body: formData

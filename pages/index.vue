@@ -26,6 +26,8 @@ import type { SnackbarConfig } from "~/types/SnackbarConfig";
 
 const {$notify} = useNuxtApp();
 
+
+
 function testNotify() {
     $notify({
         text: 'Hello World',

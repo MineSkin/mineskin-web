@@ -3,7 +3,7 @@
         <v-row justify="center" class="mb-2">
             UPLOAD
         </v-row>
-        <v-row justify="center" align="center">
+        <v-row justify="center" align="center" class="my-2">
             <v-sheet
                 rounded
                 border
@@ -21,12 +21,14 @@
             label="UPLOAD"
             prepend-icon="mdi-file"
             />
-        <v-row justify="center" align="center">
+        <v-row justify="center" align="center" class="my-2">
             <v-btn
                 color="primary"
                 icon="mdi-arrow-right"
                 variant="elevated"
                 aria-label="Continue"
+                :disabled="!hasFile"
+                @click="cont()"
             ></v-btn>
         </v-row>
     </div>
@@ -35,4 +37,11 @@
 import FileList from "~/components/FileList.vue";
 
 const uploadFiles = defineModel<File[]>([]);
+const hasFile = computed(() => uploadFiles.value.length > 0);
+const emit = defineEmits(['continue']);
+
+function cont(){
+    if(!hasFile.value) return;
+    emit('continue');
+}
 </script>

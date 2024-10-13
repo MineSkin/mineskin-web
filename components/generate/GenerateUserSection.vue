@@ -11,17 +11,25 @@
             rule="user"
             prepend-icon="mdi-account"
         />
-        <v-row justify="center" align="center">
+        <v-row justify="center" align="center" class="my-2">
             <v-btn
                 color="primary"
                 icon="mdi-arrow-right"
                 variant="elevated"
                 aria-label="Continue"
+                :disabled="!hasUser"
+                @click="cont()"
             ></v-btn>
         </v-row>
-        <dbg :data="users"/>
     </div>
 </template>
 <script setup lang="ts">
-const users = defineModel<string[]>([''])
+const users = defineModel<string[]>(['']);
+const hasUser = computed(() => users.value.filter(user=>user.length>0).length > 0);
+const emit = defineEmits(['continue']);
+
+function cont(){
+    if(!hasUser.value) return;
+    emit('continue');
+}
 </script>
