@@ -12,6 +12,7 @@
   "dependencies": {
     "@mineskin/types": "git+ssh://git@github.com/MineSkin/mineskin-types.git",
     "nuxt": "^3.13.0",
+    "pinia": "^2.2.4",
     "vue": "latest",
     "vue-router": "latest",
     "vuetify-nuxt-module": "^0.18.3"
