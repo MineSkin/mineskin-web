@@ -14,7 +14,7 @@
         @dragover.prevent="dragging = true"
         @dragleave.prevent="dragging = false"
         @drop.prevent="onDrop"
-        :color="dragging ? 'primary' : ''"
+        :color="dragging ? 'secondary' : ''"
     >
         <v-row class="my-2 d-flex" :justify="generateType === GenerateType.UPLOAD ? 'center':generateType===GenerateType.USER?'end':'start'">
             <v-col
@@ -30,11 +30,12 @@
             <v-divider vertical v-show="!generateType"/>
             <v-col
                 class="mx-4 section-col"
-                :cols="!generateType?'':generateType === GenerateType.UPLOAD ? 6 : 4"
+                :cols="!generateType?'':generateType === GenerateType.UPLOAD ? 4 : 4"
             >
                 <GenerateUploadSection
                     class="section-upload"
                     v-show="!generateType || generateType === GenerateType.UPLOAD"
+                    v-model="uploadFiles"
                 />
             </v-col>
             <v-divider vertical v-show="!generateType"/>
@@ -71,8 +72,8 @@ const generateType = computed<Maybe<GenerateType>>(() => {
         return GenerateType.UPLOAD;
     }
 });
-const uploadFiles = ref<File[]>([]);
 
+const uploadFiles = ref<File[]>([]);
 const urls = ref<string[]>(['']);
 const users = ref<string[]>(['']);
 
