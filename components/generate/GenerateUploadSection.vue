@@ -21,16 +21,16 @@
             label="UPLOAD"
             prepend-icon="mdi-file"
             />
-        <v-row justify="center" align="center" class="my-2">
-            <v-btn
-                color="primary"
-                icon="mdi-arrow-right"
-                variant="elevated"
-                aria-label="Continue"
-                :disabled="!hasFile"
-                @click="cont()"
-            ></v-btn>
-        </v-row>
+<!--        <v-row justify="center" align="center" class="my-2">-->
+<!--            <v-btn-->
+<!--                color="primary"-->
+<!--                icon="mdi-arrow-right"-->
+<!--                variant="elevated"-->
+<!--                aria-label="Continue"-->
+<!--                :disabled="!hasFile"-->
+<!--                @click="cont()"-->
+<!--            ></v-btn>-->
+<!--        </v-row>-->
     </div>
 </template>
 <script setup lang="ts">
