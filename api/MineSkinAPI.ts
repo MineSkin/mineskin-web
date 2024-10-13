@@ -111,7 +111,7 @@ export class MineSkinAPI {
         }
         if (json.warnings?.length > 0) {
             for (let warning of json.warnings) {
-                console.error('API warning', warning);
+                console.warn('API warning', warning);
                 // this.nuxtApp.$notify({
                 //     text: warning.message,
                 //     color: 'warning'
@@ -120,7 +120,7 @@ export class MineSkinAPI {
         }
         if (json.messages?.length > 0) {
             for (let message of json.messages) {
-                console.error('API message', message);
+                console.info('API message', message);
                 this.nuxtApp.$notify({
                     text: message.message,
                     color: 'info'
