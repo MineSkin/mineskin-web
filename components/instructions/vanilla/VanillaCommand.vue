@@ -1,14 +1,16 @@
 <template>
-    <component :is="format">
-        <template v-slot:skinValue>{{ skin.texture.data.value }}</template>
-        <template v-slot:skinSignature>{{ skin.texture.data.signature }}</template>
-        <template v-slot:skinUuid>{{ skin.uuid }}</template>
-        <template v-slot:uuidString>{{ addUuidDashes(skin.uuid) }}</template>
-        <template v-slot:uuidArray>{{ formatInt32UUID(getInt32ForUUID(skin.uuid)) }}</template>
-        <template v-slot:skinName>{{ skinName(skin) }}</template>
-        <template v-slot:skinShortId>{{ skin.uuid.substring(0, 8) }}</template>
-        <template v-slot:skinDate>{{ new Date(skin.generator.timestamp).toISOString() }}</template>
-    </component>
+        <pre>
+        <component :is="format">
+            <template v-slot:skinValue>{{ skin.texture.data.value }}</template>
+            <template v-slot:skinSignature>{{ skin.texture.data.signature }}</template>
+            <template v-slot:skinUuid>{{ skin.uuid }}</template>
+            <template v-slot:uuidString>{{ addUuidDashes(skin.uuid) }}</template>
+            <template v-slot:uuidArray>{{ formatInt32UUID(getInt32ForUUID(skin.uuid)) }}</template>
+            <template v-slot:skinName>{{ skinName(skin) }}</template>
+            <template v-slot:skinShortId>{{ skin.uuid.substring(0, 8) }}</template>
+            <template v-slot:skinDate>{{ new Date(skin.generator.timestamp).toISOString() }}</template>
+        </component>
+            </pre>
 </template>
 <script setup lang="ts">
 import type { SkinInfo2 } from "@mineskin/types";

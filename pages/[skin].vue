@@ -62,6 +62,7 @@
             <v-col cols="12">
                 <v-card>
                     <v-tabs
+                        bg-color="secondary"
                         v-model="instructionsTab"
                     >
                         <v-tab value="vanilla">Vanilla</v-tab>
@@ -83,7 +84,9 @@
                             </v-tabs-window-item>
 
                             <v-tabs-window-item value="plugins">
-                                Three
+                                <div>
+                                    <PluginInstructions :skin="skin"/>
+                                </div>
                             </v-tabs-window-item>
                         </v-tabs-window>
                     </v-card-text>
@@ -100,6 +103,7 @@ import VanillaCommand16 from "~/components/instructions/VanillaCommand16.vue";
 import VanillaCommand from "~/components/instructions/VanillaCommand.vue";
 import VanillaInstructions from "~/components/instructions/VanillaInstructions.vue";
 import SkinCodeInstructions from "~/components/instructions/SkinCodeInstructions.vue";
+import PluginInstructions from "~/components/instructions/PluginInstructions.vue";
 
 const router = useRouter();
 
