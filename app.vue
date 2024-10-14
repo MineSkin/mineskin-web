@@ -23,7 +23,7 @@
 
                 <template v-slot:append>
                     <v-btn rounded @click="jobsDrawer = !jobsDrawer">
-                        <v-badge :content="queueStore.jobs.length" floating location="bottom right">
+                        <v-badge :dot="queueStore.jobs.length===0" :content="queueStore.jobs.length" floating location="bottom right">
                             <v-icon icon="mdi-list-status"></v-icon>
                         </v-badge>
                         <v-tooltip
@@ -34,7 +34,7 @@
                 </template>
 
             </v-app-bar>
-            <v-main>
+            <v-main style="--v-layout-top: 56px">
                 <NuxtPage/>
             </v-main>
             <v-navigation-drawer
