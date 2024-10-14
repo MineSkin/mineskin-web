@@ -17,7 +17,8 @@
         @drop.prevent="onDrop"
         :color="dragging ? 'secondary' : ''"
     >
-        <v-row class="my-2 d-flex text-center" :justify="generateType === GenerateType.UPLOAD ? 'center':generateType===GenerateType.USER?'end':'start'">
+        <v-row class="my-2 d-flex text-center"
+               :justify="generateType === GenerateType.UPLOAD ? 'center':generateType===GenerateType.USER?'end':'start'">
             <v-col
                 :cols="!generateType ? 4:generateType === GenerateType.URL ? 6 : 'auto'"
                 class="mx-4 section-col"
@@ -56,41 +57,48 @@
         </v-row>
         <v-divider class="my-4"/>
         <v-expand-transition>
-        <v-row v-show="generateType" class="my-2">
-            <v-col class="text-center">
-                [PREVIEW]
-            </v-col>
-            <v-col>
-                <v-row class="mb-2">
-                    <v-text-field
-                        label="Name (optional)"
-                        v-model="name"
-                        hint="Optional name for this skin"
-                        persistent-hint
-                    />
-                </v-row>
-                <v-row class="mb-2">
-                    <v-select
-                        label="Visibility"
-                        v-model="visibility"
-                        :items="Object.values(SkinVisibility2)"
-                        :item-props="visibilityProps"
-                        hint="Visibility of the skin"
-                        persistent-hint
-                    />
-                </v-row>
-                <v-row class="mb-2">
-                    <v-select
-                        label="Variant"
-                        v-model="variant"
-                        :items="Object.values(SkinVariant)"
-                        :item-props="variantProps"
-                        hint="Variant of the skin. Use unknown for auto-detect"
-                        persistent-hint
-                    />
-                </v-row>
-            </v-col>
-        </v-row>
+            <v-row v-show="generateType" class="my-2">
+                <v-col class="text-center">
+                    [PREVIEW]
+                </v-col>
+                <v-col>
+                    <v-row class="mb-2">
+                        <v-text-field
+                            label="Name (optional)"
+                            v-model="name"
+                            hint="Optional name for this skin"
+                            persistent-hint
+                        />
+                    </v-row>
+                    <v-row class="mb-2">
+                        <v-select
+                            label="Visibility"
+                            v-model="visibility"
+                            :items="Object.values(SkinVisibility2)"
+                            :item-props="visibilityProps"
+                            hint="Visibility of the skin"
+                            persistent-hint
+                        />
+                    </v-row>
+                    <v-row class="mb-2">
+                        <v-select
+                            label="Variant"
+                            v-model="variant"
+                            :items="Object.values(SkinVariant)"
+                            :item-props="variantProps"
+                            hint="Variant of the skin. Use unknown for auto-detect"
+                            persistent-hint
+                        />
+                    </v-row>
+                </v-col>
+            </v-row>
+        </v-expand-transition>
+        <v-expand-transition>
+            <v-row v-show="generateType" class="my-2">
+                <v-btn
+                    text="Generate"
+                    @click="cont"></v-btn>
+            </v-row>
         </v-expand-transition>
         <v-row>
             <dbg :data="{users,uploadFiles,urls,generateType}"/>
@@ -102,8 +110,12 @@
 import { GenerateType, type Maybe, SkinVariant, SkinVisibility2 } from "@mineskin/types";
 import GenerateUrlSection from "~/components/generate/GenerateUrlSection.vue";
 import GenerateUploadSection from "~/components/generate/GenerateUploadSection.vue";
+import { useQueueStore } from "~/stores/queue";
+import type { GenerateJobResponse } from "~/types/GenerateJobResponse";
 
 const {$mineskin} = useNuxtApp();
+
+const queueStore = useQueueStore();
 
 const generateType = computed<Maybe<GenerateType>>(() => {
     if (urls.value.filter(url => url.length > 0).length > 0) {
@@ -121,8 +133,8 @@ const uploadFiles = ref<File[]>([]);
 const urls = ref<string[]>(['']);
 const users = ref<string[]>(['']);
 
-const name=ref('');
-const visibility=ref(SkinVisibility2.PUBLIC);
+const name = ref('');
+const visibility = ref(SkinVisibility2.PUBLIC);
 const variant = ref(SkinVariant.UNKNOWN);
 
 const dragging = ref(false);
@@ -134,7 +146,7 @@ function onDrop(e: DragEvent) {
 }
 
 function visibilityProps(item: SkinVisibility2) {
-    switch (item){
+    switch (item) {
         case SkinVisibility2.PUBLIC:
             return {
                 title: "Public",
@@ -154,7 +166,7 @@ function visibilityProps(item: SkinVisibility2) {
 }
 
 function variantProps(item: SkinVariant) {
-    switch (item){
+    switch (item) {
         case SkinVariant.CLASSIC:
             return {
                 title: "Classic",
@@ -173,15 +185,20 @@ function variantProps(item: SkinVariant) {
     }
 }
 
-function cont(){
+async function cont() {
     console.log('continue');
     switch (generateType.value) {
         case GenerateType.UPLOAD:
-            $mineskin.queue.upload(uploadFiles.value[0],{
+            const response = await $mineskin.queue.upload(uploadFiles.value[0], {
                 visibility: visibility.value,
-                variant: variant.value,
+                variant: variant.value || undefined,
                 name: name.value
-            })
+            });
+            if (response.success) {
+                if ('job' in response) {
+                    queueStore.addJob((response as GenerateJobResponse).job);
+                }
+            }
             break;
         case GenerateType.URL:
             break;

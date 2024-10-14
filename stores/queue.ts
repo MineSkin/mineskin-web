@@ -1,22 +1,47 @@
-import {defineStore} from "pinia";
+import { defineStore } from "pinia";
+import type { JobInfo } from "@mineskin/types";
 
-export const useQueueStore = defineStore('queue', ()=>{
+export const useQueueStore = defineStore('queue', () => {
     const jobIds = ref<string[]>([]);
+    const jobs = ref<JobInfo[]>([]);
 
-    const addJob = (jobId: string) => {
-        jobIds.value.push(jobId);
+    const {$mineskin} = useNuxtApp();
+
+    const addJob = (job: JobInfo) => {
+        jobIds.value.push(job.id);
+        jobs.value.push(job);
     }
 
-    const removeJob = (jobId: string) => {
+    const removeJobId = (jobId: string) => {
         const index = jobIds.value.indexOf(jobId);
         if (index > -1) {
             jobIds.value.splice(index, 1);
+        }
+
+        const jobIndex = jobs.value.findIndex(job => job.id === jobId);
+        if (jobIndex > -1) {
+            jobs.value.splice(jobIndex, 1);
+        }
+    }
+
+    const removeJob = (job: JobInfo) => {
+        removeJobId(job.id);
+    }
+
+    const refreshJobList = async () => {
+        const response = await $mineskin.queue.list();
+        if (response.success) {
+            jobIds.value = response.jobs.map(job => job.id);
+            jobs.value = response.jobs;
         }
     }
 
     return {
         jobIds,
+        jobs,
         addJob,
-        removeJob
+        removeJobId,
+        removeJob,
+        refreshJobList
     }
 })

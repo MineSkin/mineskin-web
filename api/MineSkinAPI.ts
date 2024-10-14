@@ -76,7 +76,7 @@ export class MineSkinAPI {
         constructor(readonly api: MineSkinAPI) {
         }
 
-        public async upload(file: File, options: GenerateOptions): Promise<SkinResponse> {
+        public async upload(file: File, options: GenerateOptions): Promise<SkinResponse|GenerateJobResponse> {
             const formData = new FormData();
             formData.append('file', file);
             if (options.visibility) {
@@ -97,7 +97,7 @@ export class MineSkinAPI {
                 .then(res => this.api.handleResponse(res));
         }
 
-        public async url(url: string, options: GenerateOptions): Promise<SkinResponse> {
+        public async url(url: string, options: GenerateOptions): Promise<SkinResponse|GenerateJobResponse> {
             const body: any = {
                 url
             };
