@@ -1,5 +1,5 @@
 <template>
-    <v-card>
+    <v-card min-height="250">
         <v-tabs
             bg-color="secondary"
             v-model="instructionsTab"
