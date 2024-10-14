@@ -1,23 +1,32 @@
+<style scoped>
+.skin-single-row{
+    flex-wrap: nowrap;
+    overflow: hidden;
+}
+</style>
 <template>
     <v-sheet rounded elevation="1" class="mx-auto pa-4">
         <h3 class="text-h6 mb-2">
             Latest Skins
-            <v-btn icon="mdi-arrow-right" variant="text"></v-btn>
+            <v-btn icon="mdi-arrow-right" variant="text" to="/gallery"></v-btn>
         </h3>
-        <v-row>
-            <v-col cols="12" md="3" v-for="n in 4" :key="n">
-                <v-card>
-                    <v-img
-                        :lazy-src="`https://picsum.photos/6/6?image=${n * 5 + 10}`"
-                        :src="`https://picsum.photos/180/180?image=${n * 5 + 10}`"
-                        aspect-ratio="1"
-                    ></v-img>
-                    <v-card-title>Card Title</v-card-title>
-                    <v-card-text>
-                        <p>Lorem Ipsum...</p>
-                    </v-card-text>
-                </v-card>
+        <v-row  class="skin-single-row">
+            <v-col cols="2" md="2" v-for="skin in latestSkins" :key="skin.uuid">
+                <skin-link-img :skin="skin"/>
             </v-col>
         </v-row>
+<!--        <dbg :data="latestSkins"/>-->
     </v-sheet>
 </template>
+<script setup lang="ts">
+import { useLazyAsyncData } from "#app";
+
+const {$mineskin} = useNuxtApp();
+
+const {
+    data: latestSkins,
+    status: latestSkinsStatus,
+} = useLazyAsyncData(async () => {
+    return (await $mineskin.skins.list())?.skins?.slice(0,8)||[];
+});
+</script>

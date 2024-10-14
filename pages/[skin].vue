@@ -1,47 +1,63 @@
 <template>
     <v-container>
+        <h1>{{ skin?.name || skin?.uuid.substring(0, 8) || 'Skin' }}</h1>
         <v-row>
-            <v-col cols="4">
-                <v-img
-                    lazy-src="/img/questionhead.png"
-                    :src="renderSkinBody(skin?.texture?.hash?.skin)"
-                    aspect-ratio="1"
-                />
-                {{ skin?.uuid }}
+            <v-col cols="12">
+                <v-card>
+                    <v-card-text>
+                        <v-row>
+                            <v-col cols="4">
+                                <v-img
+                                    lazy-src="/img/questionhead.png"
+                                    :src="renderSkinBody(skin?.texture?.hash?.skin)"
+                                    aspect-ratio="1"
+                                />
+                            </v-col>
+                            <v-divider vertical class="my-4"/>
+                            <v-col>
+                                <v-row dense>
+                                    <v-col>
+                                        <copy-text-field
+                                            label="Direct Link"
+                                            readonly
+                                            :value="skinLink"
+                                        ></copy-text-field>
+                                    </v-col>
+                                </v-row>
+                                <v-row dense>
+                                    <v-col>
+                                        <copy-text-field
+                                            label="Skin Value"
+                                            readonly
+                                            :value="skinValue"
+                                        ></copy-text-field>
+                                    </v-col>
+                                </v-row>
+                                <v-row dense>
+                                    <v-col>
+                                        <copy-text-field
+                                            label="Skin Signature"
+                                            readonly
+                                            :value="skinSignature"
+                                        ></copy-text-field>
+                                    </v-col>
+                                </v-row>
+                                <v-row dense>
+                                    <v-col>
+                                        <copy-text-field
+                                            label="Texture URL"
+                                            readonly
+                                            :value="skinTextureUrl"
+                                        ></copy-text-field>
+                                    </v-col>
+                                </v-row>
+                            </v-col>
+                        </v-row>
+                    </v-card-text>
+                </v-card>
             </v-col>
-            <v-col>
-                <v-row>
-                    <copy-text-field
-                        label="Direct Link"
-                        readonly
-                        :value="skinLink"
-                    ></copy-text-field>
-                </v-row>
-                <v-row>
-                    <copy-text-field
-                        label="Skin Value"
-                        readonly
-                        :value="skinValue"
-                    ></copy-text-field>
-                </v-row>
-                <v-row>
-                    <copy-text-field
-                        label="Skin Signature"
-                        readonly
-                        :value="skinSignature"
-                    ></copy-text-field>
-                </v-row>
-                <v-row>
-                    <copy-text-field
-                        label="Texture URL"
-                        readonly
-                        :value="skinTextureUrl"
-                    ></copy-text-field>
-                </v-row>
-            </v-col>
-            {{ skin }}
         </v-row>
-
+        <dbg :data="skin"/>
         <v-row>
             <v-col cols="12">
                 <v-card>
@@ -88,7 +104,7 @@ const {$mineskin} = useNuxtApp();
 
 const {
     data: skin
-} = useLazyAsyncData <Maybe<SkinInfo2>>(`skin-${ skinId.value }`, async () => {
+} = useLazyAsyncData<Maybe<SkinInfo2>>(`skin-${ skinId.value }`, async () => {
     return (await $mineskin.skins.get(skinId.value))?.skin;
 });
 

@@ -7,8 +7,7 @@
             <v-row>
                 <template v-for="(item, index) in skins" :key="item">
                     <v-col cols="2">
-                        <skin-link-img :skin="item" @click="viewSkin(item.uuid)">
-                        </skin-link-img>
+                        <skin-link-card :skin="item" @click="viewSkin(item.uuid)"/>
                     </v-col>
                 </template>
             </v-row>
@@ -78,9 +77,5 @@ onMounted(async () => {
 })
 
 
-function viewSkin(uuid: string) {
-    console.debug('viewSkin', uuid);
-    router.push(`/${uuid}`);
-}
 
 </script>

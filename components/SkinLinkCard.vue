@@ -1,14 +1,13 @@
 <template>
     <router-link :to="'/'+skin.uuid">
-        <v-sheet
-            width="180"
-            height="180"
-        >
+        <v-sheet width="180" class="pa-2">
             <v-img
                 lazy-src="/img/questionhead.png"
                 :src="renderSkinHead(skin.texture)"
                 aspect-ratio="1"
             />
+            <v-divider class="my-2"/>
+            {{ skin.name || skin.uuid?.substring(0, 8) }}
         </v-sheet>
     </router-link>
 </template>
@@ -16,14 +15,7 @@
 import { renderSkinHead } from "~/util/render";
 import type { ListedSkin } from "~/types/SkinListResponse";
 
-const router = useRouter();
-
 const props = defineProps<{
     skin: ListedSkin
 }>();
-
-function viewSkin(uuid: string) {
-    router.push(`/${ uuid }`);
-}
-
 </script>
