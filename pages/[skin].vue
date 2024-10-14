@@ -77,7 +77,9 @@
                             </v-tabs-window-item>
 
                             <v-tabs-window-item value="code">
-                                Two
+                                <div>
+                                    <SkinCodeInstructions :skin="skin"/>
+                                </div>
                             </v-tabs-window-item>
 
                             <v-tabs-window-item value="plugins">
@@ -97,6 +99,7 @@ import type { Maybe, SkinIdAndTexture, SkinInfo, SkinInfo2, ValueAndSignature } 
 import VanillaCommand16 from "~/components/instructions/VanillaCommand16.vue";
 import VanillaCommand from "~/components/instructions/VanillaCommand.vue";
 import VanillaInstructions from "~/components/instructions/VanillaInstructions.vue";
+import SkinCodeInstructions from "~/components/instructions/SkinCodeInstructions.vue";
 
 const router = useRouter();
 

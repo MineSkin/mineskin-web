@@ -1,10 +1,10 @@
 <template>
     <div>
-        <VanillaCommand :skin="skin" :version="version"/>
+        <SkinCode :skin="skin" :type="type"/>
         <v-select
-            v-model="version"
-            :items="versions"
-            label="Version"
+            v-model="type"
+            :items="types"
+            label="Type"
             outlined
             dense></v-select>
     </div>
@@ -12,9 +12,10 @@
 <script setup lang="ts">
 import type { SkinInfo2 } from "@mineskin/types";
 import VanillaCommand from "~/components/instructions/vanilla/VanillaCommand.vue";
+import SkinCode from "~/components/instructions/code/SkinCode.vue";
 const props = defineProps<{
     skin: SkinInfo2;
 }>();
-const versions = [12, 13, 16];
-const version = ref(16);
+const types = ['paper','mojang'];
+const type = ref('paper');
 </script>
