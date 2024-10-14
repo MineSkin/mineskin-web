@@ -71,7 +71,9 @@
                     <v-card-text>
                         <v-tabs-window v-model="instructionsTab">
                             <v-tabs-window-item value="vanilla">
-                                One
+                                <div>
+                                    <VanillaInstructions :skin="skin"/>
+                                </div>
                             </v-tabs-window-item>
 
                             <v-tabs-window-item value="code">
@@ -92,6 +94,9 @@
 import { useLazyAsyncData, useNuxtApp } from "#app";
 import { renderSkinBody, renderSkinHead } from "~/util/render";
 import type { Maybe, SkinIdAndTexture, SkinInfo, SkinInfo2, ValueAndSignature } from "@mineskin/types";
+import VanillaCommand16 from "~/components/instructions/VanillaCommand16.vue";
+import VanillaCommand from "~/components/instructions/VanillaCommand.vue";
+import VanillaInstructions from "~/components/instructions/VanillaInstructions.vue";
 
 const router = useRouter();
 
