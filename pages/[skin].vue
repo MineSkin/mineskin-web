@@ -17,6 +17,16 @@
                 <SkinInstructionsCard :skin="skin"/>
             </v-col>
         </v-row>
+
+        <v-row class="my-4">
+            <v-col>
+                <div class="text-grey-darken-2">Generated on {{ new Date(skin?.generator?.timestamp).toUTCString() }} in {{ skin?.generator?.duration / 1000 }}s</div>
+                <div class="text-grey-darken-3">By worker {{ skin?.generator?.worker }} with account {{ skin?.generator?.account?.substring(0,10) }} via server {{ skin?.generator?.server }}</div>
+            </v-col>
+            <v-col class="text-end">
+                <div class="text-grey-darken-3">{{ skin?.texture?.hash?.skin }}</div>
+            </v-col>
+        </v-row>
     </v-container>
 </template>
 <script setup lang="ts">

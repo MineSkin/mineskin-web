@@ -7,7 +7,7 @@
         <template v-slot:uuidArray>{{ formatInt32UUID(getInt32ForUUID(skin.uuid)) }}</template>
         <template v-slot:skinName>{{ skinName(skin) }}</template>
         <template v-slot:skinShortId>{{ skin.uuid.substring(0, 8) }}</template>
-        <template v-slot:skinDate>{{ new Date(skin.generator.timestamp).toISOString() }}</template>
+        <template v-slot:skinDate>{{ new Date(skin.generator.timestamp).toUTCString() }}</template>
     </component>
 </template>
 <script setup lang="ts">
