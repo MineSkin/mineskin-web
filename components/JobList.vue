@@ -1,9 +1,7 @@
 <template>
     <v-list>
-        <v-list-item  v-for="job in queueStore.jobs">
-            {{ job.id }}
-            {{ job.status }}
-        </v-list-item>
+        <JobStatus v-for="job in queueStore.jobs"  :job="job" >
+        </JobStatus>
     </v-list>
 </template>
 <script setup lang="ts">

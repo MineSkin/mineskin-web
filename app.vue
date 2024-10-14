@@ -2,7 +2,7 @@
     <NuxtLayout>
         <v-app>
             <Snackbars/>
-            <v-app-bar density="comfortable">
+            <v-app-bar density="comfortable" class="px-4">
                 <v-app-bar-title>
                     MineSkin
                     <v-btn icon>
@@ -22,18 +22,33 @@
                 <v-divider vertical class="mx-4 my-2"/>
 
                 <template v-slot:append>
-                <v-btn icon="mdi-list-status"></v-btn>
+                    <v-btn rounded @click="jobsDrawer = !jobsDrawer">
+                        <v-badge :content="queueStore.jobs.length" floating location="bottom right">
+                            <v-icon icon="mdi-list-status"></v-icon>
+                        </v-badge>
+                        <v-tooltip
+                            activator="parent"
+                            location="bottom"
+                        >Show Jobs</v-tooltip>
+                    </v-btn>
                 </template>
 
             </v-app-bar>
             <v-main>
                 <NuxtPage/>
             </v-main>
+            <v-navigation-drawer
+                v-model="jobsDrawer"
+                location="end"
+                temporary
+            >
+                <JobList class="my-2"/>
+            </v-navigation-drawer>
         </v-app>
     </NuxtLayout>
 </template>
 <script setup lang="ts">
-import { useAuthStore } from "#imports";
+import { useAuthStore, useQueueStore } from "#imports";
 
 const router = useRouter();
 // const showNav = computed(()=>{
@@ -41,8 +56,11 @@ const router = useRouter();
 // })
 
 const authStore = useAuthStore();
+const queueStore = useQueueStore();
 
-onMounted(()=>{
+const jobsDrawer = ref(false);
+
+onMounted(() => {
     authStore.checkAuth();
 })
 </script>
