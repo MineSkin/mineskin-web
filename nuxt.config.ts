@@ -7,7 +7,10 @@ export default defineNuxtConfig({
         '@/plugins/notifier',
         '@/plugins/mineskin',
     ],
-    modules: ['vuetify-nuxt-module'],
+    modules: [
+        'vuetify-nuxt-module',
+        '@pinia/nuxt',
+    ],
     vuetify: {
         moduleOptions: {
             /* module specific options */

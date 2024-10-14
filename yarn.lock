@@ -993,8 +993,8 @@ __metadata:
 
 "@mineskin/types@git+ssh://git@github.com/MineSkin/mineskin-types.git":
   version: 1.0.1
-  resolution: "@mineskin/types@git+ssh://git@github.com/MineSkin/mineskin-types.git#commit=396186926440a22e81dadacacd08eeaaa0c7aedf"
-  checksum: 10c0/a88991216fcf8b56f52c8ef9f553ac6c91a6c6e8dc75dfafec8203c84852ae7096cc796b4c235deb946d249edb3dfc3e2874531fe7220d5edf2c76a62d735f0e
+  resolution: "@mineskin/types@git+ssh://git@github.com/MineSkin/mineskin-types.git#commit=63b65d2a2fa0867510d6a38962d3cf9091305e1a"
+  checksum: 10c0/6c31f8c2565dfce9b70e05266e11e5f31174fcf6d5e79b970e1e2cb5940b74035a03dfa46b22aa63de024dc294b336aa3ca90f78515929ac8912ec2414a6b740
   languageName: node
   linkType: hard
 
@@ -1162,7 +1162,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nuxt/kit@npm:3.13.2, @nuxt/kit@npm:^3.12.4, @nuxt/kit@npm:^3.13.1, @nuxt/kit@npm:^3.13.2":
+"@nuxt/kit@npm:3.13.2, @nuxt/kit@npm:^3.12.4, @nuxt/kit@npm:^3.13.1, @nuxt/kit@npm:^3.13.2, @nuxt/kit@npm:^3.9.0":
   version: 3.13.2
   resolution: "@nuxt/kit@npm:3.13.2"
   dependencies:
@@ -1423,6 +1423,16 @@ __metadata:
     "@parcel/watcher-win32-x64":
       optional: true
   checksum: 10c0/33b7112094b9eb46c234d824953967435b628d3d93a0553255e9910829b84cab3da870153c3a870c31db186dc58f3b2db81382fcaee3451438aeec4d786a6211
+  languageName: node
+  linkType: hard
+
+"@pinia/nuxt@npm:^0.5.5":
+  version: 0.5.5
+  resolution: "@pinia/nuxt@npm:0.5.5"
+  dependencies:
+    "@nuxt/kit": "npm:^3.9.0"
+    pinia: "npm:^2.2.3"
+  checksum: 10c0/be38b7d8d148dd12632649496138105a9956c42ce2b99fad35d277aaca46b252fb26d66b984fad8ccf2c1cd3b9407f66816816fa21cab2e60f0b304734a4d677
   languageName: node
   linkType: hard
 
@@ -5355,6 +5365,7 @@ __metadata:
   resolution: "nuxt-app@workspace:."
   dependencies:
     "@mineskin/types": "git+ssh://git@github.com/MineSkin/mineskin-types.git"
+    "@pinia/nuxt": "npm:^0.5.5"
     nuxt: "npm:^3.13.0"
     pinia: "npm:^2.2.4"
     vue: "npm:latest"
@@ -5691,7 +5702,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pinia@npm:^2.2.4":
+"pinia@npm:^2.2.3, pinia@npm:^2.2.4":
   version: 2.2.4
   resolution: "pinia@npm:2.2.4"
   dependencies:

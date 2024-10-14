@@ -17,6 +17,7 @@
             </v-col>
         </v-row>
         <v-btn @click="testNotify()">Notify Test</v-btn>
+        <JobList/> <!--TODO: move-->
     </v-container>
 </template>
 <script setup lang="ts">

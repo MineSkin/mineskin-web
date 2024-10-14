@@ -4,6 +4,7 @@ import type { MineSkinResponse } from "~/types/MineSkinResponse";
 import type { SkinResponse } from "~/types/SkinResponse";
 import type { SkinListResponse } from "~/types/SkinListResponse";
 import type { GenerateJobResponse } from "~/types/GenerateJobResponse";
+import type { JobListResponse } from "~/types/JobListResponse";
 
 const INIT: RequestInit = {
     headers: {
@@ -97,7 +98,7 @@ export class MineSkinAPI {
         }
 
         public async url(url: string, options: GenerateOptions): Promise<SkinResponse> {
-            const body = {
+            const body: any = {
                 url
             };
             if (options.visibility) {
@@ -114,6 +115,11 @@ export class MineSkinAPI {
                 method: 'POST',
                 body: JSON.stringify(body)
             })
+                .then(res => this.api.handleResponse(res));
+        }
+
+        public async list(): Promise<JobListResponse> {
+            return fetch(`${ this.api.BASE }/v2/queue`, INIT)
                 .then(res => this.api.handleResponse(res));
         }
 
