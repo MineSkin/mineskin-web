@@ -1,12 +1,17 @@
 <template>
     <v-container>
-        <h1>{{ skin?.name || skin?.uuid.substring(0, 8) || 'Skin' }}</h1>
-        <v-row>
+        <h2>
+            <router-link to="/gallery" class="text-white">
+                <v-icon icon="mdi-arrow-left" class="mx-2"/>
+            </router-link>
+            {{ skinName(skin) || 'Skin' }}
+        </h2>
+        <v-row class="mt-1">
             <v-col cols="12">
                 <SkinSummaryCard :skin="skin"/>
             </v-col>
         </v-row>
-        <dbg :data="skin"/>
+        <!--        <dbg :data="skin"/>-->
         <v-row>
             <v-col cols="12">
                 <SkinInstructionsCard :skin="skin"/>
@@ -19,6 +24,7 @@ import { useLazyAsyncData, useNuxtApp } from "#app";
 import type { Maybe, SkinIdAndTexture, SkinInfo, SkinInfo2, ValueAndSignature } from "@mineskin/types";
 import SkinSummaryCard from "~/components/skin/SkinSummaryCard.vue";
 import SkinInstructionsCard from "~/components/skin/SkinInstructionsCard.vue";
+import { skinName } from "../util/skin";
 
 const router = useRouter();
 
