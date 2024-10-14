@@ -24,7 +24,6 @@
                 <template v-slot:append>
                     <v-btn rounded @click="jobsDrawer = !jobsDrawer">
                         <v-badge
-                            :dot="queueStore?.jobs?.length<=0"
                             :content="queueStore?.jobs?.length"
                             floating
                             location="bottom right"

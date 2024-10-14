@@ -65,6 +65,10 @@ export const useQueueStore = defineStore('queue', () => {
         }
     }
 
+    const hasPendingJobs = computed(() => {
+        return jobs.value.some(job => job.status === 'waiting' || job.status === 'processing');
+    });
+
     return {
         jobIds,
         jobs,
@@ -72,7 +76,8 @@ export const useQueueStore = defineStore('queue', () => {
         removeJobId,
         removeJob,
         refreshJobList,
-        updatePendingJobs
+        updatePendingJobs,
+        hasPendingJobs
     }
 }, {
     persist: {
