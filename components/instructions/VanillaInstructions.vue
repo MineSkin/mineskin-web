@@ -4,19 +4,31 @@ pre.instructions{
 }
 </style>
 <template>
-    <div>
-        <VanillaCommand :skin="skin" :version="version"/>
-        <v-select
+    <div class="d-flex flex-row">
+        <v-tabs
             v-model="version"
-            :items="versions"
-            label="Version"
-            outlined
-            dense></v-select>
+            color="primary"
+            direction="vertical"
+            class="mr-2"
+        >
+            <v-tab text="1.16" :value="16"></v-tab>
+            <v-tab text="1.13" :value="13"></v-tab>
+            <v-tab text="1.12" :value="12"></v-tab>
+        </v-tabs>
+
+        <v-tabs-window v-model="version">
+            <v-tabs-window-item v-for="v in versions" :key="v" :value="v">
+                <div>
+                    <VanillaCommand :skin="skin" :version="v"/>
+                </div>
+            </v-tabs-window-item>
+        </v-tabs-window>
     </div>
 </template>
 <script setup lang="ts">
 import type { SkinInfo2 } from "@mineskin/types";
 import VanillaCommand from "~/components/instructions/vanilla/VanillaCommand.vue";
+import PluginCommand from "~/components/instructions/plugin/PluginCommand.vue";
 const props = defineProps<{
     skin: SkinInfo2;
 }>();
