@@ -1,6 +1,6 @@
 <template>
     <v-list>
-        <JobStatus v-for="job in queueStore.jobs"  :job="job" >
+        <JobStatus v-for="job in queueStore.jobs" :job="job">
         </JobStatus>
     </v-list>
 </template>

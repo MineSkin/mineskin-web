@@ -12,19 +12,22 @@
             <v-tabs-window v-model="instructionsTab">
                 <v-tabs-window-item value="vanilla">
                     <div>
-                        <VanillaInstructions :skin="skin"/>
+                        <v-skeleton-loader v-if="!skin" type="paragraph"/>
+                        <VanillaInstructions v-else :skin="skin"/>
                     </div>
                 </v-tabs-window-item>
 
                 <v-tabs-window-item value="plugins">
                     <div>
-                        <PluginInstructions :skin="skin"/>
+                        <v-skeleton-loader v-if="!skin" type="paragraph"/>
+                        <PluginInstructions v-else :skin="skin"/>
                     </div>
                 </v-tabs-window-item>
 
                 <v-tabs-window-item value="code">
                     <div>
-                        <SkinCodeInstructions :skin="skin"/>
+                        <v-skeleton-loader v-if="!skin" type="paragraph"/>
+                        <SkinCodeInstructions v-else :skin="skin"/>
                     </div>
                 </v-tabs-window-item>
 

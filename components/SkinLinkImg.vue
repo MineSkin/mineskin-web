@@ -1,12 +1,12 @@
 <template>
-    <router-link :to="'/'+skin.uuid">
+    <router-link :to="skin?('/'+skin.uuid):undefined">
         <v-sheet
             width="180"
             height="180"
         >
             <v-img
                 lazy-src="/img/questionhead.png"
-                :src="renderSkinHead(skin.texture)"
+                :src="renderSkinHead(skin?.texture)"
                 aspect-ratio="1"
             />
         </v-sheet>

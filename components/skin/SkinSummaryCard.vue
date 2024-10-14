@@ -13,7 +13,9 @@
                 <v-col>
                     <v-row dense>
                         <v-col>
+                            <v-skeleton-loader v-if="!skin" type="text" width="100%"/>
                             <copy-text-field
+                                v-else
                                 label="Direct Link"
                                 readonly
                                 :value="skinLink"
@@ -22,7 +24,9 @@
                     </v-row>
                     <v-row dense>
                         <v-col>
+                            <v-skeleton-loader v-if="!skin" type="text" width="100%"/>
                             <copy-text-field
+                                v-else
                                 label="Skin Value"
                                 readonly
                                 :value="skinValue"
@@ -31,7 +35,9 @@
                     </v-row>
                     <v-row dense>
                         <v-col>
+                            <v-skeleton-loader v-if="!skin" type="text" width="100%"/>
                             <copy-text-field
+                                v-else
                                 label="Skin Signature"
                                 readonly
                                 :value="skinSignature"
@@ -40,7 +46,9 @@
                     </v-row>
                     <v-row dense>
                         <v-col>
+                            <v-skeleton-loader v-if="!skin" type="text" width="100%"/>
                             <copy-text-field
+                                v-else
                                 label="Texture URL"
                                 readonly
                                 :value="skinTextureUrl"
