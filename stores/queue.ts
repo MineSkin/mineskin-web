@@ -6,6 +6,8 @@ export const useQueueStore = defineStore('queue', () => {
     const jobs = ref<JobInfo[]>([]);
     const refreshes = ref<Map<string, number>>(new Map());
 
+    let updateTimer: any;
+
     const {$mineskin} = useNuxtApp();
 
     const addJob = (job: JobInfo) => {
@@ -35,6 +37,12 @@ export const useQueueStore = defineStore('queue', () => {
             jobIds.value = response.jobs.map(job => job.id);
             jobs.value = response.jobs;
         }
+
+        if (!updateTimer) {
+            updateTimer = setInterval(() => {
+                updatePendingJobs();
+            }, 1000);
+        }
     }
 
     const updatePendingJobs = async () => {
@@ -56,12 +64,6 @@ export const useQueueStore = defineStore('queue', () => {
             }
         }
     }
-
-    (() => {
-        setInterval(() => {
-            updatePendingJobs();
-        }, 1000);
-    })();
 
     return {
         jobIds,
