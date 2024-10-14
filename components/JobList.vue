@@ -15,10 +15,6 @@ const {$mineskin} = useNuxtApp();
 
 onMounted(()=>{
     queueStore.refreshJobList();
-
-    setInterval(() => {
-        queueStore.updatePendingJobs();
-    }, 1000);
 })
 
 

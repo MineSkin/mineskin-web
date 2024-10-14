@@ -124,7 +124,7 @@ export class MineSkinAPI {
         }
 
         public async get(jobId: string): Promise<SkinResponse|GenerateJobResponse> {
-            return fetch(`${ this.api.BASE }/v2/queue/${ jobId }`, INIT)
+            return fetch(`${ this.api.BASE }/v2/queue/${ jobId }?t=${Math.round(Date.now()/1000)}`, INIT)
                 .then(res => this.api.handleResponse(res));
         }
 

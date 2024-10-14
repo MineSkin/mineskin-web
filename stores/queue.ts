@@ -4,6 +4,7 @@ import type { JobInfo } from "@mineskin/types";
 export const useQueueStore = defineStore('queue', () => {
     const jobIds = ref<string[]>([]);
     const jobs = ref<JobInfo[]>([]);
+    const refreshes = ref<Map<string, number>>(new Map());
 
     const {$mineskin} = useNuxtApp();
 
@@ -39,6 +40,12 @@ export const useQueueStore = defineStore('queue', () => {
     const updatePendingJobs = async () => {
         for (const job of jobs.value) {
             if (job.status === 'waiting' || job.status === 'processing') {
+                const r = refreshes.value.get(job.id);
+                if (r > 5) {
+                    continue;
+                }
+                refreshes.value.set(job.id, (r || 0) + 1);
+
                 const response = await $mineskin.queue.get(job.id);
                 if (response.success) {
                     const index = jobs.value.findIndex(j => j.id === job.id);
@@ -50,6 +57,12 @@ export const useQueueStore = defineStore('queue', () => {
         }
     }
 
+    (() => {
+        setInterval(() => {
+            updatePendingJobs();
+        }, 1000);
+    })();
+
     return {
         jobIds,
         jobs,
@@ -58,5 +71,10 @@ export const useQueueStore = defineStore('queue', () => {
         removeJob,
         refreshJobList,
         updatePendingJobs
+    }
+}, {
+    persist: {
+        storage: persistedState.localStorage,
+        paths: ['jobs']
     }
 })
