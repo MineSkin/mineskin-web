@@ -16,7 +16,7 @@ pre.instructions{
             <v-tab text="1.12" :value="12"></v-tab>
         </v-tabs>
 
-        <v-tabs-window v-model="version">
+        <v-tabs-window v-model="version"  direction="vertical">
             <v-tabs-window-item v-for="v in versions" :key="v" :value="v">
                 <div>
                     <VanillaCommand :skin="skin" :version="v"/>
