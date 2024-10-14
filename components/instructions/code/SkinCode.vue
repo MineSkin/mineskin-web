@@ -14,6 +14,7 @@ import type { SkinInfo2 } from "@mineskin/types";
 import CodeFormatPaper from "~/components/instructions/code/CodeFormatPaper.vue";
 import { addUuidDashes, skinName } from "../../../util/skin";
 import CodeFormatMojang from "~/components/instructions/code/CodeFormatMojang.vue";
+import InstructionsPre from "~/components/instructions/InstructionsPre.vue";
 
 const props = defineProps<{
     skin: SkinInfo2;

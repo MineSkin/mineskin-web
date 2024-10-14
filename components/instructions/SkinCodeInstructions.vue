@@ -1,3 +1,8 @@
+<style>
+pre.instructions{
+    white-space: pre-wrap;
+}
+</style>
 <template>
     <div>
         <SkinCode :skin="skin" :type="type"/>

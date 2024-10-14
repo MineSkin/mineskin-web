@@ -7,6 +7,7 @@
 import type { SkinInfo2 } from "@mineskin/types";
 import CitizensFormat from "~/components/instructions/plugin/CitizensFormat.vue";
 import TaterzensFormat from "~/components/instructions/plugin/TaterzensFormat.vue";
+import InstructionsPre from "~/components/instructions/InstructionsPre.vue";
 
 const props = defineProps<{
     skin: SkinInfo2;

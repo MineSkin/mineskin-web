@@ -1,3 +1,8 @@
+<style>
+pre.instructions{
+    white-space: pre-wrap;
+}
+</style>
 <template>
     <div>
         <VanillaCommand :skin="skin" :version="version"/>

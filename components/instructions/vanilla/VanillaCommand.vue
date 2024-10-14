@@ -1,6 +1,5 @@
 <template>
-        <pre>
-        <component :is="format">
+    <component :is="format">
             <template v-slot:skinValue>{{ skin.texture.data.value }}</template>
             <template v-slot:skinSignature>{{ skin.texture.data.signature }}</template>
             <template v-slot:skinUuid>{{ skin.uuid }}</template>
@@ -10,7 +9,6 @@
             <template v-slot:skinShortId>{{ skin.uuid.substring(0, 8) }}</template>
             <template v-slot:skinDate>{{ new Date(skin.generator.timestamp).toISOString() }}</template>
         </component>
-            </pre>
 </template>
 <script setup lang="ts">
 import type { SkinInfo2 } from "@mineskin/types";
@@ -18,6 +16,7 @@ import VanillaFormat12 from "~/components/instructions/vanilla/VanillaFormat12.v
 import VanillaFormat13 from "~/components/instructions/vanilla/VanillaFormat13.vue";
 import VanillaFormat16 from "~/components/instructions/vanilla/VanillaFormat16.vue";
 import { addUuidDashes, formatInt32UUID, getInt32ForUUID, skinName } from "../../../util/skin";
+import InstructionsPre from "~/components/instructions/InstructionsPre.vue";
 
 const props = defineProps<{
     skin: SkinInfo2;
