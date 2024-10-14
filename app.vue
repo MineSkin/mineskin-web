@@ -33,8 +33,16 @@
     </NuxtLayout>
 </template>
 <script setup lang="ts">
+import { useAuthStore } from "#imports";
+
 const router = useRouter();
 // const showNav = computed(()=>{
 //     return router.currentRoute.value.path === "/"||router.currentRoute.value.path === "/gallery";
 // })
+
+const authStore = useAuthStore();
+
+onMounted(()=>{
+    authStore.checkAuth();
+})
 </script>

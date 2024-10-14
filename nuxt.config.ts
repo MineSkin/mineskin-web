@@ -6,10 +6,12 @@ export default defineNuxtConfig({
         '@/plugins/logger',
         '@/plugins/notifier',
         '@/plugins/mineskin',
+        '@/plugins/account',
     ],
     modules: [
         'vuetify-nuxt-module',
         '@pinia/nuxt',
+        '@pinia-plugin-persistedstate/nuxt'
     ],
     vuetify: {
         moduleOptions: {

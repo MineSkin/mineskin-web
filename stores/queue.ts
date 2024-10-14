@@ -36,12 +36,27 @@ export const useQueueStore = defineStore('queue', () => {
         }
     }
 
+    const updatePendingJobs = async () => {
+        for (const job of jobs.value) {
+            if (job.status === 'waiting' || job.status === 'processing') {
+                const response = await $mineskin.queue.get(job.id);
+                if (response.success) {
+                    const index = jobs.value.findIndex(j => j.id === job.id);
+                    if (index > -1) {
+                        jobs.value[index] = response.job;
+                    }
+                }
+            }
+        }
+    }
+
     return {
         jobIds,
         jobs,
         addJob,
         removeJobId,
         removeJob,
-        refreshJobList
+        refreshJobList,
+        updatePendingJobs
     }
 })

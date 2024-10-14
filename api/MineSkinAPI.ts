@@ -157,6 +157,17 @@ export class MineSkinAPI {
 
     }(this);
 
+    public me = new class {
+
+        constructor(readonly api: MineSkinAPI) {
+        }
+
+        public async get(){
+            return fetch(`${ this.api.BASE }/v2/me`, INIT);
+        }
+
+    }(this);
+
     private async handleResponse<T extends MineSkinResponse>(res: Response): Promise<T> {
         const json: MineSkinResponse = await res.json();
         if (json.errors?.length > 0) {
