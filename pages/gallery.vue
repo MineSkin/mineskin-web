@@ -6,9 +6,9 @@
         <v-infinite-scroll :items="skins" :onLoad="load">
             <v-row>
                 <template v-for="(item, index) in skins" :key="item">
-                    <v-col cols="2">
-                        <skin-link-card :skin="item" @click="viewSkin(item.uuid)"/>
-                    </v-col>
+<!--                    <v-col cols="4" sm="3" md="2">-->
+                        <skin-link-card class="ma-2" :skin="item" @click="viewSkin(item.uuid)"/>
+<!--                    </v-col>-->
                 </template>
             </v-row>
         </v-infinite-scroll>

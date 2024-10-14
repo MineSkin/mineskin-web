@@ -11,12 +11,12 @@
             <v-btn icon="mdi-arrow-right" variant="text" to="/gallery"></v-btn>
         </h3>
         <v-row  class="skin-single-row">
-            <v-col cols="2" md="2" v-for="skin in latestSkins" :key="skin.uuid">
-                <skin-link-img :skin="skin"/>
-            </v-col>
-            <v-col cols="2" md="2" v-for="n in 6" :key="n">
-                <skin-link-img/>
-            </v-col>
+<!--            <v-col cols="3" md="2" v-for="skin in latestSkins" :key="skin.uuid">-->
+                <skin-link-img class="ma-2" v-for="skin in latestSkins" :key="skin.uuid" :skin="skin"/>
+<!--            </v-col>-->
+<!--            <v-col cols="2" md="2" v-for="n in 6" :key="n">-->
+                <skin-link-img class="ma-2"  v-for="n in 6" :key="n"/>
+<!--            </v-col>-->
         </v-row>
 <!--        <dbg :data="latestSkins"/>-->
     </v-sheet>

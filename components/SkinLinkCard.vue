@@ -1,6 +1,8 @@
 <template>
     <router-link :to="'/'+skin.uuid">
-        <v-sheet width="180" class="pa-2">
+        <v-sheet
+            width="min(180px,max(90px,20vmin))"
+            class="pa-2">
             <v-img
                 lazy-src="/img/questionhead.png"
                 :src="renderSkinHead(skin.texture)"

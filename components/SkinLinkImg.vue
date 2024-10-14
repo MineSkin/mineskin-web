@@ -1,8 +1,7 @@
 <template>
     <router-link :to="skin?('/'+skin.uuid):undefined">
         <v-sheet
-            width="180"
-            height="180"
+            width="min(180px,max(90px,20vmin))"
         >
             <v-img
                 lazy-src="/img/questionhead.png"
