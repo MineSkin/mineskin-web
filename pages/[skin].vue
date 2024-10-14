@@ -66,8 +66,8 @@
                         v-model="instructionsTab"
                     >
                         <v-tab value="vanilla">Vanilla</v-tab>
-                        <v-tab value="code">Code</v-tab>
                         <v-tab value="plugins">Plugins/Mods</v-tab>
+                        <v-tab value="code">Code</v-tab>
                     </v-tabs>
                     <v-card-text>
                         <v-tabs-window v-model="instructionsTab">
@@ -77,17 +77,18 @@
                                 </div>
                             </v-tabs-window-item>
 
+                            <v-tabs-window-item value="plugins">
+                                <div>
+                                    <PluginInstructions :skin="skin"/>
+                                </div>
+                            </v-tabs-window-item>
+
                             <v-tabs-window-item value="code">
                                 <div>
                                     <SkinCodeInstructions :skin="skin"/>
                                 </div>
                             </v-tabs-window-item>
 
-                            <v-tabs-window-item value="plugins">
-                                <div>
-                                    <PluginInstructions :skin="skin"/>
-                                </div>
-                            </v-tabs-window-item>
                         </v-tabs-window>
                     </v-card-text>
                 </v-card>
