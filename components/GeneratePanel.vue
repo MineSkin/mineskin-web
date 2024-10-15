@@ -27,7 +27,8 @@
                 class="mx-4 section-col"
             >
                 <GenerateUrlSection
-                    class="section-url d-flex flex-column"
+                    class="section-url flex-column"
+                    :class="{'d-flex':!generateType || generateType === GenerateType.URL}"
                     v-show="!generateType || generateType === GenerateType.URL"
                     v-model="urls"
                     @continue="cont"
@@ -39,7 +40,8 @@
                 :cols="!generateType?'':generateType === GenerateType.UPLOAD ? 4 : 4"
             >
                 <GenerateUploadSection
-                    class="section-upload d-flex flex-column"
+                    class="section-upload flex-column"
+                    :class="{'d-flex':!generateType || generateType === GenerateType.UPLOAD}"
                     v-show="!generateType || generateType === GenerateType.UPLOAD"
                     v-model="uploadFiles"
                     @continue="cont"
@@ -51,7 +53,8 @@
                 class="mx-4 section-col"
             >
                 <GenerateUserSection
-                    class="section-user d-flex flex-column"
+                    class="section-user flex-column"
+                    :class="{'d-flex':!generateType || generateType === GenerateType.USER}"
                     v-show="!generateType || generateType === GenerateType.USER"
                     v-model="users"
                     @continue="cont"

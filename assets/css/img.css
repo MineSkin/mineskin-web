@@ -1,0 +1,7 @@
+.pixelated {
+    image-rendering: pixelated;
+}
+
+.input-prepend-image {
+    width: 48px;
+}

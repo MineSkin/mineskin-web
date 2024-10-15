@@ -9,6 +9,7 @@
             type="url"
             rule="url"
             prepend-icon="mdi-link"
+            :image-provider="item=>item"
         />
         <v-row align="end">
             <v-col>

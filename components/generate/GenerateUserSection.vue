@@ -10,6 +10,7 @@
             type="text"
             rule="user"
             prepend-icon="mdi-account"
+            :image-provider="user=>userToImage(user)"
         />
         <v-row align="end">
             <v-col>
@@ -29,12 +30,25 @@
     </div>
 </template>
 <script setup lang="ts">
+import { textureUrlForUuid } from "~/util/render";
+
 const users = defineModel<string[]>(['']);
 const hasUser = computed(() => users.value.filter(user=>user.length>0).length > 0);
 const emit = defineEmits(['continue']);
+
+const {$mineskin } = useNuxtApp();
 
 function cont(){
     if(!hasUser.value) return;
     emit('continue');
 }
+
+
+async function userToImage(user: string) {
+    console.debug('userToImage',user)
+    const validation = await $mineskin.validate.name(user);
+    if(!validation.valid) return null;
+    return textureUrlForUuid(validation.uuid!);
+}
+
 </script>

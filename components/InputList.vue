@@ -4,16 +4,19 @@
                v-for="(item, index) in items"
                :key="index"
         >
-            <v-text-field
+            <input-list-row
                 :model-value="items[index]"
                 @update:modelValue="change(index, $event)"
+                :item="items[index]"
                 :type="type"
                 :label="label"
                 :rules="rules"
-                :prepend-icon="prependIcon"
                 :append-icon="canAdd(index) ? 'mdi-plus' : canRemove(index)? 'mdi-minus':''"
+                :prepend-icon="prependIcon"
+                :image-provider="imageProvider"
                 @click:append="listAddOrRemove(index)"
-            />
+            >
+            </input-list-row>
         </v-row>
     </div>
 </template>
@@ -26,6 +29,7 @@ const props = defineProps<{
     prependIcon?: string;
     type?: string;
     rule?: string;
+    imageProvider?: (item: string)=>string|Promise<string>;
 }>()
 
 const allRules = {

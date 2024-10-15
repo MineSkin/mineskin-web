@@ -20,6 +20,7 @@
             v-model="uploadFiles"
             label="UPLOAD"
             prepend-icon="mdi-file"
+            :image-provider="file=>fileToUrl(file)"
             />
         <v-row class="flex-1-1-100" align="end">
             <v-col>
@@ -49,4 +50,9 @@ function cont(){
     if(!hasFile.value) return;
     emit('continue');
 }
+
+function fileToUrl(file: File): string {
+    return URL.createObjectURL(file);
+}
+
 </script>
