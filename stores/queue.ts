@@ -6,6 +6,8 @@ export const useQueueStore = defineStore('queue', () => {
     const jobs = ref<JobInfo[]>([]);
     const refreshes = ref<Map<string, number>>(new Map());
 
+    const jobsDrawer = ref(false);
+
     let updateTimer: any;
 
     const {$mineskin} = useNuxtApp();
@@ -77,7 +79,8 @@ export const useQueueStore = defineStore('queue', () => {
         removeJob,
         refreshJobList,
         updatePendingJobs,
-        hasPendingJobs
+        hasPendingJobs,
+        jobsDrawer
     }
 }, {
     persist: {

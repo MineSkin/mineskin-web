@@ -24,7 +24,7 @@
         <v-progress-linear
             v-else-if="job.status === 'completed'||job.status === 'failed'"
             height="20"
-            indeterminate
+            model-value="100"
             :color="job.status === 'completed' ? 'success':'error'">
             <template v-slot:default>
                 Done

@@ -28,7 +28,7 @@
                 <v-divider vertical class="mx-4 my-2"/>
 
                 <template v-slot:append>
-                    <v-btn icon @click="jobsDrawer = !jobsDrawer">
+                    <v-btn icon @click="queueStore.jobsDrawer = !queueStore.jobsDrawer">
                         <component :is="queueStore?.jobs?.length>0?'v-badge':'div'"
                             :content="queueStore?.jobs?.length"
                             location="bottom right"
@@ -76,7 +76,7 @@
                 <NuxtPage/>
             </v-main>
             <v-navigation-drawer
-                v-model="jobsDrawer"
+                v-model="queueStore.jobsDrawer"
                 location="end"
                 temporary
             >
@@ -99,8 +99,6 @@ const router = useRouter();
 
 const authStore = useAuthStore();
 const queueStore = useQueueStore();
-
-const jobsDrawer = ref(false);
 
 onBeforeMount(() => {
     authStore.checkAuth();

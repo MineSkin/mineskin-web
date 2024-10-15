@@ -36,7 +36,7 @@
                     :class="{'d-flex':!generateType || generateType === GenerateType.URL}"
                     v-show="!generateType || generateType === GenerateType.URL"
                     v-model="urls"
-                    @continue="cont"
+                    @continue="generate"
                 />
             </v-col>
             <v-divider vertical v-show="!generateType"/>
@@ -62,65 +62,115 @@
                     :class="{'d-flex':!generateType || generateType === GenerateType.USER}"
                     v-show="!generateType || generateType === GenerateType.USER"
                     v-model="users"
-                    @continue="cont"
+                    @continue="generate"
                 />
             </v-col>
         </v-row>
         <v-divider class="my-4"/>
         <v-expand-transition>
-            <v-row v-show="generateType" class="my-2">
+            <v-row v-show="generateType" class="my-2" justify="center">
+                <v-spacer></v-spacer>
                 <v-col>
-                    <SimplePreview :user="users[0]" :url="urls[0]" :file="uploadFiles[0]"/>
-                </v-col>
-                <v-col class="text-center">
-                    <v-btn
-                        color="primary"
-                        text="Generate"
-                        size="x-large"
-                        @click="cont"
-                    ></v-btn>
+                    <v-select
+                        label="Visibility"
+                        v-model="visibility"
+                        :items="Object.values(SkinVisibility2)"
+                        :item-props="visibilityProps"
+                        hint="Visibility of the skin"
+                        persistent-hint
+                    />
                 </v-col>
                 <v-col>
-                    <v-row>
-                      <v-col>
-                          <v-text-field
-                              label="Name (optional)"
-                              v-model="name"
-                              hint="Optional name for this skin"
-                              persistent-hint
-                          />
-                      </v-col>
+                    <v-text-field
+                        label="Name (optional)"
+                        v-model="name"
+                        hint="Optional name for this skin"
+                        persistent-hint
+                    />
+                </v-col>
+                <v-col>
+                    <v-select
+                        label="Variant"
+                        v-model="variant"
+                        :items="Object.values(SkinVariant)"
+                        :item-props="variantProps"
+                        hint="Variant of the skin"
+                        persistent-hint
+                    />
+                </v-col>
+                <v-spacer></v-spacer>
+                <!--                <v-col>-->
+                <!--&lt;!&ndash;                    <SimplePreview :user="users[0]" :url="urls[0]" :file="uploadFiles[0]"/>&ndash;&gt;-->
+                <!--                </v-col>-->
+                <!--                <v-col class="text-center">-->
+                <!--                -->
+                <!--                </v-col>-->
+                <!--                <v-col>-->
+                <!--                    <v-row>-->
+                <!--                      <v-col>-->
+                <!--                          <v-text-field-->
+                <!--                              label="Name (optional)"-->
+                <!--                              v-model="name"-->
+                <!--                              hint="Optional name for this skin"-->
+                <!--                              persistent-hint-->
+                <!--                          />-->
+                <!--                      </v-col>-->
+                <!--                    </v-row>-->
+                <!--                    <v-row>-->
+                <!--                     <v-col>-->
+                <!--                         <v-select-->
+                <!--                             label="Visibility"-->
+                <!--                             v-model="visibility"-->
+                <!--                             :items="Object.values(SkinVisibility2)"-->
+                <!--                             :item-props="visibilityProps"-->
+                <!--                             hint="Visibility of the skin"-->
+                <!--                             persistent-hint-->
+                <!--                         />-->
+                <!--                     </v-col>-->
+                <!--                    </v-row>-->
+                <!--                    <v-row>-->
+                <!--                      <v-col>-->
+                <!--                          <v-select-->
+                <!--                              label="Variant"-->
+                <!--                              v-model="variant"-->
+                <!--                              :items="Object.values(SkinVariant)"-->
+                <!--                              :item-props="variantProps"-->
+                <!--                              hint="Variant of the skin. Use unknown for auto-detect"-->
+                <!--                              persistent-hint-->
+                <!--                          />-->
+                <!--                      </v-col>-->
+                <!--                    </v-row>-->
+                <!--                </v-col>-->
+            </v-row>
+        </v-expand-transition>
+        <v-expand-transition>
+            <v-row v-show="generateType" class="my-4" justify="center">
+                <v-col>
+                    <v-row justify="center" class="mb-2 text-center">
+                        <v-btn
+                            color="primary"
+                            text="Generate"
+                            size="x-large"
+                            @click="generate"
+                        ></v-btn>
                     </v-row>
-                    <v-row>
-                     <v-col>
-                         <v-select
-                             label="Visibility"
-                             v-model="visibility"
-                             :items="Object.values(SkinVisibility2)"
-                             :item-props="visibilityProps"
-                             hint="Visibility of the skin"
-                             persistent-hint
-                         />
-                     </v-col>
-                    </v-row>
-                    <v-row>
-                      <v-col>
-                          <v-select
-                              label="Variant"
-                              v-model="variant"
-                              :items="Object.values(SkinVariant)"
-                              :item-props="variantProps"
-                              hint="Variant of the skin. Use unknown for auto-detect"
-                              persistent-hint
-                          />
-                      </v-col>
+                    <v-row justify="center" class="mt-2 text-center">
+                        <div v-show="generating">
+                            <div>
+                                Your {{ imageCount > 1 ? 'skins are' : 'skin is' }} being generated...
+                            </div>
+                            <div>
+                                Check the <action-link @click.prevent="queueStore.jobsDrawer = true" icon="mdi-list-status" tooltip="Show Jobs">Job List</action-link> for progress,
+                                or <action-link @click.prevent="reset" icon="mdi-reload" tooltip="Reset Image Selection">generate more skins</action-link>.
+                            </div>
+                        </div>
                     </v-row>
                 </v-col>
             </v-row>
         </v-expand-transition>
-<!--        <v-row>-->
-<!--            <dbg :data="{users,uploadFiles,urls,generateType}"/>-->
-<!--        </v-row>-->
+        <!--        <v-row>-->
+        <!--            <dbg :data="{users,uploadFiles,urls,generateType}"/>-->
+        <!--        </v-row>-->
     </v-sheet>
 </template>
 <script setup lang="ts">
@@ -131,6 +181,8 @@ import GenerateUploadSection from "~/components/generate/GenerateUploadSection.v
 import { useQueueStore } from "~/stores/queue";
 import type { GenerateJobResponse } from "~/types/GenerateJobResponse";
 import SimplePreview from "~/components/SimplePreview.vue";
+import { sleep } from "~/util/misc";
+import ActionLink from "~/components/ActionLink.vue";
 
 const {$mineskin, $notify} = useNuxtApp();
 
@@ -155,6 +207,20 @@ const users = ref<string[]>(['']);
 const name = ref('');
 const visibility = ref(SkinVisibility2.PUBLIC);
 const variant = ref(SkinVariant.UNKNOWN);
+
+const imageCount = computed(() => {
+    switch (generateType.value) {
+        case GenerateType.UPLOAD:
+            return uploadFiles.value.length;
+        case GenerateType.URL:
+            return urls.value.filter(url => url.length > 0).length;
+        case GenerateType.USER:
+            return users.value.filter(user => user.length > 0).length;
+    }
+    return 0;
+})
+
+const generating = ref(false);
 
 const dragging = ref(false);
 
@@ -236,14 +302,25 @@ function variantProps(item: SkinVariant) {
             };
         case SkinVariant.UNKNOWN:
             return {
-                title: "Unknown",
+                title: "Auto",
                 subtitle: "Auto-detect"
             };
     }
 }
 
-async function cont() {
-    console.log('continue');
+function reset() {
+    uploadFiles.value = [];
+    urls.value = [''];
+    users.value = [''];
+    name.value = '';
+    visibility.value = SkinVisibility2.PUBLIC; // TODO: persist preferred visibility
+    variant.value = SkinVariant.UNKNOWN;
+}
+
+async function generate() {
+    console.log('generate');
+    generating.value = true;
+    await sleep(100);
     switch (generateType.value) {
         case GenerateType.UPLOAD:
             const response = await $mineskin.queue.upload(uploadFiles.value[0], {
