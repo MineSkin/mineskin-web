@@ -11,12 +11,15 @@
     <v-sheet
         rounded
         elevation="1"
-        class="mx-auto py-4 px-6"
+        class="mx-auto px-4 pt-0 pb-4"
         @dragover.prevent="dragging = true"
         @dragleave.prevent="dragging = false"
         @drop.prevent="onDrop"
         :color="dragging ? 'secondary' : ''"
     >
+        <h3 class="text-h6 mb-2 pt-1">
+            Generate New Skin Data
+        </h3>
         <v-row class="my-2 d-flex text-center"
                :justify="generateType === GenerateType.UPLOAD ? 'center':generateType===GenerateType.USER?'end':'start'">
             <v-col
