@@ -3,11 +3,7 @@
         <v-sheet
             width="min(180px,max(90px,20vmin))"
             class="pa-2">
-            <v-img
-                :lazy-src="PLACEHOLDER_HEAD"
-                :src="renderSkinHead(skin.texture)"
-                aspect-ratio="1"
-            />
+            <SkinHeadImg :skin="skin"/>
             <v-divider class="my-2"/>
             {{ skin.name || skin.uuid?.substring(0, 8) }}
         </v-sheet>

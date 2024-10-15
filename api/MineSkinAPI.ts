@@ -48,7 +48,7 @@ export class MineSkinAPI {
             if (options.name) {
                 formData.append('name', options.name);
             }
-            return this.api.request(`${ this.api.BASE }/v2/generate`, {
+            return this.api.request(`/v2/generate`, {
                 headers: {
                 },
                 method: 'POST',
@@ -69,7 +69,7 @@ export class MineSkinAPI {
             if (options.name) {
                 body['name'] = options.name;
             }
-            return this.api.request(`${ this.api.BASE }/v2/generate`, {
+            return this.api.request(`/v2/generate`, {
                 ...INIT,
                 method: 'POST',
                 body: JSON.stringify(body)
@@ -83,7 +83,7 @@ export class MineSkinAPI {
         constructor(readonly api: MineSkinAPI) {
         }
 
-        public async upload(file: File, options: GenerateOptions): Promise<SkinResponse|GenerateJobResponse> {
+        public async upload(file: File, options: GenerateOptions): Promise<GenerateJobResponse> {
             const formData = new FormData();
             formData.append('file', file);
             if (options.visibility) {
@@ -95,7 +95,7 @@ export class MineSkinAPI {
             if (options.name) {
                 formData.append('name', options.name);
             }
-            return this.api.request(`${ this.api.BASE }/v2/queue`, {
+            return this.api.request(`/v2/queue`, {
                 headers: {
                 },
                 method: 'POST',
@@ -103,7 +103,7 @@ export class MineSkinAPI {
             });
         }
 
-        public async url(url: string, options: GenerateOptions): Promise<SkinResponse|GenerateJobResponse> {
+        public async url(url: string, options: GenerateOptions): Promise<GenerateJobResponse> {
             const body: any = {
                 url
             };
@@ -116,7 +116,7 @@ export class MineSkinAPI {
             if (options.name) {
                 body['name'] = options.name;
             }
-            return this.api.request(`${ this.api.BASE }/v2/queue`, {
+            return this.api.request(`/v2/queue`, {
                 ...INIT,
                 method: 'POST',
                 body: JSON.stringify(body)
@@ -124,11 +124,14 @@ export class MineSkinAPI {
         }
 
         public async list(): Promise<JobListResponse> {
-            return this.api.request(`${ this.api.BASE }/v2/queue`, INIT);
+            return this.api.request(`/v2/queue`, {
+                ...INIT,
+                credentials: 'include'
+            });
         }
 
-        public async get(jobId: string): Promise<SkinResponse|GenerateJobResponse> {
-            return this.api.request(`${ this.api.BASE }/v2/queue/${ jobId }?t=${Math.round(Date.now()/1000)}`, INIT);
+        public async get(jobId: string): Promise<GenerateJobResponse> {
+            return this.api.request(`/v2/queue/${ jobId }?t=${Math.round(Date.now()/1000)}`, INIT);
         }
 
     }(this);
@@ -149,11 +152,11 @@ export class MineSkinAPI {
             if (filter) {
                 params.set('filter', filter);
             }
-            return this.api.request(`${ this.api.BASE }/v2/skins?${ params.toString() }`, INIT);
+            return this.api.request(`/v2/skins?${ params.toString() }`, INIT);
         }
 
         public async get(uuid: string): Promise<SkinResponse> {
-            return this.api.request(`${ this.api.BASE }/v2/skins/${ uuid }`, INIT);
+            return this.api.request(`/v2/skins/${ uuid }`, INIT);
         }
 
     }(this);
@@ -184,14 +187,14 @@ export class MineSkinAPI {
 
     }(this);
 
-    private async request<T extends MineSkinResponse>(url: string, init: RequestInit): Promise<T> {
+    private async request<T extends MineSkinResponse>(path: string, init: RequestInit): Promise<T> {
         const baseInit = {
             ...INIT
         };
         if (this.authed) {
             baseInit.credentials = init?.credentials ?? 'include';
         }
-        return fetch(url, {
+        return fetch(`${this.BASE}${path}`, {
             ...baseInit,
             ...init
         })

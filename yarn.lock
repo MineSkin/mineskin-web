@@ -993,8 +993,8 @@ __metadata:
 
 "@mineskin/types@git+ssh://git@github.com/MineSkin/mineskin-types.git":
   version: 1.0.1
-  resolution: "@mineskin/types@git+ssh://git@github.com/MineSkin/mineskin-types.git#commit=63b65d2a2fa0867510d6a38962d3cf9091305e1a"
-  checksum: 10c0/6c31f8c2565dfce9b70e05266e11e5f31174fcf6d5e79b970e1e2cb5940b74035a03dfa46b22aa63de024dc294b336aa3ca90f78515929ac8912ec2414a6b740
+  resolution: "@mineskin/types@git+ssh://git@github.com/MineSkin/mineskin-types.git#commit=7934efe89f9502a51cb74ebfc77cd652360fe0c2"
+  checksum: 10c0/de2846c4384d95e8c9dfb5a5e10aa66e172f8c6cd6923cb1662d8f2b1c2121532ddab1365c692a186833a3632125deda1140fe258ba2c2976ba77e8f33a232c1
   languageName: node
   linkType: hard
 

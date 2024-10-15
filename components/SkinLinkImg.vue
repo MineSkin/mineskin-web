@@ -3,11 +3,7 @@
         <v-sheet
             width="min(180px,max(90px,20vmin))"
         >
-            <v-img
-                :lazy-src="PLACEHOLDER_HEAD"
-                :src="renderSkinHead(skin?.texture)"
-                aspect-ratio="1"
-            />
+            <SkinHeadImg :skin="skin"/>
         </v-sheet>
     </router-link>
 </template>

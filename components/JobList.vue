@@ -1,9 +1,11 @@
 <template>
     <v-list>
-        <JobStatus v-for="job in queueStore.jobs" :job="job"/>
+        <JobStatus v-for="job in queueStore.jobsSorted" :id="job.id"/>
         <v-list-item v-if="queueStore.jobs.length<=0">
             <v-list-item-title>No jobs in queue</v-list-item-title>
         </v-list-item>
+<!--        <dbg :data="queueStore.jobMap"></dbg>-->
+<!--        <dbg :data="queueStore.jobsSorted.map(j=>j.timestamp)"></dbg>-->
     </v-list>
 </template>
 <script setup lang="ts">

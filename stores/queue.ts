@@ -1,33 +1,39 @@
 import { defineStore } from "pinia";
 import type { JobInfo } from "@mineskin/types";
+import type { JobWithSkin } from "~/types/JobWithSkin";
 
 export const useQueueStore = defineStore('queue', () => {
-    const jobIds = ref<string[]>([]);
-    const jobs = ref<JobInfo[]>([]);
+    const jobMap = ref<Record<string, JobInfo>>({});
     const refreshes = ref<Map<string, number>>(new Map());
 
     const jobsDrawer = ref(false);
 
     let updateTimer: any;
 
-    const {$mineskin,$notify} = useNuxtApp();
+    const {$mineskin, $notify} = useNuxtApp();
+
+    const jobs = computed(() => Array.from(Object.values(jobMap.value)));
+
+    const jobsSorted = computed(() => {
+        return jobs.value.sort((a, b) => {
+            return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
+        });
+    });
 
     const addJob = (job: JobInfo) => {
-        jobIds.value.push(job.id);
-        jobs.value.push(job);
-        checkJobStatusChange(job);
+        const existing = jobMap.value[job.id];
+        if (existing) {
+            job = {
+                ...existing,
+                ...job
+            }
+        }
+        jobMap.value[job.id]=job;
+        checkJobStatusChange(job, existing);
     }
 
     const removeJobId = (jobId: string) => {
-        const index = jobIds.value.indexOf(jobId);
-        if (index > -1) {
-            jobIds.value.splice(index, 1);
-        }
-
-        const jobIndex = jobs.value.findIndex(job => job.id === jobId);
-        if (jobIndex > -1) {
-            jobs.value.splice(jobIndex, 1);
-        }
+        delete jobMap.value[jobId];
     }
 
     const removeJob = (job: JobInfo) => {
@@ -37,8 +43,9 @@ export const useQueueStore = defineStore('queue', () => {
     const refreshJobList = async () => {
         const response = await $mineskin.queue.list();
         if (response.success) {
-            jobIds.value = response.jobs.map(job => job.id);
-            jobs.value = response.jobs;
+            for (const job of response.jobs) {
+                addJob(job);
+            }
         }
 
         if (!updateTimer) {
@@ -49,7 +56,7 @@ export const useQueueStore = defineStore('queue', () => {
     }
 
     const updatePendingJobs = async () => {
-        for (const job of jobs.value) {
+        for (const job of jobs.value.values()) {
             if (job.status === 'waiting' || job.status === 'processing') {
                 const r = refreshes.value.get(job.id);
                 if (r > 5) {
@@ -59,22 +66,18 @@ export const useQueueStore = defineStore('queue', () => {
 
                 const response = await $mineskin.queue.get(job.id);
                 if (response.success) {
-                    const index = jobs.value.findIndex(j => j.id === job.id);
-                    if (index > -1) {
-                        jobs.value[index] = response.job;
-                    }
-                    checkJobStatusChange(response.job, job);
+                    addJob(response.job);
                 }
             }
         }
     }
 
-    const checkJobStatusChange = (now: JobInfo,prev?: JobInfo) => {
-        console.debug(`${now.id} ${prev?.status} -> ${now.status}`);
-        if(prev?.status === now.status) return;
+    const checkJobStatusChange = (now: JobInfo, prev?: JobInfo) => {
+        if (prev?.status === now.status) return;
+        console.debug(`${ now.id } ${ prev?.status } -> ${ now.status }`);
         $notify({
-            text: `Job ${now.id} is now ${now.status}`,
-            color: now.status==='completed'? 'success':now.status==='failed'?'error':'info'
+            text: `Job ${ now.id==='unknown'?'':now.id } is now ${ now.status }`,
+            color: now.status === 'completed' ? 'success' : now.status === 'failed' ? 'error' : 'info'
         });
     }
 
@@ -82,9 +85,11 @@ export const useQueueStore = defineStore('queue', () => {
         return jobs.value.some(job => job.status === 'waiting' || job.status === 'processing');
     });
 
+
     return {
-        jobIds,
+        jobMap,
         jobs,
+        jobsSorted,
         addJob,
         removeJobId,
         removeJob,
@@ -96,6 +101,6 @@ export const useQueueStore = defineStore('queue', () => {
 }, {
     persist: {
         storage: persistedState.localStorage,
-        paths: ['jobs']
+        paths: ['jobMap']
     }
 })

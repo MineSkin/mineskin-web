@@ -2,7 +2,7 @@ import type { Ref } from "vue";
 import type { Maybe } from "~/types/util";
 import type { AuthStatus } from "~/types/auth";
 
-const TOKEN_TIMEOUT = 1000 * 60 * 60 * 6;
+const TOKEN_TIMEOUT = 1000 * 60 * 60 * 1;
 
 export const useAuthStore = defineStore('auth', () => {
     const {$mineskin, $account} = useNuxtApp();
