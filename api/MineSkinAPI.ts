@@ -176,7 +176,7 @@ export class MineSkinAPI {
         }
 
         public async get(){
-            return this.api.request(`${ this.api.BASE }/v2/me`, {
+            return fetch(`${ this.api.BASE }/v2/me`, {
                 credentials: 'include'
             });
         }

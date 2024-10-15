@@ -17,7 +17,7 @@ export const useAuthStore = defineStore('auth', () => {
 
     const checkAuth = async (): Promise<Maybe<AuthStatus>> => {
         console.debug('authStore.checkAuth');
-        const response = await $mineskin.me.get();
+        const response: Response = await $mineskin.me.get();
         console.log(response);
 
         const hasWebCookie = document.cookie.includes('mskweb');
@@ -34,8 +34,6 @@ export const useAuthStore = defineStore('auth', () => {
                 }
             }
         }
-
-
 
         authed.value = response.ok;
         $mineskin.setAuthed(response.ok);
