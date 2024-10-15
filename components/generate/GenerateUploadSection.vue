@@ -1,16 +1,16 @@
 <template>
     <div class="text-center"    >
-        <v-row justify="center" class="mb-2">
+        <v-row justify="center" class="mb-2 flex-0-0">
             UPLOAD
         </v-row>
-        <v-row justify="center" align="center" class="my-2">
+        <v-row justify="center" align="center" class="my-2 flex-0-0">
             <v-sheet
                 rounded
                 border
                 color="transparent"
-                class="pa-2 ma-4"
+                class="pa-2 ma-2"
             >
-                <v-icon size="128">
+                <v-icon size="64">
                     mdi-upload
                 </v-icon>
             </v-sheet>
@@ -21,6 +21,11 @@
             label="UPLOAD"
             prepend-icon="mdi-file"
             />
+        <v-row class="flex-1-1-100" align="end">
+            <v-col>
+                Drag a skin image file here to generate data for it
+            </v-col>
+        </v-row>
 <!--        <v-row justify="center" align="center" class="my-2">-->
 <!--            <v-btn-->
 <!--                color="primary"-->

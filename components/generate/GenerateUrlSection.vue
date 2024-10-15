@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-row justify="center" class="mb-2">
+        <v-row justify="center" class="mb-2 flex-0-0">
             URL
         </v-row>
         <InputList
@@ -10,6 +10,11 @@
             rule="url"
             prepend-icon="mdi-link"
         />
+        <v-row align="end">
+            <v-col>
+                Enter the URL of a skin image you want to generate data for
+            </v-col>
+        </v-row>
 <!--        <v-row justify="center" align="center" class="my-2">-->
 <!--            <v-btn-->
 <!--                color="primary"-->

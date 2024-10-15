@@ -4,7 +4,7 @@
 }
 
 .section-upload, .section-url, .section-user {
-    min-height: 229px;
+    min-height: 180px;
 }
 </style>
 <template>
@@ -27,7 +27,7 @@
                 class="mx-4 section-col"
             >
                 <GenerateUrlSection
-                    class="section-url"
+                    class="section-url d-flex flex-column"
                     v-show="!generateType || generateType === GenerateType.URL"
                     v-model="urls"
                     @continue="cont"
@@ -39,7 +39,7 @@
                 :cols="!generateType?'':generateType === GenerateType.UPLOAD ? 4 : 4"
             >
                 <GenerateUploadSection
-                    class="section-upload"
+                    class="section-upload d-flex flex-column"
                     v-show="!generateType || generateType === GenerateType.UPLOAD"
                     v-model="uploadFiles"
                     @continue="cont"
@@ -51,7 +51,7 @@
                 class="mx-4 section-col"
             >
                 <GenerateUserSection
-                    class="section-user"
+                    class="section-user d-flex flex-column"
                     v-show="!generateType || generateType === GenerateType.USER"
                     v-model="users"
                     @continue="cont"
