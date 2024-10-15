@@ -18,6 +18,8 @@
     </div>
 </template>
 <script setup lang="ts">
+import { useDebounceFn } from '@vueuse/core'
+
 const items = defineModel<string[]>(['']);
 const props = defineProps<{
     label?: string;
@@ -43,10 +45,12 @@ const rules = computed(() => {
     }
 })
 
-function change(index: number, value: string) {
+function change0(index: number, value: string) {
     console.log(index, value);
     items.value[index] = value;
 }
+
+const change = useDebounceFn(change0, 500);
 
 function canAdd(index: number) {
     return index === items.value.length - 1 && items.value[index] !== '';

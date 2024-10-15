@@ -58,8 +58,16 @@
         <v-divider class="my-4"/>
         <v-expand-transition>
             <v-row v-show="generateType" class="my-2">
+                <v-col>
+                    <SimplePreview :user="users[0]" :url="urls[0]" :file="uploadFiles[0]"/>
+                </v-col>
                 <v-col class="text-center">
-                    [PREVIEW]
+                    <v-btn
+                        color="primary"
+                        text="Generate"
+                        size="x-large"
+                        @click="cont"
+                    ></v-btn>
                 </v-col>
                 <v-col>
                     <v-row class="mb-2">
@@ -93,13 +101,6 @@
                 </v-col>
             </v-row>
         </v-expand-transition>
-        <v-expand-transition>
-            <v-row v-show="generateType" class="my-2">
-                <v-btn
-                    text="Generate"
-                    @click="cont"></v-btn>
-            </v-row>
-        </v-expand-transition>
         <v-row>
             <dbg :data="{users,uploadFiles,urls,generateType}"/>
         </v-row>
@@ -112,6 +113,7 @@ import GenerateUrlSection from "~/components/generate/GenerateUrlSection.vue";
 import GenerateUploadSection from "~/components/generate/GenerateUploadSection.vue";
 import { useQueueStore } from "~/stores/queue";
 import type { GenerateJobResponse } from "~/types/GenerateJobResponse";
+import SimplePreview from "~/components/SimplePreview.vue";
 
 const {$mineskin} = useNuxtApp();
 

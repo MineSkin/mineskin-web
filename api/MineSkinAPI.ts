@@ -6,6 +6,7 @@ import type { SkinListResponse } from "~/types/SkinListResponse";
 import type { GenerateJobResponse } from "~/types/GenerateJobResponse";
 import type { JobListResponse } from "~/types/JobListResponse";
 import { useAuthStore } from "#imports";
+import type { UserValidation } from "~/types/UserValidation";
 
 const INIT: RequestInit = {
     headers: {
@@ -160,6 +161,19 @@ export class MineSkinAPI {
         public async get(uuid: string): Promise<SkinResponse> {
             return this.api.request(`${ this.api.BASE }/v2/skins/${ uuid }`, INIT)
                 .then(res => this.api.handleResponse(res));
+        }
+
+    }(this);
+
+    public validate = new class {
+
+        constructor(readonly api: MineSkinAPI) {
+        }
+
+        public async name(name: string): Promise<UserValidation> {
+            //TODO: update this route
+            return fetch(`${ this.api.BASE }/validate/name/${ name }`, INIT)
+                .then(res => res.json());
         }
 
     }(this);

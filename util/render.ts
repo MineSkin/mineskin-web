@@ -16,3 +16,7 @@ export function renderSkinTexture(texture: string, options: { overlay: boolean, 
     params.set('url', `http://textures.minecraft.net/texture/${ texture }`)
     return `https://render.mineskin.org/render?${ params.toString() }`
 }
+
+export function textureUrlForUuid(uuid: string) {
+    return `https://crafatar.com/skins/${ uuid }`;
+}
