@@ -126,7 +126,7 @@ import { useQueueStore } from "~/stores/queue";
 import type { GenerateJobResponse } from "~/types/GenerateJobResponse";
 import SimplePreview from "~/components/SimplePreview.vue";
 
-const {$mineskin} = useNuxtApp();
+const {$mineskin, $notify} = useNuxtApp();
 
 const queueStore = useQueueStore();
 
@@ -164,7 +164,18 @@ const onDragEnd = (e: DragEvent) => {
 function onDrop(e: DragEvent) {
     console.log(e.type, e);
     dragging.value = false;
-    uploadFiles.value.push(...Array.from(e.dataTransfer.files));
+    if (!e.dataTransfer) return;
+    const originalFiles = Array.from(e.dataTransfer.files);
+    console.log(originalFiles);
+    const files = originalFiles.filter(f => f.type.startsWith('image/png'));
+    if (files.length <= 0) {
+        $notify({
+            text: 'No valid image files found',
+            color: 'warning'
+        })
+        return;
+    }
+    uploadFiles.value.push(...files);
 }
 
 function visibilityProps(item: SkinVisibility2) {
