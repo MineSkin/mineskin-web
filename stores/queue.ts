@@ -10,11 +10,12 @@ export const useQueueStore = defineStore('queue', () => {
 
     let updateTimer: any;
 
-    const {$mineskin} = useNuxtApp();
+    const {$mineskin,$notify} = useNuxtApp();
 
     const addJob = (job: JobInfo) => {
         jobIds.value.push(job.id);
         jobs.value.push(job);
+        checkJobStatusChange(job);
     }
 
     const removeJobId = (jobId: string) => {
@@ -62,9 +63,19 @@ export const useQueueStore = defineStore('queue', () => {
                     if (index > -1) {
                         jobs.value[index] = response.job;
                     }
+                    checkJobStatusChange(response.job, job);
                 }
             }
         }
+    }
+
+    const checkJobStatusChange = (now: JobInfo,prev?: JobInfo) => {
+        console.debug(`${now.id} ${prev?.status} -> ${now.status}`);
+        if(prev?.status === now.status) return;
+        $notify({
+            text: `Job ${now.id} is now ${now.status}`,
+            color: now.status==='completed'? 'success':now.status==='failed'?'error':'info'
+        });
     }
 
     const hasPendingJobs = computed(() => {

@@ -152,6 +152,7 @@
                             text="Generate"
                             size="x-large"
                             @click="generate"
+                            :disabled="generating"
                         ></v-btn>
                     </v-row>
                     <v-row justify="center" class="mt-2 text-center">
@@ -315,6 +316,7 @@ function reset() {
     name.value = '';
     visibility.value = SkinVisibility2.PUBLIC; // TODO: persist preferred visibility
     variant.value = SkinVariant.UNKNOWN;
+    generating.value = false;
 }
 
 async function generate() {
