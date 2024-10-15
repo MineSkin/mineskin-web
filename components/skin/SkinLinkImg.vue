@@ -1,11 +1,11 @@
 <template>
-    <router-link :to="skin?('/'+skin.uuid):undefined">
+    <nuxt-link :to="skin?('/'+skin.uuid):undefined">
         <v-sheet
             width="min(180px,max(90px,20vmin))"
         >
             <SkinHeadImg :skin="skin"/>
         </v-sheet>
-    </router-link>
+    </nuxt-link>
 </template>
 <script setup lang="ts">
 

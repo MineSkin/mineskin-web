@@ -1,9 +1,9 @@
 <template>
     <v-container>
         <h2>
-            <router-link to="/gallery" class="text-white">
+            <nuxt-link to="/gallery" class="text-white">
                 <v-icon icon="mdi-arrow-left" class="mx-2"/>
-            </router-link>
+            </nuxt-link>
             {{ skinName(skin) || 'Skin' }}
         </h2>
         <v-row class="mt-1">

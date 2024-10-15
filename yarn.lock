@@ -3806,6 +3806,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"flagsmith@npm:^7.0.0":
+  version: 7.0.0
+  resolution: "flagsmith@npm:7.0.0"
+  checksum: 10c0/763b9d5d605c58dd1372fef585b03658f8fc368b851421f3361002a002ca45b4915dfb81bd02bd9eb080458acc79575aa8c69b43b63b45c1e8a5025cd11ff49c
+  languageName: node
+  linkType: hard
+
 "flatted@npm:^3.3.1":
   version: 3.3.1
   resolution: "flatted@npm:3.3.1"
@@ -5423,6 +5430,7 @@ __metadata:
     "@pinia-plugin-persistedstate/nuxt": "npm:^1.2.1"
     "@pinia/nuxt": "npm:^0.5.5"
     "@vueuse/core": "npm:^11.1.0"
+    flagsmith: "npm:^7.0.0"
     nuxt: "npm:^3.13.0"
     pinia: "npm:^2.2.4"
     vue: "npm:latest"

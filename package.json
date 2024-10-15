@@ -14,6 +14,7 @@
     "@pinia-plugin-persistedstate/nuxt": "^1.2.1",
     "@pinia/nuxt": "^0.5.5",
     "@vueuse/core": "^11.1.0",
+    "flagsmith": "^7.0.0",
     "nuxt": "^3.13.0",
     "pinia": "^2.2.4",
     "vue": "latest",

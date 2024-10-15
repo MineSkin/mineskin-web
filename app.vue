@@ -1,4 +1,9 @@
 <style>
+.app-bar-link {
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+}
 .img-link{
     width: 100%;
     height: 100%;
@@ -10,10 +15,19 @@
             <Snackbars/>
             <v-app-bar density="comfortable" class="px-4">
                 <v-app-bar-title>
-                    MineSkin
-                    <v-btn icon>
-                        <v-icon>mdi-magnify</v-icon>
-                    </v-btn>
+                  <nuxt-link class="app-bar-link" to="/">
+                      MineSkin
+                      <v-chip
+                          density="compact"
+                          :color="config.public.isDev ? 'warning' :'secondary'"
+                          variant="flat"
+                      >
+                          {{ config.public.isDev ? 'Dev Mode' : 'Beta' }}
+                      </v-chip>
+                  </nuxt-link>
+                <v-btn icon>
+                    <v-icon>mdi-magnify</v-icon>
+                </v-btn>
                 </v-app-bar-title>
 
                 <v-spacer></v-spacer>
@@ -90,7 +104,71 @@
 import { useAuthStore } from "~/stores/auth";
 import { useQueueStore } from "~/stores/queue";
 
-const runtimeConfig = useRuntimeConfig();
+const config = useRuntimeConfig();
+
+
+
+useHead({
+    script: [
+        {
+
+            src: '//www.termsfeed.com/public/cookie-consent/4.1.0/cookie-consent.js',
+            tagPosition: 'bodyOpen'
+        },
+        {
+            innerHTML: `
+        var runCookieConsent = function () {
+            if(!window.cookieconsent) {
+                console.error('CookieConsent not loaded');
+                setTimeout(runCookieConsent, 1000);
+                return;
+            }
+            cookieconsent.run({
+                "notice_banner_type":"simple",
+                "consent_type":"express",
+                "palette":"dark",
+                "language":"en",
+                "page_load_consent_levels":["strictly-necessary"],
+                "notice_banner_reject_button_hide":false,
+                "preferences_center_close_button_hide":false,
+                "page_refresh_confirmation_buttons":false,
+                "website_name":"MineSkin"
+            });
+        };
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', runCookieConsent);
+        } else {
+            runCookieConsent();
+        }
+    `,
+            tagPosition: 'bodyOpen'
+        },
+
+        {
+            src: 'https://www.googletagmanager.com/gtag/js?id=G-5GVV9RF5HZ',
+            async: true,
+            'data-cookie-consent': 'tracking',
+            tagPosition: 'bodyClose'
+        },
+        {
+            innerHTML: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-5GVV9RF5HZ');
+            `,
+            'data-cookie-consent': 'tracking',
+            tagPosition: 'bodyClose'
+        }
+    ],
+    noscript: [
+        {
+            innerHTML: 'Free cookie consent management tool by <a href="https://www.termsfeed.com/">TermsFeed</a>',
+            tagPosition: 'bodyClose'
+        }
+    ]
+}, {mode: 'client'})
 
 const router = useRouter();
 // const showNav = computed(()=>{

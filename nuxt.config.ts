@@ -8,6 +8,8 @@ export default defineNuxtConfig({
         '@/plugins/notifier',
         '@/plugins/mineskin',
         '@/plugins/account',
+        '@/plugins/flagsmith',
+        '@/plugins/gtag',
     ],
     modules: [
         'vuetify-nuxt-module',
