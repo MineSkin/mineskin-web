@@ -81,33 +81,39 @@
                     ></v-btn>
                 </v-col>
                 <v-col>
-                    <v-row class="mb-2">
-                        <v-text-field
-                            label="Name (optional)"
-                            v-model="name"
-                            hint="Optional name for this skin"
-                            persistent-hint
-                        />
+                    <v-row>
+                      <v-col>
+                          <v-text-field
+                              label="Name (optional)"
+                              v-model="name"
+                              hint="Optional name for this skin"
+                              persistent-hint
+                          />
+                      </v-col>
                     </v-row>
-                    <v-row class="mb-2">
-                        <v-select
-                            label="Visibility"
-                            v-model="visibility"
-                            :items="Object.values(SkinVisibility2)"
-                            :item-props="visibilityProps"
-                            hint="Visibility of the skin"
-                            persistent-hint
-                        />
+                    <v-row>
+                     <v-col>
+                         <v-select
+                             label="Visibility"
+                             v-model="visibility"
+                             :items="Object.values(SkinVisibility2)"
+                             :item-props="visibilityProps"
+                             hint="Visibility of the skin"
+                             persistent-hint
+                         />
+                     </v-col>
                     </v-row>
-                    <v-row class="mb-2">
-                        <v-select
-                            label="Variant"
-                            v-model="variant"
-                            :items="Object.values(SkinVariant)"
-                            :item-props="variantProps"
-                            hint="Variant of the skin. Use unknown for auto-detect"
-                            persistent-hint
-                        />
+                    <v-row>
+                      <v-col>
+                          <v-select
+                              label="Variant"
+                              v-model="variant"
+                              :items="Object.values(SkinVariant)"
+                              :item-props="variantProps"
+                              hint="Variant of the skin. Use unknown for auto-detect"
+                              persistent-hint
+                          />
+                      </v-col>
                     </v-row>
                 </v-col>
             </v-row>
