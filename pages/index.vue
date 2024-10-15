@@ -21,6 +21,7 @@
         </v-row>
         <v-btn @click="testNotify()">Notify Test</v-btn>
         <JobList/> <!--TODO: move-->
+        <dbg :data="authStore.user"/>
     </v-container>
 </template>
 <script setup lang="ts">
@@ -28,8 +29,11 @@ import GeneratePanel from "~/components/GeneratePanel.vue";
 import { useNuxtApp, useState } from "#app";
 import type { SnackbarConfig } from "~/types/SnackbarConfig";
 import AdWrappper from "~/components/AdWrappper.vue";
+import { useAuthStore } from "~/stores/auth";
 
 const {$notify} = useNuxtApp();
+
+const authStore = useAuthStore();
 
 
 function testNotify() {

@@ -28,6 +28,7 @@ export class MineSkinAPI {
 
     setAuthed(authed: boolean) {
         this.authed = authed;
+        console.debug('API authed', this.authed);
     }
 
     public generate = new class {

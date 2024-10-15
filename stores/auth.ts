@@ -17,6 +17,21 @@ export const useAuthStore = defineStore('auth', () => {
 
     const checkAuth = async (): Promise<Maybe<AuthStatus>> => {
         console.debug('authStore.checkAuth');
+
+        const cookie = getWebTokenCookie();
+        if (cookie) {
+            const payload = parseWebAccessToken(cookie);
+            if (payload) {
+                console.debug(payload);
+                _user.value = {
+                    user: payload.user,
+                    email: payload.email,
+                    grants: payload.grants,
+                    picture: payload.picture
+                };
+            }
+        }
+
         const response: Response = await $mineskin.me.get();
         console.log(response);
 
@@ -42,6 +57,7 @@ export const useAuthStore = defineStore('auth', () => {
         if (success) {
             const body = await response.json();
             _user.value = {
+                ...user.value||{},
                 ...body,
                 authenticated: success
             };
@@ -73,6 +89,21 @@ export const useAuthStore = defineStore('auth', () => {
         return false;
     }
 
+    const getWebTokenCookie = (): Maybe<string> => {
+        return document.cookie.split('; ').find(row => row.startsWith('mskweb'))?.split('=')[1];
+    }
+
+    const parseWebAccessToken = (token: string): any => {
+        // https://stackoverflow.com/a/38552302/6257838
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function (c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+        return JSON.parse(jsonPayload);
+    }
+
+    const user = computed(() => _user.value);
     const userId = computed(() => _user.value?.id);
     const grants = computed(() => _user.value?.grants);
 
@@ -84,6 +115,7 @@ export const useAuthStore = defineStore('auth', () => {
         refreshWebAccessToken,
         checkAuth,
         userId,
+        user,
         grants
     }
 }, {

@@ -1,3 +1,9 @@
+<style>
+.img-link{
+    width: 100%;
+    height: 100%;
+}
+</style>
 <template>
     <NuxtLayout>
         <v-app>
@@ -22,19 +28,47 @@
                 <v-divider vertical class="mx-4 my-2"/>
 
                 <template v-slot:append>
-                    <v-btn rounded @click="jobsDrawer = !jobsDrawer">
-                        <v-badge
+                    <v-btn icon @click="jobsDrawer = !jobsDrawer">
+                        <component :is="queueStore?.jobs?.length>0?'v-badge':'div'"
                             :content="queueStore?.jobs?.length"
-                            floating
                             location="bottom right"
                         >
                             <v-icon icon="mdi-list-status"></v-icon>
-                        </v-badge>
+                        </component>
                         <v-tooltip
                             activator="parent"
                             location="bottom"
-                        >Show Jobs</v-tooltip>
+                        >
+                            Show Jobs
+                        </v-tooltip>
                     </v-btn>
+
+
+                    <v-avatar
+                        class="ml-2"
+                        color="info"
+                    >
+                        <a  v-if="authStore.authed" class="img-link" href="https://account.mineskin.org">
+                            <v-img :src="authStore.user?.picture" alt="User Avatar"></v-img>
+                            <v-tooltip
+                                activator="parent"
+                                location="bottom"
+                            >
+                                Go to Account
+                            </v-tooltip>
+                        </a>
+                        <v-btn v-else  icon>
+                            <a class="img-link text-white" href="https://account.mineskin.org">
+                                <v-icon>mdi-account</v-icon>
+                                <v-tooltip
+                                    activator="parent"
+                                    location="bottom"
+                                >
+                                    Sign In
+                                </v-tooltip>
+                            </a>
+                        </v-btn>
+                    </v-avatar>
                 </template>
 
             </v-app-bar>
@@ -52,7 +86,11 @@
     </NuxtLayout>
 </template>
 <script setup lang="ts">
-import { useAuthStore, useQueueStore } from "#imports";
+
+import { useAuthStore } from "~/stores/auth";
+import { useQueueStore } from "~/stores/queue";
+
+const runtimeConfig = useRuntimeConfig();
 
 const router = useRouter();
 // const showNav = computed(()=>{
@@ -64,7 +102,7 @@ const queueStore = useQueueStore();
 
 const jobsDrawer = ref(false);
 
-onMounted(() => {
+onBeforeMount(() => {
     authStore.checkAuth();
 })
 </script>
