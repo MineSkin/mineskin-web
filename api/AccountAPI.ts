@@ -23,9 +23,18 @@ export class AccountAPI {
         }
 
         public async refreshWebAccessToken(): Promise<Maybe<Response>> {
-            return fetch(`${ this.api.BASE }/auth/refresh`, {
+            return fetch(`${ this.api.BASE }/auth/tokens/web/refresh`, {
                 ...INIT,
-                method: 'POST'
+                method: 'POST',
+                credentials: 'include'
+            })
+        }
+
+        public async refreshApiAccessToken(): Promise<Maybe<Response>> {
+            return fetch(`${ this.api.BASE }/auth/tokens/api/refresh`, {
+                ...INIT,
+                method: 'POST',
+                credentials: 'include'
             })
         }
 

@@ -5,6 +5,7 @@ import type { SkinResponse } from "~/types/SkinResponse";
 import type { SkinListResponse } from "~/types/SkinListResponse";
 import type { GenerateJobResponse } from "~/types/GenerateJobResponse";
 import type { JobListResponse } from "~/types/JobListResponse";
+import { useAuthStore } from "#imports";
 
 const INIT: RequestInit = {
     headers: {
@@ -17,9 +18,15 @@ export class MineSkinAPI {
 
     BASE: string = '';
 
+    authed: boolean = false;
+
     constructor(readonly nuxtApp: any, readonly config: RuntimeConfig) {
         this.BASE = config.public.hosts.mineskin;
-        console.debug('API base', this.BASE)
+        console.debug('API base', this.BASE);
+    }
+
+    setAuthed(authed: boolean) {
+        this.authed = authed;
     }
 
     public generate = new class {
@@ -39,7 +46,7 @@ export class MineSkinAPI {
             if (options.name) {
                 formData.append('name', options.name);
             }
-            return fetch(`${ this.api.BASE }/v2/generate`, {
+            return this.api.request(`${ this.api.BASE }/v2/generate`, {
                 headers: {
                 },
                 method: 'POST',
@@ -61,7 +68,7 @@ export class MineSkinAPI {
             if (options.name) {
                 body['name'] = options.name;
             }
-            return fetch(`${ this.api.BASE }/v2/generate`, {
+            return this.api.request(`${ this.api.BASE }/v2/generate`, {
                 ...INIT,
                 method: 'POST',
                 body: JSON.stringify(body)
@@ -88,7 +95,7 @@ export class MineSkinAPI {
             if (options.name) {
                 formData.append('name', options.name);
             }
-            return fetch(`${ this.api.BASE }/v2/queue`, {
+            return this.api.request(`${ this.api.BASE }/v2/queue`, {
                 headers: {
                 },
                 method: 'POST',
@@ -110,7 +117,7 @@ export class MineSkinAPI {
             if (options.name) {
                 body['name'] = options.name;
             }
-            return fetch(`${ this.api.BASE }/v2/queue`, {
+            return this.api.request(`${ this.api.BASE }/v2/queue`, {
                 ...INIT,
                 method: 'POST',
                 body: JSON.stringify(body)
@@ -119,12 +126,12 @@ export class MineSkinAPI {
         }
 
         public async list(): Promise<JobListResponse> {
-            return fetch(`${ this.api.BASE }/v2/queue`, INIT)
+            return this.api.request(`${ this.api.BASE }/v2/queue`, INIT)
                 .then(res => this.api.handleResponse(res));
         }
 
         public async get(jobId: string): Promise<SkinResponse|GenerateJobResponse> {
-            return fetch(`${ this.api.BASE }/v2/queue/${ jobId }?t=${Math.round(Date.now()/1000)}`, INIT)
+            return this.api.request(`${ this.api.BASE }/v2/queue/${ jobId }?t=${Math.round(Date.now()/1000)}`, INIT)
                 .then(res => this.api.handleResponse(res));
         }
 
@@ -146,12 +153,12 @@ export class MineSkinAPI {
             if (filter) {
                 params.set('filter', filter);
             }
-            return fetch(`${ this.api.BASE }/v2/skins?${ params.toString() }`, INIT)
+            return this.api.request(`${ this.api.BASE }/v2/skins?${ params.toString() }`, INIT)
                 .then(res => this.api.handleResponse(res));
         }
 
         public async get(uuid: string): Promise<SkinResponse> {
-            return fetch(`${ this.api.BASE }/v2/skins/${ uuid }`, INIT)
+            return this.api.request(`${ this.api.BASE }/v2/skins/${ uuid }`, INIT)
                 .then(res => this.api.handleResponse(res));
         }
 
@@ -163,10 +170,26 @@ export class MineSkinAPI {
         }
 
         public async get(){
-            return fetch(`${ this.api.BASE }/v2/me`, INIT);
+            return this.api.request(`${ this.api.BASE }/v2/me`, {
+                credentials: 'include'
+            });
         }
 
     }(this);
+
+    private async request<T extends MineSkinResponse>(url: string, init: RequestInit): Promise<T> {
+        const baseInit = {
+            ...INIT
+        };
+        if (this.authed) {
+            baseInit.credentials = init?.credentials ?? 'include';
+        }
+        return fetch(url, {
+            ...baseInit,
+            ...init
+        })
+            .then(res => this.handleResponse(res));
+    }
 
     private async handleResponse<T extends MineSkinResponse>(res: Response): Promise<T> {
         const json: MineSkinResponse = await res.json();
