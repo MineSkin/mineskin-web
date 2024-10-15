@@ -23,8 +23,6 @@
 </template>
 <script setup lang="ts">
 import { useNuxtApp } from "#app";
-import { renderSkinHead } from "~/util/render";
-import SkinLinkImg from "~/components/SkinLinkImg.vue";
 
 const router = useRouter()
 

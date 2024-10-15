@@ -36,10 +36,11 @@
     </v-card>
 </template>
 <script setup lang="ts">
-import SkinCodeInstructions from "~/components/instructions/SkinCodeInstructions.vue";
-import PluginInstructions from "~/components/instructions/PluginInstructions.vue";
-import VanillaInstructions from "~/components/instructions/VanillaInstructions.vue";
 import type { SkinInfo2 } from "@mineskin/types";
+import { ref } from "vue";
+import SkinCodeInstructions from "../instructions/SkinCodeInstructions.vue";
+import PluginInstructions from "../instructions/PluginInstructions.vue";
+import VanillaInstructions from "../instructions/VanillaInstructions.vue";
 
 const props = defineProps<{
     skin: SkinInfo2;

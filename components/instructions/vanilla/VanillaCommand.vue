@@ -12,11 +12,10 @@
 </template>
 <script setup lang="ts">
 import type { SkinInfo2 } from "@mineskin/types";
-import VanillaFormat12 from "~/components/instructions/vanilla/VanillaFormat12.vue";
-import VanillaFormat13 from "~/components/instructions/vanilla/VanillaFormat13.vue";
-import VanillaFormat16 from "~/components/instructions/vanilla/VanillaFormat16.vue";
 import { addUuidDashes, formatInt32UUID, getInt32ForUUID, skinName } from "../../../util/skin";
-import InstructionsPre from "~/components/instructions/InstructionsPre.vue";
+import VanillaFormat12 from "./VanillaFormat12.vue";
+import VanillaFormat13 from "./VanillaFormat13.vue";
+import VanillaFormat16 from "./VanillaFormat16.vue";
 
 const props = defineProps<{
     skin: SkinInfo2;

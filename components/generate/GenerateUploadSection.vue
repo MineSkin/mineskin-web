@@ -42,7 +42,8 @@
 </template>
 <script setup lang="ts">
 import '~/assets/css/misc.css'
-import FileList from "~/components/FileList.vue";
+import { computed } from "vue";
+import FileList from "./list/FileList.vue";
 
 const uploadFiles = defineModel<File[]>([]);
 const hasFile = computed(() => uploadFiles.value.length > 0);

@@ -10,8 +10,9 @@
     </div>
 </template>
 <script setup lang="ts">
-import { fileAsBase64, renderSkinBody, renderSkinHead, textureUrlForUuid } from "~/util/render";
 import { computedAsync } from "@vueuse/core";
+import { fileAsBase64, renderSkinHead, textureUrlForUuid } from "../../util/render";
+import { computed } from "vue";
 
 const props = defineProps<{
     url?: string;

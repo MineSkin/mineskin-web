@@ -5,9 +5,9 @@
 </template>
 <script setup lang="ts">
 import type { SkinInfo2 } from "@mineskin/types";
-import CitizensFormat from "~/components/instructions/plugin/CitizensFormat.vue";
-import TaterzensFormat from "~/components/instructions/plugin/TaterzensFormat.vue";
-import InstructionsPre from "~/components/instructions/InstructionsPre.vue";
+import { computed } from "vue";
+import CitizensFormat from "./CitizensFormat.vue";
+import TaterzensFormat from "./TaterzensFormat.vue";
 
 const props = defineProps<{
     skin: SkinInfo2;

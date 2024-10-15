@@ -61,9 +61,9 @@
     </v-card>
 </template>
 <script setup lang="ts">
-import { renderSkinBody } from "~/util/render";
 import type { Maybe, SkinIdAndTexture, SkinInfo2, ValueAndSignature } from "@mineskin/types";
-import { PLACEHOLDER_HEAD } from "~/util/skin";
+import CopyTextField from "./CopyTextField.vue";
+import { computed } from "vue";
 const props = defineProps<{
     skin: SkinInfo2;
 }>();

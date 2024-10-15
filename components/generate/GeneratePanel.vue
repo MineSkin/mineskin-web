@@ -177,13 +177,13 @@
 <script setup lang="ts">
 
 import { GenerateType, type Maybe, SkinVariant, SkinVisibility2 } from "@mineskin/types";
-import GenerateUrlSection from "~/components/generate/GenerateUrlSection.vue";
-import GenerateUploadSection from "~/components/generate/GenerateUploadSection.vue";
-import { useQueueStore } from "~/stores/queue";
-import type { GenerateJobResponse } from "~/types/GenerateJobResponse";
-import SimplePreview from "~/components/SimplePreview.vue";
-import { sleep } from "~/util/misc";
-import ActionLink from "~/components/ActionLink.vue";
+import { useNuxtApp } from "nuxt/app";
+import { useQueueStore } from "../../stores/queue";
+import { computed, ref } from "vue";
+import ActionLink from "../ActionLink.vue";
+import GenerateUserSection from "./GenerateUserSection.vue";
+import GenerateUploadSection from "./GenerateUploadSection.vue";
+import GenerateUrlSection from "./GenerateUrlSection.vue";
 
 const {$mineskin, $notify} = useNuxtApp();
 

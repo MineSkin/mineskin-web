@@ -10,9 +10,8 @@
     </router-link>
 </template>
 <script setup lang="ts">
-import { renderSkinHead } from "~/util/render";
-import type { ListedSkin } from "~/types/SkinListResponse";
-import { PLACEHOLDER_HEAD } from "~/util/skin";
+import SkinHeadImg from "../SkinHeadImg.vue";
+import type { ListedSkin } from "../../types/SkinListResponse";
 
 const props = defineProps<{
     skin: ListedSkin

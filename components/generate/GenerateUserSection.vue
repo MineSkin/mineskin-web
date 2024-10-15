@@ -30,7 +30,8 @@
     </div>
 </template>
 <script setup lang="ts">
-import { textureUrlForUuid } from "~/util/render";
+
+import { textureUrlForUuid } from "../../util/render";
 
 const users = defineModel<string[]>(['']);
 const hasUser = computed(() => users.value.filter(user=>user.length>0).length > 0);

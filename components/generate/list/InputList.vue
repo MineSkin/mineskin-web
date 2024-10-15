@@ -22,6 +22,7 @@
 </template>
 <script setup lang="ts">
 import { useDebounceFn } from '@vueuse/core'
+import InputListRow from "./InputListRow.vue";
 
 const items = defineModel<string[]>(['']);
 const props = defineProps<{

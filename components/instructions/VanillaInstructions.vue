@@ -27,8 +27,8 @@ pre.instructions{
 </template>
 <script setup lang="ts">
 import type { SkinInfo2 } from "@mineskin/types";
-import VanillaCommand from "~/components/instructions/vanilla/VanillaCommand.vue";
-import PluginCommand from "~/components/instructions/plugin/PluginCommand.vue";
+import { ref } from "vue";
+import VanillaCommand from "./vanilla/VanillaCommand.vue";
 const props = defineProps<{
     skin: SkinInfo2;
 }>();

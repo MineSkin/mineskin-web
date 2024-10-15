@@ -20,7 +20,7 @@
 </template>
 <script setup lang="ts">
 import '~/assets/css/img.css'
-import FileListRow from "~/components/FileListRow.vue";
+import FileListRow from "./FileListRow.vue";
 const items = defineModel<File[]>([]);
 const props = defineProps<{
     label?: string;

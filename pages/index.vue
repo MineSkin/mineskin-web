@@ -25,11 +25,10 @@
     </v-container>
 </template>
 <script setup lang="ts">
-import GeneratePanel from "~/components/GeneratePanel.vue";
 import { useNuxtApp, useState } from "#app";
-import type { SnackbarConfig } from "~/types/SnackbarConfig";
 import AdWrappper from "~/components/AdWrappper.vue";
 import { useAuthStore } from "~/stores/auth";
+import LatestSkinsPreviewList from "~/components/skin/LatestSkinsPreviewList.vue";
 
 const {$notify} = useNuxtApp();
 

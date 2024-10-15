@@ -22,7 +22,8 @@
     </v-sheet>
 </template>
 <script setup lang="ts">
-import { useLazyAsyncData } from "#app";
+
+import { useLazyAsyncData, useNuxtApp } from "nuxt/app";
 
 const {$mineskin} = useNuxtApp();
 

@@ -11,10 +11,10 @@
 </template>
 <script setup lang="ts">
 import type { SkinInfo2 } from "@mineskin/types";
-import CodeFormatPaper from "~/components/instructions/code/CodeFormatPaper.vue";
 import { addUuidDashes, skinName } from "../../../util/skin";
-import CodeFormatMojang from "~/components/instructions/code/CodeFormatMojang.vue";
-import InstructionsPre from "~/components/instructions/InstructionsPre.vue";
+import CodeFormatPaper from "./CodeFormatPaper.vue";
+import CodeFormatMojang from "./CodeFormatMojang.vue";
+import { computed } from "vue";
 
 const props = defineProps<{
     skin: SkinInfo2;

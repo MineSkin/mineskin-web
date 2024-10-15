@@ -8,9 +8,10 @@
     </router-link>
 </template>
 <script setup lang="ts">
-import { renderSkinHead } from "~/util/render";
-import type { ListedSkin } from "~/types/SkinListResponse";
-import { PLACEHOLDER_HEAD } from "~/util/skin";
+
+import { useRouter } from "nuxt/app";
+import type { ListedSkin } from "../../types/SkinListResponse";
+import SkinHeadImg from "../SkinHeadImg.vue";
 
 const router = useRouter();
 
