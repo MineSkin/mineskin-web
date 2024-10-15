@@ -8,7 +8,8 @@
                 rounded
                 border
                 color="transparent"
-                class="pa-2 ma-2"
+                class="pa-2 ma-2 clickable"
+                @click="showFilePicker()"
             >
                 <v-icon size="64">
                     mdi-upload
@@ -40,19 +41,20 @@
     </div>
 </template>
 <script setup lang="ts">
+import '~/assets/css/misc.css'
 import FileList from "~/components/FileList.vue";
 
 const uploadFiles = defineModel<File[]>([]);
 const hasFile = computed(() => uploadFiles.value.length > 0);
-const emit = defineEmits(['continue']);
 
-function cont(){
-    if(!hasFile.value) return;
-    emit('continue');
-}
+const emit = defineEmits(['pick']);
 
 function fileToUrl(file: File): string {
     return URL.createObjectURL(file);
+}
+
+function showFilePicker() {
+    emit('pick');
 }
 
 </script>

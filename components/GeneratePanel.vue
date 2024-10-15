@@ -49,7 +49,7 @@
                     :class="{'d-flex':!generateType || generateType === GenerateType.UPLOAD}"
                     v-show="!generateType || generateType === GenerateType.UPLOAD"
                     v-model="uploadFiles"
-                    @continue="cont"
+                    @pick="showFilePicker()"
                 />
             </v-col>
             <v-divider vertical v-show="!generateType"/>
@@ -112,9 +112,9 @@
                 </v-col>
             </v-row>
         </v-expand-transition>
-        <v-row>
-            <dbg :data="{users,uploadFiles,urls,generateType}"/>
-        </v-row>
+<!--        <v-row>-->
+<!--            <dbg :data="{users,uploadFiles,urls,generateType}"/>-->
+<!--        </v-row>-->
     </v-sheet>
 </template>
 <script setup lang="ts">
@@ -165,9 +165,26 @@ function onDrop(e: DragEvent) {
     console.log(e.type, e);
     dragging.value = false;
     if (!e.dataTransfer) return;
-    const originalFiles = Array.from(e.dataTransfer.files);
-    console.log(originalFiles);
-    const files = originalFiles.filter(f => f.type.startsWith('image/png'));
+    const files = Array.from(e.dataTransfer.files);
+    console.log(files);
+    collectUploadedFiles(files);
+}
+
+function showFilePicker() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/png';
+    input.multiple = true;
+    input.onchange = (e) => {
+        if (!input.files) return;
+        collectUploadedFiles(Array.from(input.files));
+    };
+    input.click();
+}
+
+
+function collectUploadedFiles(files: File[]) {
+    const filtered = files.filter(f => f.type.startsWith('image/png'));
     if (files.length <= 0) {
         $notify({
             text: 'No valid image files found',
@@ -175,8 +192,9 @@ function onDrop(e: DragEvent) {
         })
         return;
     }
-    uploadFiles.value.push(...files);
+    uploadFiles.value.push(...filtered);
 }
+
 
 function visibilityProps(item: SkinVisibility2) {
     switch (item) {
