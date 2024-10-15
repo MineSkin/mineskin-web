@@ -64,6 +64,8 @@
 import type { Maybe, SkinIdAndTexture, SkinInfo2, ValueAndSignature } from "@mineskin/types";
 import CopyTextField from "./CopyTextField.vue";
 import { computed } from "vue";
+import { renderSkinBody } from "~/util/render";
+import { PLACEHOLDER_HEAD } from "~/util/skin";
 const props = defineProps<{
     skin: SkinInfo2;
 }>();
