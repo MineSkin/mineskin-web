@@ -4,10 +4,13 @@
 }
 </style>
 <template>
-    <v-img class="preview" aspect-ratio="1" :src="texture"></v-img>
+    <div>
+        <v-img class="preview" aspect-ratio="1" :src="texture"></v-img>
+<!--        <v-img class="preview" aspect-ratio="1" :src="image"></v-img>-->
+    </div>
 </template>
 <script setup lang="ts">
-import { renderSkinBody, renderSkinHead, textureUrlForUuid } from "~/util/render";
+import { fileAsBase64, renderSkinBody, renderSkinHead, textureUrlForUuid } from "~/util/render";
 import { computedAsync } from "@vueuse/core";
 
 const props = defineProps<{
@@ -25,6 +28,13 @@ const userValidation = computedAsync(async () => {
     return undefined;
 });
 
+const fileBase64 = computedAsync(async ()=>{
+    if (props.file) {
+        return await fileAsBase64(props.file);
+    }
+    return undefined;
+})
+
 const texture = computed(() => {
     if (props.user) {
         const validated = userValidation.value;
@@ -35,11 +45,14 @@ const texture = computed(() => {
         return props.url;
     }
     if (props.file) {
-        return URL.createObjectURL(props.file);
+        return fileBase64.value;
     }
 });
 
 const image = computed(()=>{
+    if (props.file) {
+        return fileBase64.value;
+    }
     return renderSkinHead(texture.value);
 })
 </script>
