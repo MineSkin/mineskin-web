@@ -52,8 +52,7 @@ export class MineSkinAPI {
                 },
                 method: 'POST',
                 body: formData
-            })
-                .then(res => this.api.handleResponse(res));
+            });
         }
 
         public async url(url: string, options: GenerateOptions): Promise<SkinResponse> {
@@ -73,8 +72,7 @@ export class MineSkinAPI {
                 ...INIT,
                 method: 'POST',
                 body: JSON.stringify(body)
-            })
-                .then(res => this.api.handleResponse(res));
+            });
         }
 
     }(this);
@@ -101,8 +99,7 @@ export class MineSkinAPI {
                 },
                 method: 'POST',
                 body: formData
-            })
-                .then(res => this.api.handleResponse(res));
+            });
         }
 
         public async url(url: string, options: GenerateOptions): Promise<SkinResponse|GenerateJobResponse> {
@@ -122,18 +119,15 @@ export class MineSkinAPI {
                 ...INIT,
                 method: 'POST',
                 body: JSON.stringify(body)
-            })
-                .then(res => this.api.handleResponse(res));
+            });
         }
 
         public async list(): Promise<JobListResponse> {
-            return this.api.request(`${ this.api.BASE }/v2/queue`, INIT)
-                .then(res => this.api.handleResponse(res));
+            return this.api.request(`${ this.api.BASE }/v2/queue`, INIT);
         }
 
         public async get(jobId: string): Promise<SkinResponse|GenerateJobResponse> {
-            return this.api.request(`${ this.api.BASE }/v2/queue/${ jobId }?t=${Math.round(Date.now()/1000)}`, INIT)
-                .then(res => this.api.handleResponse(res));
+            return this.api.request(`${ this.api.BASE }/v2/queue/${ jobId }?t=${Math.round(Date.now()/1000)}`, INIT);
         }
 
     }(this);
@@ -154,13 +148,11 @@ export class MineSkinAPI {
             if (filter) {
                 params.set('filter', filter);
             }
-            return this.api.request(`${ this.api.BASE }/v2/skins?${ params.toString() }`, INIT)
-                .then(res => this.api.handleResponse(res));
+            return this.api.request(`${ this.api.BASE }/v2/skins?${ params.toString() }`, INIT);
         }
 
         public async get(uuid: string): Promise<SkinResponse> {
-            return this.api.request(`${ this.api.BASE }/v2/skins/${ uuid }`, INIT)
-                .then(res => this.api.handleResponse(res));
+            return this.api.request(`${ this.api.BASE }/v2/skins/${ uuid }`, INIT);
         }
 
     }(this);
