@@ -15,7 +15,7 @@
                 <skin-link-img class="ma-2" v-for="skin in latestSkins" :key="skin.uuid" :skin="skin"/>
 <!--            </v-col>-->
 <!--            <v-col cols="2" md="2" v-for="n in 6" :key="n">-->
-                <skin-link-img class="ma-2"  v-for="n in 6" :key="n"/>
+                <skin-link-img class="ma-2" v-if="!latestSkins" v-for="n in 10" :key="n"/>
 <!--            </v-col>-->
         </v-row>
 <!--        <dbg :data="latestSkins"/>-->
@@ -30,6 +30,6 @@ const {
     data: latestSkins,
     status: latestSkinsStatus,
 } = useLazyAsyncData(async () => {
-    return (await $mineskin.skins.list())?.skins?.slice(0,8)||[];
+    return (await $mineskin.skins.list())?.skins?.slice(0,10)||[];
 });
 </script>
