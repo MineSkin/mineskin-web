@@ -6,14 +6,19 @@
 .section-upload, .section-url, .section-user {
     min-height: 180px;
 }
+
+.drop-area {
+    transition: background-color .2s ease-in-out;
+}
 </style>
 <template>
     <v-sheet
         rounded
         elevation="1"
-        class="mx-auto px-4 pt-0 pb-4"
-        @dragover.prevent="dragging = true"
-        @dragleave.prevent="dragging = false"
+        class="mx-auto px-4 pt-0 pb-4 drop-area"
+        @dragover.prevent="onDragStart"
+        @dragstart.prevent="onDragStart"
+        @dragleave.prevent="onDragEnd"
         @drop.prevent="onDrop"
         :color="dragging ? 'secondary' : ''"
     >
@@ -147,8 +152,17 @@ const variant = ref(SkinVariant.UNKNOWN);
 
 const dragging = ref(false);
 
+const onDragStart = (e: DragEvent) => {
+    console.log(e.type, e);
+    dragging.value = true;
+};
+const onDragEnd = (e: DragEvent) => {
+    console.log(e.type, e);
+    dragging.value = false;
+};
+
 function onDrop(e: DragEvent) {
-    console.log(e)
+    console.log(e.type, e);
     dragging.value = false;
     uploadFiles.value.push(...Array.from(e.dataTransfer.files));
 }
