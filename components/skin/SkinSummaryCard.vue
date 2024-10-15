@@ -4,7 +4,7 @@
             <v-row>
                 <v-col cols="4">
                     <v-img
-                        lazy-src="/img/questionhead.png"
+                        :lazy-src="PLACEHOLDER_HEAD"
                         :src="renderSkinBody(skin?.texture?.hash?.skin)"
                         aspect-ratio="1"
                     />
@@ -63,6 +63,7 @@
 <script setup lang="ts">
 import { renderSkinBody } from "~/util/render";
 import type { Maybe, SkinIdAndTexture, SkinInfo2, ValueAndSignature } from "@mineskin/types";
+import { PLACEHOLDER_HEAD } from "~/util/skin";
 const props = defineProps<{
     skin: SkinInfo2;
 }>();
