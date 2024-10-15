@@ -10,7 +10,7 @@ export const useAuthStore = defineStore('auth', () => {
     const router = useRouter();
 
     const authed: Ref<boolean> = ref(false);
-    const _user: Ref<Maybe<any>> = ref(null);
+    const _user: Ref<Maybe<AuthStatus>> = ref(null);
 
     const lastWebTokenRefresh = ref(0);
     const lastApiTokenRefresh = ref(0);
@@ -35,8 +35,19 @@ export const useAuthStore = defineStore('auth', () => {
             }
         }
 
-        authed.value = response.ok;
-        $mineskin.setAuthed(response.ok);
+        const success = response.ok;
+        authed.value = success;
+        $mineskin.setAuthed(success);
+
+        if (success) {
+            const body = await response.json();
+            _user.value = {
+                ...body,
+                authenticated: success
+            };
+            return _user.value;
+        }
+
         return {
             authenticated: authed.value
         };
@@ -62,6 +73,9 @@ export const useAuthStore = defineStore('auth', () => {
         return false;
     }
 
+    const userId = computed(() => _user.value?.id);
+    const grants = computed(() => _user.value?.grants);
+
     return {
         authed,
         _user,
@@ -69,6 +83,8 @@ export const useAuthStore = defineStore('auth', () => {
         lastApiTokenRefresh,
         refreshWebAccessToken,
         checkAuth,
+        userId,
+        grants
     }
 }, {
     persist: {

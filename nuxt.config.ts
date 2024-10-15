@@ -38,7 +38,10 @@ export default defineNuxtConfig({
             cfPagesCommitSha: process.env.CF_PAGES_COMMIT_SHA,
             cfPagesBranch: process.env.CF_PAGES_BRANCH,
             cfPagesUrl: process.env.CF_PAGES_URL,
-            sentryDsn: process.env.SENTRY_DSN
+            sentryDsn: process.env.SENTRY_DSN,
+            google: {
+                adsense: process.env.GOOGLE_ADSENSE
+            }
         }
     },
 })

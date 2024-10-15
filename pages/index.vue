@@ -11,6 +11,9 @@
                 <LatestSkinsPreviewList/>
             </v-col>
         </v-row>
+        <v-row class="text-center">
+            <ad-wrappper ad-slot="3929622901"/>
+        </v-row>
         <v-row>
             <v-col cols="12">
                 <GeneratePanel/>
@@ -24,6 +27,7 @@
 import GeneratePanel from "~/components/GeneratePanel.vue";
 import { useNuxtApp, useState } from "#app";
 import type { SnackbarConfig } from "~/types/SnackbarConfig";
+import AdWrappper from "~/components/AdWrappper.vue";
 
 const {$notify} = useNuxtApp();
 
