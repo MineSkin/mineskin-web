@@ -3,7 +3,7 @@
         <v-row>
             <v-col cols="12">
                 <h1>MineSkin</h1>
-                <p>Lorem Ipsum...</p>
+                <p>Automate Minecraft Skin Data Generation</p>
             </v-col>
         </v-row>
         <v-row>
