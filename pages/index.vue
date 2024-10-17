@@ -19,10 +19,10 @@
                 <GeneratePanel/>
             </v-col>
         </v-row>
-        <v-btn @click="testNotify()">Notify Test</v-btn>
+<!--        <v-btn @click="testNotify()">Notify Test</v-btn>-->
 <!--        <JobList/> &lt;!&ndash;TODO: move&ndash;&gt;-->
 <!--        <dbg :data="authStore.user"/>-->
-        <CreditsInfo/> <!--TODO: move-->
+<!--        <CreditsInfo/> &lt;!&ndash;TODO: move&ndash;&gt;-->
     </v-container>
 </template>
 <script setup lang="ts">
