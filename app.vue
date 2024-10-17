@@ -4,7 +4,8 @@
     text-decoration: none;
     cursor: pointer;
 }
-.img-link{
+
+.img-link {
     width: 100%;
     height: 100%;
 }
@@ -15,19 +16,19 @@
             <Snackbars/>
             <v-app-bar density="comfortable" class="px-4">
                 <v-app-bar-title>
-                  <nuxt-link class="app-bar-link" to="/">
-                      MineSkin
-                      <v-chip
-                          density="compact"
-                          :color="config.public.isDev ? 'warning' :'secondary'"
-                          variant="flat"
-                      >
-                          {{ config.public.isDev ? 'Dev Mode' : 'Beta' }}
-                      </v-chip>
-                  </nuxt-link>
-                <v-btn icon>
-                    <v-icon>mdi-magnify</v-icon>
-                </v-btn>
+                    <nuxt-link class="app-bar-link" to="/">
+                        MineSkin
+                        <v-chip
+                            density="compact"
+                            :color="config.public.isDev ? 'warning' :'secondary'"
+                            variant="flat"
+                        >
+                            {{ config.public.isDev ? 'Dev Mode' : 'Beta' }}
+                        </v-chip>
+                    </nuxt-link>
+                    <v-btn icon>
+                        <v-icon>mdi-magnify</v-icon>
+                    </v-btn>
                 </v-app-bar-title>
 
                 <v-spacer></v-spacer>
@@ -44,8 +45,8 @@
                 <template v-slot:append>
                     <v-btn icon @click="queueStore.jobsDrawer = !queueStore.jobsDrawer">
                         <component :is="queueStore?.jobs?.length>0?'v-badge':'div'"
-                            :content="queueStore?.jobs?.length"
-                            location="bottom right"
+                                   :content="queueStore?.jobs?.length"
+                                   location="bottom right"
                         >
                             <v-icon icon="mdi-list-status"></v-icon>
                         </component>
@@ -62,7 +63,7 @@
                         class="ml-2"
                         color="info"
                     >
-                        <a  v-if="authStore.authed" class="img-link" href="https://account.mineskin.org">
+                        <a v-if="authStore.authed" class="img-link" href="https://account.mineskin.org">
                             <v-img :src="authStore.user?.picture" alt="User Avatar"></v-img>
                             <v-tooltip
                                 activator="parent"
@@ -71,7 +72,7 @@
                                 Go to Account
                             </v-tooltip>
                         </a>
-                        <v-btn v-else  icon>
+                        <v-btn v-else icon>
                             <a class="img-link text-white" href="https://account.mineskin.org">
                                 <v-icon>mdi-account</v-icon>
                                 <v-tooltip
@@ -94,6 +95,12 @@
                 location="end"
                 temporary
             >
+                <v-list>
+                    <v-list-subheader v-if="authStore.authed">Credits</v-list-subheader>
+                    <v-list-item v-if="authStore.authed">
+                        <CreditsInfo/>
+                    </v-list-item>
+                </v-list>
                 <JobList class="my-2"/>
             </v-navigation-drawer>
         </v-app>
@@ -105,7 +112,6 @@ import { useAuthStore } from "~/stores/auth";
 import { useQueueStore } from "~/stores/queue";
 
 const config = useRuntimeConfig();
-
 
 
 useHead({

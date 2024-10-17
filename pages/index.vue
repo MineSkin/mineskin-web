@@ -20,8 +20,9 @@
             </v-col>
         </v-row>
         <v-btn @click="testNotify()">Notify Test</v-btn>
-        <JobList/> <!--TODO: move-->
-        <dbg :data="authStore.user"/>
+<!--        <JobList/> &lt;!&ndash;TODO: move&ndash;&gt;-->
+<!--        <dbg :data="authStore.user"/>-->
+        <CreditsInfo/> <!--TODO: move-->
     </v-container>
 </template>
 <script setup lang="ts">

@@ -1,5 +1,6 @@
 <template>
     <v-list>
+        <v-list-subheader>Jobs</v-list-subheader>
         <JobStatus v-for="job in queueStore.jobsSorted" :id="job.id"/>
         <v-list-item v-if="queueStore.jobs.length<=0">
             <v-list-item-title>No jobs in queue</v-list-item-title>

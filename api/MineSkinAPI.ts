@@ -185,6 +185,24 @@ export class MineSkinAPI {
             });
         }
 
+        public async client() {
+            return this.api.request(`/v2/me/client`, {
+                credentials: 'include'
+            });
+        }
+
+        public async credits() {
+            return this.api.request(`/v2/me/credits`, {
+                credentials: 'include'
+            });
+        }
+
+        public async apikey() {
+            return this.api.request(`/v2/me/apikey`, {
+                credentials: 'include'
+            });
+        }
+
     }(this);
 
     private async request<T extends MineSkinResponse>(path: string, init: RequestInit): Promise<T> {
