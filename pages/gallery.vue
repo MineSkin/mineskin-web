@@ -21,6 +21,10 @@
 <script setup lang="ts">
 import { useNuxtApp } from "#app";
 
+useHead({
+    title: 'Gallery - MineSkin'
+});
+
 const router = useRouter()
 
 const {$mineskin} = useNuxtApp();

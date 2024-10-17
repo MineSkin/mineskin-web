@@ -3,7 +3,7 @@
         <v-row>
             <v-col cols="12">
                 <h1>MineSkin</h1>
-                <p>Automate Minecraft Skin Data Generation</p>
+                <p>Automate Minecraft Skin Signature Generation</p>
             </v-col>
         </v-row>
         <v-row>

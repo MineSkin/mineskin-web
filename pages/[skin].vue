@@ -20,8 +20,12 @@
 
         <v-row class="my-4">
             <v-col>
-                <div class="text-grey-darken-2">Generated on {{ new Date(skin?.generator?.timestamp).toUTCString() }} in {{ skin?.generator?.duration / 1000 }}s</div>
-                <div class="text-grey-darken-3">By worker {{ skin?.generator?.worker }} with account {{ skin?.generator?.account?.substring(0,10) }} via server {{ skin?.generator?.server }}</div>
+                <div class="text-grey-darken-2">Generated on {{ new Date(skin?.generator?.timestamp).toUTCString() }} in
+                    {{ skin?.generator?.duration / 1000 }}s
+                </div>
+                <div class="text-grey-darken-3">By worker {{ skin?.generator?.worker }} with account
+                    {{ skin?.generator?.account?.substring(0, 10) }} via server {{ skin?.generator?.server }}
+                </div>
             </v-col>
             <v-col class="text-end">
                 <div class="text-grey-darken-3">{{ skin?.texture?.hash?.skin }}</div>
@@ -49,6 +53,10 @@ const {
     data: skin
 } = useLazyAsyncData<Maybe<SkinInfo2>>(`skin-${ skinId.value }`, async () => {
     return (await $mineskin.skins.get(skinId.value))?.skin;
+});
+
+useHead({
+    title: `${ skinName(skin.value) || 'Skin' } - MineSkin`
 });
 
 </script>
