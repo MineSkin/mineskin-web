@@ -278,16 +278,20 @@ function visibilityProps(item: SkinVisibility2) {
     switch (item) {
         case SkinVisibility2.PUBLIC:
             return {
+                prependIcon: "mdi-earth",
                 title: "Public",
                 subtitle: "Visible to everyone"
             };
         case SkinVisibility2.UNLISTED:
             return {
+                prependIcon: "mdi-link",
                 title: "Unlisted",
                 subtitle: "Visible to anyone with the link"
             };
         case SkinVisibility2.PRIVATE:
             return {
+                prependIcon: "mdi-eye-off",
+                appendIcon: !canUsePrivateSkins.value ?  'mdi-lock' : '',
                 title: "Private",
                 subtitle: canUsePrivateSkins.value ? "Visible to you only" : "Requires Basic subscription",
                 disabled: !canUsePrivateSkins.value
