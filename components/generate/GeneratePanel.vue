@@ -187,6 +187,7 @@ import GenerateUrlSection from "./GenerateUrlSection.vue";
 
 const {$mineskin, $notify} = useNuxtApp();
 
+const authStore = useAuthStore();
 const queueStore = useQueueStore();
 
 const generateType = computed<Maybe<GenerateType>>(() => {
@@ -219,6 +220,10 @@ const imageCount = computed(() => {
             return users.value.filter(user => user.length > 0).length;
     }
     return 0;
+})
+
+const canUsePrivateSkins = computed(()=>{
+    return authStore.authed && authStore.grants?.private_skins;
 })
 
 const generating = ref(false);
@@ -284,7 +289,8 @@ function visibilityProps(item: SkinVisibility2) {
         case SkinVisibility2.PRIVATE:
             return {
                 title: "Private",
-                subtitle: "Visible to you only"
+                subtitle: canUsePrivateSkins.value ? "Visible to you only" : "Requires Basic subscription",
+                disabled: !canUsePrivateSkins.value
             };
     }
 }
