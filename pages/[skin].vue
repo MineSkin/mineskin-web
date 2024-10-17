@@ -1,5 +1,5 @@
 <template>
-    <v-container>
+    <v-container class="mb-4">
         <h2>
             <nuxt-link to="/gallery" class="text-white">
                 <v-icon icon="mdi-arrow-left" class="mx-2"/>

@@ -1,5 +1,5 @@
 <template>
-    <v-container>
+    <v-container class="mb-4">
         <v-row>
             <v-col cols="12">
                 <h1>MineSkin</h1>
