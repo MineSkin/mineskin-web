@@ -10,7 +10,7 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
-    "@mineskin/types": "git+ssh://git@github.com/MineSkin/mineskin-types.git",
+    "@mineskin/types": "https://github.com/MineSkin/mineskin-types.git",
     "@pinia-plugin-persistedstate/nuxt": "^1.2.1",
     "@pinia/nuxt": "^0.5.5",
     "@vueuse/core": "^11.1.0",
