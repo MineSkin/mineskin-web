@@ -5,10 +5,14 @@
                 <h1>MineSkin</h1>
                 <p>Automate Minecraft Skin Signature Generation</p>
             </v-col>
-            <v-card v-if="notificationBanner" :color="notificationBanner.color||'warning'" class="my-4">
-                <v-card-title>{{ notificationBanner.title }}</v-card-title>
-                <v-card-text>{{ notificationBanner.text }}</v-card-text>
-            </v-card>
+        </v-row>
+        <v-row v-if="notificationBanner">
+           <v-col>
+               <v-card :color="notificationBanner.color||'warning'">
+                   <v-card-title>{{ notificationBanner.title }}</v-card-title>
+                   <v-card-text>{{ notificationBanner.text }}</v-card-text>
+               </v-card>
+           </v-col>
         </v-row>
         <v-row>
             <v-col cols="12">
