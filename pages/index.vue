@@ -5,6 +5,10 @@
                 <h1>MineSkin</h1>
                 <p>Automate Minecraft Skin Signature Generation</p>
             </v-col>
+            <v-card v-if="notificationBanner" :color="notificationBanner.color||'warning'" class="my-4">
+                <v-card-title>{{ notificationBanner.title }}</v-card-title>
+                <v-card-text>{{ notificationBanner.text }}</v-card-text>
+            </v-card>
         </v-row>
         <v-row>
             <v-col cols="12">
@@ -31,9 +35,16 @@ import AdWrappper from "~/components/AdWrappper.vue";
 import { useAuthStore } from "~/stores/auth";
 import LatestSkinsPreviewList from "~/components/skin/LatestSkinsPreviewList.vue";
 
-const {$notify} = useNuxtApp();
+const {$notify,$flags} = useNuxtApp();
 
 const authStore = useAuthStore();
+
+const notificationBanner = computed(() => {
+    if ($flags.hasFeature('web.notification_banner')) {
+        return JSON.parse($flags.getValue('web.notification_banner'));
+    }
+    return undefined;
+})
 
 
 function testNotify() {
