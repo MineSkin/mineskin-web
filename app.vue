@@ -94,6 +94,7 @@
                 v-model="queueStore.jobsDrawer"
                 location="end"
                 temporary
+                width="320"
             >
                 <v-list>
                     <v-list-subheader v-if="authStore.authed">Credits</v-list-subheader>
