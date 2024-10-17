@@ -74,7 +74,7 @@
                     <v-select
                         label="Visibility"
                         v-model="visibility"
-                        :items="Object.values(SkinVisibility2)"
+                        :items="visibilities"
                         :item-props="visibilityProps"
                         hint="Visibility of the skin"
                         persistent-hint
@@ -161,8 +161,16 @@
                                 Your {{ imageCount > 1 ? 'skins are' : 'skin is' }} being generated...
                             </div>
                             <div>
-                                Check the <action-link @click.prevent="queueStore.jobsDrawer = true" icon="mdi-list-status" tooltip="Show Jobs">Job List</action-link> for progress,
-                                or <action-link @click.prevent="reset" icon="mdi-reload" tooltip="Reset Image Selection">generate more skins</action-link>.
+                                Check the
+                                <action-link @click.prevent="queueStore.jobsDrawer = true" icon="mdi-list-status"
+                                             tooltip="Show Jobs">Job List
+                                </action-link>
+                                for progress,
+                                or
+                                <action-link @click.prevent="reset" icon="mdi-reload" tooltip="Reset Image Selection">
+                                    generate more skins
+                                </action-link>
+                                .
                             </div>
                         </div>
                     </v-row>
@@ -184,8 +192,9 @@ import ActionLink from "../ActionLink.vue";
 import GenerateUserSection from "./GenerateUserSection.vue";
 import GenerateUploadSection from "./GenerateUploadSection.vue";
 import GenerateUrlSection from "./GenerateUrlSection.vue";
+import type { GenerateJobResponse } from "~/types/GenerateJobResponse";
 
-const {$mineskin, $notify} = useNuxtApp();
+const {$mineskin, $notify, $flags} = useNuxtApp();
 
 const authStore = useAuthStore();
 const queueStore = useQueueStore();
@@ -206,6 +215,8 @@ const uploadFiles = ref<File[]>([]);
 const urls = ref<string[]>(['']);
 const users = ref<string[]>(['']);
 
+const visibilities = [SkinVisibility2.PUBLIC, SkinVisibility2.UNLISTED];
+
 const name = ref('');
 const visibility = ref(SkinVisibility2.PUBLIC);
 const variant = ref(SkinVariant.UNKNOWN);
@@ -222,7 +233,7 @@ const imageCount = computed(() => {
     return 0;
 })
 
-const canUsePrivateSkins = computed(()=>{
+const canUsePrivateSkins = computed(() => {
     return authStore.authed && authStore.grants?.private_skins;
 })
 
@@ -291,7 +302,7 @@ function visibilityProps(item: SkinVisibility2) {
         case SkinVisibility2.PRIVATE:
             return {
                 prependIcon: "mdi-eye-off",
-                appendIcon: !canUsePrivateSkins.value ?  'mdi-lock' : '',
+                appendIcon: !canUsePrivateSkins.value ? 'mdi-lock' : '',
                 title: "Private",
                 subtitle: canUsePrivateSkins.value ? "Visible to you only" : "Requires Basic subscription",
                 disabled: !canUsePrivateSkins.value
@@ -352,5 +363,11 @@ async function generate() {
             break;
     }
 }
+
+onMounted(() => {
+    if ($flags.hasFeature('web.visibility.private')) {
+        visibilities.push(SkinVisibility2.PRIVATE);
+    }
+})
 
 </script>
