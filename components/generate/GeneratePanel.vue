@@ -146,6 +146,11 @@
         <v-expand-transition>
             <v-row v-show="generateType" class="my-4" justify="center">
                 <v-col>
+                    <v-row justify="center" class="mb-2 text-center" v-if="showCreditsInfo">
+                        <div>
+                            This request will consume 1 credit if the skin is successfully generated.
+                        </div>
+                    </v-row>
                     <v-row justify="center" class="mb-2 text-center">
                         <v-btn
                             color="primary"
@@ -235,7 +240,9 @@ const imageCount = computed(() => {
 
 const canUsePrivateSkins = computed(() => {
     return authStore.authed && authStore.grants?.private_skins;
-})
+});
+
+const showCreditsInfo = computed(() => $flags.hasFeature('web.credits.show_info'));
 
 const generating = ref(false);
 
