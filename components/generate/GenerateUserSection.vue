@@ -30,7 +30,7 @@
     </div>
 </template>
 <script setup lang="ts">
-
+import InputList from "./list/InputList.vue";
 import { textureUrlForUuid } from "../../util/render";
 
 const users = defineModel<string[]>(['']);
