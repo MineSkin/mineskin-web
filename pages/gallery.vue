@@ -1,9 +1,6 @@
 <template>
     <v-container>
-        {{ hasNext }}
-        {{ after }}
-
-        <v-infinite-scroll :items="skins" :onLoad="load">
+        <v-infinite-scroll :items="skins" :onLoad="load" style="overflow: hidden">
             <v-row>
                 <template v-for="(item, index) in skins" :key="item">
 <!--                    <v-col cols="4" sm="3" md="2">-->
