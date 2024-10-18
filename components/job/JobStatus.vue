@@ -11,7 +11,7 @@
                 <span v-else>{{ job.id?.substring(0, 8) }}</span>
             </template>
             <template v-slot:subtitle>
-                <DateUTC class="float-end" :date="job.timestamp"></DateUTC>
+                <DateLocal class="float-end" :date="job.timestamp"></DateLocal>
             </template>
             <v-progress-linear
                 v-if="job.status === 'waiting'"
@@ -51,6 +51,7 @@ import { useLazyAsyncData } from "#app";
 import type { GenerateJobResponse } from "~/types/GenerateJobResponse";
 import type { JobResponse } from "~/types/JobResponse";
 import DateUTC from "~/components/DateUTC.vue";
+import DateLocal from "~/components/DateLocal.vue";
 
 const {$mineskin} = useNuxtApp();
 

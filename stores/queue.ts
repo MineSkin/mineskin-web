@@ -12,12 +12,12 @@ export const useQueueStore = defineStore('queue', () => {
 
     const {$mineskin, $notify} = useNuxtApp();
 
-    const jobs = computed(() => Array.from(Object.values(jobMap.value)));
+    const jobs = computed<JobInfo[]>(() => Object.values(jobMap.value));
 
-    const jobsSorted = computed(() => {
+    const jobsSorted = computed<JobInfo[]>(() => {
         return jobs.value.sort((a, b) => {
-            return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
-        });
+            return b.timestamp - a.timestamp;
+        }).slice(0, 8);
     });
 
     const addJob = (job: JobInfo) => {
@@ -30,6 +30,7 @@ export const useQueueStore = defineStore('queue', () => {
             }
         }
         jobMap.value[job.id] = job;
+        console.debug(jobsSorted.value.length);
         checkJobStatusChange(job, existing);
     }
 
