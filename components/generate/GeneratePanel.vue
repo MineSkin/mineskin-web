@@ -366,10 +366,11 @@ async function generate() {
     console.log('generate');
     generating.value = true;
     await sleep(100);
+    let response;
     switch (generateType.value) {
         case GenerateType.UPLOAD:
             //TODO: actually process all images
-            let response = await $mineskin.queue.upload(uploadFiles.value[0], {
+            response = await $mineskin.queue.upload(uploadFiles.value[0], {
                 visibility: visibility.value,
                 variant: variant.value || undefined,
                 name: name.value
@@ -381,7 +382,7 @@ async function generate() {
             }
             break;
         case GenerateType.URL:
-            let response = await $mineskin.queue.url(urls.value[0], {
+            response = await $mineskin.queue.url(urls.value[0], {
                 visibility: visibility.value,
                 variant: variant.value || undefined,
                 name: name.value
