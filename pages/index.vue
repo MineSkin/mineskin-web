@@ -31,6 +31,8 @@
 <!--        <JobList/> &lt;!&ndash;TODO: move&ndash;&gt;-->
 <!--        <dbg :data="authStore.user"/>-->
 <!--        <CreditsInfo/> &lt;!&ndash;TODO: move&ndash;&gt;-->
+        <v-row class="my-10">
+        </v-row>
     </v-container>
 </template>
 <script setup lang="ts">
