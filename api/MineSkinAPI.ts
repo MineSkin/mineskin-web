@@ -57,7 +57,7 @@ export class MineSkinAPI {
         }
 
         public async url(url: string, options: GenerateOptions): Promise<SkinResponse> {
-            const body = {
+            const body:any = {
                 url
             };
             if (options.visibility) {

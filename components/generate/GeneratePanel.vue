@@ -368,7 +368,8 @@ async function generate() {
     await sleep(100);
     switch (generateType.value) {
         case GenerateType.UPLOAD:
-            const response = await $mineskin.queue.upload(uploadFiles.value[0], {
+            //TODO: actually process all images
+            let response = await $mineskin.queue.upload(uploadFiles.value[0], {
                 visibility: visibility.value,
                 variant: variant.value || undefined,
                 name: name.value
@@ -380,8 +381,22 @@ async function generate() {
             }
             break;
         case GenerateType.URL:
+            let response = await $mineskin.queue.url(urls.value[0], {
+                visibility: visibility.value,
+                variant: variant.value || undefined,
+                name: name.value
+            });
+            if (response.success) {
+                if ('job' in response) {
+                    queueStore.addJob((response as GenerateJobResponse).job);
+                }
+            }
             break;
         case GenerateType.USER:
+            $notify({
+                text: 'User generation not yet implemented',
+                color: 'warning'
+            });
             break;
     }
 }

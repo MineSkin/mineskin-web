@@ -73,6 +73,8 @@ export const useQueueStore = defineStore('queue', () => {
         }
     }
 
+    //TODO: save generated skins in local storage
+
     const checkJobStatusChange = (now: JobInfo, prev?: JobInfo) => {
         if (prev?.status === now.status) return;
         console.debug(`${ now.id } ${ prev?.status } -> ${ now.status }`);
