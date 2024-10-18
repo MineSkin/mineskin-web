@@ -3,9 +3,9 @@
         <v-infinite-scroll :items="skins" :onLoad="load" style="overflow: hidden">
             <v-row>
                 <template v-for="(item, index) in skins" :key="item">
-<!--                    <v-col cols="4" sm="3" md="2">-->
-                        <skin-link-card class="ma-2" :skin="item"/>
-<!--                    </v-col>-->
+                    <!--                    <v-col cols="4" sm="3" md="2">-->
+                    <skin-link-card class="ma-2" :skin="item"/>
+                    <!--                    </v-col>-->
                 </template>
             </v-row>
         </v-infinite-scroll>
@@ -22,7 +22,7 @@
 import { useNuxtApp } from "#app";
 
 useHead({
-    title: 'Gallery - MineSkin'
+    title: 'My Skins - MineSkin'
 });
 
 const router = useRouter()
@@ -42,7 +42,7 @@ const hasNext = ref(true);
 
 async function api() {
     if (!hasNext.value) return [];
-    const response = await $mineskin.skins.list(after.value);
+    const response = await $mineskin.me.skins(after.value);
     console.debug(response);
     const skins = response?.skins || [];
     hasNext.value = skins.length > 0;

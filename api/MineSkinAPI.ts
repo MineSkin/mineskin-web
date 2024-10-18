@@ -203,6 +203,23 @@ export class MineSkinAPI {
             });
         }
 
+        public async skins(after?: string, size?: number, filter?: string): Promise<SkinListResponse> {
+            const params = new URLSearchParams();
+            if (after) {
+                params.set('after', after);
+            }
+            if (size) {
+                params.set('size', size.toString());
+            }
+            if (filter) {
+                params.set('filter', filter);
+            }
+            return this.api.request(`/v2/me/skins?${ params.toString() }`, {
+                ...INIT,
+                credentials: 'include'
+            });
+        }
+
     }(this);
 
     private async request<T extends MineSkinResponse>(path: string, init: RequestInit): Promise<T> {
