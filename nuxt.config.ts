@@ -33,9 +33,10 @@ export default defineNuxtConfig({
                     mineskin: {
                         dark: true,
                         colors: {
-                            primary: '#3f51b5ff',
-                            secondary: '#4EA5D9',
-                            accent: '#44CFCB',
+                            mskindigo: '#3f51b5ff',
+                            primary: '#4EA5D9',
+                            secondary: '#44CFCB',
+                            accent: '#65B891',
                             brown: '#562C2C',
                             mskred: '#F2542D'
                         }

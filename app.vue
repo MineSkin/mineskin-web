@@ -14,7 +14,7 @@
     <NuxtLayout>
         <v-app>
             <Snackbars/>
-            <v-app-bar density="comfortable" class="px-4" color="primary">
+            <v-app-bar density="comfortable" class="px-4" color="mskindigo">
                 <v-app-bar-title>
                     <nuxt-link class="app-bar-link" to="/">
                         MineSkin

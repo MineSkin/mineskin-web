@@ -55,6 +55,16 @@
                             ></copy-text-field>
                         </v-col>
                     </v-row>
+                    <v-divider class="my-4"/>
+                    <v-row>
+                        <v-col v-if="!skin">
+                            <v-skeleton-loader v-if="!skin" type="button,button"/>
+                        </v-col>
+                        <v-col v-else>
+                            <v-btn color="secondary" text="Use This Skin" class="mx-2" size="large" :href="useSkinLink"></v-btn>
+                            <v-btn color="accent" text="Download Skin" class="mx-2" size="large" :href="skinTextureUrl" download></v-btn>
+                        </v-col>
+                    </v-row>
                 </v-col>
             </v-row>
         </v-card-text>
@@ -88,4 +98,9 @@ const skinSignature = computed(() => {
 const skinTextureUrl = computed(() => {
     return skinTexture.value?.url.skin;
 });
+
+//TODO: verify this actually still works
+const useSkinLink = computed(()=>{
+    return `https://www.minecraft.net/profile/skin/remote?url=${ skinTextureUrl.value }`;
+})
 </script>

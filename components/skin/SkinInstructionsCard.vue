@@ -1,7 +1,7 @@
 <template>
     <v-card min-height="250">
         <v-tabs
-            bg-color="secondary"
+            bg-color="primary"
             v-model="instructionsTab"
         >
             <v-tab value="vanilla">Vanilla</v-tab>
