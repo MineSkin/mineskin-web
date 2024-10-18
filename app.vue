@@ -9,6 +9,35 @@
     width: 100%;
     height: 100%;
 }
+
+.v-footer {
+    max-height: 14em;
+}
+
+@media (min-width: 400px) {
+    .v-footer {
+        max-height: 10em;
+    }
+}
+
+@media (min-width: 600px) {
+    .v-footer {
+        max-height: 8em;
+    }
+}
+
+@media (min-width: 800px) {
+    .v-footer {
+        max-height: 6em;
+    }
+}
+
+@media (min-width: 1000px) {
+    .v-footer {
+        max-height: 4em;
+    }
+}
+
 </style>
 <template>
     <NuxtLayout>
