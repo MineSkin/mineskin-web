@@ -28,7 +28,19 @@ export default defineNuxtConfig({
         vuetifyOptions: {
             labComponents: 'VSnackbarQueue',
             theme: {
-                defaultTheme: 'dark'
+                defaultTheme: 'mineskin',
+                themes: {
+                    mineskin: {
+                        dark: true,
+                        colors: {
+                            primary: '#3f51b5ff',
+                            secondary: '#4EA5D9',
+                            accent: '#44CFCB',
+                            brown: '#562C2C',
+                            mskred: '#F2542D'
+                        }
+                    }
+                }
             },
         }
 
