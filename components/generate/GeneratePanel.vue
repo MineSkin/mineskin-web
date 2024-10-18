@@ -229,6 +229,8 @@ const generateType = computed<Maybe<GenerateType>>(() => {
     }
 });
 
+//TODO: limit number of images
+
 const uploadFiles = ref<File[]>([]);
 const urls = ref<string[]>(['']);
 const users = ref<string[]>(['']);

@@ -21,14 +21,15 @@ export const useQueueStore = defineStore('queue', () => {
     });
 
     const addJob = (job: JobInfo) => {
-        const existing = jobMap.value[job.id];
+        console.debug('addJob', job);
+        const existing = job.id === 'unknown' ? undefined : jobMap.value[job.id];
         if (existing) {
             job = {
                 ...existing,
                 ...job
             }
         }
-        jobMap.value[job.id]=job;
+        jobMap.value[job.id] = job;
         checkJobStatusChange(job, existing);
     }
 
@@ -76,8 +77,9 @@ export const useQueueStore = defineStore('queue', () => {
         if (prev?.status === now.status) return;
         console.debug(`${ now.id } ${ prev?.status } -> ${ now.status }`);
         $notify({
-            text: `Job ${ now.id==='unknown'?'':now.id } is now ${ now.status }`,
-            color: now.status === 'completed' ? 'success' : now.status === 'failed' ? 'error' : 'info'
+            text: `Job ${ now.id === 'unknown' ? '' : now.id } is ${ now.status }`,
+            color: now.status === 'completed' ? 'success' : now.status === 'failed' ? 'error' : 'info',
+            timeout: (now.status === 'completed' || now.status === 'failed') ? 1200 : 800
         });
     }
 
