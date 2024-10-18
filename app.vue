@@ -38,6 +38,7 @@
                 >
                     <v-tab to="/">Generate</v-tab>
                     <v-tab to="/gallery">Gallery</v-tab>
+                    <v-tab v-if="authStore.authed" to="/my-skins">My Skins</v-tab>
                 </v-tabs>
 
                 <v-divider vertical class="mx-4 my-2"/>
