@@ -162,11 +162,16 @@ import { useQueueStore } from "~/stores/queue";
 
 const config = useRuntimeConfig();
 
+const description = 'MineSkin.org allows you to generate skin texture data for Minecraft which is signed by Mojang.';
+
 useSeoMeta({
     titleTemplate: (titleChunk) => {
-        return titleChunk ? `${titleChunk} - MineSkin` : 'MineSkin - Skin Signature Generator';
+        return titleChunk ? `${ titleChunk } - MineSkin` : 'MineSkin - Skin Signature Generator';
     },
-    description: 'MineSkin.org allows you to generate skin texture data for Minecraft which is signed by Mojang.',
+    ogImage: '~/assets/img/mineskin-x256.png',
+    description: description,
+    ogDescription: description,
+    twitterDescription: description,
     author: 'inventivetalent',
 })
 
