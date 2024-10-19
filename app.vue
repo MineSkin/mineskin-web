@@ -44,8 +44,8 @@
         <v-app>
             <Snackbars/>
             <v-app-bar density="comfortable" class="px-4" color="mskindigo">
-                <v-app-bar-title>
-                    <nuxt-link v-if="!mdAndUp" class="app-bar-link" to="/">
+                <v-app-bar-title class="flex-0-1">
+                    <nuxt-link v-if="mdAndUp" class="app-bar-link" to="/">
                         MineSkin
                         <v-chip
                             density="compact"
@@ -55,10 +55,29 @@
                             {{ config.public.isDev ? 'Dev Mode' : 'V2 Beta' }}
                         </v-chip>
                     </nuxt-link>
-                    <v-btn icon>
+                </v-app-bar-title>
+
+                <div class="d-flex flex-auto">
+                    <v-btn icon
+                           @click="searching ? search() : searching = true"
+                    >
                         <v-icon>mdi-magnify</v-icon>
                     </v-btn>
-                </v-app-bar-title>
+                    <v-expand-x-transition>
+                        <v-text-field v-show="searching"
+                                      density="compact"
+                                      v-model="filter"
+                                      placeholder="Search"
+                                      append-inner-icon="mdi-close"
+                                      @click:append-inner="filter = ''; searching = false"
+                                      @keydown.enter="searching = false; search()"
+                                      @keydown.esc="searching = false"
+                                      hide-details
+                                      single-line
+                                      min-width="20vw"
+                        />
+                    </v-expand-x-transition>
+                </div>
 
                 <v-spacer></v-spacer>
 
@@ -246,6 +265,22 @@ const authStore = useAuthStore();
 const queueStore = useQueueStore();
 
 const {mdAndUp} = useDisplay();
+
+const searching = ref(false);
+const filter = ref('');
+
+const search = () => {
+    searching.value = false;
+    if (filter.value === '') {
+        return;
+    }
+    router.push({
+        path: '/gallery',
+        query: {
+            filter: filter.value
+        }
+    });
+}
 
 onBeforeMount(() => {
     authStore.checkAuth();

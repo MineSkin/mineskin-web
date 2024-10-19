@@ -34,6 +34,10 @@ const router = useRouter()
 
 const {$mineskin} = useNuxtApp();
 
+const filter = computed(()=>{
+    return router.currentRoute.value.query.filter || '';
+})
+
 // const {
 //     data: skins,
 //     status: skinsStatus,
@@ -47,7 +51,7 @@ const hasNext = ref(true);
 
 async function api() {
     if (!hasNext.value) return [];
-    const response = await $mineskin.skins.list(after.value);
+    const response = await $mineskin.skins.list(after.value,undefined,filter.value);
     console.debug(response);
     const skins = response?.skins || [];
     hasNext.value = skins.length > 0;
