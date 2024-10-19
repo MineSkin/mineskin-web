@@ -4,6 +4,7 @@
                v-for="(item, index) in items"
                :key="index"
         >
+            <v-col>
             <file-list-row
                 :model-value="item.name"
                 :item="item"
@@ -15,6 +16,7 @@
                 :image-provider="imageProvider"
                 @click:append="items.splice(index,1)">
             </file-list-row>
+            </v-col>
         </v-row>
     </div>
 </template>

@@ -1,6 +1,5 @@
 <template>
-    <div
-    >
+    <div>
         <v-row justify="center" class="mb-2 flex-0-0">
             USER
         </v-row>

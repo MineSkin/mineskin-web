@@ -1,6 +1,5 @@
 <template>
-    <v-text-field
-    >
+    <v-text-field>
         <template v-slot:prepend>
             <div>
                 <v-img v-if="imageProvider && image" class="pixelated input-prepend-image" :src="image"

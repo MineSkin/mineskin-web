@@ -28,8 +28,10 @@
         <v-row class="my-2 d-flex text-center"
                :justify="generateType === GenerateType.UPLOAD ? 'center':generateType===GenerateType.USER?'end':'start'">
             <v-col
-                :cols="!generateType ? 4:generateType === GenerateType.URL ? 6 : 'auto'"
-                class="mx-4 section-col"
+                :cols="12"
+                :md="!generateType ? 4:generateType === GenerateType.URL ? 6 : 'auto'"
+                class="section-col"
+                :class="{'mx-4':mdAndUp,'my-2':!mdAndUp}"
             >
                 <GenerateUrlSection
                     class="section-url flex-column"
@@ -39,10 +41,12 @@
                     @continue="generate"
                 />
             </v-col>
-            <v-divider vertical v-show="!generateType"/>
+            <v-divider :vertical="mdAndUp" v-show="!generateType"/>
             <v-col
-                class="mx-4 section-col"
-                :cols="!generateType?'':generateType === GenerateType.UPLOAD ? 4 : 4"
+                :cols="12"
+                :md="!generateType?'':generateType === GenerateType.UPLOAD ? 4 : 4"
+                class="section-col"
+                :class="{'mx-4':mdAndUp,'my-2':!mdAndUp}"
             >
                 <GenerateUploadSection
                     class="section-upload flex-column"
@@ -52,10 +56,12 @@
                     @pick="showFilePicker()"
                 />
             </v-col>
-            <v-divider vertical v-show="!generateType"/>
+            <v-divider :vertical="mdAndUp" v-show="!generateType"/>
             <v-col
-                :cols="!generateType ? 4 : generateType === GenerateType.USER ? 6 : 'auto'"
-                class="mx-4 section-col"
+                :cols="12"
+                :md="!generateType ? 4 : generateType === GenerateType.USER ? 6 : 'auto'"
+                class="section-col"
+                :class="{'mx-4':mdAndUp,'my-2':!mdAndUp}"
             >
                 <GenerateUserSection
                     class="section-user flex-column"
@@ -70,7 +76,7 @@
         <v-expand-transition>
             <v-row v-show="generateType" class="my-2" justify="center">
                 <v-spacer></v-spacer>
-                <v-col>
+                <v-col cols="12" md="3">
                     <v-select
                         label="Visibility"
                         v-model="visibility"
@@ -80,7 +86,7 @@
                         persistent-hint
                     />
                 </v-col>
-                <v-col>
+                <v-col cols="12" md="3">
                     <v-text-field
                         label="Name (optional)"
                         v-model="name"
@@ -88,7 +94,7 @@
                         persistent-hint
                     />
                 </v-col>
-                <v-col>
+                <v-col cols="12" md="3">
                     <v-select
                         label="Variant"
                         v-model="variant"
@@ -208,6 +214,8 @@ const {$mineskin, $notify, $flags} = useNuxtApp();
 
 const authStore = useAuthStore();
 const queueStore = useQueueStore();
+
+const {mdAndUp} = useDisplay();
 
 const {
     data: credits,

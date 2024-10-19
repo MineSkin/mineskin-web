@@ -45,6 +45,8 @@ const {$notify,$flags} = useNuxtApp();
 
 const authStore = useAuthStore();
 
+const {mdAndUp} = useDisplay();
+
 const notificationBanner = computed(() => {
     if ($flags.hasFeature('web.notification_banner')) {
         return JSON.parse($flags.getValue('web.notification_banner'));

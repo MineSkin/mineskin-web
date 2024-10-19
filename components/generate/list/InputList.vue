@@ -1,9 +1,9 @@
 <template>
-    <div>
         <v-row justify="center" align="center" class="my-2"
                v-for="(item, index) in items"
                :key="index"
         >
+            <v-col>
             <input-list-row
                 :model-value="items[index]"
                 @update:modelValue="change(index, $event)"
@@ -17,8 +17,8 @@
                 @click:append="listAddOrRemove(index)"
             >
             </input-list-row>
+            </v-col>
         </v-row>
-    </div>
 </template>
 <script setup lang="ts">
 import { useDebounceFn } from '@vueuse/core'
