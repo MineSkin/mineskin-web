@@ -4,8 +4,6 @@ export default defineNuxtConfig({
     devtools: {enabled: true},
     app: {
         head: {
-            meta:{
-            }
         }
     },
     ssr: false,
