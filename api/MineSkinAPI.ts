@@ -179,7 +179,7 @@ export class MineSkinAPI {
         constructor(readonly api: MineSkinAPI) {
         }
 
-        public async get(){
+        public async get(options?: Partial<RequestOptions>){
             return fetch(`${ this.api.BASE }/v2/me`, {
                 credentials: 'include'
             });
@@ -188,19 +188,19 @@ export class MineSkinAPI {
         public async client() {
             return this.api.request(`/v2/me/client`, {
                 credentials: 'include'
-            });
+            },{silent:true});
         }
 
         public async credits() {
             return this.api.request(`/v2/me/credits`, {
                 credentials: 'include'
-            });
+            },{silent:true});
         }
 
         public async apikey() {
             return this.api.request(`/v2/me/apikey`, {
                 credentials: 'include'
-            });
+            },{silent:true});
         }
 
         public async skins(after?: string, size?: number, filter?: string): Promise<SkinListResponse> {
@@ -222,7 +222,7 @@ export class MineSkinAPI {
 
     }(this);
 
-    private async request<T extends MineSkinResponse>(path: string, init: RequestInit): Promise<T> {
+    private async request<T extends MineSkinResponse>(path: string, init: RequestInit, options?: Partial<RequestOptions>): Promise<T> {
         const baseInit = {
             ...INIT
         };
@@ -233,14 +233,15 @@ export class MineSkinAPI {
             ...baseInit,
             ...init
         })
-            .then(res => this.handleResponse(res));
+            .then(res => this.handleResponse(res, options));
     }
 
-    private async handleResponse<T extends MineSkinResponse>(res: Response): Promise<T> {
+    private async handleResponse<T extends MineSkinResponse>(res: Response, options?: Partial<RequestOptions>): Promise<T> {
         const json: MineSkinResponse = await res.json();
         if (json.errors?.length > 0) {
             for (let error of json.errors) {
                 console.error('API error', error);
+                if(options?.silent) continue;
                 this.nuxtApp.$notify({
                     text: error.message,
                     color: 'error'
@@ -250,6 +251,7 @@ export class MineSkinAPI {
         if (json.warnings?.length > 0) {
             for (let warning of json.warnings) {
                 console.warn('API warning', warning);
+                //if(options?.silent) continue;
                 // this.nuxtApp.$notify({
                 //     text: warning.message,
                 //     color: 'warning'
@@ -259,6 +261,7 @@ export class MineSkinAPI {
         if (json.messages?.length > 0) {
             for (let message of json.messages) {
                 console.info('API message', message);
+                if(options?.silent) continue;
                 this.nuxtApp.$notify({
                     text: message.message,
                     color: 'info'
@@ -269,4 +272,8 @@ export class MineSkinAPI {
         return json as T;
     }
 
+}
+
+export interface RequestOptions {
+    silent: boolean;
 }
