@@ -162,11 +162,15 @@ import { useQueueStore } from "~/stores/queue";
 
 const config = useRuntimeConfig();
 
-
-useHead({
+useSeoMeta({
     titleTemplate: (titleChunk) => {
         return titleChunk ? `${titleChunk} - MineSkin` : 'MineSkin - Skin Signature Generator';
     },
+    description: 'MineSkin.org allows you to generate skin texture data for Minecraft which is signed by Mojang.',
+    author: 'inventivetalent',
+})
+
+useHead({
     script: [
         {
 
