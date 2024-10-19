@@ -45,7 +45,7 @@
             <Snackbars/>
             <v-app-bar density="comfortable" class="px-4" color="mskindigo">
                 <v-app-bar-title>
-                    <nuxt-link class="app-bar-link" to="/">
+                    <nuxt-link v-if="!mdAndUp" class="app-bar-link" to="/">
                         MineSkin
                         <v-chip
                             density="compact"
