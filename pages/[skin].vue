@@ -1,3 +1,8 @@
+<style>
+.line-break-anywhere {
+ line-break: anywhere;
+}
+</style>
 <template>
     <v-container class="mb-4">
         <h2>
@@ -19,7 +24,7 @@
         </v-row>
 
         <v-row class="my-4">
-            <v-col>
+            <v-col cols="12" md="6">
                 <div class="text-grey-darken-2">Generated on {{ new Date(skin?.generator?.timestamp).toUTCString() }} in
                     {{ skin?.generator?.duration / 1000 }}s
                 </div>
@@ -27,7 +32,7 @@
                     {{ skin?.generator?.account?.substring(0, 10) }} via server {{ skin?.generator?.server }}
                 </div>
             </v-col>
-            <v-col class="text-end">
+            <v-col cols="12" md="6" class="text-end line-break-anywhere">
                 <div class="text-grey-darken-3">{{ skin?.texture?.hash?.skin }}</div>
             </v-col>
         </v-row>
