@@ -1,5 +1,10 @@
 <template>
     <v-container>
+        <v-row>
+            <v-col cols="12">
+                <h2>Skin Gallery</h2>
+            </v-col>
+        </v-row>
         <v-infinite-scroll :items="skins" :onLoad="load" style="overflow: hidden">
             <v-row justify="center">
                 <template v-for="(item, index) in skins" :key="item">
