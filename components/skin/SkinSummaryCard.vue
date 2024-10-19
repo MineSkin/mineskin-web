@@ -4,7 +4,7 @@
             <v-row>
                 <v-col cols="4">
                     <v-img
-                        :lazy-src="PLACEHOLDER_HEAD"
+                        :lazy-src="PLACEHOLDER_BODY"
                         :src="renderSkinBody(skin?.texture?.hash?.skin)"
                         aspect-ratio="1"
                     />
@@ -75,7 +75,7 @@ import type { Maybe, SkinIdAndTexture, SkinInfo2, ValueAndSignature } from "@min
 import CopyTextField from "./CopyTextField.vue";
 import { computed } from "vue";
 import { renderSkinBody } from "~/util/render";
-import { PLACEHOLDER_HEAD } from "~/util/skin";
+import { PLACEHOLDER_BODY, PLACEHOLDER_HEAD } from "~/util/skin";
 const props = defineProps<{
     skin: SkinInfo2;
 }>();
