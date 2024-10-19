@@ -22,7 +22,7 @@
 import { useNuxtApp } from "#app";
 
 useHead({
-    title: 'My Skins - MineSkin'
+    title: 'My Skins'
 });
 
 const router = useRouter()
