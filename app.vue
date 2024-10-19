@@ -164,6 +164,9 @@ const config = useRuntimeConfig();
 
 
 useHead({
+    titleTemplate: (titleChunk) => {
+        return titleChunk ? `${titleChunk} - MineSkin` : 'MineSkin - Skin Signature Generator';
+    },
     script: [
         {
 

@@ -4,7 +4,7 @@
             <back-link  to="/gallery" class="text-white">
                 <v-icon icon="mdi-arrow-left" class="mx-2"/>
             </back-link>
-            {{ skinName(skin) || 'Skin' }}
+            {{ skinNameDisplay }}
         </h2>
         <v-row class="mt-1">
             <v-col cols="12">
@@ -49,6 +49,10 @@ const skinId = computed<string>(() => {
 
 const {$mineskin} = useNuxtApp();
 
+const skinNameDisplay = computed(() => {
+    return skinName(skin.value) || 'Skin';
+});
+
 const {
     data: skin
 } = useLazyAsyncData<Maybe<SkinInfo2>>(`skin-${ skinId.value }`, async () => {
@@ -56,7 +60,7 @@ const {
 });
 
 useHead({
-    title: `${ skinName(skin.value) || 'Skin' } - MineSkin`
+    title: skinNameDisplay
 });
 
 </script>
