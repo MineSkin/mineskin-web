@@ -2,14 +2,14 @@
     <v-card>
         <v-card-text>
             <v-row>
-                <v-col cols="4">
+                <v-col cols="12" md="4">
                     <v-img
                         :lazy-src="PLACEHOLDER_BODY"
                         :src="renderSkinBody(skin?.texture?.hash?.skin)"
                         aspect-ratio="1"
                     />
                 </v-col>
-                <v-divider vertical class="my-4"/>
+                <v-divider :vertical="mdAndUp" class="my-4"/>
                 <v-col>
                     <v-row dense>
                         <v-col>
@@ -61,8 +61,8 @@
                             <v-skeleton-loader v-if="!skin" type="button,button"/>
                         </v-col>
                         <v-col v-else>
-                            <v-btn color="secondary" text="Use This Skin" class="mx-2" size="large" :href="useSkinLink"></v-btn>
-                            <v-btn color="accent" text="Download Skin" class="mx-2" size="large" :href="skinTextureUrl" download></v-btn>
+                            <v-btn color="secondary" text="Use This Skin" class="ma-2" size="large" :href="useSkinLink"></v-btn>
+                            <v-btn color="accent" text="Download Skin" class="ma-2" size="large" :href="skinTextureUrl" download></v-btn>
                         </v-col>
                     </v-row>
                 </v-col>
@@ -79,6 +79,8 @@ import { PLACEHOLDER_BODY, PLACEHOLDER_HEAD } from "~/util/skin";
 const props = defineProps<{
     skin: SkinInfo2;
 }>();
+
+const {mdAndUp} = useDisplay();
 
 const skinLink = computed(() => {
     return `https://minesk.in/${ props.skin.uuid }`;
