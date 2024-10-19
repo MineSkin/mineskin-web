@@ -4,7 +4,6 @@ export default defineNuxtConfig({
     devtools: {enabled: true},
     app: {
         head: {
-            title: "MineSkin - Skin Signature Generator"
         }
     },
     ssr: false,
