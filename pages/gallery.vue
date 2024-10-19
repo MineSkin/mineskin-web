@@ -1,7 +1,7 @@
 <template>
     <v-container>
         <v-infinite-scroll :items="skins" :onLoad="load" style="overflow: hidden">
-            <v-row>
+            <v-row justify="center">
                 <template v-for="(item, index) in skins" :key="item">
 <!--                    <v-col cols="4" sm="3" md="2">-->
                         <skin-link-card class="ma-2" :skin="item"/>
