@@ -1,10 +1,9 @@
 import { defineStore } from "pinia";
 import type { JobInfo } from "@mineskin/types";
-import type { JobWithSkin } from "~/types/JobWithSkin";
+import type { JobWithMeta } from "~/types/JobWithMeta";
 
 export const useQueueStore = defineStore('queue', () => {
-    const jobMap = ref<Record<string, JobInfo>>({});
-    const refreshes = ref<Map<string, number>>(new Map());
+    const jobMap = ref<Record<string, JobWithMeta>>({});
 
     const jobsDrawer = ref(false);
 
@@ -12,15 +11,15 @@ export const useQueueStore = defineStore('queue', () => {
 
     const {$mineskin, $notify} = useNuxtApp();
 
-    const jobs = computed<JobInfo[]>(() => Object.values(jobMap.value));
+    const jobs = computed<JobWithMeta[]>(() => Object.values(jobMap.value));
 
-    const jobsSorted = computed<JobInfo[]>(() => {
+    const jobsSorted = computed<JobWithMeta[]>(() => {
         return jobs.value.sort((a, b) => {
             return b.timestamp - a.timestamp;
         }).slice(0, 8);
     });
 
-    const addJob = (job: JobInfo) => {
+    const addJob = (job: JobWithMeta) => {
         console.debug('addJob', job);
         const existing = job.id === 'unknown' ? undefined : jobMap.value[job.id];
         if (existing) {
@@ -28,6 +27,12 @@ export const useQueueStore = defineStore('queue', () => {
                 ...existing,
                 ...job
             }
+        }
+        if (!job.lastStatusCheck) {
+            job.lastStatusCheck = Date.now();
+        }
+        if (!job.statusCheckCount) {
+            job.statusCheckCount = 0;
         }
         jobMap.value[job.id] = job;
         console.debug(jobsSorted.value.length);
@@ -46,29 +51,33 @@ export const useQueueStore = defineStore('queue', () => {
         const response = await $mineskin.queue.list();
         if (response.success) {
             for (const job of response.jobs) {
-                addJob(job);
+                addJob(job as JobWithMeta);
             }
         }
 
         if (!updateTimer) {
             updateTimer = setInterval(() => {
                 updatePendingJobs();
-            }, 1000);
+            }, 1500);
         }
     }
 
     const updatePendingJobs = async () => {
         for (const job of jobs.value.values()) {
             if (job.status === 'waiting' || job.status === 'processing') {
-                const r = refreshes.value.get(job.id);
-                if (r > 5) {
+                if (Date.now() - job.lastStatusCheck < 1800 * job.statusCheckCount) {
                     continue;
                 }
-                refreshes.value.set(job.id, (r || 0) + 1);
+                if (job.statusCheckCount > 10) {
+                    continue;
+                }
+
+                job.statusCheckCount++;
+                job.lastStatusCheck = Date.now();
 
                 const response = await $mineskin.queue.get(job.id);
                 if (response.success) {
-                    addJob(response.job);
+                    addJob(response.job as JobWithMeta);
                 }
             }
         }
