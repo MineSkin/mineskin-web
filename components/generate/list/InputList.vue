@@ -1,9 +1,9 @@
 <template>
-        <v-row justify="center" align="center" class="my-2"
-               v-for="(item, index) in items"
-               :key="index"
-        >
-            <v-col>
+    <v-row justify="center" align="center" class="my-2"
+           v-for="(item, index) in items"
+           :key="index"
+    >
+        <v-col>
             <input-list-row
                 :model-value="items[index]"
                 @update:modelValue="change(index, $event)"
@@ -17,11 +17,11 @@
                 @click:append="listAddOrRemove(index)"
             >
             </input-list-row>
-            </v-col>
-        </v-row>
+        </v-col>
+    </v-row>
 </template>
 <script setup lang="ts">
-import { useDebounceFn } from '@vueuse/core'
+import { computedAsync, useDebounceFn } from '@vueuse/core'
 import InputListRow from "./InputListRow.vue";
 
 const items = defineModel<string[]>(['']);
@@ -30,13 +30,19 @@ const props = defineProps<{
     prependIcon?: string;
     type?: string;
     rule?: string;
-    imageProvider?: (item: string)=>string|Promise<string>;
-}>()
+    imageProvider?: (item: string) => string | Promise<string>;
+}>();
+
+const {$mineskin} = useNuxtApp();
 
 const allRules = {
     required: (value: string) => !!value || 'Required.',
     url: (value: string) => !value || value?.startsWith('http') || 'Invalid URL',
-    uuidOrName: (value: string) => !value || value?.length > 1 && (value.length < 17 || value.length > 32) || 'Invalid UUID or Name'
+    uuidOrName: (value: string) => !value || value?.length > 1 && (value.length < 17 || value.length > 32) || 'Invalid UUID or Name',
+    validNameOrUuid: async (value: string) => {
+        const {valid} = await validateUser(value);
+        return valid || 'Invalid UUID or Name';
+    }
 };
 
 const rules = computed(() => {
@@ -44,7 +50,7 @@ const rules = computed(() => {
         case 'url':
             return [allRules.url];
         case 'user':
-            return [allRules.uuidOrName];
+            return [allRules.uuidOrName, allRules.validNameOrUuid];
         default:
             return [];
     }
@@ -72,4 +78,12 @@ function listAddOrRemove(index: number) {
         items.value.splice(index, 1);
     }
 }
+
+async function validateUser(user: string) {
+    if (user.length < 32) {
+        return await $mineskin.validate.name(user);
+    }
+    return {valid: true};
+}
+
 </script>

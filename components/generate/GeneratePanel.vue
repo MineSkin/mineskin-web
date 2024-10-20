@@ -426,7 +426,22 @@ async function generate() {
             if (!canGenerateMultiple.value) {
                 users.value = [users.value[0]];
             }
-            for (const user of users.value) {
+            let validated: string[] = [];
+            for (let user of users.value) {
+                if (user.length < 32) {
+                    const {valid, uuid} = await $mineskin.validate.name(user);
+                    if (!valid) {
+                        $notify({
+                            text: `Invalid user: ${ user }`,
+                            color: 'warning'
+                        });
+                        continue;
+                    }
+                    validated.push(uuid!);
+                }
+            }
+            users.value = validated;
+            for (const user of validated) {
                 await sleep(500);
                 responses.push(await $mineskin.queue.user(user, options))
             }
