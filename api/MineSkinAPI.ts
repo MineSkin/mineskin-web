@@ -123,6 +123,26 @@ export class MineSkinAPI {
             });
         }
 
+        public async user(user: string, options: GenerateOptions): Promise<GenerateJobResponse> {
+            const body: any = {
+                user
+            };
+            if (options.visibility) {
+                body['visibility'] = options.visibility;
+            }
+            if (options.variant) {
+                body['variant'] = options.variant;
+            }
+            if (options.name) {
+                body['name'] = options.name;
+            }
+            return this.api.request(`/v2/queue`, {
+                ...INIT,
+                method: 'POST',
+                body: JSON.stringify(body)
+            });
+        }
+
         public async list(): Promise<JobListResponse> {
             return this.api.request(`/v2/queue`, {
                 ...INIT,

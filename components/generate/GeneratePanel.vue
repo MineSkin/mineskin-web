@@ -402,10 +402,16 @@ async function generate() {
             }
             break;
         case GenerateType.USER:
-            $notify({
-                text: 'User generation not yet implemented',
-                color: 'warning'
+            response = await $mineskin.queue.user(users.value[0], {
+                visibility: visibility.value,
+                variant: variant.value || undefined,
+                name: name.value
             });
+            if (response.success) {
+                if ('job' in response) {
+                    queueStore.addJob((response as GenerateJobResponse).job);
+                }
+            }
             break;
     }
 }
