@@ -163,7 +163,11 @@
                     </v-row>
                     <v-row justify="center" class="mt-2 text-center">
                         <div v-if="showCreditsInfo && !generating && (credits && credits.balance>0)">
-                            <span>This request will consume {{ imageCount || 1 }} {{ imageCount>1?'credits':'credit' }} if the skin is successfully generated.</span><br/>
+                            <span>This request will consume {{
+                                    imageCount || 1
+                                }} {{
+                                    imageCount > 1 ? 'credits' : 'credit'
+                                }} if the skin is successfully generated.</span><br/>
                             <span>You have {{ credits?.balance }} {{ credits?.type }} credits remaining.</span>
                         </div>
                         <div v-else-if="showCreditsInfo && !generating">
@@ -198,7 +202,7 @@
 </template>
 <script setup lang="ts">
 
-import { GenerateType, type Maybe, SkinVariant, SkinVisibility2 } from "@mineskin/types";
+import { type GenerateOptions, GenerateType, type Maybe, SkinVariant, SkinVisibility2 } from "@mineskin/types";
 import { useLazyAsyncData, useNuxtApp } from "nuxt/app";
 import { useQueueStore } from "../../stores/queue";
 import { computed, ref } from "vue";
@@ -264,7 +268,7 @@ const imageCount = computed(() => {
 const canUsePrivateSkins = computed(() => {
     return authStore.authed && authStore.grants?.private_skins;
 });
-const canGenerateMultiple = computed(()=>{
+const canGenerateMultiple = computed(() => {
     return authStore.authed;
 })
 
@@ -373,6 +377,14 @@ function reset() {
     generating.value = false;
 }
 
+function getOptions(): GenerateOptions {
+    return {
+        visibility: visibility.value,
+        variant: variant.value || undefined,
+        name: name.value
+    }
+}
+
 async function generate() {
     console.log('generate');
     if (imageCount.value > 1 && !canGenerateMultiple.value) {
@@ -385,44 +397,59 @@ async function generate() {
     generating.value = true;
     await sleep(100);
 
-    let response: GenerateJobResponse;
+    const options: GenerateOptions = getOptions();
+
+    let responses: GenerateJobResponse[] = [];
     switch (generateType.value) {
-        case GenerateType.UPLOAD:
+        case GenerateType.UPLOAD: {
             //TODO: actually process all images
-            response = await $mineskin.queue.upload(uploadFiles.value[0], {
-                visibility: visibility.value,
-                variant: variant.value || undefined,
-                name: name.value
-            });
+            if (!canGenerateMultiple.value) {
+                uploadFiles.value = [uploadFiles.value[0]];
+            }
+            for (const file of uploadFiles.value) {
+                await sleep(500);
+                responses.push(await $mineskin.queue.upload(file, options));
+            }
             break;
-        case GenerateType.URL:
-            response = await $mineskin.queue.url(urls.value[0], {
-                visibility: visibility.value,
-                variant: variant.value || undefined,
-                name: name.value
-            });
+        }
+        case GenerateType.URL: {
+            if (!canGenerateMultiple.value) {
+                urls.value = [urls.value[0]];
+            }
+            for (const url of urls.value) {
+                await sleep(500);
+                responses.push(await $mineskin.queue.url(url, options))
+            }
             break;
-        case GenerateType.USER:
-            response = await $mineskin.queue.user(users.value[0], {
-                visibility: visibility.value,
-                variant: variant.value || undefined,
-                name: name.value
-            });
+        }
+        case GenerateType.USER: {
+            if (!canGenerateMultiple.value) {
+                users.value = [users.value[0]];
+            }
+            for (const user of users.value) {
+                await sleep(500);
+                responses.push(await $mineskin.queue.user(user, options))
+            }
             break;
-        default:
+        }
+        default: {
             $notify({
                 text: 'No valid input found',
                 color: 'warning'
             });
             generating.value = false;
             return;
+        }
     }
-    if (response.success) {
-        if ('job' in response) {
-            queueStore.addJob((response as GenerateJobResponse).job);
+    for (const response of responses) {
+        if (response.success) {
+            if ('job' in response) {
+                queueStore.addJob((response as GenerateJobResponse).job);
+            }
         }
     }
 }
+
 
 onMounted(() => {
     if ($flags.hasFeature('web.visibility.private')) {
