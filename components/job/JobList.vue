@@ -1,8 +1,8 @@
 <template>
     <v-list>
         <v-list-subheader>Jobs</v-list-subheader>
-        <JobStatus v-for="job in queueStore.jobsSorted" :id="job.id"/>
-        <v-list-item v-if="queueStore.jobs.length<=0">
+        <JobStatus v-for="job in jobs" :id="job.id" :key="job.id"/>
+        <v-list-item v-if="jobs.length<=0">
             <v-list-item-title>No jobs in queue</v-list-item-title>
         </v-list-item>
 <!--        <dbg :data="queueStore.jobMap"></dbg>-->
@@ -15,6 +15,8 @@ import { useQueueStore } from "~/stores/queue";
 const queueStore = useQueueStore();
 
 const {$mineskin} = useNuxtApp();
+
+const jobs = computed(() => queueStore.jobsSorted);
 
 onMounted(() => {
     queueStore.refreshJobList();
