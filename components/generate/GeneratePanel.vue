@@ -264,6 +264,9 @@ const imageCount = computed(() => {
 const canUsePrivateSkins = computed(() => {
     return authStore.authed && authStore.grants?.private_skins;
 });
+const canGenerateMultiple = computed(()=>{
+    return authStore.authed;
+})
 
 const showCreditsInfo = computed(() => $flags.hasFeature('web.credits.show_info'));
 
@@ -372,9 +375,17 @@ function reset() {
 
 async function generate() {
     console.log('generate');
+    if (imageCount.value > 1 && !canGenerateMultiple.value) {
+        $notify({
+            text: 'Please log in to generate multiple skins at once',
+            color: 'warning'
+        });
+        return;
+    }
     generating.value = true;
     await sleep(100);
-    let response;
+
+    let response: GenerateJobResponse;
     switch (generateType.value) {
         case GenerateType.UPLOAD:
             //TODO: actually process all images
@@ -383,11 +394,6 @@ async function generate() {
                 variant: variant.value || undefined,
                 name: name.value
             });
-            if (response.success) {
-                if ('job' in response) {
-                    queueStore.addJob((response as GenerateJobResponse).job);
-                }
-            }
             break;
         case GenerateType.URL:
             response = await $mineskin.queue.url(urls.value[0], {
@@ -395,11 +401,6 @@ async function generate() {
                 variant: variant.value || undefined,
                 name: name.value
             });
-            if (response.success) {
-                if ('job' in response) {
-                    queueStore.addJob((response as GenerateJobResponse).job);
-                }
-            }
             break;
         case GenerateType.USER:
             response = await $mineskin.queue.user(users.value[0], {
@@ -407,12 +408,19 @@ async function generate() {
                 variant: variant.value || undefined,
                 name: name.value
             });
-            if (response.success) {
-                if ('job' in response) {
-                    queueStore.addJob((response as GenerateJobResponse).job);
-                }
-            }
             break;
+        default:
+            $notify({
+                text: 'No valid input found',
+                color: 'warning'
+            });
+            generating.value = false;
+            return;
+    }
+    if (response.success) {
+        if ('job' in response) {
+            queueStore.addJob((response as GenerateJobResponse).job);
+        }
     }
 }
 
