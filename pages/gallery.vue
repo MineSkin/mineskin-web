@@ -10,7 +10,7 @@
                 <template v-for="(item, index) in skins" :key="item">
                     <!--                    <v-col cols="4" sm="3" md="2">-->
                     <div v-if="item.ad"
-                         style="max-height: 1200px;width:min(180px,max(90px,20vmin));">
+                         style="max-height: 1200px;width:min(390px,max(180px,40vmin));">
                         <ad-wrappper
                             ad-format="fluid"
                             ad-layout-key="+1i+s2-10-1k+6v"
