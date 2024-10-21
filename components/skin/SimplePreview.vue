@@ -6,7 +6,7 @@
 <template>
     <div>
         <v-img class="preview" aspect-ratio="1" :src="texture"></v-img>
-<!--        <v-img class="preview" aspect-ratio="1" :src="image"></v-img>-->
+        <!--        <v-img class="preview" aspect-ratio="1" :src="image"></v-img>-->
     </div>
 </template>
 <script setup lang="ts">
@@ -24,12 +24,16 @@ const {$mineskin} = useNuxtApp();
 
 const userValidation = computedAsync(async () => {
     if (props.user) {
-        return await $mineskin.validate.name(props.user);
+        if (props.user.length < 32) {
+            return await $mineskin.validate.name(props.user);
+        }else {
+            return await $mineskin.validate.uuid(props.user);
+        }
     }
     return undefined;
 });
 
-const fileBase64 = computedAsync(async ()=>{
+const fileBase64 = computedAsync(async () => {
     if (props.file) {
         return await fileAsBase64(props.file);
     }
@@ -50,7 +54,7 @@ const texture = computed(() => {
     }
 });
 
-const image = computed(()=>{
+const image = computed(() => {
     if (props.file) {
         return fileBase64.value;
     }

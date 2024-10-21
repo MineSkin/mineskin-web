@@ -82,8 +82,9 @@ function listAddOrRemove(index: number) {
 async function validateUser(user: string) {
     if (user.length < 32) {
         return await $mineskin.validate.name(user);
+    }else {
+        return await $mineskin.validate.uuid(user);
     }
-    return {valid: true};
 }
 
 </script>
