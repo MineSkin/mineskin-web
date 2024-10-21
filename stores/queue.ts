@@ -11,13 +11,7 @@ export const useQueueStore = defineStore('queue', () => {
 
     const {$mineskin, $notify} = useNuxtApp();
 
-    const jobs = computed<JobWithMeta[]>(() => Object.values(jobMap.value));
-
-    const jobsSorted = computed<JobWithMeta[]>(() => {
-        return jobs.value.sort((a, b) => {
-            return b.timestamp - a.timestamp;
-        }).slice(0, 8);
-    });
+    const jobsSorted = ref<JobWithMeta[]>([]);
 
     const addJob = (job: JobWithMeta) => {
         console.debug('addJob', job);
@@ -60,10 +54,19 @@ export const useQueueStore = defineStore('queue', () => {
                 updatePendingJobs();
             }, 1500);
         }
+        updateSortedJobs();
+    }
+
+    const updateSortedJobs = ()=>{
+        const jobs = Object.values(jobMap.value);
+        const sorted = jobs.sort((a, b) => {
+            return b.timestamp - a.timestamp;
+        }).slice(0, 8);
+        jobsSorted.value = sorted;
     }
 
     const updatePendingJobs = async () => {
-        for (const job of jobs.value.values()) {
+        for (const job of jobsSorted.value.values()) {
             if(job.id === 'unknown') continue;
             if (job.status === 'waiting' || job.status === 'processing') {
                 if (Date.now() - job.lastStatusCheck < 1800 * job.statusCheckCount) {
@@ -84,6 +87,7 @@ export const useQueueStore = defineStore('queue', () => {
                 }
             }
         }
+        updateSortedJobs();
     }
 
     //TODO: save generated skins in local storage
@@ -99,19 +103,19 @@ export const useQueueStore = defineStore('queue', () => {
     }
 
     const hasPendingJobs = computed(() => {
-        return jobs.value.some(job => job.status === 'waiting' || job.status === 'processing');
+        return jobsSorted.value.some(job => job.status === 'waiting' || job.status === 'processing');
     });
 
 
     return {
         jobMap,
-        jobs,
         jobsSorted,
         addJob,
         removeJobId,
         removeJob,
         refreshJobList,
         updatePendingJobs,
+        updateSortedJobs,
         hasPendingJobs,
         jobsDrawer
     }

@@ -463,6 +463,7 @@ async function generate() {
             }
         }
     }
+    queueStore.updateSortedJobs();
 }
 
 
