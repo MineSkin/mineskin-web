@@ -37,7 +37,7 @@
                 model-value="100"
                 :color="job.status === 'completed' ? 'success':'error'">
                 <template v-slot:default>
-                    Done
+                    {{ job.status === 'completed' ? 'Completed' : 'Failed' }}
                 </template>
             </v-progress-linear>
         </v-list-item>
