@@ -64,6 +64,7 @@ export const useQueueStore = defineStore('queue', () => {
 
     const updatePendingJobs = async () => {
         for (const job of jobs.value.values()) {
+            if(job.id === 'unknown') continue;
             if (job.status === 'waiting' || job.status === 'processing') {
                 if (Date.now() - job.lastStatusCheck < 1800 * job.statusCheckCount) {
                     continue;
