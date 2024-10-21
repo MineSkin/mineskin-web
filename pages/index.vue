@@ -28,7 +28,7 @@
                 <GeneratePanel/>
             </v-col>
         </v-row>
-<!--        <v-btn @click="testNotify()">Notify Test</v-btn>-->
+        <v-btn @click="testNotify()">Notify Test</v-btn>
 <!--        <JobList/> &lt;!&ndash;TODO: move&ndash;&gt;-->
 <!--        <dbg :data="authStore.user"/>-->
 <!--        <CreditsInfo/> &lt;!&ndash;TODO: move&ndash;&gt;-->
@@ -58,9 +58,9 @@ const notificationBanner = computed(() => {
 
 function testNotify() {
     $notify({
-        text: 'Hello World',
+        text: 'Hello World\n\nTest',
         color: 'success',
-        timeout: 1000
+        timeout: 20000
     });
 }
 </script>

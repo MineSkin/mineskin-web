@@ -1,21 +1,24 @@
+<!-- https://github.com/alihdev/vuetify-helper/blob/main/snackbars-stack-way.md -->
 <template>
-    <v-snackbar-queue
-        v-model="queue" :color="color" :timeout="timeout"
-        closable
+    <VSnackbar
+        v-for="(snackbar) in snackbars"
+        :key="snackbar.id"
+        v-model="snackbar.show"
         location="top right"
-        position="fixed"
-    ></v-snackbar-queue>
+        variant="flat"
+        :timeout="snackbar.timeout"
+        :color="snackbar.color"
+        :style="{ top: `${snackbar.position}px` }"
+        @update:model-value="onChanged(snackbar.id, $event)"
+    >
+        {{ snackbar.text }}
+    </VSnackbar>
 </template>
-
 <script setup lang="ts">
-import {useState} from "#app";
-import type { SnackbarConfig } from "~/types/SnackbarConfig";
 
-const queue = useState<Array<SnackbarConfig>>('snackbars', () => ([]));
+const store = useSnackbarStore()
 
-const timeout = ref(5000);
-const color = ref("success");
+const { snackbars } = storeToRefs(store)
 
-onMounted(()=>{
-})
+const onChanged = (id: number, isShow: boolean) => !isShow && store.remove(id)
 </script>
