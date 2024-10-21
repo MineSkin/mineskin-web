@@ -49,15 +49,14 @@ export class MineSkinAPI {
                 formData.append('name', options.name);
             }
             return this.api.request(`/v2/generate`, {
-                headers: {
-                },
+                headers: {},
                 method: 'POST',
                 body: formData
             });
         }
 
         public async url(url: string, options: GenerateOptions): Promise<SkinResponse> {
-            const body:any = {
+            const body: any = {
                 url
             };
             if (options.visibility) {
@@ -96,8 +95,7 @@ export class MineSkinAPI {
                 formData.append('name', options.name);
             }
             return this.api.request(`/v2/queue`, {
-                headers: {
-                },
+                headers: {},
                 method: 'POST',
                 body: formData
             });
@@ -151,7 +149,7 @@ export class MineSkinAPI {
         }
 
         public async get(jobId: string): Promise<GenerateJobResponse> {
-            return this.api.request(`/v2/queue/${ jobId }?t=${Math.round(Date.now()/1000)}`, INIT);
+            return this.api.request(`/v2/queue/${ jobId }?t=${ Math.round(Date.now() / 1000) }`, INIT);
         }
 
     }(this);
@@ -205,7 +203,7 @@ export class MineSkinAPI {
         constructor(readonly api: MineSkinAPI) {
         }
 
-        public async get(options?: Partial<RequestOptions>){
+        public async get(options?: Partial<RequestOptions>) {
             return fetch(`${ this.api.BASE }/v2/me`, {
                 credentials: 'include'
             });
@@ -214,19 +212,19 @@ export class MineSkinAPI {
         public async client() {
             return this.api.request(`/v2/me/client`, {
                 credentials: 'include'
-            },{silent:true});
+            }, {silent: true});
         }
 
         public async credits() {
             return this.api.request(`/v2/me/credits`, {
                 credentials: 'include'
-            },{silent:true});
+            }, {silent: true});
         }
 
         public async apikey() {
             return this.api.request(`/v2/me/apikey`, {
                 credentials: 'include'
-            },{silent:true});
+            }, {silent: true});
         }
 
         public async skins(after?: string, size?: number, filter?: string): Promise<SkinListResponse> {
@@ -255,7 +253,7 @@ export class MineSkinAPI {
         if (this.authed) {
             baseInit.credentials = init?.credentials ?? 'include';
         }
-        return fetch(`${this.BASE}${path}`, {
+        return fetch(`${ this.BASE }${ path }`, {
             ...baseInit,
             ...init
         })
@@ -267,7 +265,8 @@ export class MineSkinAPI {
         if (json.errors?.length > 0) {
             for (let error of json.errors) {
                 console.error('API error', error);
-                if(options?.silent) continue;
+                if (options?.silent) continue;
+                if (res.ok) continue; // ignore error messages if response is ok
                 this.nuxtApp.$notify({
                     text: error.message,
                     color: 'error'
@@ -287,7 +286,7 @@ export class MineSkinAPI {
         if (json.messages?.length > 0) {
             for (let message of json.messages) {
                 console.info('API message', message);
-                if(options?.silent) continue;
+                if (options?.silent) continue;
                 this.nuxtApp.$notify({
                     text: message.message,
                     color: 'info'
