@@ -102,7 +102,8 @@ const skinTextureUrl = computed(() => {
 });
 
 const proxiedSkinTextureUrl = computed(()=>{
-    return `https://mineskin.org/textures/${ props.skin.texture.hash.skin }`;
+    //TODO: update this domain
+    return `https://v2.mineskin.org/textures/${ props.skin.texture.hash.skin }`;
 })
 
 //TODO: verify this actually still works
