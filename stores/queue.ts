@@ -48,7 +48,7 @@ export const useQueueStore = defineStore('queue', () => {
     }
 
     const refreshJobList = async () => {
-        const response = await $mineskin.queue.list();
+        const response = await $mineskin.queue.list({silent:true});
         if (response.success) {
             for (const job of response.jobs) {
                 addJob(job as JobWithMeta);
