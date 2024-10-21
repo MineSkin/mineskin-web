@@ -62,7 +62,7 @@
                         </v-col>
                         <v-col v-else>
                             <v-btn color="secondary" text="Use This Skin" class="ma-2" size="large" :href="useSkinLink"></v-btn>
-                            <v-btn color="accent" text="Download Skin" class="ma-2" size="large" :href="skinTextureUrl" download></v-btn>
+                            <v-btn color="accent" text="Download Skin" class="ma-2" size="large" :href="proxiedSkinTextureUrl" download></v-btn>
                         </v-col>
                     </v-row>
                 </v-col>
@@ -100,6 +100,10 @@ const skinSignature = computed(() => {
 const skinTextureUrl = computed(() => {
     return skinTexture.value?.url.skin;
 });
+
+const proxiedSkinTextureUrl = computed(()=>{
+    return `https://mineskin.org/textures/${ props.skin.texture.hash.skin }`;
+})
 
 //TODO: verify this actually still works
 const useSkinLink = computed(()=>{
