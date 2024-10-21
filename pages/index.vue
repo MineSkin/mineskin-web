@@ -20,6 +20,7 @@
             </v-col>
         </v-row>
         <v-row class="text-center">
+            <!-- web v2 index middle banner -->
             <ad-wrappper ad-slot="3929622901"/>
         </v-row>
         <v-row>

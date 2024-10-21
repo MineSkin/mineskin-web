@@ -9,7 +9,6 @@
         <component is="script" async
                    :src="'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=' + clientId"
                    crossorigin="anonymous"></component>
-        <!-- web v2 index middle banner -->
         <slot name="ad">
             <ins class="adsbygoogle"
                  style="display:block"
@@ -17,6 +16,7 @@
                  :data-ad-client="clientId"
                  :data-ad-slot="adSlot"
                  :data-ad-format="adFormat||'auto'"
+                 :data-ad-layout-key="adLayoutKey"
                  :data-full-width-responsive="responsive||true"></ins>
         </slot>
         <component is="script">
@@ -35,6 +35,7 @@ const clientId = runtimeConfig.public.google.adsense;
 const props = defineProps<{
     adSlot?: string;
     adFormat?: string;
+    adLayoutKey?: string;
     responsive?: boolean;
 }>();
 

@@ -8,9 +8,17 @@
         <v-infinite-scroll :items="skins" :onLoad="load" style="overflow: hidden">
             <v-row justify="center">
                 <template v-for="(item, index) in skins" :key="item">
-<!--                    <v-col cols="4" sm="3" md="2">-->
-                        <skin-link-card class="ma-2" :skin="item"/>
-<!--                    </v-col>-->
+                    <!--                    <v-col cols="4" sm="3" md="2">-->
+                    <div v-if="item.ad"
+                         style="max-height: 1200px;width:min(180px,max(90px,20vmin));">
+                        <ad-wrappper
+                            ad-format="fluid"
+                            ad-layout-key="+1i+s2-10-1k+6v"
+                            ad-slot="3361952161"
+                        />
+                    </div>
+                    <skin-link-card v-else class="ma-2" :skin="item"/>
+                    <!--                    </v-col>-->
                 </template>
             </v-row>
         </v-infinite-scroll>
@@ -25,6 +33,8 @@
 </template>
 <script setup lang="ts">
 import { useNuxtApp } from "#app";
+import type { Maybe } from "@mineskin/types";
+import type { ListedSkin } from "~/types/SkinListResponse";
 
 useHead({
     title: 'Gallery'
@@ -32,9 +42,9 @@ useHead({
 
 const router = useRouter()
 
-const {$mineskin} = useNuxtApp();
+const {$mineskin, $flags} = useNuxtApp();
 
-const filter = computed(()=>{
+const filter = computed<string>(() => {
     return router.currentRoute.value.query.filter || '';
 })
 
@@ -45,18 +55,21 @@ const filter = computed(()=>{
 //     return $mineskin.skins.list();
 // });
 
-const skins = ref([]);
-const after = ref(null);
+const skins = ref<ListedSkin[]>([]);
+const after = ref<string | null>(null);
 const hasNext = ref(true);
 
 async function api() {
     if (!hasNext.value) return [];
-    const response = await $mineskin.skins.list(after.value,undefined,filter.value);
+    const response = await $mineskin.skins.list(after.value, undefined, filter.value);
     console.debug(response);
     const skins = response?.skins || [];
     hasNext.value = skins.length > 0;
     if (skins.length > 0) {
-        after.value = skins[skins.length - 1].uuid;
+        after.value = skins[skins.length - 1].uuid!;
+        if (inlineAdRate.value != 0 && Math.random() < inlineAdRate.value) {
+            skins.splice(Math.floor(Math.random() * skins.length), 0, {uuid: '', ad: true});
+        }
     }
     return skins;
     // return new Promise(resolve => {
@@ -80,10 +93,16 @@ async function load({done}) {
     done('ok')
 }
 
-onMounted(async () => {
-    await load({done: () => {}})
-})
+const inlineAdRate = computed(() => Number($flags.getValue('web.ads.gallery_inline_rate', {
+    fallback: .5
+})));
 
+onMounted(async () => {
+    await load({
+        done: () => {
+        }
+    })
+})
 
 
 </script>
