@@ -14,7 +14,7 @@
             color="success"
         >
             <template v-slot:default>
-                {{ credits.total - credits.balance }} / {{ credits.total }} {{ credits.type }} credits used
+                {{ credits.total - credits.balance }} / {{ credits.total }} credits used
             </template>
         </v-progress-linear>
     </div>

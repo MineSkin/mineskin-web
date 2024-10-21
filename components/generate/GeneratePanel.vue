@@ -168,7 +168,7 @@
                                 }} {{
                                     imageCount > 1 ? 'credits' : 'credit'
                                 }} if the skin is successfully generated.</span><br/>
-                            <span>You have {{ credits?.balance }} {{ credits?.type }} credits remaining.</span>
+                            <span>You have {{ credits?.balance }} credits remaining.</span>
                         </div>
                         <div v-else-if="showCreditsInfo && !generating">
                             <span>You do not have any credits remaining.</span><br/>
