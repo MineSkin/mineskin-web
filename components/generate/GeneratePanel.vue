@@ -162,13 +162,13 @@
                         ></v-btn>
                     </v-row>
                     <v-row justify="center" class="mt-2 text-center">
-                        <div v-if="showCreditsInfo && !generating && (credits && credits.balance>0)">
+                        <div v-if="showCreditsInfo && !generating && (credits && credits.all.balance>0)">
                             <span>This request will consume {{
                                     imageCount || 1
                                 }} {{
                                     imageCount > 1 ? 'credits' : 'credit'
                                 }} if the skin is successfully generated.</span><br/>
-                            <span>You have {{ credits?.balance }} credits remaining.</span>
+                            <span>You have {{ credits?.all?.balance }} credits remaining.</span>
                         </div>
                         <div v-else-if="showCreditsInfo && !generating">
                             <span>You do not have any credits remaining.</span><br/>
