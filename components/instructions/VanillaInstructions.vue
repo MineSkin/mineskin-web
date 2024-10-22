@@ -6,7 +6,7 @@
             direction="vertical"
             class="mr-2"
         >
-            <v-tab text="1.16" :value="16"></v-tab>
+            <v-tab text="1.16+" :value="16"></v-tab>
             <v-tab text="1.13" :value="13"></v-tab>
             <v-tab text="1.12" :value="12"></v-tab>
         </v-tabs>
