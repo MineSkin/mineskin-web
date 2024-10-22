@@ -15,7 +15,7 @@ pre.instructions{
             <v-tab text="Mojang" value="mojang"></v-tab>
         </v-tabs>
 
-        <v-tabs-window v-model="type" direction="vertical">
+        <v-tabs-window v-model="type" direction="vertical"  class="w-100" >
             <v-tabs-window-item v-for="t in types" :key="t" :value="t">
                 <div>
                     <SkinCode :skin="skin" :type="type"/>
