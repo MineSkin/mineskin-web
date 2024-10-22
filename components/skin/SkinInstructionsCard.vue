@@ -1,3 +1,11 @@
+<style>
+.instructions-text-container {
+    min-height: 175px;
+}
+pre.instructions {
+    display: none;
+}
+</style>
 <template>
     <v-card min-height="260">
         <v-tabs
@@ -9,7 +17,7 @@
             <v-tab value="code">Code</v-tab>
         </v-tabs>
         <v-card-text>
-            <v-tabs-window v-model="instructionsTab">
+            <v-tabs-window v-model="instructionsTab" class="instructions-window">
                 <v-tabs-window-item value="vanilla">
                     <div>
                         <v-skeleton-loader v-if="!skin" type="paragraph"/>

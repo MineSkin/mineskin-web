@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="instructions-text-container">
         <copy-text-area :value="getText()" readonly width="100%"/>
         <component :is="format" ref="formatted">
             <template v-slot:skinValue>{{ skin.texture.data.value }}</template>
@@ -19,6 +19,7 @@ import CodeFormatPaper from "./CodeFormatPaper.vue";
 import CodeFormatMojang from "./CodeFormatMojang.vue";
 import { computed } from "vue";
 import CopyTextArea from "~/components/skin/CopyTextArea.vue";
+import CopyTextField from "~/components/skin/CopyTextField.vue";
 
 const props = defineProps<{
     skin: SkinInfo2;

@@ -1,8 +1,3 @@
-<style>
-pre.instructions{
-    white-space: pre-wrap;
-}
-</style>
 <template>
     <div class="d-flex flex-row">
         <v-tabs

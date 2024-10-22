@@ -1,8 +1,3 @@
-<style>
-pre.instructions{
-    display: none;
-}
-</style>
 <template>
     <div class="d-flex flex-row">
         <v-tabs
