@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import type { JobInfo } from "@mineskin/types";
 import type { JobWithMeta } from "~/types/JobWithMeta";
+import { useAuthStore } from "~/stores/auth";
 
 export const useQueueStore = defineStore('queue', () => {
     const jobMap = ref<Record<string, JobWithMeta>>({});
@@ -10,6 +11,8 @@ export const useQueueStore = defineStore('queue', () => {
     let updateTimer: any;
 
     const {$mineskin, $notify} = useNuxtApp();
+
+    const authStore = useAuthStore();
 
     const jobsSorted = ref<JobWithMeta[]>([]);
 
@@ -42,22 +45,24 @@ export const useQueueStore = defineStore('queue', () => {
     }
 
     const refreshJobList = async () => {
-        const response = await $mineskin.queue.list({silent:true});
-        if (response.success) {
-            for (const job of response.jobs) {
-                addJob(job as JobWithMeta);
+        if (authStore.authed) {
+            const response = await $mineskin.queue.list({silent: true});
+            if (response.success) {
+                for (const job of response.jobs) {
+                    addJob(job as JobWithMeta);
+                }
             }
         }
 
         if (!updateTimer) {
             updateTimer = setInterval(() => {
                 updatePendingJobs();
-            }, 1500);
+            }, 1600);
         }
         updateSortedJobs();
     }
 
-    const updateSortedJobs = ()=>{
+    const updateSortedJobs = () => {
         const jobs = Object.values(jobMap.value);
         const sorted = jobs.sort((a, b) => {
             return b.timestamp - a.timestamp;
@@ -67,7 +72,7 @@ export const useQueueStore = defineStore('queue', () => {
 
     const updatePendingJobs = async () => {
         for (const job of jobsSorted.value.values()) {
-            if(job.id === 'unknown') continue;
+            if (job.id === 'unknown') continue;
             if (job.status === 'waiting' || job.status === 'processing') {
                 if (Date.now() - job.lastStatusCheck < 1800 * job.statusCheckCount) {
                     continue;

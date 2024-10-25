@@ -13,11 +13,13 @@
 import { useQueueStore } from "~/stores/queue";
 
 const queueStore = useQueueStore();
+const authStore = useAuthStore();
 
 const {$mineskin} = useNuxtApp();
 
-onMounted(() => {
-    queueStore.refreshJobList();
+onMounted(async () => {
+    await authStore.checkAuth();
+    await queueStore.refreshJobList();
 })
 
 
