@@ -40,6 +40,7 @@
 import { useNuxtApp } from "#app";
 import type { Maybe } from "@mineskin/types";
 import type { ListedSkin } from "~/types/SkinListResponse";
+import { useAuthStore } from "~/stores/auth";
 
 useHead({
     title: 'Gallery'
@@ -48,6 +49,10 @@ useHead({
 const router = useRouter()
 
 const {$mineskin, $flags} = useNuxtApp();
+
+const authStore = useAuthStore();
+
+const adFree = computed(() => authStore.grants?.ad_free);
 
 const filter = computed<string>(() => {
     return router.currentRoute.value.query.filter || '';
@@ -99,7 +104,7 @@ async function load({done}) {
         }
         return acc;
     }, [] as ListedSkin[][]);
-    if (inlineAdRate.value != 0 && Math.random() < inlineAdRate.value) {
+    if (!adFree && inlineAdRate.value != 0 && Math.random() < inlineAdRate.value) {
         grouped.splice(Math.floor(Math.floor(Math.random() * grouped.length)/2)*2, 0, {ad: true});
     }
     skins.value.push(...grouped);
