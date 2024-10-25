@@ -15,7 +15,19 @@ export const useAuthStore = defineStore('auth', () => {
     const lastWebTokenRefresh = ref(0);
     const lastApiTokenRefresh = ref(0);
 
+    const _authCheckPromise = ref<Promise<Maybe<AuthStatus>> | null>(null);
+
     const checkAuth = async (): Promise<Maybe<AuthStatus>> => {
+        if (!_authCheckPromise.value) {
+            _authCheckPromise.value = checkAuth0().then(res => {
+                _authCheckPromise.value = null;
+                return res;
+            });
+        }
+        return _authCheckPromise.value;
+    }
+
+    const checkAuth0 = async (): Promise<Maybe<AuthStatus>> => {
         console.debug('authStore.checkAuth');
 
         const cookie = getWebTokenCookie();
@@ -45,7 +57,7 @@ export const useAuthStore = defineStore('auth', () => {
         if (response.status === 401 || response.status === 404) {
             if (Date.now() - lastApiTokenRefresh.value > TOKEN_TIMEOUT) {
                 if (await refreshApiAccessToken()) {
-                    return checkAuth();
+                    return checkAuth0();
                 }
             }
         }
@@ -57,7 +69,7 @@ export const useAuthStore = defineStore('auth', () => {
         if (success) {
             const body = await response.json();
             _user.value = {
-                ...user.value||{},
+                ...user.value || {},
                 ...body,
                 authenticated: success
             };
