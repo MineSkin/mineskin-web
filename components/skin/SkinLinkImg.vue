@@ -16,7 +16,7 @@ import SkinHeadImg from "../SkinHeadImg.vue";
 const router = useRouter();
 
 const props = defineProps<{
-    skin: ListedSkin
+    skin?: ListedSkin
 }>();
 
 function viewSkin(uuid: string) {

@@ -65,7 +65,7 @@ const filter = computed<string>(() => {
 //     return $mineskin.skins.list();
 // });
 
-const skins = ref<Array<Array<ListedSkin>|{ad:boolean}>>([]);
+const skins = ref<Array<Array<ListedSkin&{placeholder?:boolean;}>|{ad:boolean}>>([]);
 const after = ref<string | null>(null);
 const hasNext = ref(true);
 
@@ -95,6 +95,10 @@ async function load({done}) {
         return;
     }
 
+    for (let i = 0; i < 2; i++) {
+        skins.value.pop(); // remove placeholder
+    }
+
     // push skins, grouping by 2
     const grouped = res.reduce((acc, item, index) => {
         if (index % 2 === 0) {
@@ -108,6 +112,10 @@ async function load({done}) {
         grouped.splice(Math.floor(Math.floor(Math.random() * grouped.length)/2)*2, 0, {ad: true});
     }
     skins.value.push(...grouped);
+
+    for (let i = 0; i < 2; i++) {
+        skins.value.push([{placeholder: true, skin:null},{placeholder: true,skin:null}]);
+    }
 
     done('ok')
 }
