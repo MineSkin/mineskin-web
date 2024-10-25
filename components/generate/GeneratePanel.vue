@@ -162,13 +162,13 @@
                         ></v-btn>
                     </v-row>
                     <v-row justify="center" class="mt-2 text-center">
-                        <div v-if="showCreditsInfo && !generating && (credits && credits.balance>0)">
+                        <div v-if="showCreditsInfo && !generating && (credits && credits.all.balance>0)">
                             <span>This request will consume {{
                                     imageCount || 1
                                 }} {{
                                     imageCount > 1 ? 'credits' : 'credit'
                                 }} if the skin is successfully generated.</span><br/>
-                            <span>You have {{ credits?.balance }} {{ credits?.type }} credits remaining.</span>
+                            <span>You have {{ credits?.all?.balance }} credits remaining.</span>
                         </div>
                         <div v-else-if="showCreditsInfo && !generating">
                             <span>You do not have any credits remaining.</span><br/>
@@ -213,11 +213,13 @@ import GenerateUrlSection from "./GenerateUrlSection.vue";
 import type { GenerateJobResponse } from "~/types/GenerateJobResponse";
 import type { BasicCreditInfo } from "~/types/BasicCreditInfo";
 import { sleep } from "~/util/misc";
+import { useSettingsStore } from "~/stores/settings";
 
 const {$mineskin, $notify, $flags} = useNuxtApp();
 
 const authStore = useAuthStore();
 const queueStore = useQueueStore();
+const settingsStore = useSettingsStore();
 
 const {mdAndUp} = useDisplay();
 
@@ -250,8 +252,12 @@ const users = ref<string[]>(['']);
 const visibilities = [SkinVisibility2.PUBLIC, SkinVisibility2.UNLISTED];
 
 const name = ref('');
-const visibility = ref(SkinVisibility2.PUBLIC);
+const visibility = ref(settingsStore.visibility || SkinVisibility2.PUBLIC);
 const variant = ref(SkinVariant.UNKNOWN);
+
+watch(() => visibility.value, (value) => {
+    settingsStore.visibility = value;
+});
 
 const imageCount = computed(() => {
     switch (generateType.value) {
@@ -463,6 +469,7 @@ async function generate() {
             }
         }
     }
+    queueStore.updateSortedJobs();
 }
 
 

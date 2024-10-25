@@ -7,10 +7,12 @@ export default defineNuxtPlugin({
     async setup(nuxtApp) {
         if (process.client) {
             const runtimeConfig = useRuntimeConfig();
+            const state = await fetch('/flagsmith.json').then(res => res.json());
             await flagsmith.init({
                 environmentID: runtimeConfig.public.flagsmithEnvironment as string,
                 enableLogs: true,
-                cacheFlags: true
+                cacheFlags: true,
+                state: state
             })
         }
         return {

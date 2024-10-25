@@ -61,8 +61,23 @@
                             <v-skeleton-loader v-if="!skin" type="button,button"/>
                         </v-col>
                         <v-col v-else>
-                            <v-btn color="secondary" text="Use This Skin" class="ma-2" size="large" :href="useSkinLink"></v-btn>
-                            <v-btn color="accent" text="Download Skin" class="ma-2" size="large" :href="skinTextureUrl" download></v-btn>
+                            <v-btn
+                                color="secondary"
+                                text="Download Skin"
+                                class="ma-2"
+                                size="large"
+                                :href="proxiedSkinTextureUrl"
+                                download
+                                prepend-icon="mdi-download"
+                            ></v-btn>
+                            <v-btn
+                                color="accent"
+                                text="Use This Skin"
+                                class="ma-2"
+                                size="large"
+                                :href="useSkinLink"
+                                prepend-icon="mdi-open-in-new"
+                            ></v-btn>
                         </v-col>
                     </v-row>
                 </v-col>
@@ -100,6 +115,10 @@ const skinSignature = computed(() => {
 const skinTextureUrl = computed(() => {
     return skinTexture.value?.url.skin;
 });
+
+const proxiedSkinTextureUrl = computed(()=>{
+    return `https://mineskin.org/textures/${ props.skin.texture.hash.skin }?attachment`;
+})
 
 //TODO: verify this actually still works
 const useSkinLink = computed(()=>{

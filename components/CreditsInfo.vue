@@ -9,12 +9,12 @@
         <v-progress-linear
             v-else-if="credits"
             height="20"
-            :model-value="credits.balance"
-            :max="credits.total"
+            :model-value="credits.all.balance"
+            :max="credits.all.total"
             color="success"
         >
             <template v-slot:default>
-                {{ credits.total - credits.balance }} / {{ credits.total }} {{ credits.type }} credits used
+                {{ credits.all.total - credits.all.balance }} / {{ credits.all.total }} credits used
             </template>
         </v-progress-linear>
     </div>

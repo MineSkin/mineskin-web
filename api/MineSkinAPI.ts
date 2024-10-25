@@ -141,15 +141,15 @@ export class MineSkinAPI {
             });
         }
 
-        public async list(): Promise<JobListResponse> {
+        public async list(options?: Partial<RequestOptions>): Promise<JobListResponse> {
             return this.api.request(`/v2/queue`, {
                 ...INIT,
                 credentials: 'include'
-            });
+            }, options);
         }
 
-        public async get(jobId: string): Promise<GenerateJobResponse> {
-            return this.api.request(`/v2/queue/${ jobId }?t=${ Math.round(Date.now() / 1000) }`, INIT);
+        public async get(jobId: string, options?: Partial<RequestOptions>): Promise<GenerateJobResponse> {
+            return this.api.request(`/v2/queue/${ jobId }?t=${ Math.round(Date.now() / 1000) }`, INIT, options);
         }
 
     }(this);

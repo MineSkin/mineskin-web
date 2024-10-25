@@ -1,8 +1,3 @@
-<style>
-pre.instructions {
-    white-space: pre-wrap;
-}
-</style>
 <template>
     <div class="d-flex flex-row">
         <v-tabs
@@ -15,7 +10,7 @@ pre.instructions {
             <v-tab text="Taterzens" value="taterzens"></v-tab>
         </v-tabs>
 
-        <v-tabs-window v-model="type"  direction="vertical">
+        <v-tabs-window v-model="type"  direction="vertical"  class="w-100" >
             <v-tabs-window-item v-for="t in types" :key="t" :value="t">
                 <div>
                     <PluginCommand :skin="skin" :type="t"/>
