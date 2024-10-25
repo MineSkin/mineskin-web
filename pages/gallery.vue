@@ -100,7 +100,7 @@ async function load({done}) {
         return acc;
     }, [] as ListedSkin[][]);
     if (inlineAdRate.value != 0 && Math.random() < inlineAdRate.value) {
-        grouped.splice(Math.floor(Math.random() * grouped.length), 0, {ad: true});
+        grouped.splice(Math.floor(Math.floor(Math.random() * grouped.length)/2)*2, 0, {ad: true});
     }
     skins.value.push(...grouped);
 
