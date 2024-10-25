@@ -7,17 +7,21 @@
         </v-row>
         <v-infinite-scroll :items="skins" :onLoad="load" style="overflow: hidden">
             <v-row justify="center">
-                <template v-for="(item, index) in skins" :key="item">
+                <template v-for="(item0, index) in skins" :key="item0">
                     <!--                    <v-col cols="4" sm="3" md="2">-->
-                    <div v-if="item.ad"
-                         style="max-height: 1200px;width:min(390px,max(180px,40vmin));">
-                        <ad-wrappper
-                            ad-format="fluid"
-                            ad-layout-key="+1i+s2-10-1k+6v"
-                            ad-slot="3361952161"
-                        />
+                    <div class="gallery-item-group mx-2">
+                        <div v-if="item0.ad"
+                             style="max-height: 1200px;width:min(390px,max(180px,40vmin));">
+                            <ad-wrappper
+                                ad-format="fluid"
+                                ad-layout-key="+1i+s2-10-1k+6v"
+                                ad-slot="3361952161"
+                            />
+                        </div>
+                        <div v-else class="gallery-item mb-4" v-for="i in 2" :key="i">
+                            <skin-link-card :skin="item0"/>
+                        </div>
                     </div>
-                    <skin-link-card v-else class="ma-2" :skin="item"/>
                     <!--                    </v-col>-->
                 </template>
             </v-row>
