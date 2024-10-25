@@ -32,7 +32,15 @@ const authStore = useAuthStore();
 const {
     data: credits,
     status: creditsStatus,
+    refresh: refreshCredits
 } = useLazyAsyncData<BasicCreditInfo>("credits", async () => {
     return (await $mineskin.me.credits())?.credit;
+}, {
+    immediate: false
 });
+
+onMounted(async () => {
+    await authStore.checkAuth();
+    await refreshCredits();
+})
 </script>
