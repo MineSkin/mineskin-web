@@ -186,12 +186,22 @@ export class MineSkinAPI {
 
         public async name(name: string): Promise<UserValidation> {
             //TODO: update this route
+            if (!name) {
+                return {
+                    valid: false
+                };
+            }
             return fetch(`${ this.api.BASE }/validate/name/${ name }`, INIT)
                 .then(res => res.json());
         }
 
         public async uuid(uuid: string): Promise<UserValidation> {
             //TODO: update this route
+            if (!uuid) {
+                return {
+                    valid: false
+                };
+            }
             return fetch(`${ this.api.BASE }/validate/uuid/${ uuid }`, INIT)
                 .then(res => res.json());
         }
