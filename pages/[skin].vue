@@ -16,6 +16,9 @@
                 <SkinSummaryCard :skin="skin"/>
             </v-col>
         </v-row>
+        <v-row class="text-center">
+            <ad-wrappper ad-slot="4431802313"/>
+        </v-row>
         <!--        <dbg :data="skin"/>-->
         <v-row>
             <v-col cols="12">
@@ -44,6 +47,7 @@ import type { Maybe, SkinIdAndTexture, SkinInfo, SkinInfo2, ValueAndSignature } 
 import SkinSummaryCard from "~/components/skin/SkinSummaryCard.vue";
 import SkinInstructionsCard from "~/components/skin/SkinInstructionsCard.vue";
 import { skinName } from "../util/skin";
+import AdWrappper from "~/components/AdWrappper.vue";
 
 const router = useRouter();
 
