@@ -11,6 +11,7 @@
                     <!--                    <v-col cols="4" sm="3" md="2">-->
                     <div class="gallery-item-group mx-2">
                         <div v-if="item0.ad"
+                             class="mx-1"
                              style="max-height: 1200px;width:min(390px,max(180px,40vmin));">
                             <ad-wrappper
                                 ad-format="fluid"
@@ -18,8 +19,8 @@
                                 ad-slot="3361952161"
                             />
                         </div>
-                        <div v-else class="gallery-item mb-4" v-for="i in 2" :key="i">
-                            <skin-link-card :skin="item0"/>
+                        <div v-else class="gallery-item mb-4" v-for="item in item0" :key="item">
+                            <skin-link-card :skin="item"/>
                         </div>
                     </div>
                     <!--                    </v-col>-->
@@ -59,7 +60,7 @@ const filter = computed<string>(() => {
 //     return $mineskin.skins.list();
 // });
 
-const skins = ref<ListedSkin[]>([]);
+const skins = ref<Array<Array<ListedSkin>|{ad:boolean}>>([]);
 const after = ref<string | null>(null);
 const hasNext = ref(true);
 
@@ -71,9 +72,6 @@ async function api() {
     hasNext.value = skins.length > 0;
     if (skins.length > 0) {
         after.value = skins[skins.length - 1].uuid!;
-        if (inlineAdRate.value != 0 && Math.random() < inlineAdRate.value) {
-            skins.splice(Math.floor(Math.random() * skins.length), 0, {uuid: '', ad: true});
-        }
     }
     return skins;
     // return new Promise(resolve => {
@@ -92,7 +90,19 @@ async function load({done}) {
         return;
     }
 
-    skins.value.push(...res);
+    // push skins, grouping by 2
+    const grouped = res.reduce((acc, item, index) => {
+        if (index % 2 === 0) {
+            acc.push([item]);
+        } else {
+            acc[acc.length - 1].push(item);
+        }
+        return acc;
+    }, [] as ListedSkin[][]);
+    if (inlineAdRate.value != 0 && Math.random() < inlineAdRate.value) {
+        grouped.splice(Math.floor(Math.random() * grouped.length), 0, {ad: true});
+    }
+    skins.value.push(...grouped);
 
     done('ok')
 }
