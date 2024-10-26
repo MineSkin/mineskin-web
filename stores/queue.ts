@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import type { JobInfo } from "@mineskin/types";
 import type { JobWithMeta } from "~/types/JobWithMeta";
 import { useAuthStore } from "~/stores/auth";
+import type { GenerateJobResponse } from "~/types/GenerateJobResponse";
 
 export const useQueueStore = defineStore('queue', () => {
     const jobMap = ref<Record<string, JobWithMeta>>({});
@@ -89,9 +90,18 @@ export const useQueueStore = defineStore('queue', () => {
                 job.statusCheckCount++;
                 job.lastStatusCheck = Date.now();
 
-                const response = await $mineskin.queue.get(job.id, {silent: true});
+                const response: GenerateJobResponse = await $mineskin.queue.get(job.id, {silent: true});
                 if (response.success) {
                     addJob(response.job as JobWithMeta);
+                    if (response.job.status === 'failed') {
+                        for (let error of response.errors) {
+                            $notify({
+                                text: error.message,
+                                color: 'error',
+                                timeout: 2200
+                            });
+                        }
+                    }
                 } else {
                     job.statusCheckCount++;
                 }
