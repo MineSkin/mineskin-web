@@ -79,6 +79,7 @@
                                 prepend-icon="mdi-open-in-new"
                             ></v-btn>
                         </v-col>
+                        <InvisibleTurnstile v-if="skin" v-model:token="turnstileToken" action="view-skin"/>
                     </v-row>
                 </v-col>
             </v-row>
@@ -91,11 +92,19 @@ import CopyTextField from "./CopyTextField.vue";
 import { computed } from "vue";
 import { renderSkinBody } from "~/util/render";
 import { PLACEHOLDER_BODY, PLACEHOLDER_HEAD } from "~/util/skin";
+import InvisibleTurnstile from "~/components/InvisibleTurnstile.vue";
+import { useInteractionsStore } from "~/stores/interactions";
+
 const props = defineProps<{
     skin: SkinInfo2;
 }>();
 
+const {$mineskin} = useNuxtApp();
+
 const {mdAndUp} = useDisplay();
+
+const interactionsStore = useInteractionsStore();
+const {recentViews} = storeToRefs(interactionsStore);
 
 const skinLink = computed(() => {
     return `https://minesk.in/${ props.skin.uuid }`;
@@ -116,12 +125,23 @@ const skinTextureUrl = computed(() => {
     return skinTexture.value?.url.skin;
 });
 
-const proxiedSkinTextureUrl = computed(()=>{
+const proxiedSkinTextureUrl = computed(() => {
     return `https://mineskin.org/textures/${ props.skin.texture.hash.skin }?attachment`;
 })
 
 //TODO: verify this actually still works
-const useSkinLink = computed(()=>{
+const useSkinLink = computed(() => {
     return `https://www.minecraft.net/profile/skin/remote?url=${ skinTextureUrl.value }`;
 })
+
+
+const turnstileToken: Ref<string> = ref('');
+watch(() => turnstileToken.value, async (token) => {
+    if (recentViews.value.includes(props.skin.uuid)) return;
+    await $mineskin.skins.trackView(props.skin.uuid, token);
+    recentViews.value.push(props.skin.uuid);
+    if (recentViews.value.length > 10) {
+        recentViews.value.shift();
+    }
+});
 </script>

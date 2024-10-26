@@ -177,6 +177,16 @@ export class MineSkinAPI {
             return this.api.request(`/v2/skins/${ uuid }`, INIT);
         }
 
+        public async trackView(uuid: string, turnstileToken: string): Promise<SkinResponse> {
+            return this.api.request(`/v2/skins/${ uuid }/interactions/view`, {
+                ...INIT,
+                method: 'POST',
+                headers: {
+                    'X-Turnstile-Token': turnstileToken
+                }
+            });
+        }
+
     }(this);
 
     public validate = new class {

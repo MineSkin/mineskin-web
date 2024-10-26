@@ -60,7 +60,8 @@ export default defineNuxtConfig({
             sentryDsn: process.env.SENTRY_DSN,
             google: {
                 adsense: process.env.GOOGLE_ADSENSE
-            }
+            },
+            turnstileSiteKey: process.env.TURNSTILE_SITE_KEY,
         }
     },
 })
