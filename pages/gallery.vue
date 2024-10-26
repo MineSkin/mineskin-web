@@ -20,7 +20,7 @@
                             />
                         </div>
                         <div v-else class="gallery-item mb-4" v-for="item in item0" :key="item">
-                            <skin-link-card :skin="item"/>
+                            <skin-link-card no-title :skin="item"/>
                         </div>
                     </div>
                     <!--                    </v-col>-->
