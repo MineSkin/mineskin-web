@@ -224,6 +224,7 @@ const settingsStore = useSettingsStore();
 
 const {mdAndUp} = useDisplay();
 
+const {authed} = storeToRefs(authStore);
 const {jobsDrawer} = storeToRefs(queueStore);
 
 const {
@@ -275,10 +276,10 @@ const imageCount = computed(() => {
 })
 
 const canUsePrivateSkins = computed(() => {
-    return authStore.authed && authStore.grants?.private_skins;
+    return authed.value && authStore.grants?.private_skins;
 });
 const canGenerateMultiple = computed(() => {
-    return authStore.authed;
+    return authed.value;
 })
 
 const showCreditsInfo = computed(() => $flags.hasFeature('web.credits.show_info'));

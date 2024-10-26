@@ -4,7 +4,6 @@ import type { SkinResponse } from "~/types/SkinResponse";
 import type { SkinListResponse } from "~/types/SkinListResponse";
 import type { GenerateJobResponse } from "~/types/GenerateJobResponse";
 import type { JobListResponse } from "~/types/JobListResponse";
-import { useAuthStore } from "#imports";
 import type { UserValidation } from "~/types/UserValidation";
 import type { GenerateOptions } from "@mineskin/types";
 
