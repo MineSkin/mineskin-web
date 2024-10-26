@@ -57,6 +57,7 @@ import type { JobResponse } from "~/types/JobResponse";
 import DateUTC from "~/components/DateUTC.vue";
 import DateLocal from "~/components/DateLocal.vue";
 import { sleep } from "~/util/misc";
+import { storeToRefs } from "pinia";
 
 const {$mineskin} = useNuxtApp();
 
@@ -65,6 +66,7 @@ const props = defineProps<{
 }>();
 
 const queueStore = useQueueStore();
+const {jobMap} = storeToRefs(queueStore);
 
 const {
     data: jobRes,
@@ -74,7 +76,7 @@ const {
 }, {
     immediate: false,
     default: () => {
-        return queueStore.jobMap[props.id]
+        return {job: jobMap.value[props.id]}
     }
 });
 
@@ -95,7 +97,14 @@ const jobTexture = computed(() => {
 
 const tryJobRefresh = async () => {
     if (refreshCounter.value > 3) return;
-    if (job.value && job.value?.status !== 'waiting' && job.value?.status !== 'processing') return;
+    if (job.value) {
+        if (job.value?.status !== 'waiting' && job.value?.status !== 'processing' && skin.value) {
+            return;
+        }
+        if (job.value?.status === 'failed') {
+            return;
+        }
+    }
 
     await sleep(500 + Math.random() * 800);
 

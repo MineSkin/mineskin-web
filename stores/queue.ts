@@ -3,6 +3,9 @@ import type { JobInfo } from "@mineskin/types";
 import type { JobWithMeta } from "~/types/JobWithMeta";
 import { useAuthStore } from "~/stores/auth";
 import type { GenerateJobResponse } from "~/types/GenerateJobResponse";
+import { useLazyAsyncData } from "nuxt/app";
+import type { JobListResponse } from "~/types/JobListResponse";
+import { sleep } from "~/util/misc";
 
 export const useQueueStore = defineStore('queue', () => {
     const jobMap = ref<Record<string, JobWithMeta>>({});
@@ -16,6 +19,21 @@ export const useQueueStore = defineStore('queue', () => {
     const authStore = useAuthStore();
 
     const jobsSorted = ref<JobWithMeta[]>([]);
+
+    const {
+        data: lazyJobList,
+        refresh: refreshLazyJobList
+    } = useLazyAsyncData<JobListResponse>('job-list', async () => {
+        return await $mineskin.queue.list({silent: true});
+    }, {
+        immediate: false,
+        default: () => {
+            return {
+                success: true,
+                jobs: Object.values(jobMap.value),
+            }
+        }
+    });
 
     const addJob = (job: JobWithMeta) => {
         console.debug('addJob', job);
@@ -48,7 +66,9 @@ export const useQueueStore = defineStore('queue', () => {
 
     const refreshJobList = async () => {
         if (authStore.authed) {
-            const response = await $mineskin.queue.list({silent: true});
+            await refreshLazyJobList();
+            // const response = await $mineskin.queue.list({silent: true});
+            const response = lazyJobList.value;
             if (response.success) {
                 for (const job of response.jobs) {
                     addJob(job as JobWithMeta);
