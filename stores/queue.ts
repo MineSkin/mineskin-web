@@ -84,7 +84,7 @@ export const useQueueStore = defineStore('queue', () => {
                 job.statusCheckCount++;
                 job.lastStatusCheck = Date.now();
 
-                const response = await $mineskin.queue.get(job.id);
+                const response = await $mineskin.queue.get(job.id, {silent: true});
                 if (response.success) {
                     addJob(response.job as JobWithMeta);
                 } else {
