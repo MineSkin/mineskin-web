@@ -92,9 +92,9 @@
                 <v-divider vertical class="mx-4 my-2"/>
 
                 <template v-slot:append>
-                    <v-btn icon @click="queueStore.jobsDrawer = !queueStore.jobsDrawer">
-                        <component :is="queueStore?.jobs?.length>0?'v-badge':'div'"
-                                   :content="queueStore?.jobs?.length"
+                    <v-btn icon @click="jobsDrawer = !jobsDrawer">
+                        <component :is="jobsSorted?.length>0?'v-badge':'div'"
+                                   :content="jobsSorted?.length"
                                    location="bottom right"
                         >
                             <v-icon icon="mdi-list-status"></v-icon>
@@ -158,7 +158,7 @@
             </v-footer>
 
             <v-navigation-drawer
-                v-model="queueStore.jobsDrawer"
+                v-model="jobsDrawer"
                 location="end"
                 temporary
                 width="320"
@@ -178,6 +178,7 @@
 
 import { useAuthStore } from "~/stores/auth";
 import { useQueueStore } from "~/stores/queue";
+import { storeToRefs } from "pinia";
 
 const config = useRuntimeConfig();
 
@@ -265,6 +266,8 @@ const authStore = useAuthStore();
 const queueStore = useQueueStore();
 
 const {mdAndUp} = useDisplay();
+
+const {jobsSorted, jobsDrawer} = storeToRefs(queueStore);
 
 const searching = ref(false);
 const filter = ref('');

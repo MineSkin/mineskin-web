@@ -180,7 +180,7 @@
                             </div>
                             <div>
                                 Check the
-                                <action-link @click.prevent="queueStore.jobsDrawer = true" icon="mdi-list-status"
+                                <action-link @click.prevent="jobsDrawer = true" icon="mdi-list-status"
                                              tooltip="Show Jobs">Job List
                                 </action-link>
                                 for progress,
@@ -214,6 +214,7 @@ import type { GenerateJobResponse } from "~/types/GenerateJobResponse";
 import type { BasicCreditInfo } from "~/types/BasicCreditInfo";
 import { sleep } from "~/util/misc";
 import { useSettingsStore } from "~/stores/settings";
+import { storeToRefs } from "pinia";
 
 const {$mineskin, $notify, $flags} = useNuxtApp();
 
@@ -222,6 +223,8 @@ const queueStore = useQueueStore();
 const settingsStore = useSettingsStore();
 
 const {mdAndUp} = useDisplay();
+
+const {jobsDrawer} = storeToRefs(queueStore);
 
 const {
     data: credits,
