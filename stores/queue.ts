@@ -71,7 +71,12 @@ export const useQueueStore = defineStore('queue', () => {
     }
 
     const updatePendingJobs = async () => {
-        for (const job of jobsSorted.value.values()) {
+        const list = Object.values(jobMap.value);
+        for (const job of list) {
+            if (Date.now() - job.timestamp > 1000 * 60 * 60 * 24 * 2) {
+                removeJobId(job.id);
+                continue;
+            }
             if (job.id === 'unknown') continue;
             if (job.status === 'waiting' || job.status === 'processing') {
                 if (Date.now() - job.lastStatusCheck < 1800 * job.statusCheckCount) {
