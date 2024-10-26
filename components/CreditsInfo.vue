@@ -9,7 +9,7 @@
         <v-progress-linear
             v-else-if="credits"
             height="20"
-            :model-value="credits.all.balance"
+            :model-value="credits.all.total - credits.all.balance"
             :max="credits.all.total"
             color="success"
         >
