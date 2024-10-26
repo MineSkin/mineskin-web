@@ -11,7 +11,8 @@ import type { GenerateOptions } from "@mineskin/types";
 const INIT: RequestInit = {
     headers: {
         'Content-Type': 'application/json',
-        'Accept': 'application/json'
+        'Accept': 'application/json',
+        'MineSkin-User-Agent': 'MineSkin-Web'
     }
 }
 
