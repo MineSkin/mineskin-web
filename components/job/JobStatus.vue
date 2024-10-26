@@ -1,5 +1,5 @@
 <template>
-    <div v-if="id !== 'unknown' &&job">
+    <div v-if="id  &&job">
         <v-list-item>
             <template v-slot:prepend>
                 <div class="mr-2" style="width: 48px">
@@ -7,7 +7,10 @@
                 </div>
             </template>
             <template v-slot:title>
-                <nuxt-link v-if="skin" :to="'/'+skin.uuid" class="text-decoration-none">{{ job.id?.substring(0, 8) }}</nuxt-link>
+                <nuxt-link v-if="skin" :to="'/'+skin.uuid" class="text-decoration-none">{{
+                        job.id?.substring(0, 8)
+                    }}
+                </nuxt-link>
                 <span v-else>{{ job.id?.substring(0, 8) }}</span>
             </template>
             <template v-slot:subtitle>
@@ -48,10 +51,12 @@
 import type { JobInfo, Maybe, SkinInfo2 } from "@mineskin/types";
 import { computedAsync } from "@vueuse/core";
 import { useLazyAsyncData } from "#app";
+import { useQueueStore } from "~/stores/queue";
 import type { GenerateJobResponse } from "~/types/GenerateJobResponse";
 import type { JobResponse } from "~/types/JobResponse";
 import DateUTC from "~/components/DateUTC.vue";
 import DateLocal from "~/components/DateLocal.vue";
+import { sleep } from "~/util/misc";
 
 const {$mineskin} = useNuxtApp();
 
@@ -59,15 +64,24 @@ const props = defineProps<{
     id: string
 }>();
 
+const queueStore = useQueueStore();
 
 const {
-    data: jobRes
+    data: jobRes,
+    refresh: refreshJob
 } = useLazyAsyncData<JobResponse>(`job-res-${ props.id }`, async () => {
-    return (await $mineskin.queue.get(props.id));
+    return (await $mineskin.queue.get(props.id, {silent: true}));
+}, {
+    immediate: false,
+    default: () => {
+        return queueStore.jobMap[props.id]
+    }
 });
 
-const job = computed(() => props.id !== 'unknown' && jobRes.value?.job);
+const job = computed<JobInfo>(() => props.id && jobRes.value?.job);
 const skin = computed(() => jobRes.value?.skin);
+
+const refreshCounter = ref(0);
 
 const jobTexture = computed(() => {
     if (jobRes.value?.links?.image) {
@@ -78,4 +92,23 @@ const jobTexture = computed(() => {
     }
     return null;
 });
+
+const tryJobRefresh = async () => {
+    if (refreshCounter.value > 3) return;
+    if (job.value && job.value?.status !== 'waiting' && job.value?.status !== 'processing') return;
+
+    await sleep(500 + Math.random() * 800);
+
+    await refreshJob();
+    refreshCounter.value++;
+
+    queueStore.addJob(job.value);
+
+    setTimeout(() => tryJobRefresh(), 1300 + Math.random() * 1000);
+}
+
+onMounted(async () => {
+    await tryJobRefresh();
+})
+
 </script>

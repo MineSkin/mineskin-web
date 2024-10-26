@@ -35,6 +35,7 @@ export const useQueueStore = defineStore('queue', () => {
         jobMap.value[job.id] = job;
         console.debug(jobsSorted.value.length);
         checkJobStatusChange(job, existing);
+        updateSortedJobs();
     }
 
     const removeJobId = (jobId: string) => {
@@ -55,60 +56,66 @@ export const useQueueStore = defineStore('queue', () => {
             }
         }
 
-        if (!updateTimer) {
-            updateTimer = setInterval(() => {
-                updatePendingJobs();
-            }, 1600);
-        }
+        // if (!updateTimer) {
+        //     updateTimer = setInterval(() => {
+        //         updatePendingJobs();
+        //     }, 1600);
+        // }
         updateSortedJobs();
     }
 
     const updateSortedJobs = () => {
         const jobs = Object.values(jobMap.value);
+        for (const job of jobs) {
+            if (Date.now() - job.timestamp > 1000 * 60 * 60 * 24 * 2) {
+                removeJobId(job.id);
+                continue;
+            }
+        }
         const sorted = jobs.sort((a, b) => {
             return b.timestamp - a.timestamp;
         }).slice(0, 8);
         jobsSorted.value = sorted;
     }
 
-    const updatePendingJobs = async () => {
-        const list = Object.values(jobMap.value);
-        for (const job of list) {
-            if (Date.now() - job.timestamp > 1000 * 60 * 60 * 24 * 2) {
-                removeJobId(job.id);
-                continue;
-            }
-            if (job.id === 'unknown') continue;
-            if (job.status === 'waiting' || job.status === 'processing') {
-                if (Date.now() - job.lastStatusCheck < 1800 * job.statusCheckCount) {
-                    continue;
-                }
-                if (job.statusCheckCount > 10) {
-                    continue;
-                }
-
-                job.statusCheckCount++;
-                job.lastStatusCheck = Date.now();
-
-                const response: GenerateJobResponse = await $mineskin.queue.get(job.id, {silent: true});
-                if (response.success) {
-                    addJob(response.job as JobWithMeta);
-                    if (response.job.status === 'failed') {
-                        for (let error of response.errors) {
-                            $notify({
-                                text: error.message,
-                                color: 'error',
-                                timeout: 2200
-                            });
-                        }
-                    }
-                } else {
-                    job.statusCheckCount++;
-                }
-            }
-        }
-        updateSortedJobs();
-    }
+    // const updatePendingJobs = async () => {
+    //     const list = Object.values(jobMap.value);
+    //     for (const job of list) {
+    //         if (Date.now() - job.timestamp > 1000 * 60 * 60 * 24 * 2) {
+    //             removeJobId(job.id);
+    //             continue;
+    //         }
+    //         if (job.id === 'unknown') continue;
+    //         if (job.status === 'waiting' || job.status === 'processing') {
+    //             if (Date.now() - job.lastStatusCheck < 1800 * job.statusCheckCount) {
+    //                 continue;
+    //             }
+    //             if (job.statusCheckCount > 10) {
+    //                 continue;
+    //             }
+    //
+    //             job.statusCheckCount++;
+    //             job.lastStatusCheck = Date.now();
+    //
+    //             const response: GenerateJobResponse = await $mineskin.queue.get(job.id, {silent: true});
+    //             if (response.success) {
+    //                 addJob(response.job as JobWithMeta);
+    //                 if (response.job.status === 'failed') {
+    //                     for (let error of response.errors) {
+    //                         $notify({
+    //                             text: error.message,
+    //                             color: 'error',
+    //                             timeout: 2200
+    //                         });
+    //                     }
+    //                 }
+    //             } else {
+    //                 job.statusCheckCount++;
+    //             }
+    //         }
+    //     }
+    //     updateSortedJobs();
+    // }
 
     //TODO: save generated skins in local storage
 
@@ -134,7 +141,7 @@ export const useQueueStore = defineStore('queue', () => {
         removeJobId,
         removeJob,
         refreshJobList,
-        updatePendingJobs,
+        // updatePendingJobs,
         updateSortedJobs,
         hasPendingJobs,
         jobsDrawer
