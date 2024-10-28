@@ -178,7 +178,7 @@ export class MineSkinAPI {
         }
 
         public async trackView(uuid: string){
-            return this.api.request(`/v2/skins/${ uuid }/interactions/view`, {
+            return this.api.request(`/v2/skins/${ uuid }/interactions/views`, {
                 method: 'POST'
             })
         }
