@@ -98,7 +98,7 @@ const props = defineProps<{
 const {mdAndUp} = useDisplay();
 
 const skinLink = computed(() => {
-    return `https://minesk.in/${ props.skin.uuid }`;
+    return `https://2.minesk.in/${ props.skin.uuid }`;
 });
 
 const skinTexture = computed<Maybe<SkinIdAndTexture>>(() => props.skin.texture);
