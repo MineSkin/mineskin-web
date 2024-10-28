@@ -73,8 +73,8 @@ useHead({
 });
 
 onMounted(()=>{
-    if (skin.value) {
-        $mineskin.skins.trackView(skin.value.uuid);
+    if (skinId.value) {
+        $mineskin.skins.trackView(skinId.value);
     }
 })
 
