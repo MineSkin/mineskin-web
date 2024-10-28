@@ -6,6 +6,7 @@ import type { GenerateJobResponse } from "~/types/GenerateJobResponse";
 import { useLazyAsyncData } from "nuxt/app";
 import type { JobListResponse } from "~/types/JobListResponse";
 import { sleep } from "~/util/misc";
+import { useSkinStore } from "~/stores/skins";
 
 export const useQueueStore = defineStore('queue', () => {
     const jobMap = ref<Record<string, JobWithMeta>>({});
@@ -17,6 +18,7 @@ export const useQueueStore = defineStore('queue', () => {
     const {$mineskin, $notify} = useNuxtApp();
 
     const authStore = useAuthStore();
+    const skinStore = useSkinStore();
 
     const jobsSorted = ref<JobWithMeta[]>([]);
 
@@ -137,8 +139,6 @@ export const useQueueStore = defineStore('queue', () => {
     //     updateSortedJobs();
     // }
 
-    //TODO: save generated skins in local storage
-
     const checkJobStatusChange = (now: JobInfo, prev?: JobInfo) => {
         if (prev?.status === now.status) return;
         console.debug(`${ now.id } ${ prev?.status } -> ${ now.status }`);
@@ -147,6 +147,9 @@ export const useQueueStore = defineStore('queue', () => {
             color: now.status === 'completed' ? 'success' : now.status === 'failed' ? 'error' : 'info',
             timeout: (now.status === 'completed' || now.status === 'failed') ? 1200 : 800
         });
+        if (now.status === 'completed' && now.result) {
+            skinStore.addSkin(now.result);
+        }
     }
 
     const hasPendingJobs = computed(() => {
