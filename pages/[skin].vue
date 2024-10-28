@@ -72,4 +72,10 @@ useHead({
     title: skinNameDisplay
 });
 
+onMounted(()=>{
+    if (skin.value) {
+        $mineskin.skins.trackView(skin.value.uuid);
+    }
+})
+
 </script>

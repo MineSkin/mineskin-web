@@ -177,6 +177,12 @@ export class MineSkinAPI {
             return this.api.request(`/v2/skins/${ uuid }`, INIT);
         }
 
+        public async trackView(uuid: string){
+            return this.api.request(`/v2/skins/${ uuid }/interactions/view`, {
+                method: 'POST'
+            })
+        }
+
     }(this);
 
     public validate = new class {
