@@ -41,7 +41,7 @@ const allRules = {
     uuidOrName: (value: string) => !value || value?.length > 1 && (value.length < 17 || value.length >= 32) || 'Invalid UUID or Name',
     validNameOrUuid: async (value: string) => {
         const {valid} = await validateUser(value);
-        return valid || 'Invalid UUID or Name';
+        return valid || 'User not found';
     }
 };
 
