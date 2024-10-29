@@ -122,7 +122,8 @@
                             </v-tooltip>
                         </a>
                         <v-btn v-else icon>
-                            <a class="img-link text-white" @click="authStore.reset()" href="https://account.mineskin.org/login?redirect=https://beta.mineskin.org/">
+                            <a class="img-link text-white" @click.prevent="loginRedirect()"
+                               href="https://account.mineskin.org/">
                                 <v-icon>mdi-account</v-icon>
                                 <v-tooltip
                                     activator="parent"
@@ -283,6 +284,11 @@ const search = () => {
             filter: filter.value
         }
     });
+}
+
+const loginRedirect = () => {
+    authStore.reset();
+    window.location.href = 'https://account.mineskin.org/login?redirect=https://beta.mineskin.org/';
 }
 
 onBeforeMount(() => {
