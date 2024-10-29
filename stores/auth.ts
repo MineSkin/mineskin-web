@@ -126,6 +126,13 @@ export const useAuthStore = defineStore('auth', () => {
     const userId = computed(() => _user.value?.id);
     const grants = computed(() => _user.value?.grants);
 
+    const reset = () => {
+        authed.value = false;
+        _user.value = null;
+        lastApiTokenRefresh.value = 0;
+        lastWebTokenRefresh.value = 0;
+    }
+
     return {
         authed,
         _user,
@@ -135,7 +142,8 @@ export const useAuthStore = defineStore('auth', () => {
         checkAuth,
         userId,
         user,
-        grants
+        grants,
+        reset
     }
 }, {
     persist: {

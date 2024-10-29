@@ -122,7 +122,7 @@
                             </v-tooltip>
                         </a>
                         <v-btn v-else icon>
-                            <a class="img-link text-white" href="https://account.mineskin.org/login?redirect=https://beta.mineskin.org/">
+                            <a class="img-link text-white" @click="authStore.reset()" href="https://account.mineskin.org/login?redirect=https://beta.mineskin.org/">
                                 <v-icon>mdi-account</v-icon>
                                 <v-tooltip
                                     activator="parent"
