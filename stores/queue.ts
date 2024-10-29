@@ -145,7 +145,9 @@ export const useQueueStore = defineStore('queue', () => {
         $notify({
             text: `Job ${ now.id === 'unknown' ? '' : now.id } is ${ now.status }`,
             color: now.status === 'completed' ? 'success' : now.status === 'failed' ? 'error' : 'info',
-            timeout: (now.status === 'completed' || now.status === 'failed') ? 1200 : 800
+            timeout: (now.status === 'completed' || now.status === 'failed') ? 1200 : 800,
+            actionLabel: now.status === 'completed' ? 'View' : undefined,
+            actionLink: now.status === 'completed' && now.result ? `/${ now.result }` : undefined
         });
         if (now.status === 'completed' && now.result) {
             skinStore.addSkin(now.result);

@@ -107,7 +107,9 @@ function testNotify() {
     $notify({
         text: 'Hello World\n\nTest',
         color: 'success',
-        timeout: 20000
+        timeout: 20000,
+        actionLabel: 'View',
+        actionLink:'/gallery'
     });
 }
 </script>
