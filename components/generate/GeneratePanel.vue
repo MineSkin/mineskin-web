@@ -276,7 +276,17 @@ const imageCount = computed(() => {
             return users.value.filter(user => user.length > 0).length;
     }
     return 0;
-})
+});
+
+watch(() => imageCount.value, (value) => {
+    if (value > 1 && !canGenerateMultiple.value) {
+        $notify({
+            text: 'Please sign in to generate multiple skins at once',
+            color: 'warning'
+        });
+        return;
+    }
+});
 
 const canUsePrivateSkins = computed(() => {
     return authed.value && grants.value?.private_skins;
@@ -402,7 +412,7 @@ async function generate() {
     console.log('generate');
     if (imageCount.value > 1 && !canGenerateMultiple.value) {
         $notify({
-            text: 'Please log in to generate multiple skins at once',
+            text: 'Please sign in to generate multiple skins at once',
             color: 'warning'
         });
         return;
