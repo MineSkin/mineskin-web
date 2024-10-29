@@ -487,6 +487,9 @@ async function generate() {
         }
     }
     queueStore.updateSortedJobs();
+
+    await sleep(1000);
+    generating.value = false;
 }
 
 
