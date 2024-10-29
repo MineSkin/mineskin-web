@@ -430,7 +430,7 @@ async function generate() {
                 uploadFiles.value = [uploadFiles.value[0]];
             }
             for (const file of uploadFiles.value) {
-                await sleep(500);
+                await sleep(800);
                 responses.push(await $mineskin.queue.upload(file, options));
             }
             break;
@@ -440,7 +440,7 @@ async function generate() {
                 urls.value = [urls.value[0]];
             }
             for (const url of urls.value) {
-                await sleep(500);
+                await sleep(800);
                 responses.push(await $mineskin.queue.url(url, options))
             }
             break;
@@ -465,7 +465,7 @@ async function generate() {
             }
             users.value = validated;
             for (const user of validated) {
-                await sleep(500);
+                await sleep(800);
                 responses.push(await $mineskin.queue.user(user, options))
             }
             break;
