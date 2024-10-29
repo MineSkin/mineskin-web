@@ -395,7 +395,7 @@ function reset() {
     urls.value = [''];
     users.value = [''];
     name.value = '';
-    visibility.value = SkinVisibility2.PUBLIC; // TODO: persist preferred visibility
+    visibility.value = preferredVisibility.value || SkinVisibility2.PUBLIC;
     variant.value = SkinVariant.UNKNOWN;
     generating.value = false;
 }
