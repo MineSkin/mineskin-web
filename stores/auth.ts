@@ -95,6 +95,7 @@ export const useAuthStore = defineStore('auth', () => {
         if (res?.status === 200) {
             return true;
         }
+        lastWebTokenRefresh.value = Date.now() - TOKEN_TIMEOUT + 5000;
         return false;
     }
 
@@ -105,6 +106,7 @@ export const useAuthStore = defineStore('auth', () => {
         if (res?.status === 200) {
             return true;
         }
+        lastApiTokenRefresh.value = Date.now() - TOKEN_TIMEOUT + 5000;
         return false;
     }
 
