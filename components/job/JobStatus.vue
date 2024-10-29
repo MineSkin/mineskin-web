@@ -121,6 +121,7 @@ const tryJobRefresh = async () => {
             for (let error of jobRes.value.errors) {
                 $notify({
                     text: error.message,
+                    color: 'error',
                     timeout: 2000
                 });
             }
