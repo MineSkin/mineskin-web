@@ -39,7 +39,7 @@ export const useQueueStore = defineStore('queue', () => {
 
     const addJob = (job: JobWithMeta) => {
         console.debug('addJob', job);
-        const existing = job.id === 'unknown' ? undefined : jobMap.value[job.id];
+        const existing = job.id ? jobMap.value[job.id] : undefined;
         if (existing) {
             job = {
                 ...existing,
@@ -143,7 +143,7 @@ export const useQueueStore = defineStore('queue', () => {
         if (prev?.status === now.status) return;
         console.debug(`${ now.id } ${ prev?.status } -> ${ now.status }`);
         $notify({
-            text: `Job ${ now.id === 'unknown' ? '' : now.id } is ${ now.status }`,
+            text: `Job ${ now.id ? now.id : '' } is ${ now.status }`,
             color: now.status === 'completed' ? 'success' : now.status === 'failed' ? 'error' : 'info',
             timeout: (now.status === 'completed' || now.status === 'failed') ? 1200 : 800,
             actionLabel: now.status === 'completed' ? 'View' : undefined,
