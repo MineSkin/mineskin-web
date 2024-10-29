@@ -71,14 +71,14 @@ const hasNext = ref(true);
 
 async function api() {
     if (!hasNext.value) return [];
-    const response = await $mineskin.skins.list(after.value, undefined, filter.value);
+    const response = await $mineskin.skins.list(after.value, 64, filter.value);
     console.debug(response);
     const skins = response?.skins || [];
     hasNext.value = skins.length > 0;
     if (skins.length > 0) {
         after.value = skins[skins.length - 1].uuid!;
         // preload next
-        $mineskin.skins.list(after.value, undefined, filter.value);
+        $mineskin.skins.list(after.value, 64, filter.value);
     }
     return skins;
     // return new Promise(resolve => {
