@@ -77,6 +77,8 @@ async function api() {
     hasNext.value = skins.length > 0;
     if (skins.length > 0) {
         after.value = skins[skins.length - 1].uuid!;
+        // preload next
+        $mineskin.skins.list(after.value, undefined, filter.value);
     }
     return skins;
     // return new Promise(resolve => {
