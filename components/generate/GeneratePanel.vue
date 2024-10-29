@@ -255,7 +255,8 @@ const uploadFiles = ref<File[]>([]);
 const urls = ref<string[]>(['']);
 const users = ref<string[]>(['']);
 
-const visibilities = [SkinVisibility2.PUBLIC, SkinVisibility2.UNLISTED];
+const visibilities = ref<SkinVisibility2[]>([SkinVisibility2.PUBLIC, SkinVisibility2.UNLISTED]);
+
 
 const name = ref('');
 const visibility = ref(preferredVisibility.value || SkinVisibility2.PUBLIC);
@@ -481,7 +482,7 @@ async function generate() {
 
 onMounted(() => {
     if ($flags.hasFeature('web.visibility.private')) {
-        visibilities.push(SkinVisibility2.PRIVATE);
+        visibilities.value.push(SkinVisibility2.PRIVATE);
     }
 })
 
