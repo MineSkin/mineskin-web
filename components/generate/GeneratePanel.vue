@@ -227,6 +227,8 @@ const {mdAndUp} = useDisplay();
 const {authed, grants} = storeToRefs(authStore);
 const {jobsDrawer} = storeToRefs(queueStore);
 
+const {visibility: preferredVisibility} = storeToRefs(settingsStore);
+
 const {
     data: credits,
     status: creditsStatus,
@@ -256,11 +258,11 @@ const users = ref<string[]>(['']);
 const visibilities = [SkinVisibility2.PUBLIC, SkinVisibility2.UNLISTED];
 
 const name = ref('');
-const visibility = ref(settingsStore.visibility || SkinVisibility2.PUBLIC);
+const visibility = ref(preferredVisibility.value || SkinVisibility2.PUBLIC);
 const variant = ref(SkinVariant.UNKNOWN);
 
 watch(() => visibility.value, (value) => {
-    settingsStore.visibility = value;
+    preferredVisibility.value = value;
 });
 
 const imageCount = computed(() => {
