@@ -224,7 +224,7 @@ const settingsStore = useSettingsStore();
 
 const {mdAndUp} = useDisplay();
 
-const {authed} = storeToRefs(authStore);
+const {authed, grants} = storeToRefs(authStore);
 const {jobsDrawer} = storeToRefs(queueStore);
 
 const {
@@ -276,7 +276,7 @@ const imageCount = computed(() => {
 })
 
 const canUsePrivateSkins = computed(() => {
-    return authed.value && authStore.grants?.private_skins;
+    return authed.value && grants.value?.private_skins;
 });
 const canGenerateMultiple = computed(() => {
     return authed.value;
