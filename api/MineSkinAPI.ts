@@ -214,6 +214,20 @@ export class MineSkinAPI {
 
     }(this);
 
+    public util = new class {
+
+        constructor(readonly api: MineSkinAPI) {
+        }
+
+        public async randomName(seed: string): Promise<string> {
+            //TODO: update this route
+            return fetch(`${ this.api.BASE }/random-name?seed=${ seed }`, INIT)
+                .then(res => res.json())
+                .then(res => res.name);
+        }
+
+    }(this);
+
     public me = new class {
 
         constructor(readonly api: MineSkinAPI) {

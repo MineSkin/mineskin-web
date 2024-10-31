@@ -1,15 +1,20 @@
 <style>
 .line-break-anywhere {
- line-break: anywhere;
+    line-break: anywhere;
 }
 </style>
 <template>
     <v-container class="mb-4">
         <h2>
-            <back-link  to="/gallery" class="text-white">
+            <back-link to="/gallery" class="text-white">
                 <v-icon icon="mdi-arrow-left" class="mx-2"/>
             </back-link>
             {{ skinNameDisplay }}
+            <v-tooltip v-if="useRandomName" text="Random Name">
+                <template v-slot:activator="{ props }">
+                    <span v-bind="props">*</span>
+                </template>
+            </v-tooltip>
         </h2>
         <v-row class="mt-1">
             <v-col cols="12">
@@ -58,21 +63,35 @@ const skinId = computed<string>(() => {
 
 const {$mineskin} = useNuxtApp();
 
-const skinNameDisplay = computed(() => {
-    return skinName(skin.value) || 'Skin';
-});
-
 const {
     data: skin
 } = useLazyAsyncData<Maybe<SkinInfo2>>(`skin-${ skinId.value }`, async () => {
     return (await $mineskin.skins.get(skinId.value))?.skin;
 });
 
+const {
+    data: randomSkinName
+} = useLazyAsyncData<string>(`skin-rng-name-${ skinId.value }`, async () => {
+    return (await $mineskin.util.randomName(skinId.value));
+});
+
+const useRandomName = computed(() => {
+    return !skin.value?.name && randomSkinName.value;
+})
+
+const skinNameDisplay = computed(() => {
+    if (useRandomName.value) {
+        return randomSkinName.value;
+    }
+    return skinName(skin.value, randomSkinName.value || 'Skin');
+});
+
+
 useHead({
     title: skinNameDisplay
 });
 
-onMounted(()=>{
+onMounted(() => {
     if (skinId.value) {
         $mineskin.skins.trackView(skinId.value);
     }

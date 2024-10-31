@@ -3,8 +3,8 @@ import type { SkinInfo2 } from "@mineskin/types";
 export const PLACEHOLDER_HEAD = 'https://imagedelivery.net/3uwxrP7hx2SHdBFF5lTuXg/30ab0642-e5e0-41fa-64bf-b6d0eac30c00/public'
 export const PLACEHOLDER_BODY = 'https://imagedelivery.net/3uwxrP7hx2SHdBFF5lTuXg/5385f922-8f90-4cff-d7e4-62edd12eb900/public';
 
-export function skinName(skin?: SkinInfo2): string {
-    return skin?.name || skin?.uuid?.substring(0, 8) || 'Skin';
+export function skinName(skin?: SkinInfo2, fallback: string = 'Skin'): string {
+    return skin?.name || skin?.uuid?.substring(0, 8) || fallback;
 }
 
 export function addUuidDashes(uuid: string): string {
