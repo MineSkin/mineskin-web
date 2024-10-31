@@ -2,6 +2,7 @@
 .skin-name {
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
 }
 </style>
 <template>
