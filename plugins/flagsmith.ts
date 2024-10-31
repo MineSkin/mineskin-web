@@ -14,7 +14,7 @@ export default defineNuxtPlugin({
                 enableLogs: true,
                 cacheFlags: true,
                 state: state
-            })
+            });
         }
         return {
             provide: {
