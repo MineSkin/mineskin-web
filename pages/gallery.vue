@@ -35,7 +35,7 @@
             </v-row>
         </v-infinite-scroll>
         <v-row justify="center">
-            <div class="gallery-item mb-4" v-for="n in 32" :key="n">
+            <div class="gallery-item mb-4" v-for="n in 20" :key="n">
                 <skin-link-card no-title/>
             </div>
         </v-row>
