@@ -345,13 +345,13 @@ const processNameVariables = (index: number, url: string | null, file: File | nu
         replaced = replaced.replace(/{user}/g, user);
     }
     if (generateType.value === GenerateType.UPLOAD && file) {
-        replaced = replaced.replace(/{file}/g, file.name);
+        replaced = replaced.replace(/{file}/g, file.name.replace('.png', ''));
     }
     if (generateType.value === GenerateType.URL && url) {
         const parsed = new URL(url);
         const filename = parsed.pathname.split('/').pop();
         if (filename) {
-            replaced = replaced.replace(/{file}/g, filename);
+            replaced = replaced.replace(/{file}/g, filename.replace('.png', ''));
         }
     }
 
