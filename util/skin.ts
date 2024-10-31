@@ -1,8 +1,7 @@
 import type { SkinInfo2 } from "@mineskin/types";
 
 export const PLACEHOLDER_HEAD = 'https://imagedelivery.net/3uwxrP7hx2SHdBFF5lTuXg/3f567030-3a96-48a6-fcaa-71b92e0df600/public'
-export const PLACEHOLDER_BODY = 'https://imagedelivery.net/3uwxrP7hx2SHdBFF5lTuXg/6aebf9dd-5732-461f-6deb-c88e226cde00/public';
-//TODO: make a nicer placeholder skin
+export const PLACEHOLDER_BODY = 'https://imagedelivery.net/3uwxrP7hx2SHdBFF5lTuXg/5385f922-8f90-4cff-d7e4-62edd12eb900/public';
 
 export function skinName(skin?: SkinInfo2): string {
     return skin?.name || skin?.uuid?.substring(0, 8) || 'Skin';
