@@ -9,4 +9,10 @@
         <priority>0.8</priority>
         <changefreq>daily</changefreq>
     </url>
+    <url>
+        <loc>https://docs.mineskin.org</loc>
+    </url>
+    <url>
+        <loc>https://account.mineskin.org</loc>
+    </url>
 </urlset>
