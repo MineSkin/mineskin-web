@@ -1,6 +1,6 @@
 {
   "api": "https://flagsmith-proxy-worker.inventive.workers.dev/",
-  "environmentID": "XB4HLkxyNsUzbWfmc9fphG",
+  "environmentID": "QdesrfNXeKrpbFPhi7bNEx",
   "flags": {
     "account.enable_billing": {
       "id": 99202,
