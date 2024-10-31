@@ -1,3 +1,9 @@
+<style scoped>
+.skin-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+</style>
 <template>
     <nuxt-link :to="skin?('/'+skin.uuid):undefined">
         <v-sheet
@@ -5,7 +11,7 @@
         >
             <SkinHeadImg :skin="skin"/>
             <v-divider v-if="!noTitle" class="my-2"/>
-            <span v-if="!noTitle">{{ skin?.name || skin?.uuid?.substring(0, 8) }}</span>
+            <div class="skin-name" v-if="!noTitle">{{ skin?.name || skin?.uuid?.substring(0, 8) }}</div>
         </v-sheet>
     </nuxt-link>
 </template>
