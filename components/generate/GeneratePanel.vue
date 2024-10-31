@@ -90,9 +90,16 @@
                     <v-text-field
                         label="Name (optional)"
                         v-model="name"
-                        hint="Optional name for this skin"
+                        hint="Optional name for this skin, supports placeholders"
                         persistent-hint
-                    />
+                    >
+                        <template v-slot:message>
+                            Optional name for this skin, supports variables <a @click.prevent="variablesDialog=true"
+                                                                                  href="#">
+                            <v-icon icon="mdi-help-circle"/>
+                        </a>
+                        </template>
+                    </v-text-field>
                 </v-col>
                 <v-col cols="12" md="3">
                     <v-select
@@ -199,6 +206,46 @@
         <!--            <dbg :data="{users,uploadFiles,urls,generateType}"/>-->
         <!--        </v-row>-->
     </v-sheet>
+    <v-dialog
+        v-model="variablesDialog"
+        width="auto"
+    >
+        <v-card
+            max-width="400"
+            prepend-icon="mdi-help-circle"
+            title="Variables / Placeholders"
+        >
+            <template v-slot:text>
+                <div>Names support variables that will get replaced with the matching values when you generate a skin.
+                    This is especially useful when generating multiple skins at once.
+                </div>
+                <br/>
+                <div>
+                    <b>Available variables:</b><br/>
+                    <ul>
+                        <li><b>{index}</b> - The index of the image in the list</li>
+                        <li><b>{user}</b> - The name/UUID of the user</li>
+                        <li><b>{file}</b> - The file name (also works for URLs)</li>
+                    </ul>
+                </div>
+                <br/>
+                <div>
+                    <b>Preview:</b><br/>
+                    <span v-if="replacedNamesPreview.length<=0">Enter a name first</span>
+                    <ul>
+                        <li v-for="name in replacedNamesPreview">{{ name }}</li>
+                    </ul>
+                </div>
+            </template>
+            <template v-slot:actions>
+                <v-btn
+                    class="ms-auto"
+                    text="Ok"
+                    @click="variablesDialog = false"
+                ></v-btn>
+            </template>
+        </v-card>
+    </v-dialog>
 </template>
 <script setup lang="ts">
 
@@ -235,7 +282,6 @@ const {
 } = useLazyAsyncData<BasicCreditInfo>("credits", async () => {
     return (await $mineskin.me.credits())?.credit;
 });
-
 
 const generateType = computed<Maybe<GenerateType>>(() => {
     if (urls.value.filter(url => url.length > 0).length > 0) {
@@ -286,6 +332,36 @@ watch(() => imageCount.value, (value) => {
         });
         return;
     }
+});
+
+const variablesDialog = ref(false);
+const processNameVariables = (index: number, url: string | null, file: File | null, user: string | null) => {
+    const original = name.value;
+    let replaced = original;
+
+    replaced = replaced.replace(/{index}/g, index.toString());
+
+    if (generateType.value === GenerateType.USER && user) {
+        replaced = replaced.replace(/{user}/g, user);
+    }
+    if (generateType.value === GenerateType.UPLOAD && file) {
+        replaced = replaced.replace(/{file}/g, file.name);
+    }
+    if (generateType.value === GenerateType.URL && url) {
+        const parsed = new URL(url);
+        const filename = parsed.pathname.split('/').pop();
+        if (filename) {
+            replaced = replaced.replace(/{file}/g, filename);
+        }
+    }
+
+    return replaced;
+}
+
+const replacedNamesPreview = computed(() => {
+    return Array.from({length: imageCount.value}, (_, i) => {
+        return processNameVariables(i, urls.value[i] || null, uploadFiles.value[i] || null, users.value[i] || null);
+    }).filter(name => name.length > 0);
 });
 
 const canUsePrivateSkins = computed(() => {
@@ -420,16 +496,18 @@ async function generate() {
     generating.value = true;
     await sleep(100);
 
-    const options: GenerateOptions = getOptions();
+    const baseOptions: GenerateOptions = getOptions();
 
     let responses: GenerateJobResponse[] = [];
     switch (generateType.value) {
         case GenerateType.UPLOAD: {
-            //TODO: actually process all images
             if (!canGenerateMultiple.value) {
                 uploadFiles.value = [uploadFiles.value[0]];
             }
+            let index = 0;
             for (const file of uploadFiles.value) {
+                let options = {...baseOptions};
+                options.name = processNameVariables(index++, null, file, null);
                 await sleep(800);
                 responses.push(await $mineskin.queue.upload(file, options));
             }
@@ -439,7 +517,10 @@ async function generate() {
             if (!canGenerateMultiple.value) {
                 urls.value = [urls.value[0]];
             }
+            let index = 0;
             for (const url of urls.value) {
+                let options = {...baseOptions};
+                options.name = processNameVariables(index++, url, null, null);
                 await sleep(800);
                 responses.push(await $mineskin.queue.url(url, options))
             }
@@ -460,11 +541,14 @@ async function generate() {
                         });
                         continue;
                     }
-                    validated.push(uuid!);
+                    validated.push(user!);
                 }
             }
-            users.value = validated;
+            //users.value = validated;
+            let index = 0;
             for (const user of validated) {
+                let options = {...baseOptions};
+                options.name = processNameVariables(index++, null, null, user);
                 await sleep(800);
                 responses.push(await $mineskin.queue.user(user, options))
             }
