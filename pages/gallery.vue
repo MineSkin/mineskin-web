@@ -86,7 +86,7 @@ const hasNext = ref(true);
 
 async function api() {
     if (!hasNext.value) return [];
-    const toLoad = 60-(adsOnPage.value*4);
+    const toLoad = 80-(adsOnPage.value*4);
     const response = await $mineskin.skins.list(after.value, toLoad, filter.value);
     console.debug(response);
     const skins = response?.skins || [];
