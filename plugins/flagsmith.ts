@@ -10,6 +10,7 @@ export default defineNuxtPlugin({
             const state = await fetch('/flagsmith.json').then(res => res.json());
             await flagsmith.init({
                 environmentID: runtimeConfig.public.flagsmithEnvironment as string,
+                api: 'https://flagsmith-proxy-worker.inventive.workers.dev/',
                 enableLogs: true,
                 cacheFlags: true,
                 state: state
