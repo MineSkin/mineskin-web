@@ -6,13 +6,20 @@
             </v-col>
         </v-row>
         <v-infinite-scroll :items="skins" :onLoad="load" style="overflow: hidden">
-            <v-row justify="center">
+            <v-row justify="center" dense>
                 <template v-for="(item0, index) in skins" :key="item0">
                     <!--                    <v-col cols="4" sm="3" md="2">-->
-                    <div class="gallery-item-group mx-2">
+                    <v-col
+                        :cols="item0.ad? 12:6"
+                        :sm="item0.ad?8:4"
+                        :md="item0.ad?4:2"
+                        :xl="item0.ad?2:1"
+                        class="gallery-item-group"
+                        :class="item0.ad?'mx-4':'mx-2'"
+                    >
                         <div v-if="item0.ad"
-                             class="mx-1"
-                             style="max-height: 1200px;width:min(390px,max(180px,40vmin));">
+                             style="max-height: 1200px;width:100%"
+                        >
                             <ad-wrappper
                                 ad-format="fluid"
                                 ad-layout-key="+1i+s2-10-1k+6v"
@@ -22,11 +29,16 @@
                         <div v-else class="gallery-item mb-4" v-for="item in item0" :key="item">
                             <skin-link-card no-title :skin="item"/>
                         </div>
-                    </div>
+                    </v-col>
                     <!--                    </v-col>-->
                 </template>
             </v-row>
         </v-infinite-scroll>
+        <v-row justify="center">
+            <div class="gallery-item mb-4" v-for="n in 32" :key="n">
+                <skin-link-card no-title/>
+            </div>
+        </v-row>
         <!--            <v-col v-for="skin in skins">-->
         <!--                <v-card>-->
         <!--                    <v-card-text>-->
@@ -46,7 +58,8 @@ useHead({
     title: 'Gallery'
 });
 
-const router = useRouter()
+const router = useRouter();
+const {xl, lg, md, sm, xs} = useDisplay();
 
 const {$mineskin, $flags} = useNuxtApp();
 
@@ -56,7 +69,9 @@ const adFree = computed(() => authStore.grants?.ad_free);
 
 const filter = computed<string>(() => {
     return router.currentRoute.value.query.filter || '';
-})
+});
+
+const adsOnPage = ref(0);
 
 // const {
 //     data: skins,
@@ -65,20 +80,21 @@ const filter = computed<string>(() => {
 //     return $mineskin.skins.list();
 // });
 
-const skins = ref<Array<Array<ListedSkin>|{ad:boolean}>>([]);
+const skins = ref<Array<Array<ListedSkin> | { ad: boolean }>>([]);
 const after = ref<string | null>(null);
 const hasNext = ref(true);
 
 async function api() {
     if (!hasNext.value) return [];
-    const response = await $mineskin.skins.list(after.value, 64, filter.value);
+    const toLoad = 60-(adsOnPage.value*4);
+    const response = await $mineskin.skins.list(after.value, toLoad, filter.value);
     console.debug(response);
     const skins = response?.skins || [];
     hasNext.value = skins.length > 0;
     if (skins.length > 0) {
         after.value = skins[skins.length - 1].uuid!;
         // preload next
-        $mineskin.skins.list(after.value, 64, filter.value);
+        $mineskin.skins.list(after.value, toLoad, filter.value);
     }
     return skins;
     // return new Promise(resolve => {
@@ -107,7 +123,8 @@ async function load({done}) {
         return acc;
     }, [] as ListedSkin[][]);
     if (!adFree.value && inlineAdRate.value != 0 && Math.random() < inlineAdRate.value) {
-        grouped.splice(Math.floor(Math.floor(Math.random() * grouped.length)/2)*2, 0, {ad: true});
+        grouped.splice((Math.floor(Math.floor(Math.random() * grouped.length) / 2) * 2)+1, 0, {ad: true});
+        adsOnPage.value++;
     }
     skins.value.push(...grouped);
 
@@ -115,7 +132,7 @@ async function load({done}) {
 }
 
 const inlineAdRate = computed(() => Number($flags.getValue('web.ads.gallery_inline_rate', {
-    fallback: .5
+    fallback: .6
 })));
 
 onMounted(async () => {
