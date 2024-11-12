@@ -17,6 +17,7 @@
                 {{ credits.all.total - credits.all.balance }} / {{ credits.all.total }} credits used
             </template>
         </v-progress-linear>
+        <a href="https://account.mineskin.org/membership" target="_blank" class="float-end">Details</a>
     </div>
 </template>
 <script setup lang="ts">
