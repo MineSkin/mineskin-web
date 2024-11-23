@@ -15,6 +15,13 @@
                     <span v-bind="props">*</span>
                 </template>
             </v-tooltip>
+            <v-tooltip v-if="skin?.visibility!==SkinVisibility2.PUBLIC" :text="skin?.visibility===SkinVisibility2.PRIVATE ? 'Private' :'Unlisted'">
+                <template v-slot:activator="{ props }">
+                    <span v-bind="props">
+                        <v-icon class="mx-2">{{ skin?.visibility===SkinVisibility2.PRIVATE ? 'mdi-eye-off' : 'mdi-link' }}</v-icon>
+                    </span>
+                </template>
+            </v-tooltip>
         </h2>
         <v-row class="mt-1">
             <v-col cols="12">
@@ -48,7 +55,14 @@
 </template>
 <script setup lang="ts">
 import { useLazyAsyncData, useNuxtApp } from "#app";
-import type { Maybe, SkinIdAndTexture, SkinInfo, SkinInfo2, ValueAndSignature } from "@mineskin/types";
+import {
+    type Maybe,
+    type SkinIdAndTexture,
+    type SkinInfo,
+    type SkinInfo2,
+    SkinVisibility2,
+    type ValueAndSignature
+} from "@mineskin/types";
 import SkinSummaryCard from "~/components/skin/SkinSummaryCard.vue";
 import SkinInstructionsCard from "~/components/skin/SkinInstructionsCard.vue";
 import { skinName } from "../util/skin";
