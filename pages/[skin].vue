@@ -15,10 +15,10 @@
                     <span v-bind="props">*</span>
                 </template>
             </v-tooltip>
-            <v-tooltip v-if="skin?.visibility!==SkinVisibility2.PUBLIC" :text="skin?.visibility===SkinVisibility2.PRIVATE ? 'Private' :'Unlisted'">
+            <v-tooltip :text="skin?.visibility===SkinVisibility2.PRIVATE ? 'Private' : skin?.visibility===SkinVisibility2.UNLISTED? 'Unlisted':'Public'">
                 <template v-slot:activator="{ props }">
                     <span v-bind="props">
-                        <v-icon class="mx-2">{{ skin?.visibility===SkinVisibility2.PRIVATE ? 'mdi-eye-off' : 'mdi-link' }}</v-icon>
+                        <v-icon class="mx-2">{{ skin?.visibility===SkinVisibility2.PRIVATE ? 'mdi-eye-off' : skin?.visibility===SkinVisibility2.UNLISTED ? 'mdi-link' : 'mdi-earth' }}</v-icon>
                     </span>
                 </template>
             </v-tooltip>
