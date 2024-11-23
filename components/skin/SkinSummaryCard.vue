@@ -80,7 +80,7 @@
                             ></v-btn>
                         </v-col>
                     </v-row>
-                    <v-row v-if="skin">
+                    <v-row v-if="skin && tagsVisible">
                         <v-col>
                             <SkinTags :skin="skin"/>
                         </v-col>
@@ -102,6 +102,9 @@ const props = defineProps<{
 }>();
 
 const {mdAndUp} = useDisplay();
+
+const {$flags} = useNuxtApp();
+const tagsVisible = computed(() => $flags.hasFeature('web.tags.visible'));
 
 const skinLink = computed(() => {
     return `https://2.minesk.in/${ props.skin.uuid }`;
