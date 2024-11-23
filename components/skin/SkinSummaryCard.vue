@@ -80,6 +80,11 @@
                             ></v-btn>
                         </v-col>
                     </v-row>
+                    <v-row v-if="skin">
+                        <v-col>
+                            <SkinTags :skin="skin"/>
+                        </v-col>
+                    </v-row>
                 </v-col>
             </v-row>
         </v-card-text>
@@ -91,6 +96,7 @@ import CopyTextField from "./CopyTextField.vue";
 import { computed } from "vue";
 import { renderSkinBody } from "~/util/render";
 import { PLACEHOLDER_BODY, PLACEHOLDER_HEAD } from "~/util/skin";
+import SkinTags from "~/components/skin/SkinTags.vue";
 const props = defineProps<{
     skin: SkinInfo2;
 }>();

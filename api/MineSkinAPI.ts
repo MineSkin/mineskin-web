@@ -6,6 +6,7 @@ import type { GenerateJobResponse } from "~/types/GenerateJobResponse";
 import type { JobListResponse } from "~/types/JobListResponse";
 import type { UserValidation } from "~/types/UserValidation";
 import type { GenerateOptions } from "@mineskin/types";
+import { TagVoteType } from "@mineskin/types";
 
 const INIT: RequestInit = {
     headers: {
@@ -180,6 +181,13 @@ export class MineSkinAPI {
         public async trackView(uuid: string){
             return this.api.request(`/v2/skins/${ uuid }/interactions/views`, {
                 method: 'POST'
+            })
+        }
+
+        public async voteTag(uuid: string, tag: string, vote: TagVoteType){
+            return this.api.request(`/v2/skins/${ uuid }/tags`, {
+                method: 'POST',
+                body: JSON.stringify({tag, vote})
             })
         }
 
