@@ -53,6 +53,8 @@ import { useNuxtApp } from "#app";
 import type { Maybe } from "@mineskin/types";
 import type { ListedSkin } from "~/types/SkinListResponse";
 import { useAuthStore } from "~/stores/auth";
+import { useGalleryStore } from "~/stores/gallery";
+import { onMounted } from "#imports";
 
 useHead({
     title: 'Gallery'
@@ -64,6 +66,8 @@ const {xl, lg, md, sm, xs} = useDisplay();
 const {$mineskin, $flags} = useNuxtApp();
 
 const authStore = useAuthStore();
+const galleryStore = useGalleryStore();
+const {galleryItems, galleryScroll} = storeToRefs(galleryStore);
 
 const adFree = computed(() => authStore.grants?.ad_free);
 
@@ -80,13 +84,17 @@ const adsOnPage = ref(0);
 //     return $mineskin.skins.list();
 // });
 
+onMounted(() => {
+    skins.value = galleryItems.value;
+})
+
 const skins = ref<Array<Array<ListedSkin> | { ad: boolean }>>([]);
 const after = ref<string | null>(null);
 const hasNext = ref(true);
 
 async function api() {
     if (!hasNext.value) return [];
-    const toLoad = 80-(adsOnPage.value*4);
+    const toLoad = 80 - (adsOnPage.value * 4);
     const response = await $mineskin.skins.list(after.value, toLoad, filter.value);
     console.debug(response);
     const skins = response?.skins || [];
@@ -123,10 +131,11 @@ async function load({done}) {
         return acc;
     }, [] as ListedSkin[][]);
     if (!adFree.value && inlineAdRate.value != 0 && Math.random() < inlineAdRate.value) {
-        grouped.splice((Math.floor(Math.floor(Math.random() * grouped.length) / 2) * 2)+1, 0, {ad: true});
+        grouped.splice((Math.floor(Math.floor(Math.random() * grouped.length) / 2) * 2) + 1, 0, {ad: true});
         adsOnPage.value++;
     }
     skins.value.push(...grouped);
+    galleryItems.value = skins.value;
 
     done('ok')
 }
