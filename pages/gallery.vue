@@ -84,10 +84,6 @@ const adsOnPage = ref(0);
 //     return $mineskin.skins.list();
 // });
 
-onMounted(() => {
-    skins.value = galleryItems.value;
-})
-
 const skins = ref<Array<Array<ListedSkin> | { ad: boolean }>>([]);
 const after = ref<string | null>(null);
 const hasNext = ref(true);
@@ -145,6 +141,7 @@ const inlineAdRate = computed(() => Number($flags.getValue('web.ads.gallery_inli
 })));
 
 onMounted(async () => {
+    skins.value = galleryItems.value;
     await load({
         done: () => {
         }
