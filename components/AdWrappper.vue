@@ -25,7 +25,7 @@
             <component is="script">
                 {{ isDev ? 'google_adtest = "on";' : '' }}
                 (adsbygoogle = window.adsbygoogle || []).push({});
-                "{{ grants }}";
+                "{{ ready }} {{ adFree }}";
             </component>
         </div>
     </ClientOnly>
