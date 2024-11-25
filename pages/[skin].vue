@@ -15,10 +15,13 @@
                     <span v-bind="props">*</span>
                 </template>
             </v-tooltip>
-            <v-tooltip :text="skin?.visibility===SkinVisibility2.PRIVATE ? 'Private' : skin?.visibility===SkinVisibility2.UNLISTED? 'Unlisted':'Public'">
+            <v-tooltip
+                :text="skin?.visibility===SkinVisibility2.PRIVATE ? 'Private' : skin?.visibility===SkinVisibility2.UNLISTED? 'Unlisted':'Public'">
                 <template v-slot:activator="{ props }">
                     <span v-bind="props">
-                        <v-icon class="mx-2">{{ skin?.visibility===SkinVisibility2.PRIVATE ? 'mdi-eye-off' : skin?.visibility===SkinVisibility2.UNLISTED ? 'mdi-link' : 'mdi-earth' }}</v-icon>
+                        <v-icon class="mx-2">{{
+                                skin?.visibility === SkinVisibility2.PRIVATE ? 'mdi-eye-off' : skin?.visibility === SkinVisibility2.UNLISTED ? 'mdi-link' : 'mdi-earth'
+                            }}</v-icon>
                     </span>
                 </template>
             </v-tooltip>
@@ -67,6 +70,7 @@ import SkinSummaryCard from "~/components/skin/SkinSummaryCard.vue";
 import SkinInstructionsCard from "~/components/skin/SkinInstructionsCard.vue";
 import { skinName } from "../util/skin";
 import AdWrappper from "~/components/AdWrappper.vue";
+import { renderSkinBody, renderSkinHead } from "~/util/render";
 
 const router = useRouter();
 
@@ -100,10 +104,22 @@ const skinNameDisplay = computed(() => {
     return skinName(skin.value, randomSkinName.value || 'Skin');
 });
 
-
-useHead({
-    title: skinNameDisplay
+const skinHeadImage = computed(() => {
+    if (!skin.value) return null;
+    return renderSkinHead(skin.value.texture.hash.skin);
 });
+// const skinBodyImage = computed(() => {
+//     if (!skin.value) return null;
+//     return renderSkinBody(skin.value.texture.hash.skin);
+// });
+const ogImage = computed(() => {
+    return skinHeadImage.value || '/img/mineskin-social-card.jpg';
+});
+
+useSeoMeta({
+    title: skinNameDisplay,
+    ogImage: ogImage
+})
 
 onMounted(() => {
     if (skinId.value) {
