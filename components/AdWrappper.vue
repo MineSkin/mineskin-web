@@ -6,7 +6,7 @@
 </style>
 <template>
     <ClientOnly>
-        <div class="ad-wrapper" v-if="!adFree">
+        <div class="ad-wrapper" v-if="ready && !adFree">
             <component is="script" async
                        :src="'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=' + clientId"
                        crossorigin="anonymous"></component>
@@ -46,4 +46,9 @@ const authStore = useAuthStore();
 const {grants} = storeToRefs(authStore);
 
 const adFree = computed(() => (grants as any)?.ad_free);
+
+const ready = ref(false);
+onMounted(() => {
+    ready.value = true;
+});
 </script>
