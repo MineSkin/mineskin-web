@@ -8,10 +8,12 @@
     <ClientOnly>
         <div class="ad-wrapper" v-if="ready && !adFree">
             <component is="script" async
+                       v-if="ready && !adFree"
                        :src="'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=' + clientId"
                        crossorigin="anonymous"></component>
             <slot name="ad">
                 <ins class="adsbygoogle"
+                     v-if="ready && !adFree"
                      style="display:block"
                      :data-adtest="isDev ? 'on': ''"
                      :data-ad-client="clientId"
