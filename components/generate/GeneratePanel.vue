@@ -184,6 +184,9 @@
                                 <span>You do not have any credits remaining.</span><br/>
                                 <span>This skin may take longer to generate.</span>
                             </div>
+                            <div v-if="!authed">
+                                <span>(Sign in to use credits)</span>
+                            </div>
                         </div>
                         <div v-if="generating">
                             <div>
