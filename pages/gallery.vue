@@ -77,7 +77,7 @@ useHead({
 const router = useRouter();
 const {xl, lg, md, sm, xs} = useDisplay();
 
-const {$mineskin, $flags} = useNuxtApp();
+const {$mineskin, $flags, $notify} = useNuxtApp();
 
 const authStore = useAuthStore();
 const galleryStore = useGalleryStore();
@@ -113,6 +113,11 @@ async function api() {
         after.value = skins[skins.length - 1].uuid!;
         // preload next
         $mineskin.skins.list(after.value, toLoad, filter.value);
+    } else {
+        $notify({
+            text: "No skins found",
+            color: "info"
+        })
     }
     return skins;
     // return new Promise(resolve => {
