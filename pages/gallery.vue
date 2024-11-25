@@ -5,7 +5,7 @@
                 <h2>Skin Gallery</h2>
             </v-col>
         </v-row>
-        <v-infinite-scroll :items="skins" :onLoad="load" style="overflow: hidden">
+        <v-infinite-scroll :items="skins" :onLoad="load" style="overflow: hidden" @scroll="onScroll">
             <v-row justify="center" dense>
                 <template v-for="(item0, index) in skins" :key="item0">
                     <!--                    <v-col cols="4" sm="3" md="2">-->
@@ -55,6 +55,7 @@ import type { ListedSkin } from "~/types/SkinListResponse";
 import { useAuthStore } from "~/stores/auth";
 import { useGalleryStore } from "~/stores/gallery";
 import { onMounted } from "#imports";
+import { computedAsync, useDebounceFn, useThrottleFn } from '@vueuse/core'
 
 useHead({
     title: 'Gallery'
@@ -140,13 +141,23 @@ const inlineAdRate = computed(() => Number($flags.getValue('web.ads.gallery_inli
     fallback: .6
 })));
 
+const handleScroll = useThrottleFn((e: Event) => {
+    galleryScroll.value = window.scrollY;
+}, 200, true, false);
+
 onMounted(async () => {
     skins.value = galleryItems.value;
+    window.addEventListener('scroll', handleScroll, {passive: true});
+    window.scrollTo(0, galleryScroll.value);
+
     await load({
         done: () => {
         }
     })
-})
+});
+onUnmounted(() => {
+    window.removeEventListener('scroll', handleScroll);
+});
 
 
 </script>
