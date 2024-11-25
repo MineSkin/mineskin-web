@@ -400,16 +400,13 @@ const generating = ref(false);
 const dragging = ref(false);
 
 const onDragStart = (e: DragEvent) => {
-    console.log(e.type, e);
     dragging.value = true;
 };
 const onDragEnd = (e: DragEvent) => {
-    console.log(e.type, e);
     dragging.value = false;
 };
 
 function onDrop(e: DragEvent) {
-    console.log(e.type, e);
     dragging.value = false;
     if (!e.dataTransfer) return;
     const files = Array.from(e.dataTransfer.files);
