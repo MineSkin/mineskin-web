@@ -124,6 +124,10 @@ useSeoMeta({
 })
 
 useHead({
+    link: [{
+        rel: 'canonical',
+        href: `https://beta.mineskin.org/${ skinId.value }`
+    }],
     script: [{
         type: 'application/ld+json',
         innerHTML: JSON.stringify({

@@ -198,6 +198,10 @@ useSeoMeta({
 })
 
 useHead({
+    link: [{
+        rel: 'canonical',
+        href: 'https://beta.mineskin.org/'
+    }],
     script: [
         {
 
@@ -261,9 +265,9 @@ useHead({
                 "description": description,
                 "potentialAction": {
                     "@type": "SearchAction",
-                     "target": {
-                      "@type": "EntryPoint",
-                      "urlTemplate": "https://beta.mineskin.org/gallery?filter={search_term_string}"
+                    "target": {
+                        "@type": "EntryPoint",
+                        "urlTemplate": "https://beta.mineskin.org/gallery?filter={search_term_string}"
                     },
                     "query-input": "required name=search_term_string"
                 }

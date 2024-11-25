@@ -59,7 +59,11 @@ import { computedAsync, useDebounceFn, useThrottleFn } from '@vueuse/core'
 
 useHead({
     title: 'Gallery',
-     script: [{
+    link: [{
+        rel: 'canonical',
+        href: 'https://beta.mineskin.org/gallery'
+    }],
+    script: [{
         type: 'application/ld+json',
         innerHTML: JSON.stringify({
             "@context": "https://schema.org",
