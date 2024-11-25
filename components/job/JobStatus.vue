@@ -75,6 +75,7 @@ const {
     return (await $mineskin.queue.get(props.id, {silent: true}));
 }, {
     immediate: false,
+    server: false,
     default: () => {
         return {job: jobMap.value[props.id]}
     }

@@ -29,6 +29,7 @@ export const useQueueStore = defineStore('queue', () => {
         return await $mineskin.queue.list({silent: true});
     }, {
         immediate: false,
+        server: false,
         default: () => {
             return {
                 success: true,
