@@ -9,8 +9,7 @@ export default defineNuxtConfig({
     routeRules: {
         '/': {prerender: true},
         '/gallery': {prerender: true},
-        '/my-skins': {ssr: false},
-        '/**': {prerender: true}
+        '/my-skins': {ssr: false}
     },
     plugins: [
         '@/plugins/logger',
