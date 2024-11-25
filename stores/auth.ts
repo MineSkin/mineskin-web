@@ -13,7 +13,7 @@ export const useAuthStore = defineStore('auth', () => {
     const wasAuthed = ref(false);
     const _user: Ref<Maybe<AuthStatus>> = ref(null);
 
-    const grants = ref<any>({});
+    const grants = ref<Record<string, string | number | boolean>>({});
 
     const lastWebTokenRefresh = ref(0);
     const lastApiTokenRefresh = ref(0);

@@ -6,14 +6,12 @@
 </style>
 <template>
     <ClientOnly>
-        <div class="ad-wrapper" v-if="ready && !adFree">
+        <div class="ad-wrapper" v-if="ready && grants && !grants.ad_free">
             <component is="script" async
-                       v-if="ready && !adFree"
                        :src="'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=' + clientId"
                        crossorigin="anonymous"></component>
             <slot name="ad">
                 <ins class="adsbygoogle"
-                     v-if="ready && !adFree"
                      style="display:block"
                      :data-adtest="isDev ? 'on': ''"
                      :data-ad-client="clientId"
@@ -25,7 +23,7 @@
             <component is="script">
                 {{ isDev ? 'google_adtest = "on";' : '' }}
                 (adsbygoogle = window.adsbygoogle || []).push({});
-                "{{ ready }} {{ adFree }}";
+                "{{ ready }} {{ grants.ad_free }} {{ adFree }}";
             </component>
         </div>
     </ClientOnly>
