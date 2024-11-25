@@ -149,7 +149,6 @@ export const useAuthStore = defineStore('auth', () => {
     }
 }, {
     persist: {
-        storage: persistedState.localStorage,
-        paths: ['lastWebTokenRefresh', 'lastApiTokenRefresh']
+        storage: persistedState.localStorage
     }
 });

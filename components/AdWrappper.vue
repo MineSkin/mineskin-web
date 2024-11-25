@@ -27,6 +27,7 @@
 </template>
 <script setup lang="ts">
 import { useAuthStore } from "~/stores/auth";
+import { storeToRefs } from "pinia";
 
 const runtimeConfig = useRuntimeConfig();
 const isDev = runtimeConfig.public.isDev;
@@ -40,6 +41,7 @@ const props = defineProps<{
 }>();
 
 const authStore = useAuthStore();
+const {grants} = storeToRefs(authStore);
 
-const adFree = computed(() => authStore.grants?.ad_free);
+const adFree = computed(() => (grants as any)?.ad_free);
 </script>
