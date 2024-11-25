@@ -49,7 +49,7 @@
     </v-container>
 </template>
 <script setup lang="ts">
-import { useNuxtApp } from "#app";
+import { onBeforeRouteUpdate, useNuxtApp } from "#app";
 import type { Maybe } from "@mineskin/types";
 import type { ListedSkin } from "~/types/SkinListResponse";
 import { useAuthStore } from "~/stores/auth";
@@ -85,8 +85,10 @@ const {galleryItems, galleryScroll} = storeToRefs(galleryStore);
 
 const adFree = computed(() => authStore.grants?.ad_free);
 
-const filter = computed<string>(() => {
-    return router.currentRoute.value.query.filter || '';
+const filter = ref<string>(router.currentRoute.value.query.filter as string || '');
+watch(() => router.currentRoute.value.query.filter, (newVal) => {
+    filter.value = newVal as string;
+    reloadNuxtApp();
 });
 
 const adsOnPage = ref(0);
@@ -113,11 +115,6 @@ async function api() {
         after.value = skins[skins.length - 1].uuid!;
         // preload next
         $mineskin.skins.list(after.value, toLoad, filter.value);
-    } else {
-        $notify({
-            text: "No skins found",
-            color: "info"
-        })
     }
     return skins;
     // return new Promise(resolve => {
@@ -133,6 +130,10 @@ async function load({done}) {
     const res = await api();
     if (res.length === 0) {
         done('empty');
+          $notify({
+            text: "No skins found",
+            color: "info"
+        })
         return;
     }
 

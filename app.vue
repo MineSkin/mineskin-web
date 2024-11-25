@@ -315,7 +315,8 @@ const search = () => {
         path: '/gallery',
         query: {
             filter: filter.value
-        }
+        },
+        force: true,
     });
 }
 
