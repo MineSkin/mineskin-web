@@ -171,8 +171,9 @@
                     <v-row justify="center" class="mt-2 text-center">
                         <ClientOnly>
                             <div v-if="showCreditsInfo && !generating">
+                                <Dbg :data="credits"></Dbg>
                                 <div v-if="credits">
-                                    <div v-if="credits.all.balance>0">
+                                    <div v-if="credits?.all?.balance>0">
                                 <span>This request will consume {{
                                         imageCount || 1
                                     }} {{

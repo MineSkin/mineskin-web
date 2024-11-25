@@ -1,5 +1,5 @@
 <template>
-    <div v-if="authStore.authed">
+    <div v-if="authed">
         <v-progress-linear
             v-if="creditsStatus === 'pending'"
             height="20"
@@ -25,16 +25,21 @@
 import { useLazyAsyncData } from "nuxt/app";
 import type { BasicCreditInfo } from "~/types/BasicCreditInfo";
 import { useAuthStore } from "#imports";
+import { storeToRefs } from "pinia";
 
 const {$mineskin} = useNuxtApp();
 
 const authStore = useAuthStore();
+const {authed} = storeToRefs(authStore);
 
 const {
     data: credits,
     status: creditsStatus,
     refresh: refreshCredits
 } = useLazyAsyncData<BasicCreditInfo>("credits", async () => {
+     if (!authed.value) {
+        return {all: {balance: 0, total: 0}};
+    }
     return (await $mineskin.me.credits())?.credit;
 }, {
     immediate: false
