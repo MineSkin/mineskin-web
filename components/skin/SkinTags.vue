@@ -30,6 +30,7 @@ a {
                 <span>Add Tag</span>
             </v-chip>
             <v-text-field v-else-if="authed"
+                          ref="newTagInput"
                           density="compact"
                           variant="outlined"
                           width="200"
@@ -58,6 +59,8 @@ const {authed} = storeToRefs(authStore);
 
 const {$mineskin, $notify} = useNuxtApp();
 
+const newTagInput = useTemplateRef('newTagInput');
+
 const addingTag = ref(false);
 const newTag = ref("");
 
@@ -78,6 +81,11 @@ const doVote = async (tag: TagInfo, vote: TagVoteType) => {
 
 const toggleNewTagInput = () => {
     addingTag.value = !addingTag.value;
+    if (addingTag.value) {
+        setTimeout(() => {
+            newTagInput.value.focus();
+        }, 0);
+    }
 };
 
 const submitTag = async () => {
