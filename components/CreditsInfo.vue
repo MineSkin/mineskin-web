@@ -9,14 +9,15 @@
         <v-progress-linear
             v-else-if="credits"
             height="20"
-            :model-value="credits.balance"
-            :max="credits.total"
+            :model-value="credits.all.total - credits.all.balance"
+            :max="credits.all.total"
             color="success"
         >
             <template v-slot:default>
-                {{ credits.total - credits.balance }} / {{ credits.total }} credits used
+                {{ credits.all.total - credits.all.balance }} / {{ credits.all.total }} credits used
             </template>
         </v-progress-linear>
+        <a href="https://account.mineskin.org/membership" target="_blank" class="float-end">Details</a>
     </div>
 </template>
 <script setup lang="ts">
@@ -32,7 +33,15 @@ const authStore = useAuthStore();
 const {
     data: credits,
     status: creditsStatus,
+    refresh: refreshCredits
 } = useLazyAsyncData<BasicCreditInfo>("credits", async () => {
     return (await $mineskin.me.credits())?.credit;
+}, {
+    immediate: false
 });
+
+onMounted(async () => {
+    await authStore.checkAuth();
+    await refreshCredits();
+})
 </script>

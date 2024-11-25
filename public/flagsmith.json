@@ -1,0 +1,119 @@
+{
+  "api": "https://flagsmith-proxy-worker.inventive.workers.dev/",
+  "environmentID": "QdesrfNXeKrpbFPhi7bNEx",
+  "flags": {
+    "account.enable_billing": {
+      "id": 99202,
+      "enabled": false,
+      "value": null
+    },
+    "account.pages.billing": {
+      "id": 99212,
+      "enabled": true,
+      "value": null
+    },
+    "account.billing.products.request_speed.variants": {
+      "id": 103113,
+      "enabled": false,
+      "value": "481426,481440,481420,481425,481439"
+    },
+    "account.billing.products.requests_speed": {
+      "id": 103114,
+      "enabled": false,
+      "value": 329235
+    },
+    "account.billing.products.features.request_speeds": {
+      "id": 103115,
+      "enabled": false,
+      "value": "{\n  \"481426\": 50,\n  \"481440\": 75,\n  \"481420\": 100,\n  \"481425\": 150,\n  \"481427\": 200,\n  \"481439\": 250\n}"
+    },
+    "account.billing.products.rate_limit": {
+      "id": 103534,
+      "enabled": false,
+      "value": null
+    },
+    "account.billing.products.addons": {
+      "id": 103535,
+      "enabled": false,
+      "value": null
+    },
+    "account.billing.products.addons.feat_private_skins": {
+      "id": 103536,
+      "enabled": false,
+      "value": null
+    },
+    "account.billing.livemode": {
+      "id": 105413,
+      "enabled": true,
+      "value": null
+    },
+    "account.billing.checkout": {
+      "id": 105414,
+      "enabled": true,
+      "value": null
+    },
+    "account.pages.keys": {
+      "id": 105749,
+      "enabled": true,
+      "value": null
+    },
+    "account.pages.minecraft": {
+      "id": 105751,
+      "enabled": true,
+      "value": null
+    },
+    "account.pages.billing.visible": {
+      "id": 107054,
+      "enabled": true,
+      "value": null
+    },
+    "account.pages.keys.visible": {
+      "id": 107055,
+      "enabled": true,
+      "value": null
+    },
+    "account.pages.minecraft.visible": {
+      "id": 107056,
+      "enabled": true,
+      "value": null
+    },
+    "account.billing.products.features": {
+      "id": 107730,
+      "enabled": true,
+      "value": ""
+    },
+    "account.billing.products.credits": {
+      "id": 108756,
+      "enabled": false,
+      "value": null
+    },
+    "web.visibility.private": {
+      "id": 110795,
+      "enabled": true,
+      "value": null
+    },
+    "web.credits.show_info": {
+      "id": 110797,
+      "enabled": false,
+      "value": null
+    },
+    "web.notification_banner": {
+      "id": 110841,
+      "enabled": false,
+      "value": "{\n\"title\":\"Microsoft authentication is currently degraded.\",\n\"text\": \"Skin Generation may be affected.\",\n\"color\": \"warning\"\n}"
+    },
+    "web.ads.gallery_inline_rate": {
+      "id": 111105,
+      "enabled": false,
+      "value": ".2"
+    },
+    "migrations.scheduled": {
+      "id": 111200,
+      "enabled": false,
+      "value": 60
+    }
+  },
+  "ts": null,
+  "traits": {},
+  "evaluationEvent": null
+}

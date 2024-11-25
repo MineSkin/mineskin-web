@@ -4,4 +4,4 @@ import type { SkinInfo2 } from "@mineskin/types";
 export interface SkinListResponse extends MineSkinResponse<'skins', ListedSkin[]>{
 }
 
-export type ListedSkin = Pick<SkinInfo2,'uuid'|'name'> & {texture?: string};
+export type ListedSkin = Pick<SkinInfo2,'uuid'|'name'> & {texture?: string;[key:string]: any;};

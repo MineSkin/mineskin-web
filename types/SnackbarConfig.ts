@@ -5,5 +5,7 @@ export interface SnackbarConfig {
     color: string,
     text: string,
     timeout: number,
-    closable: boolean
+    closable: boolean,
+    actionLabel?: string,
+    actionLink?: string
 }

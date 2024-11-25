@@ -1,20 +1,38 @@
 <style>
 .line-break-anywhere {
- line-break: anywhere;
+    line-break: anywhere;
 }
 </style>
 <template>
     <v-container class="mb-4">
         <h2>
-            <back-link  to="/gallery" class="text-white">
+            <back-link to="/gallery" class="text-white">
                 <v-icon icon="mdi-arrow-left" class="mx-2"/>
             </back-link>
             {{ skinNameDisplay }}
+            <v-tooltip v-if="useRandomName" text="Random Name">
+                <template v-slot:activator="{ props }">
+                    <span v-bind="props">*</span>
+                </template>
+            </v-tooltip>
+            <v-tooltip
+                :text="skin?.visibility===SkinVisibility2.PRIVATE ? 'Private' : skin?.visibility===SkinVisibility2.UNLISTED? 'Unlisted':'Public'">
+                <template v-slot:activator="{ props }">
+                    <span v-bind="props">
+                        <v-icon class="mx-2">{{
+                                skin?.visibility === SkinVisibility2.PRIVATE ? 'mdi-eye-off' : skin?.visibility === SkinVisibility2.UNLISTED ? 'mdi-link' : 'mdi-earth'
+                            }}</v-icon>
+                    </span>
+                </template>
+            </v-tooltip>
         </h2>
         <v-row class="mt-1">
             <v-col cols="12">
                 <SkinSummaryCard :skin="skin"/>
             </v-col>
+        </v-row>
+        <v-row class="text-center">
+            <ad-wrappper ad-slot="4431802313"/>
         </v-row>
         <!--        <dbg :data="skin"/>-->
         <v-row>
@@ -40,10 +58,19 @@
 </template>
 <script setup lang="ts">
 import { useLazyAsyncData, useNuxtApp } from "#app";
-import type { Maybe, SkinIdAndTexture, SkinInfo, SkinInfo2, ValueAndSignature } from "@mineskin/types";
+import {
+    type Maybe,
+    type SkinIdAndTexture,
+    type SkinInfo,
+    type SkinInfo2,
+    SkinVisibility2,
+    type ValueAndSignature
+} from "@mineskin/types";
 import SkinSummaryCard from "~/components/skin/SkinSummaryCard.vue";
 import SkinInstructionsCard from "~/components/skin/SkinInstructionsCard.vue";
 import { skinName } from "../util/skin";
+import AdWrappper from "~/components/AdWrappper.vue";
+import { renderSkinBody, renderSkinHead } from "~/util/render";
 
 const router = useRouter();
 
@@ -54,18 +81,51 @@ const skinId = computed<string>(() => {
 
 const {$mineskin} = useNuxtApp();
 
-const skinNameDisplay = computed(() => {
-    return skinName(skin.value) || 'Skin';
-});
-
 const {
     data: skin
 } = useLazyAsyncData<Maybe<SkinInfo2>>(`skin-${ skinId.value }`, async () => {
     return (await $mineskin.skins.get(skinId.value))?.skin;
 });
 
-useHead({
-    title: skinNameDisplay
+const {
+    data: randomSkinName
+} = useLazyAsyncData<string>(`skin-rng-name-${ skinId.value }`, async () => {
+    return (await $mineskin.util.randomName(skinId.value));
 });
+
+const useRandomName = computed(() => {
+    return !skin.value?.name && randomSkinName.value;
+})
+
+const skinNameDisplay = computed(() => {
+    if (useRandomName.value) {
+        return randomSkinName.value;
+    }
+    return skinName(skin.value, randomSkinName.value || 'Skin');
+});
+
+const skinHeadImage = computed(() => {
+    if (!skin.value) return null;
+    return renderSkinHead(skin.value.texture.hash.skin);
+});
+// const skinBodyImage = computed(() => {
+//     if (!skin.value) return null;
+//     return renderSkinBody(skin.value.texture.hash.skin);
+// });
+const ogImage = computed(() => {
+    return skinHeadImage.value || '/img/mineskin-social-card.jpg';
+});
+
+useSeoMeta({
+    title: skinNameDisplay,
+    ogTitle: skinNameDisplay,
+    ogImage: ogImage
+})
+
+onMounted(() => {
+    if (skinId.value) {
+        $mineskin.skins.trackView(skinId.value);
+    }
+})
 
 </script>

@@ -21,5 +21,8 @@
     "vue-router": "latest",
     "vuetify-nuxt-module": "^0.18.3"
   },
-  "packageManager": "yarn@4.5.0"
+  "packageManager": "yarn@4.5.0",
+  "devDependencies": {
+    "flagsmith-cli": "^0.2.0"
+  }
 }

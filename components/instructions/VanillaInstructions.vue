@@ -1,8 +1,3 @@
-<style>
-pre.instructions{
-    white-space: pre-wrap;
-}
-</style>
 <template>
     <div class="d-flex flex-row">
         <v-tabs
@@ -11,12 +6,12 @@ pre.instructions{
             direction="vertical"
             class="mr-2"
         >
-            <v-tab text="1.16" :value="16"></v-tab>
+            <v-tab text="1.16+" :value="16"></v-tab>
             <v-tab text="1.13" :value="13"></v-tab>
             <v-tab text="1.12" :value="12"></v-tab>
         </v-tabs>
 
-        <v-tabs-window v-model="version"  direction="vertical">
+        <v-tabs-window v-model="version"  direction="vertical" class="w-100" >
             <v-tabs-window-item v-for="v in versions" :key="v" :value="v">
                 <div>
                     <VanillaCommand :skin="skin" :version="v"/>

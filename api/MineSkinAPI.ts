@@ -4,14 +4,15 @@ import type { SkinResponse } from "~/types/SkinResponse";
 import type { SkinListResponse } from "~/types/SkinListResponse";
 import type { GenerateJobResponse } from "~/types/GenerateJobResponse";
 import type { JobListResponse } from "~/types/JobListResponse";
-import { useAuthStore } from "#imports";
 import type { UserValidation } from "~/types/UserValidation";
 import type { GenerateOptions } from "@mineskin/types";
+import { TagVoteType } from "@mineskin/types";
 
 const INIT: RequestInit = {
     headers: {
         'Content-Type': 'application/json',
-        'Accept': 'application/json'
+        'Accept': 'application/json',
+        'MineSkin-User-Agent': 'MineSkin-Web'
     }
 }
 
@@ -177,6 +178,26 @@ export class MineSkinAPI {
             return this.api.request(`/v2/skins/${ uuid }`, INIT);
         }
 
+        public async trackView(uuid: string) {
+            return this.api.request(`/v2/skins/${ uuid }/interactions/views`, {
+                method: 'POST'
+            })
+        }
+
+        public async voteTag(uuid: string, tag: string, vote: TagVoteType) {
+            return this.api.request(`/v2/skins/${ uuid }/tags`, {
+                method: 'POST',
+                body: JSON.stringify({tag, vote})
+            })
+        }
+
+        public async reportSkin(uuid: string, reason: string) {
+            return this.api.request(`/v2/skins/${ uuid }/report`, {
+                method: 'POST',
+                body: JSON.stringify({reason})
+            })
+        }
+
     }(this);
 
     public validate = new class {
@@ -186,14 +207,38 @@ export class MineSkinAPI {
 
         public async name(name: string): Promise<UserValidation> {
             //TODO: update this route
+            if (!name) {
+                return {
+                    valid: false
+                };
+            }
             return fetch(`${ this.api.BASE }/validate/name/${ name }`, INIT)
                 .then(res => res.json());
         }
 
         public async uuid(uuid: string): Promise<UserValidation> {
             //TODO: update this route
+            if (!uuid) {
+                return {
+                    valid: false
+                };
+            }
             return fetch(`${ this.api.BASE }/validate/uuid/${ uuid }`, INIT)
                 .then(res => res.json());
+        }
+
+    }(this);
+
+    public util = new class {
+
+        constructor(readonly api: MineSkinAPI) {
+        }
+
+        public async randomName(seed: string): Promise<string> {
+            //TODO: update this route
+            return fetch(`${ this.api.BASE }/random-name?seed=${ seed }`, INIT)
+                .then(res => res.json())
+                .then(res => res.name);
         }
 
     }(this);

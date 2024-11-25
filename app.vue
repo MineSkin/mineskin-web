@@ -92,9 +92,9 @@
                 <v-divider vertical class="mx-4 my-2"/>
 
                 <template v-slot:append>
-                    <v-btn icon @click="queueStore.jobsDrawer = !queueStore.jobsDrawer">
-                        <component :is="queueStore?.jobs?.length>0?'v-badge':'div'"
-                                   :content="queueStore?.jobs?.length"
+                    <v-btn icon @click="jobsDrawer = !jobsDrawer">
+                        <component :is="jobsSorted?.length>0?'v-badge':'div'"
+                                   :content="jobsSorted?.length"
                                    location="bottom right"
                         >
                             <v-icon icon="mdi-list-status"></v-icon>
@@ -122,7 +122,8 @@
                             </v-tooltip>
                         </a>
                         <v-btn v-else icon>
-                            <a class="img-link text-white" href="https://account.mineskin.org">
+                            <a class="img-link text-white" @click.prevent="loginRedirect()"
+                               href="https://account.mineskin.org/">
                                 <v-icon>mdi-account</v-icon>
                                 <v-tooltip
                                     activator="parent"
@@ -158,7 +159,7 @@
             </v-footer>
 
             <v-navigation-drawer
-                v-model="queueStore.jobsDrawer"
+                v-model="jobsDrawer"
                 location="end"
                 temporary
                 width="320"
@@ -178,6 +179,7 @@
 
 import { useAuthStore } from "~/stores/auth";
 import { useQueueStore } from "~/stores/queue";
+import { storeToRefs } from "pinia";
 
 const config = useRuntimeConfig();
 
@@ -187,7 +189,8 @@ useSeoMeta({
     titleTemplate: (titleChunk) => {
         return titleChunk ? `${ titleChunk } - MineSkin` : 'MineSkin - Skin Signature Generator';
     },
-    ogImage: '~/assets/img/mineskin-x256.png',
+    ogSiteName: 'MineSkin',
+    ogImage: '/img/mineskin-social-card.jpg',
     description: description,
     ogDescription: description,
     twitterDescription: description,
@@ -266,6 +269,8 @@ const queueStore = useQueueStore();
 
 const {mdAndUp} = useDisplay();
 
+const {jobsSorted, jobsDrawer} = storeToRefs(queueStore);
+
 const searching = ref(false);
 const filter = ref('');
 
@@ -280,6 +285,11 @@ const search = () => {
             filter: filter.value
         }
     });
+}
+
+const loginRedirect = () => {
+    authStore.reset();
+    window.location.href = 'https://account.mineskin.org/login?redirect=https://beta.mineskin.org/';
 }
 
 onBeforeMount(() => {

@@ -53,8 +53,8 @@ async function userToImage(user: string) {
         validation = await $mineskin.validate.uuid(user);
     }
     if (!validation.valid) {
+        return null;
     }
-    return null;
     return textureUrlForUuid(validation.uuid!);
 }
 
