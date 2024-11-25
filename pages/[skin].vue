@@ -47,7 +47,8 @@
                     {{ skin?.generator?.duration / 1000 }}s
                 </div>
                 <div class="text-grey-darken-3">By worker {{ skin?.generator?.worker || 'n/a' }} with account
-                    {{ skin?.generator?.account?.substring(0, 10) || 'n/a' }} via server {{ skin?.generator?.server || 'n/a' }}
+                    {{ skin?.generator?.account?.substring(0, 10) || 'n/a' }} via server
+                    {{ skin?.generator?.server || 'n/a' }}
                 </div>
             </v-col>
             <v-col cols="12" md="6" class="text-end line-break-anywhere">
@@ -120,6 +121,20 @@ useSeoMeta({
     title: skinNameDisplay,
     ogTitle: skinNameDisplay,
     ogImage: ogImage
+})
+
+useHead({
+    script: [{
+        type: 'application/ld+json',
+        innerHTML: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebPage",
+            "name": skinNameDisplay,
+            "url": `https://beta.mineskin.org/${ skinId.value }`,
+            "image": ogImage.value,
+            "datePublished": new Date(skin.value?.generator?.timestamp || 0).toISOString(),
+        })
+    }]
 })
 
 onMounted(() => {
