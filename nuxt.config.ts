@@ -6,7 +6,7 @@ export default defineNuxtConfig({
         head: {
         }
     },
-    ssr: false,
+    ssr: true,
     plugins: [
         '@/plugins/logger',
         '@/plugins/notifier',

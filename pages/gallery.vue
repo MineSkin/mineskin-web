@@ -5,7 +5,7 @@
                 <h2>Skin Gallery</h2>
             </v-col>
         </v-row>
-        <v-infinite-scroll :items="skins" :onLoad="load" style="overflow: hidden" @scroll="onScroll">
+        <v-infinite-scroll :items="skins" :onLoad="load" style="overflow: hidden">
             <v-row justify="center" dense>
                 <template v-for="(item0, index) in skins" :key="item0">
                     <!--                    <v-col cols="4" sm="3" md="2">-->
