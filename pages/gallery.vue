@@ -88,7 +88,9 @@ const adFree = computed(() => authStore.grants?.ad_free);
 const filter = ref<string>(router.currentRoute.value.query.filter as string || '');
 watch(() => router.currentRoute.value.query.filter, (newVal) => {
     filter.value = newVal as string;
-    reloadNuxtApp();
+    reloadNuxtApp({
+        ttl: 100
+    });
 });
 
 const adsOnPage = ref(0);
