@@ -6,7 +6,7 @@
 }
 </style>
 <template>
-    <nuxt-link :to="skin?('/'+skin.uuid):undefined">
+    <nuxt-link :to="skin ? ('/skins/'+skin.uuid) : undefined">
         <v-sheet
             class="pa-2"
         >

@@ -7,7 +7,7 @@
                 </div>
             </template>
             <template v-slot:title>
-                <nuxt-link v-if="skin" :to="'/'+skin.uuid" class="text-decoration-none">{{
+                <nuxt-link v-if="skin" :to="'/skins/'+skin.uuid" class="text-decoration-none">{{
                         job.id?.substring(0, 8)
                     }}
                 </nuxt-link>
