@@ -69,7 +69,7 @@ import {
 } from "@mineskin/types";
 import SkinSummaryCard from "~/components/skin/SkinSummaryCard.vue";
 import SkinInstructionsCard from "~/components/skin/SkinInstructionsCard.vue";
-import { skinName } from "../util/skin";
+import { skinName } from "../../util/skin";
 import AdWrappper from "~/components/AdWrappper.vue";
 import { renderSkinBody, renderSkinHead } from "~/util/render";
 
@@ -123,6 +123,17 @@ useSeoMeta({
     ogImage: ogImage
 })
 
+const ldJsonContent = computed(() => {
+    return JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": skinNameDisplay.value,
+        "url": `https://beta.mineskin.org/skins/${ skinId.value }`,
+        "image": ogImage.value,
+        "datePublished": new Date(skin.value?.generator?.timestamp || 0).toISOString(),
+    });
+});
+
 useHead({
     link: [{
         rel: 'canonical',
@@ -130,14 +141,7 @@ useHead({
     }],
     script: [{
         type: 'application/ld+json',
-        innerHTML: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "WebPage",
-            "name": skinNameDisplay,
-            "url": `https://beta.mineskin.org/skins/${ skinId.value }`,
-            "image": ogImage.value,
-            "datePublished": new Date(skin.value?.generator?.timestamp || 0).toISOString(),
-        })
+        innerHTML: ldJsonContent
     }]
 })
 
