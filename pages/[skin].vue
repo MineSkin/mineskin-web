@@ -118,6 +118,7 @@ const ogImage = computed(() => {
 
 useSeoMeta({
     title: skinNameDisplay,
+    ogTitle: skinNameDisplay,
     ogImage: ogImage
 })
 
