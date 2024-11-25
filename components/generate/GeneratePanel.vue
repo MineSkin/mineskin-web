@@ -169,9 +169,10 @@
                         ></v-btn>
                     </v-row>
                     <v-row justify="center" class="mt-2 text-center">
-                        <div v-if="showCreditsInfo && !generating">
-                            <div v-if="credits">
-                                <div v-if="credits.all.balance>0">
+                        <ClientOnly>
+                            <div v-if="showCreditsInfo && !generating">
+                                <div v-if="credits">
+                                    <div v-if="credits.all.balance>0">
                                 <span>This request will consume {{
                                         imageCount || 1
                                     }} {{
@@ -179,34 +180,36 @@
                                     }} if the {{
                                         imageCount > 1 ? 'skins are' : 'skin is'
                                     }} successfully generated.</span><br/>
-                                    <span>You have {{ credits?.all?.balance }} credits remaining.</span>
-                                </div>
-                                <div v-else>
-                                    <span>You do not have any credits remaining.</span><br/>
-                                    <span>This skin may take longer to generate.</span>
-                                </div>
-                                <div v-if="!authed">
-                                    <span>(Sign in to use credits)</span>
+                                        <span>You have {{ credits?.all?.balance }} credits remaining.</span>
+                                    </div>
+                                    <div v-else>
+                                        <span>You do not have any credits remaining.</span><br/>
+                                        <span>This skin may take longer to generate.</span>
+                                    </div>
+                                    <div v-if="!authed">
+                                        <span>(Sign in to use credits)</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div v-if="generating">
-                            <div>
-                                Your {{ imageCount > 1 ? 'skins are' : 'skin is' }} being generated...
+                            <div v-if="generating">
+                                <div>
+                                    Your {{ imageCount > 1 ? 'skins are' : 'skin is' }} being generated...
+                                </div>
+                                <div>
+                                    Check the
+                                    <action-link @click.prevent="jobsDrawer = true" icon="mdi-list-status"
+                                                 tooltip="Show Jobs">Job List
+                                    </action-link>
+                                    for progress,
+                                    or
+                                    <action-link @click.prevent="reset" icon="mdi-reload"
+                                                 tooltip="Reset Image Selection">
+                                        generate more skins
+                                    </action-link>
+                                    .
+                                </div>
                             </div>
-                            <div>
-                                Check the
-                                <action-link @click.prevent="jobsDrawer = true" icon="mdi-list-status"
-                                             tooltip="Show Jobs">Job List
-                                </action-link>
-                                for progress,
-                                or
-                                <action-link @click.prevent="reset" icon="mdi-reload" tooltip="Reset Image Selection">
-                                    generate more skins
-                                </action-link>
-                                .
-                            </div>
-                        </div>
+                        </ClientOnly>
                     </v-row>
                 </v-col>
             </v-row>
