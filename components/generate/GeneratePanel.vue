@@ -171,7 +171,7 @@
                     <v-row justify="center" class="mt-2 text-center">
                         <ClientOnly>
                             <div v-if="showCreditsInfo && !generating">
-                                <Dbg :data="credits"></Dbg>
+                                <Dbg :data="{credits,creditsStatus,authed}"></Dbg>
                                 <div v-if="credits">
                                     <div v-if="credits?.all?.balance>0">
                                 <span>This request will consume {{
@@ -297,7 +297,9 @@ const {
     if (!authed.value) {
         return {all: {balance: 0, total: 0}};
     }
-    return (await $mineskin.me.credits())?.credit;
+    const res = await $mineskin.me.credits();
+    console.debug('credits', res);
+    return res?.credit;
 }, {
     immediate: false,
     server: false

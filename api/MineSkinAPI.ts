@@ -7,6 +7,7 @@ import type { JobListResponse } from "~/types/JobListResponse";
 import type { UserValidation } from "~/types/UserValidation";
 import type { GenerateOptions } from "@mineskin/types";
 import { TagVoteType } from "@mineskin/types";
+import type { BasicCreditInfo } from "~/types/BasicCreditInfo";
 
 const INIT: RequestInit = {
     headers: {
@@ -260,7 +261,7 @@ export class MineSkinAPI {
             }, {silent: true});
         }
 
-        public async credits() {
+        public async credits(): Promise<MineSkinResponse<"credit", BasicCreditInfo>> {
             return this.api.request(`/v2/me/credits`, {
                 credentials: 'include'
             }, {silent: true});
