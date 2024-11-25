@@ -7,8 +7,6 @@ export default defineNuxtConfig({
     },
     ssr: true,
     routeRules: {
-        '/': {prerender: true},
-        '/gallery': {prerender: true},
         '/my-skins': {ssr: false}
     },
     plugins: [
