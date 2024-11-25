@@ -178,16 +178,23 @@ export class MineSkinAPI {
             return this.api.request(`/v2/skins/${ uuid }`, INIT);
         }
 
-        public async trackView(uuid: string){
+        public async trackView(uuid: string) {
             return this.api.request(`/v2/skins/${ uuid }/interactions/views`, {
                 method: 'POST'
             })
         }
 
-        public async voteTag(uuid: string, tag: string, vote: TagVoteType){
+        public async voteTag(uuid: string, tag: string, vote: TagVoteType) {
             return this.api.request(`/v2/skins/${ uuid }/tags`, {
                 method: 'POST',
                 body: JSON.stringify({tag, vote})
+            })
+        }
+
+        public async reportSkin(uuid: string, reason: string) {
+            return this.api.request(`/v2/skins/${ uuid }/report`, {
+                method: 'POST',
+                body: JSON.stringify({reason})
             })
         }
 

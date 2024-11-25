@@ -80,9 +80,12 @@
                             ></v-btn>
                         </v-col>
                     </v-row>
-                    <v-row v-if="skin && tagsVisible">
-                        <v-col>
+                    <v-row v-if="skin">
+                        <v-col v-if="tagsVisible">
                             <SkinTags :skin="skin"/>
+                        </v-col>
+                        <v-col cols="12" md="3" v-if="reportVisible" align-self="end" class="text-end">
+                           <SkinReportDialog :skin="skin"/>
                         </v-col>
                     </v-row>
                 </v-col>
@@ -105,6 +108,7 @@ const {mdAndUp} = useDisplay();
 
 const {$flags} = useNuxtApp();
 const tagsVisible = computed(() => $flags.hasFeature('web.tags.visible'));
+const reportVisible = computed(() => $flags.hasFeature('web.report.visible'));
 
 const skinLink = computed(() => {
     return `https://2.minesk.in/${ props.skin.uuid }`;
@@ -132,5 +136,9 @@ const proxiedSkinTextureUrl = computed(()=>{
 //TODO: verify this actually still works
 const useSkinLink = computed(()=>{
     return `https://www.minecraft.net/profile/skin/remote?url=${ skinTextureUrl.value }`;
-})
+});
+
+const reportSkin = ()=>{
+
+}
 </script>
