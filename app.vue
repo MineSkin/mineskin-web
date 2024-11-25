@@ -189,6 +189,7 @@ useSeoMeta({
     titleTemplate: (titleChunk) => {
         return titleChunk ? `${ titleChunk } - MineSkin` : 'MineSkin - Skin Signature Generator';
     },
+    ogSiteName: 'MineSkin',
     ogImage: '/img/mineskin-social-card.jpg',
     description: description,
     ogDescription: description,
