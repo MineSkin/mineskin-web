@@ -95,7 +95,7 @@
                     >
                         <template v-slot:message>
                             Optional name for this skin, supports variables <a @click.prevent="variablesDialog=true"
-                                                                                  href="#">
+                                                                               href="#">
                             <v-icon icon="mdi-help-circle"/>
                         </a>
                         </template>
@@ -169,7 +169,8 @@
                         ></v-btn>
                     </v-row>
                     <v-row justify="center" class="mt-2 text-center">
-                        <div v-if="showCreditsInfo && !generating && (credits && credits.all.balance>0)">
+                        <div v-if="showCreditsInfo && !generating">
+                            <div v-if="credits && credits.all.balance>0">
                             <span>This request will consume {{
                                     imageCount || 1
                                 }} {{
@@ -177,11 +178,12 @@
                                 }} if the {{
                                     imageCount > 1 ? 'skins are' : 'skin is'
                                 }} successfully generated.</span><br/>
-                            <span>You have {{ credits?.all?.balance }} credits remaining.</span>
-                        </div>
-                        <div v-else-if="showCreditsInfo && !generating">
-                            <span>You do not have any credits remaining.</span><br/>
-                            <span>This skin may take longer to generate.</span>
+                                <span>You have {{ credits?.all?.balance }} credits remaining.</span>
+                            </div>
+                            <div v-else>
+                                <span>You do not have any credits remaining.</span><br/>
+                                <span>This skin may take longer to generate.</span>
+                            </div>
                         </div>
                         <div v-if="generating">
                             <div>
