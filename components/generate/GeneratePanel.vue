@@ -170,28 +170,7 @@
                     </v-row>
                     <v-row justify="center" class="mt-2 text-center">
                         <ClientOnly>
-                            <div v-if="showCreditsInfo && !generating">
-                                <Dbg :data="{credits,creditsStatus,authed:authStore.authed}"></Dbg>
-                                <div v-if="credits">
-                                    <div v-if="credits?.all?.balance>0">
-                                <span>This request will consume {{
-                                        imageCount || 1
-                                    }} {{
-                                        imageCount > 1 ? 'credits' : 'credit'
-                                    }} if the {{
-                                        imageCount > 1 ? 'skins are' : 'skin is'
-                                    }} successfully generated.</span><br/>
-                                        <span>You have {{ credits?.all?.balance }} credits remaining.</span>
-                                    </div>
-                                    <div v-else>
-                                        <span>You do not have any credits remaining.</span><br/>
-                                        <span>This skin may take longer to generate.</span>
-                                    </div>
-                                    <div v-if="!authStore.authed">
-                                        <span>(Sign in to use credits)</span>
-                                    </div>
-                                </div>
-                            </div>
+                            <CreditsStatus :generating="generating" :image-count="imageCount"/>
                             <div v-if="generating">
                                 <div>
                                     Your {{ imageCount > 1 ? 'skins are' : 'skin is' }} being generated...
@@ -288,17 +267,6 @@ const {grants} = storeToRefs(authStore);
 const {jobsDrawer} = storeToRefs(queueStore);
 
 const {visibility: preferredVisibility} = storeToRefs(settingsStore);
-
-const {
-    data: credits,
-    status: creditsStatus,
-    refresh: refreshCredits
-} = useLazyAsyncData<BasicCreditInfo>("credits", async () => {
-    return (await $mineskin.me.credits())?.credit;
-}, {
-    immediate: false,
-    server: false
-});
 
 const generateType = computed<Maybe<GenerateType>>(() => {
     if (urls.value.filter(url => url.length > 0).length > 0) {
@@ -592,12 +560,10 @@ async function generate() {
 
 
 onMounted(async () => {
-    if ($flags.hasFeature('web.visibility.private')) {
-        visibilities.value.push(SkinVisibility2.PRIVATE);
-    }
     try {
-        await authStore.checkAuth();
-        await refreshCredits();
+        if ($flags.hasFeature('web.visibility.private')) {
+            visibilities.value.push(SkinVisibility2.PRIVATE);
+        }
     } catch (e) {
         console.error(e);
     }
