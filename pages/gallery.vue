@@ -2,7 +2,7 @@
     <v-container>
         <v-row>
             <v-col cols="12">
-                <h2>Skin Gallery</h2>
+                <h2>Skin Gallery <small v-if="filter">&quot;{{ filter }}&quot;</small></h2>
             </v-col>
         </v-row>
         <v-infinite-scroll :items="skins" :onLoad="load" style="overflow: hidden">
