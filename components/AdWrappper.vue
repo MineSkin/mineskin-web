@@ -23,7 +23,7 @@
             <component is="script">
                 {{ isDev ? 'google_adtest = "on";' : '' }}
                 (adsbygoogle = window.adsbygoogle || []).push({});
-                "{{ ready }} {{ grants.ad_free }} {{ adFree }}";
+                "{{ ready }} {{ grants.ad_free }}";
             </component>
         </div>
     </ClientOnly>
@@ -45,8 +45,6 @@ const props = defineProps<{
 
 const authStore = useAuthStore();
 const {grants} = storeToRefs(authStore);
-
-const adFree = computed(() => (grants as any)?.ad_free);
 
 const ready = ref(false);
 onMounted(() => {
