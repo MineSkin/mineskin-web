@@ -171,7 +171,7 @@
                     <v-row justify="center" class="mt-2 text-center">
                         <ClientOnly>
                             <div v-if="showCreditsInfo && !generating">
-                                <Dbg :data="{credits,creditsStatus,authed}"></Dbg>
+                                <Dbg :data="{credits,creditsStatus,authed:authStore.authed}"></Dbg>
                                 <div v-if="credits">
                                     <div v-if="credits?.all?.balance>0">
                                 <span>This request will consume {{
@@ -187,7 +187,7 @@
                                         <span>You do not have any credits remaining.</span><br/>
                                         <span>This skin may take longer to generate.</span>
                                     </div>
-                                    <div v-if="!authed">
+                                    <div v-if="!authStore.authed">
                                         <span>(Sign in to use credits)</span>
                                     </div>
                                 </div>
@@ -284,7 +284,7 @@ const settingsStore = useSettingsStore();
 
 const {mdAndUp} = useDisplay();
 
-const {authed, grants} = storeToRefs(authStore);
+const {grants} = storeToRefs(authStore);
 const {jobsDrawer} = storeToRefs(queueStore);
 
 const {visibility: preferredVisibility} = storeToRefs(settingsStore);
@@ -294,12 +294,7 @@ const {
     status: creditsStatus,
     refresh: refreshCredits
 } = useLazyAsyncData<BasicCreditInfo>("credits", async () => {
-    if (!authed.value) {
-        return {all: {balance: 0, total: 0}};
-    }
-    const res = await $mineskin.me.credits();
-    console.debug('credits', res);
-    return res?.credit;
+    return (await $mineskin.me.credits())?.credit;
 }, {
     immediate: false,
     server: false
@@ -387,10 +382,10 @@ const replacedNamesPreview = computed(() => {
 });
 
 const canUsePrivateSkins = computed(() => {
-    return authed.value && grants.value?.private_skins;
+    return authStore.authed && grants.value?.private_skins;
 });
 const canGenerateMultiple = computed(() => {
-    return authed.value;
+    return authStore.authed;
 })
 
 const showCreditsInfo = computed(() => $flags.hasFeature('web.credits.show_info'));
