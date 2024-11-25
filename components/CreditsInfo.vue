@@ -38,7 +38,8 @@ const {
     return (await $mineskin.me.credits())?.credit;
 }, {
     immediate: false,
-    server: false
+    server: false,
+    dedupe: 'defer'
 });
 
 onMounted(async () => {
