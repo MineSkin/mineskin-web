@@ -59,12 +59,13 @@
 
                 <div class="d-flex flex-auto">
                     <v-btn icon
-                           @click="searching ? search() : searching = true"
+                           @click="searching ? search() : showSearch()"
                     >
                         <v-icon>mdi-magnify</v-icon>
                     </v-btn>
                     <v-expand-x-transition>
                         <v-text-field v-show="searching"
+                                      ref="searchField"
                                       density="compact"
                                       v-model="filter"
                                       placeholder="Search"
@@ -296,6 +297,14 @@ const {jobsSorted, jobsDrawer} = storeToRefs(queueStore);
 
 const searching = ref(false);
 const filter = ref('');
+const searchField = useTemplateRef('searchField');
+
+const showSearch = () => {
+    searching.value = true;
+    setTimeout(() => {
+        searchField.value.focus();
+    }, 0);
+}
 
 const search = () => {
     searching.value = false;
