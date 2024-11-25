@@ -34,12 +34,11 @@ const {
     data: credits,
     status: creditsStatus,
     refresh: refreshCredits
-} = useLazyAsyncData<BasicCreditInfo>("credits", async () => {
+} = useLazyAsyncData<BasicCreditInfo>("credits-info", async () => {
     return (await $mineskin.me.credits())?.credit;
 }, {
     immediate: false,
-    server: false,
-    dedupe: 'defer'
+    server: false
 });
 
 onMounted(async () => {

@@ -29,13 +29,14 @@ import { useAuthStore } from "~/stores/auth";
 import { useLazyAsyncData } from "nuxt/app";
 import type { BasicCreditInfo } from "~/types/BasicCreditInfo";
 import { computed } from "vue";
+import { useNuxtData } from "#imports";
 
 const props = defineProps<{
     imageCount: number;
     generating: boolean;
 }>();
 
-const {$mineskin,$flags} = useNuxtApp();
+const {$mineskin, $flags} = useNuxtApp();
 
 const authStore = useAuthStore();
 
@@ -45,12 +46,11 @@ const {
     data: credits,
     status: creditsStatus,
     refresh: refreshCredits
-} = useLazyAsyncData<BasicCreditInfo>("credits", async () => {
+} = useLazyAsyncData<BasicCreditInfo>("credits-status", async () => {
     return (await $mineskin.me.credits())?.credit;
 }, {
     immediate: false,
-    server: false,
-    dedupe: 'defer'
+    server: false
 });
 
 onMounted(async () => {
