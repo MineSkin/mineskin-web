@@ -286,8 +286,11 @@ const {visibility: preferredVisibility} = storeToRefs(settingsStore);
 const {
     data: credits,
     status: creditsStatus,
+    refresh: refreshCredits
 } = useLazyAsyncData<BasicCreditInfo>("credits", async () => {
     return (await $mineskin.me.credits())?.credit;
+}, {
+    immediate: false
 });
 
 const generateType = computed<Maybe<GenerateType>>(() => {
@@ -584,9 +587,15 @@ async function generate() {
 }
 
 
-onMounted(() => {
+onMounted(async () => {
     if ($flags.hasFeature('web.visibility.private')) {
         visibilities.value.push(SkinVisibility2.PRIVATE);
+    }
+    try {
+        await authStore.checkAuth();
+        await refreshCredits();
+    } catch (e) {
+        console.error(e);
     }
 })
 
