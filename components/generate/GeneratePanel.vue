@@ -290,6 +290,9 @@ const {
     status: creditsStatus,
     refresh: refreshCredits
 } = useLazyAsyncData<BasicCreditInfo>("credits", async () => {
+    if (!authed.value) {
+        return {all: {balance: 0, total: 0}};
+    }
     return (await $mineskin.me.credits())?.credit;
 }, {
     immediate: false
