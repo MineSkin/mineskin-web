@@ -58,7 +58,16 @@ import { onMounted } from "#imports";
 import { computedAsync, useDebounceFn, useThrottleFn } from '@vueuse/core'
 
 useHead({
-    title: 'Gallery'
+    title: 'Gallery',
+     script: [{
+        type: 'application/ld+json',
+        innerHTML: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebPage",
+            "name": "Gallery",
+            "url": `https://beta.mineskin.org/gallery`
+        })
+    }]
 });
 
 const router = useRouter();

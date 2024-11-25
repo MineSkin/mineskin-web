@@ -249,6 +249,25 @@ useHead({
             `,
             'data-cookie-consent': 'tracking',
             tagPosition: 'bodyClose'
+        },
+        {
+            type: 'application/ld+json',
+            innerHTML: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "WebSite",
+                "url": "https://beta.mineskin.org/",
+                "name": "MineSkin",
+                "alternateName": "mineskin.org",
+                "description": description,
+                "potentialAction": {
+                    "@type": "SearchAction",
+                     "target": {
+                      "@type": "EntryPoint",
+                      "urlTemplate": "https://beta.mineskin.org/gallery?filter={search_term_string}"
+                    },
+                    "query-input": "required name=search_term_string"
+                }
+            }),
         }
     ],
     noscript: [
