@@ -20,7 +20,7 @@ const props = defineProps<{
 }>();
 
 function viewSkin(uuid: string) {
-    router.push(`/${ uuid }`);
+    router.push(`/skins/${ uuid }`);
 }
 
 </script>

@@ -148,7 +148,7 @@ export const useQueueStore = defineStore('queue', () => {
             color: now.status === 'completed' ? 'success' : now.status === 'failed' ? 'error' : 'info',
             timeout: (now.status === 'completed' || now.status === 'failed') ? 1200 : 800,
             actionLabel: now.status === 'completed' ? 'View' : undefined,
-            actionLink: now.status === 'completed' && now.result ? `/${ now.result }` : undefined
+            actionLink: now.status === 'completed' && now.result ? `/skins/${ now.result }` : undefined
         });
         if (now.status === 'completed' && now.result) {
             skinStore.addSkin(now.result);
