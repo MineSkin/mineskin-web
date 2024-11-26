@@ -70,14 +70,14 @@
                                 download
                                 prepend-icon="mdi-download"
                             ></v-btn>
-                            <v-btn
-                                color="accent"
-                                text="Use This Skin"
-                                class="ma-2"
-                                size="large"
-                                :href="useSkinLink"
-                                prepend-icon="mdi-open-in-new"
-                            ></v-btn>
+<!--                            <v-btn-->
+<!--                                color="accent"-->
+<!--                                text="Use This Skin"-->
+<!--                                class="ma-2"-->
+<!--                                size="large"-->
+<!--                                :href="useSkinLink"-->
+<!--                                prepend-icon="mdi-open-in-new"-->
+<!--                            ></v-btn>-->
                         </v-col>
                         <InvisibleTurnstile v-if="skin" v-model:token="viewTurnstileToken" action="view-skin"/>
                     </v-row>
