@@ -512,7 +512,7 @@ async function generate() {
             if (!canGenerateMultiple.value) {
                 users.value = [users.value[0]];
             }
-            let validated: string[] = [];
+            let validated: string[][] = [];
             for (let user of users.value) {
                 if (user.length < 32) {
                     const {valid, uuid} = await $mineskin.validate.name(user);
@@ -523,16 +523,16 @@ async function generate() {
                         });
                         continue;
                     }
-                    validated.push(user!);
+                    validated.push([user, uuid!]);
                 }
             }
             //users.value = validated;
             let index = 0;
-            for (const user of validated) {
+            for (const [user, uuid] of validated) {
                 let options = {...baseOptions};
                 options.name = processNameVariables(index++, null, null, user);
                 await sleep(800);
-                responses.push(await $mineskin.queue.user(user, options))
+                responses.push(await $mineskin.queue.user(uuid, options))
             }
             break;
         }
