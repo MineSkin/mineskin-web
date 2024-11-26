@@ -81,7 +81,7 @@ const {$mineskin, $flags, $notify} = useNuxtApp();
 
 const authStore = useAuthStore();
 const galleryStore = useGalleryStore();
-const {galleryItems, galleryScroll} = storeToRefs(galleryStore);
+const {galleryItems, galleryAnchor, galleryScroll} = storeToRefs(galleryStore);
 
 const adFree = computed(() => authStore.grants?.ad_free);
 
@@ -115,6 +115,7 @@ async function api() {
     hasNext.value = skins.length > 0;
     if (skins.length > 0) {
         after.value = skins[skins.length - 1].uuid!;
+        galleryAnchor.value = after.value;
         // preload next
         $mineskin.skins.list(after.value, toLoad, filter.value);
     }
@@ -168,6 +169,7 @@ const handleScroll = useThrottleFn((e: Event) => {
 
 onMounted(async () => {
     skins.value = galleryItems.value;
+    after.value = galleryAnchor.value;
     window.addEventListener('scroll', handleScroll, {passive: true});
     window.scrollTo(0, galleryScroll.value);
 
