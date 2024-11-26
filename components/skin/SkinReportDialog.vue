@@ -1,5 +1,5 @@
 <template>
-    <div class="pa-4 text-center">
+    <div>
         <v-dialog
             v-model="dialog"
             max-width="400"
