@@ -6,6 +6,7 @@ import type { GenerateJobResponse } from "~/types/GenerateJobResponse";
 import { useLazyAsyncData } from "nuxt/app";
 import type { JobListResponse } from "~/types/JobListResponse";
 import { sleep } from "~/util/misc";
+import { useSkinStore } from "~/stores/skins";
 
 export const useQueueStore = defineStore('queue', () => {
     const jobMap = ref<Record<string, JobWithMeta>>({});
@@ -17,6 +18,7 @@ export const useQueueStore = defineStore('queue', () => {
     const {$mineskin, $notify} = useNuxtApp();
 
     const authStore = useAuthStore();
+    const skinStore = useSkinStore();
 
     const jobsSorted = ref<JobWithMeta[]>([]);
 
@@ -27,6 +29,7 @@ export const useQueueStore = defineStore('queue', () => {
         return await $mineskin.queue.list({silent: true});
     }, {
         immediate: false,
+        server: false,
         default: () => {
             return {
                 success: true,
@@ -37,7 +40,7 @@ export const useQueueStore = defineStore('queue', () => {
 
     const addJob = (job: JobWithMeta) => {
         console.debug('addJob', job);
-        const existing = job.id === 'unknown' ? undefined : jobMap.value[job.id];
+        const existing = job.id ? jobMap.value[job.id] : undefined;
         if (existing) {
             job = {
                 ...existing,
@@ -137,16 +140,19 @@ export const useQueueStore = defineStore('queue', () => {
     //     updateSortedJobs();
     // }
 
-    //TODO: save generated skins in local storage
-
     const checkJobStatusChange = (now: JobInfo, prev?: JobInfo) => {
         if (prev?.status === now.status) return;
         console.debug(`${ now.id } ${ prev?.status } -> ${ now.status }`);
         $notify({
-            text: `Job ${ now.id === 'unknown' ? '' : now.id } is ${ now.status }`,
+            text: `Job ${ now.id ? now.id : '' } is ${ now.status }`,
             color: now.status === 'completed' ? 'success' : now.status === 'failed' ? 'error' : 'info',
-            timeout: (now.status === 'completed' || now.status === 'failed') ? 1200 : 800
+            timeout: (now.status === 'completed' || now.status === 'failed') ? 1200 : 800,
+            actionLabel: now.status === 'completed' ? 'View' : undefined,
+            actionLink: now.status === 'completed' && now.result ? `/skins/${ now.result }` : undefined
         });
+        if (now.status === 'completed' && now.result) {
+            skinStore.addSkin(now.result);
+        }
     }
 
     const hasPendingJobs = computed(() => {

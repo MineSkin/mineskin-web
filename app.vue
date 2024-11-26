@@ -59,12 +59,13 @@
 
                 <div class="d-flex flex-auto">
                     <v-btn icon
-                           @click="searching ? search() : searching = true"
+                           @click="searching ? search() : showSearch()"
                     >
                         <v-icon>mdi-magnify</v-icon>
                     </v-btn>
                     <v-expand-x-transition>
                         <v-text-field v-show="searching"
+                                      ref="searchField"
                                       density="compact"
                                       v-model="filter"
                                       placeholder="Search"
@@ -122,7 +123,8 @@
                             </v-tooltip>
                         </a>
                         <v-btn v-else icon>
-                            <a class="img-link text-white" href="https://account.mineskin.org">
+                            <a class="img-link text-white" @click.prevent="loginRedirect()"
+                               href="https://account.mineskin.org/">
                                 <v-icon>mdi-account</v-icon>
                                 <v-tooltip
                                     activator="parent"
@@ -188,7 +190,8 @@ useSeoMeta({
     titleTemplate: (titleChunk) => {
         return titleChunk ? `${ titleChunk } - MineSkin` : 'MineSkin - Skin Signature Generator';
     },
-    ogImage: '~/assets/img/mineskin-x256.png',
+    ogSiteName: 'MineSkin',
+    ogImage: '/img/mineskin-social-card.jpg',
     description: description,
     ogDescription: description,
     twitterDescription: description,
@@ -196,6 +199,10 @@ useSeoMeta({
 })
 
 useHead({
+    link: [{
+        rel: 'canonical',
+        href: 'https://beta.mineskin.org/'
+    }],
     script: [
         {
 
@@ -247,6 +254,25 @@ useHead({
             `,
             'data-cookie-consent': 'tracking',
             tagPosition: 'bodyClose'
+        },
+        {
+            type: 'application/ld+json',
+            innerHTML: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "WebSite",
+                "url": "https://beta.mineskin.org/",
+                "name": "MineSkin",
+                "alternateName": "mineskin.org",
+                "description": description,
+                "potentialAction": {
+                    "@type": "SearchAction",
+                    "target": {
+                        "@type": "EntryPoint",
+                        "urlTemplate": "https://beta.mineskin.org/gallery?filter={search_term_string}"
+                    },
+                    "query-input": "required name=search_term_string"
+                }
+            }),
         }
     ],
     noscript: [
@@ -271,6 +297,14 @@ const {jobsSorted, jobsDrawer} = storeToRefs(queueStore);
 
 const searching = ref(false);
 const filter = ref('');
+const searchField = useTemplateRef('searchField');
+
+const showSearch = () => {
+    searching.value = true;
+    setTimeout(() => {
+        searchField.value.focus();
+    }, 0);
+}
 
 const search = () => {
     searching.value = false;
@@ -281,8 +315,14 @@ const search = () => {
         path: '/gallery',
         query: {
             filter: filter.value
-        }
+        },
+        force: true,
     });
+}
+
+const loginRedirect = () => {
+    authStore.reset();
+    window.location.href = 'https://account.mineskin.org/login?redirect=https://beta.mineskin.org/';
 }
 
 onBeforeMount(() => {

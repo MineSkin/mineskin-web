@@ -38,10 +38,10 @@ const {$mineskin} = useNuxtApp();
 const allRules = {
     required: (value: string) => !!value || 'Required.',
     url: (value: string) => !value || value?.startsWith('http') || 'Invalid URL',
-    uuidOrName: (value: string) => !value || value?.length > 1 && (value.length < 17 || value.length > 32) || 'Invalid UUID or Name',
-    validNameOrUuid: async (value: string) => {
-        const {valid} = await validateUser(value);
-        return valid || 'Invalid UUID or Name';
+    uuidOrName: (value: string) => !value || value?.length > 1 && (value.length < 17 || value.length >= 32) || 'Invalid UUID or Name',
+    validNameOrUuid: (value: string) => {
+        validateUser(value);
+        return true;
     }
 };
 

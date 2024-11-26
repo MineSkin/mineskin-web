@@ -7,7 +7,7 @@
                 </div>
             </template>
             <template v-slot:title>
-                <nuxt-link v-if="skin" :to="'/'+skin.uuid" class="text-decoration-none">{{
+                <nuxt-link v-if="skin" :to="'/skins/'+skin.uuid" class="text-decoration-none">{{
                         job.id?.substring(0, 8)
                     }}
                 </nuxt-link>
@@ -59,7 +59,7 @@ import DateLocal from "~/components/DateLocal.vue";
 import { sleep } from "~/util/misc";
 import { storeToRefs } from "pinia";
 
-const {$mineskin} = useNuxtApp();
+const {$mineskin, $notify} = useNuxtApp();
 
 const props = defineProps<{
     id: string
@@ -75,6 +75,7 @@ const {
     return (await $mineskin.queue.get(props.id, {silent: true}));
 }, {
     immediate: false,
+    server: false,
     default: () => {
         return {job: jobMap.value[props.id]}
     }
@@ -106,12 +107,27 @@ const tryJobRefresh = async () => {
         }
     }
 
+    let oldStatus = job.value?.status;
+
     await sleep(500 + Math.random() * 800);
 
     await refreshJob();
     refreshCounter.value++;
 
     queueStore.addJob(job.value);
+
+    if (oldStatus && oldStatus !== job.value?.status) {
+        console.log('status changed', oldStatus, job.value?.status)
+        if (job.value.status === 'failed' && jobRes.value?.errors) {
+            for (let error of jobRes.value.errors) {
+                $notify({
+                    text: error.message,
+                    color: 'error',
+                    timeout: 2000
+                });
+            }
+        }
+    }
 
     setTimeout(() => tryJobRefresh(), 1300 + Math.random() * 1000);
 }

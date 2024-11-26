@@ -6,6 +6,8 @@ import type { GenerateJobResponse } from "~/types/GenerateJobResponse";
 import type { JobListResponse } from "~/types/JobListResponse";
 import type { UserValidation } from "~/types/UserValidation";
 import type { GenerateOptions } from "@mineskin/types";
+import { TagVoteType } from "@mineskin/types";
+import type { BasicCreditInfo } from "~/types/BasicCreditInfo";
 
 const INIT: RequestInit = {
     headers: {
@@ -177,14 +179,24 @@ export class MineSkinAPI {
             return this.api.request(`/v2/skins/${ uuid }`, INIT);
         }
 
-        public async trackView(uuid: string, turnstileToken: string): Promise<SkinResponse> {
-            return this.api.request(`/v2/skins/${ uuid }/interactions/view`, {
-                ...INIT,
+        public async trackView(uuid: string) {
+            return this.api.request(`/v2/skins/${ uuid }/interactions/views`, {
+                method: 'POST'
+            })
+        }
+
+        public async voteTag(uuid: string, tag: string, vote: TagVoteType) {
+            return this.api.request(`/v2/skins/${ uuid }/tags`, {
                 method: 'POST',
-                headers: {
-                    'X-Turnstile-Token': turnstileToken
-                }
-            });
+                body: JSON.stringify({tag, vote})
+            })
+        }
+
+        public async reportSkin(uuid: string, reason: string) {
+            return this.api.request(`/v2/skins/${ uuid }/report`, {
+                method: 'POST',
+                body: JSON.stringify({reason})
+            })
         }
 
     }(this);
@@ -218,6 +230,20 @@ export class MineSkinAPI {
 
     }(this);
 
+    public util = new class {
+
+        constructor(readonly api: MineSkinAPI) {
+        }
+
+        public async randomName(seed: string): Promise<string> {
+            //TODO: update this route
+            return fetch(`${ this.api.BASE }/random-name?seed=${ seed }`, INIT)
+                .then(res => res.json())
+                .then(res => res.name);
+        }
+
+    }(this);
+
     public me = new class {
 
         constructor(readonly api: MineSkinAPI) {
@@ -235,7 +261,7 @@ export class MineSkinAPI {
             }, {silent: true});
         }
 
-        public async credits() {
+        public async credits(): Promise<MineSkinResponse<"credit", BasicCreditInfo>> {
             return this.api.request(`/v2/me/credits`, {
                 credentials: 'include'
             }, {silent: true});

@@ -1,5 +1,5 @@
 {
-  "api": "https://edge.api.flagsmith.com/api/v1/",
+  "api": "https://flagsmith-proxy-worker.inventive.workers.dev/",
   "environmentID": "QdesrfNXeKrpbFPhi7bNEx",
   "flags": {
     "account.enable_billing": {

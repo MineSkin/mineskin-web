@@ -81,6 +81,14 @@
                         </v-col>
                         <InvisibleTurnstile v-if="skin" v-model:token="turnstileToken" action="view-skin"/>
                     </v-row>
+                    <v-row v-if="skin">
+                        <v-col v-if="tagsVisible">
+                            <SkinTags :skin="skin"/>
+                        </v-col>
+                        <v-col cols="12" md="3" v-if="reportVisible" align-self="end" class="text-end">
+                           <SkinReportDialog :skin="skin"/>
+                        </v-col>
+                    </v-row>
                 </v-col>
             </v-row>
         </v-card-text>
@@ -92,6 +100,7 @@ import CopyTextField from "./CopyTextField.vue";
 import { computed } from "vue";
 import { renderSkinBody } from "~/util/render";
 import { PLACEHOLDER_BODY, PLACEHOLDER_HEAD } from "~/util/skin";
+import SkinTags from "~/components/skin/SkinTags.vue";
 import InvisibleTurnstile from "~/components/InvisibleTurnstile.vue";
 import { useInteractionsStore } from "~/stores/interactions";
 
@@ -99,15 +108,17 @@ const props = defineProps<{
     skin: SkinInfo2;
 }>();
 
-const {$mineskin} = useNuxtApp();
-
 const {mdAndUp} = useDisplay();
+
+const {$flags,$mineskin} = useNuxtApp();
+const tagsVisible = computed(() => $flags.hasFeature('web.tags.visible'));
+const reportVisible = computed(() => $flags.hasFeature('web.report.visible'));
 
 const interactionsStore = useInteractionsStore();
 const {recentViews} = storeToRefs(interactionsStore);
 
 const skinLink = computed(() => {
-    return `https://minesk.in/${ props.skin.uuid }`;
+    return `https://2.minesk.in/${ props.skin.uuid }`;
 });
 
 const skinTexture = computed<Maybe<SkinIdAndTexture>>(() => props.skin.texture);
@@ -132,8 +143,7 @@ const proxiedSkinTextureUrl = computed(() => {
 //TODO: verify this actually still works
 const useSkinLink = computed(() => {
     return `https://www.minecraft.net/profile/skin/remote?url=${ skinTextureUrl.value }`;
-})
-
+});
 
 const turnstileToken: Ref<string> = ref('');
 watch(() => turnstileToken.value, async (token) => {
@@ -144,4 +154,11 @@ watch(() => turnstileToken.value, async (token) => {
         recentViews.value.shift();
     }
 });
+
+const reportSkin = ()=>{
+
+}
+
+
+
 </script>

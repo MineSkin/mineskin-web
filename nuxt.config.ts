@@ -3,10 +3,12 @@ export default defineNuxtConfig({
     compatibilityDate: '2024-04-03',
     devtools: {enabled: true},
     app: {
-        head: {
-        }
+        head: {}
     },
-    ssr: false,
+    ssr: true,
+    routeRules: {
+        '/my-skins': {ssr: false}
+    },
     plugins: [
         '@/plugins/logger',
         '@/plugins/notifier',
