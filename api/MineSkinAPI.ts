@@ -181,29 +181,27 @@ export class MineSkinAPI {
 
         public async trackView(uuid: string) {
             return this.api.request(`/v2/skins/${ uuid }/interactions/views`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
+                ...INIT,
+                method: 'POST'
             })
         }
 
         public async likeSkin(uuid: string, turnstileToken: string) {
             return this.api.request(`/v2/skins/${ uuid }/interactions/views`, {
+                ...INIT,
                 method: 'POST',
                 headers: {
                     'Turnstile-Token': turnstileToken,
-                    'Content-Type': 'application/json'
                 }
             })
         }
 
         public async voteTag(uuid: string, tag: string, vote: TagVoteType, turnstileToken: string) {
             return this.api.request(`/v2/skins/${ uuid }/tags`, {
+                ...INIT,
                 method: 'POST',
                 headers: {
                     'Turnstile-Token': turnstileToken,
-                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({tag, vote})
             })
@@ -211,10 +209,10 @@ export class MineSkinAPI {
 
         public async reportSkin(uuid: string, reason: string, turnstileToken: string) {
             return this.api.request(`/v2/skins/${ uuid }/report`, {
+                ...INIT,
                 method: 'POST',
                 headers: {
                     'Turnstile-Token': turnstileToken,
-                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({reason})
             })
