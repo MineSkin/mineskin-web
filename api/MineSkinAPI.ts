@@ -185,16 +185,31 @@ export class MineSkinAPI {
             })
         }
 
-        public async voteTag(uuid: string, tag: string, vote: TagVoteType) {
+        public async likeSkin(uuid: string, turnstileToken: string) {
+            return this.api.request(`/v2/skins/${ uuid }/interactions/views`, {
+                method: 'POST',
+                headers: {
+                    'Turnstile-Token': turnstileToken
+                }
+            })
+        }
+
+        public async voteTag(uuid: string, tag: string, vote: TagVoteType, turnstileToken: string) {
             return this.api.request(`/v2/skins/${ uuid }/tags`, {
                 method: 'POST',
+                headers: {
+                    'Turnstile-Token': turnstileToken
+                },
                 body: JSON.stringify({tag, vote})
             })
         }
 
-        public async reportSkin(uuid: string, reason: string) {
+        public async reportSkin(uuid: string, reason: string, turnstileToken: string) {
             return this.api.request(`/v2/skins/${ uuid }/report`, {
                 method: 'POST',
+                headers: {
+                    'Turnstile-Token': turnstileToken
+                },
                 body: JSON.stringify({reason})
             })
         }

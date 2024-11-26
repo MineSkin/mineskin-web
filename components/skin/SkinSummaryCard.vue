@@ -79,7 +79,7 @@
                                 prepend-icon="mdi-open-in-new"
                             ></v-btn>
                         </v-col>
-                        <InvisibleTurnstile v-if="skin" v-model:token="turnstileToken" action="view-skin"/>
+                        <InvisibleTurnstile v-if="skin" v-model:token="viewTurnstileToken" action="view-skin"/>
                     </v-row>
                     <v-row v-if="skin">
                         <v-col v-if="tagsVisible">
@@ -145,10 +145,10 @@ const useSkinLink = computed(() => {
     return `https://www.minecraft.net/profile/skin/remote?url=${ skinTextureUrl.value }`;
 });
 
-const turnstileToken: Ref<string> = ref('');
-watch(() => turnstileToken.value, async (token) => {
+const viewTurnstileToken: Ref<string> = ref('');
+watch(() => viewTurnstileToken.value, async (token) => {
     if (recentViews.value.includes(props.skin.uuid)) return;
-    await $mineskin.skins.trackView(props.skin.uuid, token);
+    await $mineskin.skins.trackView(props.skin.uuid);
     recentViews.value.push(props.skin.uuid);
     if (recentViews.value.length > 10) {
         recentViews.value.shift();
@@ -156,7 +156,7 @@ watch(() => turnstileToken.value, async (token) => {
 });
 
 const reportSkin = ()=>{
-
+    //TODO
 }
 
 

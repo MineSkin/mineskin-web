@@ -42,12 +42,14 @@ a {
                           @click:append-inner="submitTag"
             ></v-text-field>
         </div>
+        <InvisibleTurnstile v-if="skin" v-model:token="tagTurnstileToken" action="vote-tag"/>
     </div>
 </template>
 <script setup lang="ts">
 import { type SkinInfo2, type TagInfo, TagVoteType } from "@mineskin/types";
 import { useAuthStore } from "#imports";
 import { storeToRefs } from "pinia";
+import InvisibleTurnstile from "~/components/InvisibleTurnstile.vue";
 
 const props = defineProps<{
     skin: SkinInfo2;
@@ -64,6 +66,8 @@ const newTagInput = useTemplateRef('newTagInput');
 const addingTag = ref(false);
 const newTag = ref("");
 
+const tagTurnstileToken: Ref<string> = ref('');
+
 //TODO: turnstile
 
 const upvote = async (tag: TagInfo) => {
@@ -76,7 +80,7 @@ const downvote = async (tag: TagInfo) => {
 
 const doVote = async (tag: TagInfo, vote: TagVoteType) => {
     console.log("Voting tag", tag, vote);
-    const res = await $mineskin.skins.voteTag(props.skin.uuid, tag.tag, vote);
+    const res = await $mineskin.skins.voteTag(props.skin.uuid, tag.tag, vote, tagTurnstileToken.value);
 };
 
 const toggleNewTagInput = () => {
@@ -95,7 +99,7 @@ const submitTag = async () => {
     }
     addingTag.value = false;
     console.log("Submitting tag", tag);
-    const res = await $mineskin.skins.voteTag(props.skin.uuid, tag, TagVoteType.UP);
+    const res = await $mineskin.skins.voteTag(props.skin.uuid, tag, TagVoteType.UP, tagTurnstileToken.value);
     if (res.success) {
         newTag.value = "";
         props.skin.tags?.push({tag});
