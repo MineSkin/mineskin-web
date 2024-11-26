@@ -90,10 +90,11 @@
                     <v-text-field
                         label="Name (optional)"
                         v-model="name"
+                        :rules="nameRules"
                         hint="Optional name for this skin, supports placeholders"
                         persistent-hint
                     >
-                        <template v-slot:message>
+                        <template v-slot:hint>
                             Optional name for this skin, supports variables <a @click.prevent="variablesDialog=true"
                                                                                href="#">
                             <v-icon icon="mdi-help-circle"/>
@@ -288,6 +289,10 @@ const users = ref<string[]>(['']);
 
 const visibilities = ref<SkinVisibility2[]>([SkinVisibility2.PUBLIC, SkinVisibility2.UNLISTED]);
 
+const nameRules = [
+    (v: string) => v.length <= 24 || 'Max 24 characters',
+    (v: string) => /^[a-zA-Z0-9_.\- ]*$/g.test(v) || 'Only a-z, 0-9, _-. allowed'
+];
 
 const name = ref('');
 const visibility = ref(preferredVisibility.value || SkinVisibility2.PUBLIC);
