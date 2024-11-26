@@ -34,6 +34,7 @@ a {
                           density="compact"
                           variant="outlined"
                           width="200"
+                          placeholder="Tag"
                           class="new-tag-input"
                           v-model="newTag"
                           prepend-inner-icon="mdi-close-circle"
