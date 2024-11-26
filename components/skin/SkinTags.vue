@@ -50,6 +50,7 @@ import { type SkinInfo2, type TagInfo, TagVoteType } from "@mineskin/types";
 import { useAuthStore } from "#imports";
 import { storeToRefs } from "pinia";
 import InvisibleTurnstile from "~/components/InvisibleTurnstile.vue";
+import { until } from "@vueuse/core";
 
 const props = defineProps<{
     skin: SkinInfo2;
@@ -66,7 +67,7 @@ const newTagInput = useTemplateRef('newTagInput');
 const addingTag = ref(false);
 const newTag = ref("");
 
-const tagTurnstileToken: Ref<string> = ref('');
+const tagTurnstileToken: Ref<string | null> = ref(null);
 
 //TODO: turnstile
 
@@ -80,7 +81,8 @@ const downvote = async (tag: TagInfo) => {
 
 const doVote = async (tag: TagInfo, vote: TagVoteType) => {
     console.log("Voting tag", tag, vote);
-    const res = await $mineskin.skins.voteTag(props.skin.uuid, tag.tag, vote, tagTurnstileToken.value);
+    const token = await until(tagTurnstileToken).not.toBeNull({timeout: 5000});
+    const res = await $mineskin.skins.voteTag(props.skin.uuid, tag.tag, vote, token);
 };
 
 const toggleNewTagInput = () => {
@@ -97,9 +99,10 @@ const submitTag = async () => {
     if (!tag) {
         return;
     }
-    addingTag.value = false;
     console.log("Submitting tag", tag);
-    const res = await $mineskin.skins.voteTag(props.skin.uuid, tag, TagVoteType.UP, tagTurnstileToken.value);
+    const token = await until(tagTurnstileToken).not.toBeNull({timeout: 5000});
+    addingTag.value = false;
+    const res = await $mineskin.skins.voteTag(props.skin.uuid, tag, TagVoteType.UP, token);
     if (res.success) {
         newTag.value = "";
         props.skin.tags?.push({tag});

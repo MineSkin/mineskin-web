@@ -65,6 +65,7 @@ import type { SkinInfo2 } from "@mineskin/types";
 import { useAuthStore } from "~/stores/auth";
 import { storeToRefs } from "pinia";
 import InvisibleTurnstile from "~/components/InvisibleTurnstile.vue";
+import { until } from "@vueuse/core";
 
 const props = defineProps<{
     skin: SkinInfo2
@@ -90,7 +91,8 @@ const submitReport = async () => {
     if (!reason.value) return;
     if (reporting.value) return;
     console.log(`Reporting skin ${ props.skin.uuid } for ${ reason.value }`);
-    await $mineskin.skins.reportSkin(props.skin.uuid, reason.value, reportTurnstileToken.value);
+    const token = await until(reportTurnstileToken).not.toBeNull({timeout: 5000});
+    await $mineskin.skins.reportSkin(props.skin.uuid, reason.value, token);
     dialog.value = false;
 }
 </script>
