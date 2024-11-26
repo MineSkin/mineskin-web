@@ -12,235 +12,232 @@
 }
 </style>
 <template>
-    <ClientOnly>
-        <v-sheet
-            rounded
-            elevation="1"
-            class="mx-auto px-4 pt-0 pb-4 drop-area"
-            @dragover.prevent="onDragStart"
-            @dragstart.prevent="onDragStart"
-            @dragleave.prevent="onDragEnd"
-            @drop.prevent="onDrop"
-            :color="dragging ? 'secondary' : ''"
-        >
-            <h3 class="text-h6 mb-2 pt-1">
-                Generate New Skin Data
-            </h3>
-            <v-row class="my-2 d-flex text-center"
-                   :justify="generateType === GenerateType.UPLOAD ? 'center':generateType===GenerateType.USER?'end':'start'">
-                <v-col
-                    :cols="12"
-                    :md="!generateType ? 4:generateType === GenerateType.URL ? 6 : 'auto'"
-                    class="section-col"
-                    :class="{'mx-4':mdAndUp,'my-2':!mdAndUp}"
-                >
-                    <GenerateUrlSection
-                        class="section-url flex-column"
-                        :class="{'d-flex':!generateType || generateType === GenerateType.URL}"
-                        v-show="!generateType || generateType === GenerateType.URL"
-                        v-model="urls"
-                        @continue="generate"
+    <v-sheet
+        rounded
+        elevation="1"
+        class="mx-auto px-4 pt-0 pb-4 drop-area"
+        @dragover.prevent="onDragStart"
+        @dragstart.prevent="onDragStart"
+        @dragleave.prevent="onDragEnd"
+        @drop.prevent="onDrop"
+        :color="dragging ? 'secondary' : ''"
+    >
+        <h3 class="text-h6 mb-2 pt-1">
+            Generate New Skin Data
+        </h3>
+        <v-row class="my-2 d-flex text-center"
+               :justify="generateType === GenerateType.UPLOAD ? 'center':generateType===GenerateType.USER?'end':'start'">
+            <v-col
+                :cols="12"
+                :md="!generateType ? 4:generateType === GenerateType.URL ? 6 : 'auto'"
+                class="section-col"
+                :class="{'mx-4':mdAndUp,'my-2':!mdAndUp}"
+            >
+                <GenerateUrlSection
+                    class="section-url flex-column"
+                    :class="{'d-flex':!generateType || generateType === GenerateType.URL}"
+                    v-show="!generateType || generateType === GenerateType.URL"
+                    v-model="urls"
+                    @continue="generate"
+                />
+            </v-col>
+            <v-divider :vertical="mdAndUp" v-show="!generateType"/>
+            <v-col
+                :cols="12"
+                :md="!generateType?'':generateType === GenerateType.UPLOAD ? 4 : 4"
+                class="section-col"
+                :class="{'mx-4':mdAndUp,'my-2':!mdAndUp}"
+            >
+                <GenerateUploadSection
+                    class="section-upload flex-column"
+                    :class="{'d-flex':!generateType || generateType === GenerateType.UPLOAD}"
+                    v-show="!generateType || generateType === GenerateType.UPLOAD"
+                    v-model="uploadFiles"
+                    @pick="showFilePicker()"
+                />
+            </v-col>
+            <v-divider :vertical="mdAndUp" v-show="!generateType"/>
+            <v-col
+                :cols="12"
+                :md="!generateType ? 4 : generateType === GenerateType.USER ? 6 : 'auto'"
+                class="section-col"
+                :class="{'mx-4':mdAndUp,'my-2':!mdAndUp}"
+            >
+                <GenerateUserSection
+                    class="section-user flex-column"
+                    :class="{'d-flex':!generateType || generateType === GenerateType.USER}"
+                    v-show="!generateType || generateType === GenerateType.USER"
+                    v-model="users"
+                    @continue="generate"
+                />
+            </v-col>
+        </v-row>
+        <v-divider class="my-4"/>
+        <v-expand-transition>
+            <v-row v-show="generateType" class="my-2" justify="center">
+                <v-spacer></v-spacer>
+                <v-col cols="12" md="3">
+                    <v-select
+                        label="Visibility"
+                        v-model="visibility"
+                        :items="visibilities"
+                        :item-props="visibilityProps"
+                        hint="Visibility of the skin"
+                        persistent-hint
                     />
                 </v-col>
-                <v-divider :vertical="mdAndUp" v-show="!generateType"/>
-                <v-col
-                    :cols="12"
-                    :md="!generateType?'':generateType === GenerateType.UPLOAD ? 4 : 4"
-                    class="section-col"
-                    :class="{'mx-4':mdAndUp,'my-2':!mdAndUp}"
-                >
-                    <GenerateUploadSection
-                        class="section-upload flex-column"
-                        :class="{'d-flex':!generateType || generateType === GenerateType.UPLOAD}"
-                        v-show="!generateType || generateType === GenerateType.UPLOAD"
-                        v-model="uploadFiles"
-                        @pick="showFilePicker()"
+                <v-col cols="12" md="3">
+                    <v-text-field
+                        label="Name (optional)"
+                        v-model="name"
+                        hint="Optional name for this skin, supports placeholders"
+                        persistent-hint
+                    >
+                        <template v-slot:message>
+                            Optional name for this skin, supports variables <a @click.prevent="variablesDialog=true"
+                                                                               href="#">
+                            <v-icon icon="mdi-help-circle"/>
+                        </a>
+                        </template>
+                    </v-text-field>
+                </v-col>
+                <v-col cols="12" md="3">
+                    <v-select
+                        label="Variant"
+                        v-model="variant"
+                        :items="Object.values(SkinVariant)"
+                        :item-props="variantProps"
+                        hint="Variant of the skin"
+                        persistent-hint
                     />
                 </v-col>
-                <v-divider :vertical="mdAndUp" v-show="!generateType"/>
-                <v-col
-                    :cols="12"
-                    :md="!generateType ? 4 : generateType === GenerateType.USER ? 6 : 'auto'"
-                    class="section-col"
-                    :class="{'mx-4':mdAndUp,'my-2':!mdAndUp}"
-                >
-                    <GenerateUserSection
-                        class="section-user flex-column"
-                        :class="{'d-flex':!generateType || generateType === GenerateType.USER}"
-                        v-show="!generateType || generateType === GenerateType.USER"
-                        v-model="users"
-                        @continue="generate"
-                    />
+                <v-spacer></v-spacer>
+                <!--                <v-col>-->
+                <!--&lt;!&ndash;                    <SimplePreview :user="users[0]" :url="urls[0]" :file="uploadFiles[0]"/>&ndash;&gt;-->
+                <!--                </v-col>-->
+                <!--                <v-col class="text-center">-->
+                <!--                -->
+                <!--                </v-col>-->
+                <!--                <v-col>-->
+                <!--                    <v-row>-->
+                <!--                      <v-col>-->
+                <!--                          <v-text-field-->
+                <!--                              label="Name (optional)"-->
+                <!--                              v-model="name"-->
+                <!--                              hint="Optional name for this skin"-->
+                <!--                              persistent-hint-->
+                <!--                          />-->
+                <!--                      </v-col>-->
+                <!--                    </v-row>-->
+                <!--                    <v-row>-->
+                <!--                     <v-col>-->
+                <!--                         <v-select-->
+                <!--                             label="Visibility"-->
+                <!--                             v-model="visibility"-->
+                <!--                             :items="Object.values(SkinVisibility2)"-->
+                <!--                             :item-props="visibilityProps"-->
+                <!--                             hint="Visibility of the skin"-->
+                <!--                             persistent-hint-->
+                <!--                         />-->
+                <!--                     </v-col>-->
+                <!--                    </v-row>-->
+                <!--                    <v-row>-->
+                <!--                      <v-col>-->
+                <!--                          <v-select-->
+                <!--                              label="Variant"-->
+                <!--                              v-model="variant"-->
+                <!--                              :items="Object.values(SkinVariant)"-->
+                <!--                              :item-props="variantProps"-->
+                <!--                              hint="Variant of the skin. Use unknown for auto-detect"-->
+                <!--                              persistent-hint-->
+                <!--                          />-->
+                <!--                      </v-col>-->
+                <!--                    </v-row>-->
+                <!--                </v-col>-->
+            </v-row>
+        </v-expand-transition>
+        <v-expand-transition>
+            <v-row v-show="generateType" class="my-4" justify="center">
+                <v-col>
+                    <v-row justify="center" class="mb-2 text-center">
+                        <v-btn
+                            color="primary"
+                            text="Generate"
+                            size="x-large"
+                            @click="generate"
+                            :disabled="generating"
+                        ></v-btn>
+                    </v-row>
+                    <v-row justify="center" class="mt-2 text-center">
+                        <ClientOnly>
+                            <CreditsStatus :generating="generating" :image-count="imageCount"/>
+                            <div v-if="generating">
+                                <div>
+                                    Your {{ imageCount > 1 ? 'skins are' : 'skin is' }} being generated...
+                                </div>
+                                <div>
+                                    Check the
+                                    <action-link @click.prevent="jobsDrawer = true" icon="mdi-list-status"
+                                                 tooltip="Show Jobs">Job List
+                                    </action-link>
+                                    for progress,
+                                    or
+                                    <action-link @click.prevent="reset" icon="mdi-reload"
+                                                 tooltip="Reset Image Selection">
+                                        generate more skins
+                                    </action-link>
+                                    .
+                                </div>
+                            </div>
+                        </ClientOnly>
+                    </v-row>
                 </v-col>
             </v-row>
-            <v-divider class="my-4"/>
-            <v-expand-transition>
-                <v-row v-show="generateType" class="my-2" justify="center">
-                    <v-spacer></v-spacer>
-                    <v-col cols="12" md="3">
-                        <v-select
-                            label="Visibility"
-                            v-model="visibility"
-                            :items="visibilities"
-                            :item-props="visibilityProps"
-                            hint="Visibility of the skin"
-                            persistent-hint
-                        />
-                    </v-col>
-                    <v-col cols="12" md="3">
-                        <v-text-field
-                            label="Name (optional)"
-                            v-model="name"
-                            hint="Optional name for this skin, supports placeholders"
-                            persistent-hint
-                        >
-                            <template v-slot:message>
-                                Optional name for this skin, supports variables <a @click.prevent="variablesDialog=true"
-                                                                                   href="#">
-                                <v-icon icon="mdi-help-circle"/>
-                            </a>
-                            </template>
-                        </v-text-field>
-                    </v-col>
-                    <v-col cols="12" md="3">
-                        <v-select
-                            label="Variant"
-                            v-model="variant"
-                            :items="Object.values(SkinVariant)"
-                            :item-props="variantProps"
-                            hint="Variant of the skin"
-                            persistent-hint
-                        />
-                    </v-col>
-                    <v-spacer></v-spacer>
-                    <!--                <v-col>-->
-                    <!--&lt;!&ndash;                    <SimplePreview :user="users[0]" :url="urls[0]" :file="uploadFiles[0]"/>&ndash;&gt;-->
-                    <!--                </v-col>-->
-                    <!--                <v-col class="text-center">-->
-                    <!--                -->
-                    <!--                </v-col>-->
-                    <!--                <v-col>-->
-                    <!--                    <v-row>-->
-                    <!--                      <v-col>-->
-                    <!--                          <v-text-field-->
-                    <!--                              label="Name (optional)"-->
-                    <!--                              v-model="name"-->
-                    <!--                              hint="Optional name for this skin"-->
-                    <!--                              persistent-hint-->
-                    <!--                          />-->
-                    <!--                      </v-col>-->
-                    <!--                    </v-row>-->
-                    <!--                    <v-row>-->
-                    <!--                     <v-col>-->
-                    <!--                         <v-select-->
-                    <!--                             label="Visibility"-->
-                    <!--                             v-model="visibility"-->
-                    <!--                             :items="Object.values(SkinVisibility2)"-->
-                    <!--                             :item-props="visibilityProps"-->
-                    <!--                             hint="Visibility of the skin"-->
-                    <!--                             persistent-hint-->
-                    <!--                         />-->
-                    <!--                     </v-col>-->
-                    <!--                    </v-row>-->
-                    <!--                    <v-row>-->
-                    <!--                      <v-col>-->
-                    <!--                          <v-select-->
-                    <!--                              label="Variant"-->
-                    <!--                              v-model="variant"-->
-                    <!--                              :items="Object.values(SkinVariant)"-->
-                    <!--                              :item-props="variantProps"-->
-                    <!--                              hint="Variant of the skin. Use unknown for auto-detect"-->
-                    <!--                              persistent-hint-->
-                    <!--                          />-->
-                    <!--                      </v-col>-->
-                    <!--                    </v-row>-->
-                    <!--                </v-col>-->
-                </v-row>
-            </v-expand-transition>
-            <v-expand-transition>
-                <v-row v-show="generateType" class="my-4" justify="center">
-                    <v-col>
-                        <v-row justify="center" class="mb-2 text-center">
-                            <v-btn
-                                color="primary"
-                                text="Generate"
-                                size="x-large"
-                                @click="generate"
-                                :disabled="generating"
-                            ></v-btn>
-                        </v-row>
-                        <v-row justify="center" class="mt-2 text-center">
-                            <ClientOnly>
-                                <CreditsStatus :generating="generating" :image-count="imageCount"/>
-                                <div v-if="generating">
-                                    <div>
-                                        Your {{ imageCount > 1 ? 'skins are' : 'skin is' }} being generated...
-                                    </div>
-                                    <div>
-                                        Check the
-                                        <action-link @click.prevent="jobsDrawer = true" icon="mdi-list-status"
-                                                     tooltip="Show Jobs">Job List
-                                        </action-link>
-                                        for progress,
-                                        or
-                                        <action-link @click.prevent="reset" icon="mdi-reload"
-                                                     tooltip="Reset Image Selection">
-                                            generate more skins
-                                        </action-link>
-                                        .
-                                    </div>
-                                </div>
-                            </ClientOnly>
-                        </v-row>
-                    </v-col>
-                </v-row>
-            </v-expand-transition>
-            <!--        <v-row>-->
-            <!--            <dbg :data="{users,uploadFiles,urls,generateType}"/>-->
-            <!--        </v-row>-->
-        </v-sheet>
-        <v-dialog
-            v-model="variablesDialog"
-            width="auto"
+        </v-expand-transition>
+        <!--        <v-row>-->
+        <!--            <dbg :data="{users,uploadFiles,urls,generateType}"/>-->
+        <!--        </v-row>-->
+    </v-sheet>
+    <v-dialog
+        v-model="variablesDialog"
+        width="auto"
+    >
+        <v-card
+            max-width="400"
+            prepend-icon="mdi-help-circle"
+            title="Variables / Placeholders"
         >
-            <v-card
-                max-width="400"
-                prepend-icon="mdi-help-circle"
-                title="Variables / Placeholders"
-            >
-                <template v-slot:text>
-                    <div>Names support variables that will get replaced with the matching values when you generate a
-                        skin.
-                        This is especially useful when generating multiple skins at once.
-                    </div>
-                    <br/>
-                    <div>
-                        <b>Available variables:</b><br/>
-                        <ul>
-                            <li><b>{index}</b> - The index of the image in the list</li>
-                            <li><b>{user}</b> - The name/UUID of the user</li>
-                            <li><b>{file}</b> - The file name (also works for URLs)</li>
-                        </ul>
-                    </div>
-                    <br/>
-                    <div>
-                        <b>Preview:</b><br/>
-                        <span v-if="replacedNamesPreview.length<=0">Enter a name first</span>
-                        <ul>
-                            <li v-for="name in replacedNamesPreview">{{ name }}</li>
-                        </ul>
-                    </div>
-                </template>
-                <template v-slot:actions>
-                    <v-btn
-                        class="ms-auto"
-                        text="Ok"
-                        @click="variablesDialog = false"
-                    ></v-btn>
-                </template>
-            </v-card>
-        </v-dialog>
-    </ClientOnly>
+            <template v-slot:text>
+                <div>Names support variables that will get replaced with the matching values when you generate a skin.
+                    This is especially useful when generating multiple skins at once.
+                </div>
+                <br/>
+                <div>
+                    <b>Available variables:</b><br/>
+                    <ul>
+                        <li><b>{index}</b> - The index of the image in the list</li>
+                        <li><b>{user}</b> - The name/UUID of the user</li>
+                        <li><b>{file}</b> - The file name (also works for URLs)</li>
+                    </ul>
+                </div>
+                <br/>
+                <div>
+                    <b>Preview:</b><br/>
+                    <span v-if="replacedNamesPreview.length<=0">Enter a name first</span>
+                    <ul>
+                        <li v-for="name in replacedNamesPreview">{{ name }}</li>
+                    </ul>
+                </div>
+            </template>
+            <template v-slot:actions>
+                <v-btn
+                    class="ms-auto"
+                    text="Ok"
+                    @click="variablesDialog = false"
+                ></v-btn>
+            </template>
+        </v-card>
+    </v-dialog>
 </template>
 <script setup lang="ts">
 
