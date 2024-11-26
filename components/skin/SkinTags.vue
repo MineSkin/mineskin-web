@@ -35,6 +35,7 @@ a {
                           variant="outlined"
                           width="200"
                           placeholder="Tag"
+                          :rules="tagRules"
                           class="new-tag-input"
                           v-model="newTag"
                           prepend-inner-icon="mdi-close-circle"
@@ -61,8 +62,8 @@ const props = defineProps<{
 
 const {
     data: tags
-} = useLazyAsyncData<Maybe<(TagInfo&{vote: TagVoteType})[]>>(`skin-${ props.skin.uuid }-tags`, async () => {
-    return (await $mineskin.skins.getTags( props.skin.uuid))?.tags;
+} = useLazyAsyncData<Maybe<(TagInfo & { vote: TagVoteType })[]>>(`skin-${ props.skin.uuid }-tags`, async () => {
+    return (await $mineskin.skins.getTags(props.skin.uuid))?.tags;
 });
 
 
@@ -74,6 +75,10 @@ const {$mineskin, $notify} = useNuxtApp();
 
 const newTagInput = useTemplateRef('newTagInput');
 
+const tagRules = [
+    (v: string) => v.length <= 32 || 'Max 32 characters',
+    (v: string) => /^[a-z0-9-_ ]+$/.test(v) || 'Only a-z, 0-9, - and _ allowed'
+]
 const addingTag = ref(false);
 const newTag = ref("");
 
