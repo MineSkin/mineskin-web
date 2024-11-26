@@ -192,6 +192,7 @@ export class MineSkinAPI {
                 method: 'POST',
                 headers: {
                     'Turnstile-Token': turnstileToken,
+                    'Content-Type': 'application/json'
                 }
             })
         }
@@ -202,6 +203,7 @@ export class MineSkinAPI {
                 method: 'POST',
                 headers: {
                     'Turnstile-Token': turnstileToken,
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({tag, vote})
             })
@@ -213,6 +215,7 @@ export class MineSkinAPI {
                 method: 'POST',
                 headers: {
                     'Turnstile-Token': turnstileToken,
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({reason})
             })
