@@ -197,6 +197,10 @@ export class MineSkinAPI {
             })
         }
 
+        public async getTags(uuid: string) {
+            return this.api.request(`/v2/skins/${ uuid }/tags`, INIT);
+        }
+
         public async voteTag(uuid: string, tag: string, vote: TagVoteType, turnstileToken: string) {
             return this.api.request(`/v2/skins/${ uuid }/tags`, {
                 ...INIT,

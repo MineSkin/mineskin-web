@@ -5,7 +5,7 @@ a {
 </style>
 <template>
     <div class="d-flex">
-        <div v-for="tag in skin.tags" :key="tag.tag" class="d-inline-block mr-2">
+        <div v-for="tag in tags" :key="tag.tag" class="d-inline-block mr-2">
             <v-chip>
                 <template v-slot:prepend v-if="authed">
                     <a @click="upvote(tag)">
@@ -47,15 +47,24 @@ a {
     </div>
 </template>
 <script setup lang="ts">
-import { type SkinInfo2, type TagInfo, TagVoteType } from "@mineskin/types";
+import { type Maybe, type SkinInfo2, type TagInfo, TagVoteType } from "@mineskin/types";
 import { useAuthStore } from "#imports";
 import { storeToRefs } from "pinia";
 import InvisibleTurnstile from "~/components/InvisibleTurnstile.vue";
 import { until } from "@vueuse/core";
+import { useLazyAsyncData } from "#app";
 
 const props = defineProps<{
     skin: SkinInfo2;
 }>();
+
+
+const {
+    data: tags
+} = useLazyAsyncData<Maybe<(TagInfo&{vote: TagVoteType})[]>>(`skin-${ props.skin.uuid }-tags`, async () => {
+    return (await $mineskin.skins.getTags( props.skin.uuid))?.tags;
+});
+
 
 const authStore = useAuthStore();
 const {authed} = storeToRefs(authStore);
@@ -106,7 +115,7 @@ const submitTag = async () => {
     const res = await $mineskin.skins.voteTag(props.skin.uuid, tag, TagVoteType.UP, token);
     if (res.success) {
         newTag.value = "";
-        props.skin.tags?.push({tag});
+        tags.value?.push({tag});
     }
 };
 </script>
