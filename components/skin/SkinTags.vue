@@ -9,14 +9,14 @@ a {
             <v-chip>
                 <template v-slot:prepend v-if="authed">
                     <a @click="upvote(tag)">
-                        <v-icon>mdi-arrow-up</v-icon>
+                        <v-icon :color="tag.vote === 'up' ? 'green' : ''">mdi-arrow-up</v-icon>
                     </a>
                     <v-tooltip text="Upvote" activator="parent" location="bottom"/>
                 </template>
                 <span class="mx-1">{{ tag.tag }}</span>
                 <template v-slot:append v-if="authed">
                     <a @click="downvote(tag)">
-                        <v-icon>mdi-arrow-down</v-icon>
+                        <v-icon :color="tag.vote === 'down' ? 'red' : ''">mdi-arrow-down</v-icon>
                     </a>
                     <v-tooltip text="Downvote" activator="parent" location="bottom"/>
                 </template>
@@ -93,6 +93,12 @@ const doVote = async (tag: TagInfo, vote: TagVoteType) => {
     console.log("Voting tag", tag, vote);
     const token = await until(tagTurnstileToken).not.toBeNull({timeout: 5000});
     const res = await $mineskin.skins.voteTag(props.skin.uuid, tag.tag, vote, token);
+    if (res.success && tags.value) {
+        const tagIndex = tags.value?.findIndex(t => t.tag === tag.tag);
+        if (tagIndex !== -1) {
+            tags.value[tagIndex].vote = vote;
+        }
+    }
 };
 
 const toggleNewTagInput = () => {
@@ -115,7 +121,10 @@ const submitTag = async () => {
     const res = await $mineskin.skins.voteTag(props.skin.uuid, tag, TagVoteType.UP, token);
     if (res.success) {
         newTag.value = "";
-        tags.value?.push({tag});
+        tags.value?.push({
+            tag: tag,
+            vote: TagVoteType.UP
+        });
     }
 };
 </script>
