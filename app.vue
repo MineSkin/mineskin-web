@@ -186,7 +186,7 @@
                     <v-divider/>
                     <v-select
                         density="compact"
-                        class="mx-4 mt-2"
+                        class="mx-4 mt-4"
                         prepend-inner-icon="mdi-translate"
                         :model-value="locale"
                         :items="locales"
