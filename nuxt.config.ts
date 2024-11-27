@@ -54,7 +54,7 @@ export default defineNuxtConfig({
         strategy: 'prefix_except_default',
         lazy: true,
         locales: [
-            {code: 'en', name: 'English'},
+            {code: 'en', name: 'English', file: 'en.json'},
             {code: 'de', name: 'Deutsch', file: 'de.json'}
         ]
     },

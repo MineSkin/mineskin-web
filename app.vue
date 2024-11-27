@@ -93,9 +93,9 @@
                 <v-tabs
                     align-tabs="center"
                 >
-                    <v-tab to="/">Generate</v-tab>
-                    <v-tab to="/gallery">Gallery</v-tab>
-                    <v-tab v-if="authStore.authed" to="/my-skins">My Skins</v-tab>
+                    <v-tab to="/">{{ $t("Generate") }}</v-tab>
+                    <v-tab to="/gallery">{{ $t("Gallery") }}</v-tab>
+                    <v-tab v-if="authStore.authed" to="/my-skins">{{ $t("My Skins") }}</v-tab>
                 </v-tabs>
 
                 <v-divider vertical class="mx-4 my-2"/>
@@ -112,7 +112,7 @@
                             activator="parent"
                             location="bottom"
                         >
-                            Show Jobs
+                            {{ $t("Show Jobs") }}
                         </v-tooltip>
                     </v-btn>
 
@@ -127,7 +127,7 @@
                                 activator="parent"
                                 location="bottom"
                             >
-                                Go to Account
+                                {{ $t("Go to Account") }}
                             </v-tooltip>
                         </a>
                         <v-btn v-else icon>
@@ -138,7 +138,7 @@
                                     activator="parent"
                                     location="bottom"
                                 >
-                                    Sign In
+                                    {{ $t("Sign In") }}
                                 </v-tooltip>
                             </a>
                         </v-btn>
