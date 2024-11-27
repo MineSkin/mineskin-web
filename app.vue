@@ -38,6 +38,14 @@
     }
 }
 
+.pos-absolute {
+    position: absolute;
+}
+
+.pos-relative {
+    position: relative;
+}
+
 </style>
 <template>
     <NuxtLayout>
@@ -164,6 +172,7 @@
                 location="end"
                 temporary
                 width="320"
+                class="pos-relative"
             >
                 <v-list>
                     <v-list-subheader v-if="authStore.authed">{{ $t("Credits") }}</v-list-subheader>
@@ -172,6 +181,20 @@
                     </v-list-item>
                 </v-list>
                 <JobList class="my-2"/>
+                <v-spacer/>
+                <div class="pos-absolute bottom-0 right-0 w-100">
+                    <v-divider/>
+                    <v-select
+                        density="compact"
+                        class="mx-4 mt-2"
+                        prepend-inner-icon="mdi-translate"
+                        :model-value="locale"
+                        :items="locales"
+                        item-title="name"
+                        item-value="code"
+                        @update:model-value="setLocale"
+                    ></v-select>
+                </div>
             </v-navigation-drawer>
         </v-app>
     </NuxtLayout>
@@ -183,6 +206,9 @@ import { useQueueStore } from "~/stores/queue";
 import { storeToRefs } from "pinia";
 
 const config = useRuntimeConfig();
+
+const { locale, locales, setLocale } = useI18n()
+const switchLocalePath = useSwitchLocalePath()
 
 const description = 'MineSkin.org allows you to generate skin texture data for Minecraft which is signed by Mojang.';
 
