@@ -166,7 +166,7 @@
                 width="320"
             >
                 <v-list>
-                    <v-list-subheader v-if="authStore.authed">Credits</v-list-subheader>
+                    <v-list-subheader v-if="authStore.authed">{{ $t("Credits") }}</v-list-subheader>
                     <v-list-item v-if="authStore.authed">
                         <CreditsInfo/>
                     </v-list-item>

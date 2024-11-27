@@ -16,7 +16,7 @@
                 </template>
             </v-tooltip>
             <v-tooltip
-                :text="skin?.visibility===SkinVisibility2.PRIVATE ? 'Private' : skin?.visibility===SkinVisibility2.UNLISTED? 'Unlisted':'Public'">
+                :text="skin?.visibility===SkinVisibility2.PRIVATE ? $t('Private') : skin?.visibility===SkinVisibility2.UNLISTED? $t('Unlisted') : $t('Public')">
                 <template v-slot:activator="{ props }">
                     <span v-bind="props">
                         <v-icon class="mx-2">{{

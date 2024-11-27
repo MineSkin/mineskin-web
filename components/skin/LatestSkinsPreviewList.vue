@@ -7,7 +7,7 @@
 <template>
     <v-sheet rounded elevation="1" class="mx-auto px-4 pt-0 pb-4">
         <h3 class="text-h6 mb-2 pt-1">
-            Latest Skins
+            {{ $t("Latest Skins") }}
             <v-btn icon="mdi-arrow-right" variant="text" to="/gallery"></v-btn>
         </h3>
         <v-row  class="skin-single-row">
