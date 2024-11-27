@@ -77,7 +77,7 @@ const {$mineskin} = useNuxtApp();
 const authStore = useAuthStore();
 const {authed} = storeToRefs(authStore);
 
-const reportTurnstileToken: Ref<string> = ref('');
+const reportTurnstileToken: Ref<string> = ref(null);
 
 const reportReasons = [
     {text: "Inappropriate Skin", value: "skin"},
