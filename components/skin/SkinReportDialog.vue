@@ -95,6 +95,7 @@ const submitReport = async () => {
     const token = await until(reportTurnstileToken).not.toBeNull({timeout: 5000});
     reportTurnstile.value = false;
     await $mineskin.skins.reportSkin(props.skin.uuid, reason.value, token);
+    reportTurnstileToken.value = null;
     reportTurnstile.value = true;
     dialog.value = false;
 }

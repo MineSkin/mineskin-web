@@ -109,6 +109,7 @@ const doVote = async (tag: TagInfo, vote: TagVoteType) => {
     const token = await until(tagTurnstileToken).not.toBeNull({timeout: 5000});
     tagTurnstile.value = false;
     const res = await $mineskin.skins.voteTag(props.skin.uuid, tag.tag, vote, token);
+    tagTurnstileToken.value = null;
     tagTurnstile.value = true;
     if (res?.success && tags.value) {
         const tagIndex = tags.value?.findIndex(t => t.tag === tag.tag);
@@ -143,6 +144,7 @@ const submitTag = async () => {
         vote: TagVoteType.UP
     });
     const res = await $mineskin.skins.voteTag(props.skin.uuid, tag, TagVoteType.UP, token);
+    tagTurnstileToken.value = null;
     tagTurnstile.value = true;
     if (res?.success) {
         newTag.value = "";
