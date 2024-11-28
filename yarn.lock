@@ -1012,8 +1012,8 @@ __metadata:
 
 "@mineskin/types@https://github.com/MineSkin/mineskin-types.git":
   version: 1.0.1
-  resolution: "@mineskin/types@https://github.com/MineSkin/mineskin-types.git#commit=acee8e05455b7b1ffeedaeff6b7bb663be0d6bf3"
-  checksum: 10c0/a256c8a27595ee98d15a7e5990d471b671ce47ee29695ea0f4695c7517fe4b5a091a9a5bfea41883264d084898b0b56925c0fa32a12687977031a38445cc5d9e
+  resolution: "@mineskin/types@https://github.com/MineSkin/mineskin-types.git#commit=996fb67da4d1feabf9f24c89d021e4b8860180c1"
+  checksum: 10c0/c633cb19a8b24ed2820a19131129608f7279fc250ee2c7568749eb2c640b3ad4a993102e3ad47d4061df2c900c702271fa58c6fdef7fd724fc23d78e4c117295
   languageName: node
   linkType: hard
 

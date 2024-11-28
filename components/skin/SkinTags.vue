@@ -63,10 +63,7 @@ const props = defineProps<{
 
 const {
     data: tags
-} = useLazyAsyncData<Maybe<(TagInfo & {
-    vote: TagVoteType;
-    suggested?: boolean
-})[]>>(`skin-${ props.skin.uuid }-tags`, async () => {
+} = useLazyAsyncData<Maybe<TagInfo[]>>(`skin-${ props.skin.uuid }-tags`, async () => {
     return (await $mineskin.skins.getTags(props.skin.uuid))?.tags?.sort((a, b) => {
         if (a.vote === b.vote) {
             if (a.suggested !== b.suggested) {
