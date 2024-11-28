@@ -40,7 +40,7 @@
 
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                      <InvisibleTurnstile v-if="skin" v-model:token="reportTurnstileToken" :key="reportTurnstileId" action="report-skin"/>
+                      <InvisibleTurnstile v-if="skin" v-model:token="reportTurnstileToken" :key="'t'+reportTurnstileId.count" action="report-skin"/>
 
                     <v-btn
                         text="Cancel"

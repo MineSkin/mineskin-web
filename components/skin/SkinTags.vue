@@ -44,7 +44,7 @@ a {
                           @click:append-inner="submitTag"
             ></v-text-field>
         </div>
-        <InvisibleTurnstile v-if="skin" v-model:token="tagTurnstileToken" :key="tagTurnstileId" action="vote-tag"/>
+        <InvisibleTurnstile v-if="skin" v-model:token="tagTurnstileToken" :key="'t'+tagTurnstileId.count" action="vote-tag"/>
     </div>
 </template>
 <script setup lang="ts">
