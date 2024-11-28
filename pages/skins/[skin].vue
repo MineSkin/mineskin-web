@@ -88,13 +88,6 @@ const {
     return (await $mineskin.skins.get(skinId.value))?.skin;
 });
 
-watch(() => skin.value, (skin) => {
-    if (skin) {
-        $mineskin.skins.trackView(skin.uuid);
-    }
-    refreshRandomSkinName();
-})
-
 const {
     data: randomSkinName,
     refresh: refreshRandomSkinName
@@ -151,6 +144,18 @@ useHead({
         type: 'application/ld+json',
         innerHTML: ldJsonContent
     }]
+})
+
+watch(skin, (skin) => {
+    if (skin) {
+        $mineskin.skins.trackView(skin.uuid);
+        if (skinId.value !== skin.uuid) {
+            router.replace(`/skins/${ skin.uuid }`);
+        }
+    }
+    refreshRandomSkinName();
+}, {
+    immediate: true
 })
 
 onMounted(() => {
