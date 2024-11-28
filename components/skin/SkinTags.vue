@@ -4,10 +4,12 @@ a {
 }
 </style>
 <template>
-    <div class="d-flex">
-        <div v-for="tag in tags" :key="tag.tag" class="d-inline-block mr-2">
+    <v-slide-group class="d-flex">
+        <v-slide-group-item v-for="tag in tags" :key="tag.tag" class="d-inline-block">
             <v-chip :variant="tag.suggested ? 'outlined': 'tonal'"
-                    :color="tag.suggested ? 'default' : tag.vote === 'up' ? 'secondary' : 'accent'">
+                    :color="tag.suggested ? 'default' : tag.vote === 'up' ? 'secondary' : 'accent'"
+                    class="mr-1"
+            >
                 <template v-slot:prepend v-if="authed">
                     <a @click="upvote(tag)" :title="tag.vote==='up'?'Upvoted':'Upvote'">
                         <v-icon :color="tag.vote === 'up' ? 'green' : ''">mdi-arrow-up</v-icon>
@@ -22,8 +24,8 @@ a {
                     </a>
                 </template>
             </v-chip>
-        </div>
-        <div class="d-inline-block">
+        </v-slide-group-item>
+        <v-slide-group-item class="d-inline-block">
             <v-chip @click="toggleNewTagInput" v-if="authed && !addingTag">
                 <template v-slot:prepend>
                     <v-icon>mdi-plus</v-icon>
@@ -44,9 +46,9 @@ a {
                           append-inner-icon="mdi-check-circle"
                           @click:append-inner="submitTag"
             ></v-text-field>
-        </div>
+        </v-slide-group-item>
         <InvisibleTurnstile v-if="skin && tagTurnstile" v-model:token="tagTurnstileToken" action="vote-tag"/>
-    </div>
+    </v-slide-group>
 </template>
 <script setup lang="ts">
 import { type Maybe, type SkinInfo2, type TagInfo, TagVoteType } from "@mineskin/types";
@@ -137,7 +139,7 @@ const submitTag = async () => {
     }
     console.log("Submitting tag", tag);
     const token = await until(tagTurnstileToken).not.toBeNull({timeout: 5000});
-     tagTurnstile.value = false;
+    tagTurnstile.value = false;
     addingTag.value = false;
     tags.value?.push({
         tag: tag,
