@@ -37,6 +37,7 @@ a {
                           density="compact"
                           variant="outlined"
                           width="200"
+                          max-width="200"
                           placeholder="Tag"
                           :rules="tagRules"
                           class="new-tag-input"
