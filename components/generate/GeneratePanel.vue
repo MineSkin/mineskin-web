@@ -289,7 +289,7 @@ const visibilities = ref<SkinVisibility2[]>([SkinVisibility2.PUBLIC, SkinVisibil
 
 const nameRules = [
     (v: string) => v.length <= 24 || 'Max 24 characters',
-    (v: string) => /^[a-zA-Z0-9_.\- ]*$/g.test(v) || 'Only a-z, 0-9, _-. allowed'
+    (v: string) => /^[a-zA-Z0-9_.\-{} ]*$/g.test(v) || 'Only a-z, 0-9, _-.{} allowed'
 ];
 
 const name = ref('');
