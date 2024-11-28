@@ -111,6 +111,7 @@ const downvote = async (tag: TagInfo) => {
 const doVote = async (tag: TagInfo, vote: TagVoteType) => {
     console.log("Voting tag", tag, vote);
     const token = await until(tagTurnstileToken).not.toBeNull({timeout: 5000});
+    tagTurnstileId.inc();
     const res = await $mineskin.skins.voteTag(props.skin.uuid, tag.tag, vote, token);
     if (res.success && tags.value) {
         const tagIndex = tags.value?.findIndex(t => t.tag === tag.tag);
