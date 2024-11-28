@@ -91,14 +91,12 @@
                         label="Name (optional)"
                         v-model="name"
                         :rules="nameRules"
-                        hint="Optional name for this skin, supports placeholders"
                         persistent-hint
                     >
-                        <template v-slot:hint>
-                            Optional name for this skin, supports variables <a @click.prevent="variablesDialog=true"
+                        <template v-slot:details>
+                            <span>Optional name for this skin, supports variables <a @click.prevent="variablesDialog=true"
                                                                                href="#">
-                            <v-icon icon="mdi-help-circle"/>
-                        </a>
+                                <v-icon icon="mdi-help-circle"/></a></span>
                         </template>
                     </v-text-field>
                 </v-col>
