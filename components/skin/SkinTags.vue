@@ -6,19 +6,20 @@ a {
 <template>
     <div class="d-flex">
         <div v-for="tag in tags" :key="tag.tag" class="d-inline-block mr-2">
-            <v-chip>
+            <v-chip :variant="tag.suggested ? 'outlined': 'tonal'"
+                    :color="tag.suggested ? 'default' : tag.vote === 'up' ? 'secondary' : 'accent'">
                 <template v-slot:prepend v-if="authed">
-                    <a @click="upvote(tag)">
+                    <a @click="upvote(tag)" :title="tag.vote==='up'?'Upvoted':'Upvote'">
                         <v-icon :color="tag.vote === 'up' ? 'green' : ''">mdi-arrow-up</v-icon>
                     </a>
-                    <v-tooltip text="Upvote" activator="parent" location="bottom"/>
                 </template>
-                <span class="mx-1">{{ tag.tag }}</span>
+                <span class="mx-1" :title="tag.suggested ? 'Suggested Tag' : ''">
+                    {{ tag.tag }}
+                </span>
                 <template v-slot:append v-if="authed">
-                    <a @click="downvote(tag)">
+                    <a @click="downvote(tag)" :title="tag.vote==='down'?'Downvoted':'Downvote'">
                         <v-icon :color="tag.vote === 'down' ? 'red' : ''">mdi-arrow-down</v-icon>
                     </a>
-                    <v-tooltip text="Downvote" activator="parent" location="bottom"/>
                 </template>
             </v-chip>
         </div>
@@ -44,7 +45,8 @@ a {
                           @click:append-inner="submitTag"
             ></v-text-field>
         </div>
-        <InvisibleTurnstile v-if="skin" v-model:token="tagTurnstileToken" :key="'t'+tagTurnstileId.count" action="vote-tag"/>
+        <InvisibleTurnstile v-if="skin" v-model:token="tagTurnstileToken" :key="'t'+tagTurnstileId.count"
+                            action="vote-tag"/>
     </div>
 </template>
 <script setup lang="ts">
@@ -62,8 +64,19 @@ const props = defineProps<{
 
 const {
     data: tags
-} = useLazyAsyncData<Maybe<(TagInfo & { vote: TagVoteType })[]>>(`skin-${ props.skin.uuid }-tags`, async () => {
-    return (await $mineskin.skins.getTags(props.skin.uuid))?.tags;
+} = useLazyAsyncData<Maybe<(TagInfo & {
+    vote: TagVoteType;
+    suggested?: boolean
+})[]>>(`skin-${ props.skin.uuid }-tags`, async () => {
+    return (await $mineskin.skins.getTags(props.skin.uuid))?.tags?.sort((a, b) => {
+        if (a.vote === b.vote) {
+            if (a.suggested !== b.suggested) {
+                return a.suggested ? 1 : -1;
+            }
+            return a.tag.localeCompare(b.tag);
+        }
+        return b.vote === 'up' ? 1 : -1;
+    });
 });
 
 
@@ -102,7 +115,9 @@ const doVote = async (tag: TagInfo, vote: TagVoteType) => {
     if (res.success && tags.value) {
         const tagIndex = tags.value?.findIndex(t => t.tag === tag.tag);
         if (tagIndex !== -1) {
-            tags.value[tagIndex].vote = vote;
+            const theTag = tags.value[tagIndex];
+            theTag.vote = vote;
+            theTag.suggested = false;
         }
     }
 };
@@ -125,13 +140,13 @@ const submitTag = async () => {
     const token = await until(tagTurnstileToken).not.toBeNull({timeout: 5000});
     tagTurnstileId.inc();
     addingTag.value = false;
+    tags.value?.push({
+        tag: tag,
+        vote: TagVoteType.UP
+    });
     const res = await $mineskin.skins.voteTag(props.skin.uuid, tag, TagVoteType.UP, token);
     if (res.success) {
         newTag.value = "";
-        tags.value?.push({
-            tag: tag,
-            vote: TagVoteType.UP
-        });
     }
 };
 </script>
