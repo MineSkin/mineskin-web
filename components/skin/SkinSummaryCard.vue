@@ -145,7 +145,7 @@ const useSkinLink = computed(() => {
     return `https://www.minecraft.net/profile/skin/remote?url=${ skinTextureUrl.value }`;
 });
 
-const viewTurnstileToken: Ref<string> = ref(null);
+const viewTurnstileToken: Ref<string|null> = ref(null);
 watch(() => viewTurnstileToken.value, async (token) => {
     if (recentViews.value.includes(props.skin.uuid)) return;
     await $mineskin.skins.trackView(props.skin.uuid);

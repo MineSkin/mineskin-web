@@ -44,7 +44,7 @@ a {
                           @click:append-inner="submitTag"
             ></v-text-field>
         </div>
-        <InvisibleTurnstile v-if="skin" v-model:token="tagTurnstileToken" action="vote-tag"/>
+        <InvisibleTurnstile v-if="skin" v-model:token="tagTurnstileToken" :key="tagTurnstileId" action="vote-tag"/>
     </div>
 </template>
 <script setup lang="ts">
@@ -52,7 +52,7 @@ import { type Maybe, type SkinInfo2, type TagInfo, TagVoteType } from "@mineskin
 import { useAuthStore } from "#imports";
 import { storeToRefs } from "pinia";
 import InvisibleTurnstile from "~/components/InvisibleTurnstile.vue";
-import { until } from "@vueuse/core";
+import { until, useCounter } from "@vueuse/core";
 import { useLazyAsyncData } from "#app";
 
 const props = defineProps<{
@@ -82,6 +82,7 @@ const tagRules = [
 const addingTag = ref(false);
 const newTag = ref("");
 
+const tagTurnstileId = useCounter();
 const tagTurnstileToken: Ref<string | null> = ref(null);
 
 //TODO: turnstile
@@ -122,6 +123,7 @@ const submitTag = async () => {
     }
     console.log("Submitting tag", tag);
     const token = await until(tagTurnstileToken).not.toBeNull({timeout: 5000});
+    tagTurnstileId.inc();
     addingTag.value = false;
     const res = await $mineskin.skins.voteTag(props.skin.uuid, tag, TagVoteType.UP, token);
     if (res.success) {
