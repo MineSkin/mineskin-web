@@ -45,8 +45,7 @@ a {
                           @click:append-inner="submitTag"
             ></v-text-field>
         </div>
-        <InvisibleTurnstile v-if="skin" v-model:token="tagTurnstileToken" :key="'t'+tagTurnstileId.count"
-                            action="vote-tag"/>
+        <InvisibleTurnstile v-if="skin && tagTurnstile" v-model:token="tagTurnstileToken" action="vote-tag"/>
     </div>
 </template>
 <script setup lang="ts">
@@ -95,7 +94,7 @@ const tagRules = [
 const addingTag = ref(false);
 const newTag = ref("");
 
-const tagTurnstileId = useCounter();
+const tagTurnstile = ref(true);
 const tagTurnstileToken: Ref<string | null> = ref(null);
 
 //TODO: turnstile
@@ -111,9 +110,10 @@ const downvote = async (tag: TagInfo) => {
 const doVote = async (tag: TagInfo, vote: TagVoteType) => {
     console.log("Voting tag", tag, vote);
     const token = await until(tagTurnstileToken).not.toBeNull({timeout: 5000});
-    tagTurnstileId.inc();
+    tagTurnstile.value = false;
     const res = await $mineskin.skins.voteTag(props.skin.uuid, tag.tag, vote, token);
-    if (res.success && tags.value) {
+    tagTurnstile.value = true;
+    if (res?.success && tags.value) {
         const tagIndex = tags.value?.findIndex(t => t.tag === tag.tag);
         if (tagIndex !== -1) {
             const theTag = tags.value[tagIndex];
@@ -139,14 +139,15 @@ const submitTag = async () => {
     }
     console.log("Submitting tag", tag);
     const token = await until(tagTurnstileToken).not.toBeNull({timeout: 5000});
-    tagTurnstileId.inc();
+     tagTurnstile.value = false;
     addingTag.value = false;
     tags.value?.push({
         tag: tag,
         vote: TagVoteType.UP
     });
     const res = await $mineskin.skins.voteTag(props.skin.uuid, tag, TagVoteType.UP, token);
-    if (res.success) {
+    tagTurnstile.value = true;
+    if (res?.success) {
         newTag.value = "";
     }
 };

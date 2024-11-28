@@ -40,7 +40,7 @@
 
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                      <InvisibleTurnstile v-if="skin" v-model:token="reportTurnstileToken" :key="'t'+reportTurnstileId.count" action="report-skin"/>
+                      <InvisibleTurnstile v-if="skin && reportTurnstile" v-model:token="reportTurnstileToken" action="report-skin"/>
 
                     <v-btn
                         text="Cancel"
@@ -77,7 +77,7 @@ const {$mineskin} = useNuxtApp();
 const authStore = useAuthStore();
 const {authed} = storeToRefs(authStore);
 
-const reportTurnstileId = useCounter();
+const reportTurnstile = ref(true);
 const reportTurnstileToken: Ref<string|null> = ref(null);
 
 const reportReasons = [
@@ -93,8 +93,9 @@ const submitReport = async () => {
     if (reporting.value) return;
     console.log(`Reporting skin ${ props.skin.uuid } for ${ reason.value }`);
     const token = await until(reportTurnstileToken).not.toBeNull({timeout: 5000});
-    reportTurnstileId.inc();
+    reportTurnstile.value = false;
     await $mineskin.skins.reportSkin(props.skin.uuid, reason.value, token);
+    reportTurnstile.value = true;
     dialog.value = false;
 }
 </script>

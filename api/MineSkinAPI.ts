@@ -336,8 +336,8 @@ export class MineSkinAPI {
     }
 
     private async handleResponse<T extends MineSkinResponse>(res: Response, options?: Partial<RequestOptions>): Promise<T> {
-        const json: MineSkinResponse = await res.json();
-        if (json.errors?.length > 0) {
+        const json: MineSkinResponse = res.status !== 204 ? await res.json() : null;
+        if (json?.errors?.length > 0) {
             for (let error of json.errors) {
                 console.error('API error', error);
                 if (options?.silent) continue;
@@ -348,7 +348,7 @@ export class MineSkinAPI {
                 })
             }
         }
-        if (json.warnings?.length > 0) {
+        if (json?.warnings?.length > 0) {
             for (let warning of json.warnings) {
                 console.warn('API warning', warning);
                 //if(options?.silent) continue;
@@ -358,7 +358,7 @@ export class MineSkinAPI {
                 // })
             }
         }
-        if (json.messages?.length > 0) {
+        if (json?.messages?.length > 0) {
             for (let message of json.messages) {
                 console.info('API message', message);
                 if (options?.silent) continue;
