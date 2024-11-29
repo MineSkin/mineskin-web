@@ -168,7 +168,6 @@ useHead({
 
 watch(skin, (skin) => {
     if (skin) {
-        $mineskin.skins.trackView(skin.uuid);
         if (skinId.value !== skin.uuid) {
             router.replace(`/skins/${ skin.uuid }`);
         }

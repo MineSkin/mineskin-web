@@ -146,7 +146,7 @@ const useSkinLink = computed(() => {
 });
 
 const viewTurnstileToken: Ref<string|null> = ref(null);
-watch(() => viewTurnstileToken.value, async (token) => {
+watch(viewTurnstileToken, async (token) => {
     if (recentViews.value.includes(props.skin.uuid)) return;
     await $mineskin.skins.trackView(props.skin.uuid);
     recentViews.value.push(props.skin.uuid);
