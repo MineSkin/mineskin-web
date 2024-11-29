@@ -66,6 +66,7 @@
 
                 <div class="d-flex flex-auto">
                     <v-btn icon
+                           v-if="mdAndUp"
                            @click="searching ? search() : showSearch()"
                     >
                         <v-icon>mdi-magnify</v-icon>
@@ -298,7 +299,7 @@ const router = useRouter();
 const authStore = useAuthStore();
 const queueStore = useQueueStore();
 
-const {mdAndUp} = useDisplay();
+const {smAndUp,mdAndUp} = useDisplay();
 
 const {jobsSorted, jobsDrawer} = storeToRefs(queueStore);
 
