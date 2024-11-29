@@ -89,7 +89,7 @@ const newTagInput = useTemplateRef('newTagInput');
 
 const tagRules = [
     (v: string) => v.length <= 32 || 'Max 32 characters',
-    (v: string) => /^[a-z0-9-_ ]*$/.test(v) || 'Only a-z, 0-9, - and _ allowed'
+    (v: string) => /^[a-z- ]*$/.test(v) || 'Only lowercase letters, spaces and hyphens allowed'
 ]
 const addingTag = ref(false);
 const newTag = ref("");
