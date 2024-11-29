@@ -70,14 +70,14 @@
                                 download
                                 prepend-icon="mdi-download"
                             ></v-btn>
-<!--                            <v-btn-->
-<!--                                color="accent"-->
-<!--                                text="Use This Skin"-->
-<!--                                class="ma-2"-->
-<!--                                size="large"-->
-<!--                                :href="useSkinLink"-->
-<!--                                prepend-icon="mdi-open-in-new"-->
-<!--                            ></v-btn>-->
+                            <!--                            <v-btn-->
+                            <!--                                color="accent"-->
+                            <!--                                text="Use This Skin"-->
+                            <!--                                class="ma-2"-->
+                            <!--                                size="large"-->
+                            <!--                                :href="useSkinLink"-->
+                            <!--                                prepend-icon="mdi-open-in-new"-->
+                            <!--                            ></v-btn>-->
                         </v-col>
                         <InvisibleTurnstile v-if="skin" v-model:token="viewTurnstileToken" action="view-skin"/>
                     </v-row>
@@ -86,7 +86,7 @@
                             <SkinTags :skin="skin"/>
                         </v-col>
                         <v-col cols="12" md="3" v-if="reportVisible" align-self="end" class="text-end">
-                           <SkinReportDialog :skin="skin"/>
+                            <SkinReportDialog :skin="skin"/>
                         </v-col>
                     </v-row>
                 </v-col>
@@ -110,7 +110,7 @@ const props = defineProps<{
 
 const {mdAndUp} = useDisplay();
 
-const {$flags,$mineskin} = useNuxtApp();
+const {$flags, $mineskin} = useNuxtApp();
 const tagsVisible = computed(() => $flags.hasFeature('web.tags.visible'));
 const reportVisible = computed(() => $flags.hasFeature('web.report.visible'));
 
@@ -145,20 +145,20 @@ const useSkinLink = computed(() => {
     return `https://www.minecraft.net/profile/skin/remote?url=${ skinTextureUrl.value }`;
 });
 
-const viewTurnstileToken: Ref<string|null> = ref(null);
+const viewTurnstileToken: Ref<string | null> = ref(null);
 watch(viewTurnstileToken, async (token) => {
+    if (!token) return;
     if (recentViews.value.includes(props.skin.uuid)) return;
-    await $mineskin.skins.trackView(props.skin.uuid);
     recentViews.value.push(props.skin.uuid);
     if (recentViews.value.length > 10) {
         recentViews.value.shift();
     }
+    await $mineskin.skins.trackView(props.skin.uuid, token);
 });
 
-const reportSkin = ()=>{
+const reportSkin = () => {
     //TODO
 }
-
 
 
 </script>

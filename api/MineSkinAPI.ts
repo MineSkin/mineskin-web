@@ -179,10 +179,14 @@ export class MineSkinAPI {
             return this.api.request(`/v2/skins/${ uuid }`, INIT);
         }
 
-        public async trackView(uuid: string) {
+        public async trackView(uuid: string, turnstileToken: string) {
             return this.api.request(`/v2/skins/${ uuid }/interactions/views`, {
                 ...INIT,
-                method: 'POST'
+                method: 'POST',
+                 headers: {
+                    'Turnstile-Token': turnstileToken,
+                    'Content-Type': 'application/json'
+                }
             })
         }
 
