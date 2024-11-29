@@ -11,16 +11,18 @@ a {
                     class="mr-1"
             >
                 <template v-slot:prepend v-if="authed">
-                    <a @click="upvote(tag)" :title="tag.vote==='up'?'Upvoted':'Upvote'">
-                        <v-icon :color="tag.vote === 'up' ? 'green' : ''">mdi-arrow-up</v-icon>
+                    <a @click="upvote(tag)" :title="tag.vote==='up'?'Upvoted':'Upvote'" style="min-width: 18px">
+                        <v-progress-circular indeterminate color="green" size="16" width="2" v-if="submittingVote"/>
+                        <v-icon v-else :color="tag.vote === 'up' ? 'green' : ''">mdi-arrow-up</v-icon>
                     </a>
                 </template>
                 <span class="mx-1" :title="tag.suggested ? 'Suggested Tag' : ''">
                     {{ tag.tag }}
                 </span>
                 <template v-slot:append v-if="authed">
-                    <a @click="downvote(tag)" :title="tag.vote==='down'?'Downvoted':'Downvote'">
-                        <v-icon :color="tag.vote === 'down' ? 'red' : ''">mdi-arrow-down</v-icon>
+                    <a @click="downvote(tag)" :title="tag.vote==='down'?'Downvoted':'Downvote'" style="min-width: 18px">
+                        <v-progress-circular indeterminate color="red" size="16" width="2" v-if="submittingVote"/>
+                        <v-icon v-else :color="tag.vote === 'down' ? 'red' : ''">mdi-arrow-down</v-icon>
                     </a>
                 </template>
             </v-chip>
@@ -80,8 +82,8 @@ const {
 
 
 const authStore = useAuthStore();
-const {authed} = storeToRefs(authStore);
-// const authed = true;
+// const {authed} = storeToRefs(authStore);
+const authed = true;
 
 const {$mineskin, $notify} = useNuxtApp();
 
@@ -107,13 +109,17 @@ const downvote = async (tag: TagInfo) => {
     await doVote(tag, TagVoteType.DOWN);
 };
 
+const submittingVote = ref(false);
 const doVote = async (tag: TagInfo, vote: TagVoteType) => {
+    if (submittingVote.value) return;
     console.log("Voting tag", tag, vote);
+    submittingVote.value = true;
     const token = await until(tagTurnstileToken).not.toBeNull({timeout: 5000});
     tagTurnstile.value = false;
     const res = await $mineskin.skins.voteTag(props.skin.uuid, tag.tag, vote, token);
     tagTurnstileToken.value = null;
     tagTurnstile.value = true;
+    submittingVote.value = false;
     if (res?.success && tags.value) {
         const tagIndex = tags.value?.findIndex(t => t.tag === tag.tag);
         if (tagIndex !== -1) {
