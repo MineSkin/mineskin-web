@@ -165,6 +165,7 @@
                             size="x-large"
                             @click="generate"
                             :disabled="generating"
+                            :loading="generating"
                         ></v-btn>
                     </v-row>
                     <v-row justify="center" class="mt-2 text-center">
@@ -557,7 +558,7 @@ async function generate() {
     }
     queueStore.updateSortedJobs();
 
-    await sleep(1000);
+    await sleep(2000);
     generating.value = false;
 }
 
