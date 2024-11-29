@@ -3,6 +3,7 @@
         <v-row>
             <v-col cols="12">
                 <h2>Skin Gallery <small v-if="filter">&quot;{{ filter }}&quot;</small></h2>
+                <dbg :data="breakpoint"></dbg>
             </v-col>
         </v-row>
         <v-infinite-scroll :items="skins" :onLoad="load" style="overflow: hidden">
@@ -10,12 +11,14 @@
                 <template v-for="(item0, index) in skins" :key="item0">
                     <!--                    <v-col cols="4" sm="3" md="2">-->
                     <v-col
-                        :cols="item0.ad? 12:6"
-                        :sm="item0.ad?8:4"
+                        :cols="item0.ad? 12:5"
+                        :xs="item0.ad? 12:5"
+                        :sm="item0.ad?8:3"
                         :md="item0.ad?4:2"
+                        :lg="item0.ad?2:2"
                         :xl="item0.ad?2:1"
                         class="gallery-item-group"
-                        :class="item0.ad?'mx-4':'mx-2'"
+                        :class="item0.ad?'mx-4':'mx-0 mx-sm-1 mx-md-2'"
                     >
                         <div v-if="item0.ad"
                              style="max-height: 1200px;width:100%"
@@ -26,7 +29,7 @@
                                 ad-slot="3361952161"
                             />
                         </div>
-                        <div v-else class="gallery-item mb-4" v-for="item in item0" :key="item">
+                        <div v-else class="gallery-item mb-1 mb-sm-2 mb-md-4" v-for="item in item0" :key="item">
                             <skin-link-card no-title :skin="item"/>
                         </div>
                     </v-col>
@@ -75,7 +78,7 @@ useHead({
 });
 
 const router = useRouter();
-const {xl, lg, md, sm, xs} = useDisplay();
+const {xl, lg, md, sm, xs,name:breakpoint} = useDisplay();
 
 const {$mineskin, $flags, $notify} = useNuxtApp();
 

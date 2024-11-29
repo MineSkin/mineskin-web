@@ -10,13 +10,15 @@
                 <template v-for="(item, index) in skins" :key="item">
                     <!--                    <v-col cols="4" sm="3" md="2">-->
                     <v-col
-                       cols="6"
-                        sm="4"
+                        cols="5"
+                        xs="5"
+                        sm="3"
                         md="2"
+                        lg="2"
                         xl="1"
                         class="gallery-item-group ma-2"
                     >
-                    <skin-link-card :skin="item"/>
+                        <skin-link-card :skin="item"/>
                     </v-col>
                     <!--                    </v-col>-->
                 </template>
@@ -85,9 +87,11 @@ async function load({done}) {
 }
 
 onMounted(async () => {
-    await load({done: () => {}})
+    await load({
+        done: () => {
+        }
+    })
 })
-
 
 
 </script>
