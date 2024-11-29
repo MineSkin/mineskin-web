@@ -118,10 +118,30 @@ const ogImage = computed(() => {
     return skinHeadImage.value || '/img/mineskin-social-card.jpg';
 });
 
+const description = computed(() => {
+    let desc = `A Minecraft Skin`;
+    if (skin.value?.name) {
+        desc += ` named ${ skin.value.name }`;
+    }
+    if (skin.value?.tags && skin.value.tags.length > 0) {
+        desc += ` with tags ${ skin.value.tags.map(t => t.tag.replace(/[^a-z]/ig, ' ')).join(', ') }`;
+    }
+    desc += ' - generated'
+    if (skin.value?.generator?.timestamp) {
+        desc += ` on ${ new Date(skin.value.generator.timestamp).toLocaleDateString() }`;
+    }
+    desc += ' by MineSkin, a generator for Minecraft skin texture signatures.';
+    return desc;
+});
+
 useSeoMeta({
     title: skinNameDisplay,
     ogTitle: skinNameDisplay,
-    ogImage: ogImage
+    twitterTitle: skinNameDisplay,
+    ogImage: ogImage,
+    description: description,
+    ogDescription: description,
+    twitterDescription: description,
 })
 
 const ldJsonContent = computed(() => {
