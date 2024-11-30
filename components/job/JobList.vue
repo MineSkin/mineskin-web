@@ -1,5 +1,5 @@
 <template>
-    <v-list>
+    <v-list >
         <v-list-subheader>Jobs</v-list-subheader>
         <JobStatus v-for="job in jobsSorted" :id="job.id" :key="job.id"/>
         <v-list-item v-if="jobsSorted.length<=0">

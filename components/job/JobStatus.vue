@@ -1,51 +1,49 @@
 <template>
-    <div v-if="id  &&job">
-        <v-list-item>
-            <template v-slot:prepend>
-                <div class="mr-2" style="width: 48px">
-                    <SkinHeadImg :texture="jobTexture"></SkinHeadImg>
-                </div>
+    <v-list-item v-if="id  &&job">
+        <template v-slot:prepend>
+            <div class="mr-2" style="width: 48px">
+                <SkinHeadImg :texture="jobTexture"></SkinHeadImg>
+            </div>
+        </template>
+        <template v-slot:title>
+            <nuxt-link v-if="skin" :to="'/skins/'+skin.uuid" class="text-decoration-none">{{
+                    job.id?.substring(0, 8)
+                }}
+            </nuxt-link>
+            <span v-else>{{ job.id?.substring(0, 8) }}</span>
+        </template>
+        <template v-slot:subtitle>
+            <DateLocal class="float-end" :date="job.timestamp"></DateLocal>
+        </template>
+        <v-progress-linear
+            v-if="job.status === 'waiting'"
+            height="20"
+            indeterminate
+            color="primary">
+            <template v-slot:default>
+                Waiting
             </template>
-            <template v-slot:title>
-                <nuxt-link v-if="skin" :to="'/skins/'+skin.uuid" class="text-decoration-none">{{
-                        job.id?.substring(0, 8)
-                    }}
-                </nuxt-link>
-                <span v-else>{{ job.id?.substring(0, 8) }}</span>
+        </v-progress-linear>
+        <v-progress-linear
+            v-else-if="job.status === 'processing'"
+            height="20"
+            indeterminate
+            color="warning">
+            <template v-slot:default>
+                Processing
             </template>
-            <template v-slot:subtitle>
-                <DateLocal class="float-end" :date="job.timestamp"></DateLocal>
+        </v-progress-linear>
+        <v-progress-linear
+            v-else-if="job.status === 'completed'||job.status === 'failed'"
+            height="20"
+            model-value="100"
+            :color="job.status === 'completed' ? 'success':'error'">
+            <template v-slot:default>
+                {{ job.status === 'completed' ? 'Completed' : 'Failed' }}
             </template>
-            <v-progress-linear
-                v-if="job.status === 'waiting'"
-                height="20"
-                indeterminate
-                color="primary">
-                <template v-slot:default>
-                    Waiting
-                </template>
-            </v-progress-linear>
-            <v-progress-linear
-                v-else-if="job.status === 'processing'"
-                height="20"
-                indeterminate
-                color="warning">
-                <template v-slot:default>
-                    Processing
-                </template>
-            </v-progress-linear>
-            <v-progress-linear
-                v-else-if="job.status === 'completed'||job.status === 'failed'"
-                height="20"
-                model-value="100"
-                :color="job.status === 'completed' ? 'success':'error'">
-                <template v-slot:default>
-                    {{ job.status === 'completed' ? 'Completed' : 'Failed' }}
-                </template>
-            </v-progress-linear>
-        </v-list-item>
-        <v-divider></v-divider>
-    </div>
+        </v-progress-linear>
+        <v-divider/>
+    </v-list-item>
 </template>
 <script setup lang="ts">
 import type { JobInfo, Maybe, SkinInfo2 } from "@mineskin/types";
