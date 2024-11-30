@@ -154,7 +154,9 @@ export const useQueueStore = defineStore('queue', () => {
         if (now.status === 'completed' && now.result) {
             skinStore.addSkin(now.result);
             if (!hasPendingJobs.value && now.timestamp > Date.now() - 1000 * 60) {
-                router.push(`/skins/${ now.result }`);
+                setTimeout(() => {
+                    router.push(`/skins/${ now.result }`);
+                }, 100);
             }
         }
     }
