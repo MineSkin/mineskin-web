@@ -18,7 +18,6 @@ export default defineNuxtConfig({
         '@/plugins/gtag',
     ],
     modules: [
-        '@sentry/nuxt/module',
         'vuetify-nuxt-module',
         '@pinia/nuxt',
         '@pinia-plugin-persistedstate/nuxt'

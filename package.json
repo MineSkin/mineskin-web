@@ -13,7 +13,6 @@
     "@mineskin/types": "https://github.com/MineSkin/mineskin-types.git",
     "@pinia-plugin-persistedstate/nuxt": "^1.2.1",
     "@pinia/nuxt": "^0.5.5",
-    "@sentry/nuxt": "^8.41.0",
     "@vueuse/core": "^11.1.0",
     "flagsmith": "^7.0.0",
     "nuxt": "^3.13.0",
