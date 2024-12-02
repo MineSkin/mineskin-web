@@ -7,6 +7,7 @@ pre {
 </style>
 <template>
     <pre v-if="config.public.isDev">{{ json }}</pre>
+    <component is="script" type="application/json" v-else>{{ json }}</component>
 </template>
 <script setup lang="ts">
 const props = defineProps<{

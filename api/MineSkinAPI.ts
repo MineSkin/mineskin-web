@@ -6,6 +6,8 @@ import type { GenerateJobResponse } from "~/types/GenerateJobResponse";
 import type { JobListResponse } from "~/types/JobListResponse";
 import type { UserValidation } from "~/types/UserValidation";
 import type { GenerateOptions } from "@mineskin/types";
+import { TagVoteType } from "@mineskin/types";
+import type { BasicCreditInfo } from "~/types/BasicCreditInfo";
 
 const INIT: RequestInit = {
     headers: {
@@ -177,9 +179,56 @@ export class MineSkinAPI {
             return this.api.request(`/v2/skins/${ uuid }`, INIT);
         }
 
-        public async trackView(uuid: string){
+        public async trackView(uuid: string, turnstileToken: string) {
             return this.api.request(`/v2/skins/${ uuid }/interactions/views`, {
-                method: 'POST'
+                ...INIT,
+                method: 'POST',
+                 headers: {
+                    'Turnstile-Token': turnstileToken,
+                    'Content-Type': 'application/json'
+                }
+            })
+        }
+
+        public async likeSkin(uuid: string, turnstileToken: string) {
+            return this.api.request(`/v2/skins/${ uuid }/interactions/views`, {
+                ...INIT,
+                method: 'POST',
+                headers: {
+                    'Turnstile-Token': turnstileToken,
+                    'Content-Type': 'application/json'
+                }
+            })
+        }
+
+        public async getTags(uuid: string) {
+            return this.api.request(`/v2/skins/${ uuid }/tags`, {
+                ...INIT,
+                credentials: 'include'
+            });
+        }
+
+        public async voteTag(uuid: string, tag: string, vote: TagVoteType, turnstileToken: string) {
+            return this.api.request(`/v2/skins/${ uuid }/tags`, {
+                ...INIT,
+                method: 'POST',
+                headers: {
+                    'Turnstile-Token': turnstileToken,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({tag, vote})
+            })
+        }
+
+        public async reportSkin(uuid: string, reason: string, turnstileToken: string) {
+            return this.api.request(`/v2/skins/${ uuid }/report`, {
+                ...INIT,
+                method: 'POST',
+                headers: {
+                    'Turnstile-Token': turnstileToken,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({reason})
             })
         }
 
@@ -214,6 +263,20 @@ export class MineSkinAPI {
 
     }(this);
 
+    public util = new class {
+
+        constructor(readonly api: MineSkinAPI) {
+        }
+
+        public async randomName(seed: string): Promise<string> {
+            //TODO: update this route
+            return fetch(`${ this.api.BASE }/random-name?seed=${ seed }`, INIT)
+                .then(res => res.json())
+                .then(res => res.name);
+        }
+
+    }(this);
+
     public me = new class {
 
         constructor(readonly api: MineSkinAPI) {
@@ -231,7 +294,7 @@ export class MineSkinAPI {
             }, {silent: true});
         }
 
-        public async credits() {
+        public async credits(): Promise<MineSkinResponse<"credit", BasicCreditInfo>> {
             return this.api.request(`/v2/me/credits`, {
                 credentials: 'include'
             }, {silent: true});
@@ -277,8 +340,8 @@ export class MineSkinAPI {
     }
 
     private async handleResponse<T extends MineSkinResponse>(res: Response, options?: Partial<RequestOptions>): Promise<T> {
-        const json: MineSkinResponse = await res.json();
-        if (json.errors?.length > 0) {
+        const json: MineSkinResponse = res.status !== 204 ? await res.json() : null;
+        if (json?.errors?.length > 0) {
             for (let error of json.errors) {
                 console.error('API error', error);
                 if (options?.silent) continue;
@@ -289,7 +352,7 @@ export class MineSkinAPI {
                 })
             }
         }
-        if (json.warnings?.length > 0) {
+        if (json?.warnings?.length > 0) {
             for (let warning of json.warnings) {
                 console.warn('API warning', warning);
                 //if(options?.silent) continue;
@@ -299,7 +362,7 @@ export class MineSkinAPI {
                 // })
             }
         }
-        if (json.messages?.length > 0) {
+        if (json?.messages?.length > 0) {
             for (let message of json.messages) {
                 console.info('API message', message);
                 if (options?.silent) continue;

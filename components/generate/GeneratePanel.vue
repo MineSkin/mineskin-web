@@ -23,7 +23,7 @@
         :color="dragging ? 'secondary' : ''"
     >
         <h3 class="text-h6 mb-2 pt-1">
-            Generate New Skin Data
+            <span class="d-inline-block pt-2">Generate New Skin Data</span>
         </h3>
         <v-row class="my-2 d-flex text-center"
                :justify="generateType === GenerateType.UPLOAD ? 'center':generateType===GenerateType.USER?'end':'start'">
@@ -90,9 +90,15 @@
                     <v-text-field
                         label="Name (optional)"
                         v-model="name"
-                        hint="Optional name for this skin"
+                        :rules="nameRules"
                         persistent-hint
-                    />
+                    >
+                        <template v-slot:details>
+                            <span>Optional name for this skin, supports variables <a @click.prevent="variablesDialog=true"
+                                                                               href="#">
+                                <v-icon icon="mdi-help-circle"/></a></span>
+                        </template>
+                    </v-text-field>
                 </v-col>
                 <v-col cols="12" md="3">
                     <v-select
@@ -159,38 +165,31 @@
                             size="x-large"
                             @click="generate"
                             :disabled="generating"
+                            :loading="generating"
                         ></v-btn>
                     </v-row>
                     <v-row justify="center" class="mt-2 text-center">
-                        <div v-if="showCreditsInfo && !generating && (credits && credits.all.balance>0)">
-                            <span>This request will consume {{
-                                    imageCount || 1
-                                }} {{
-                                    imageCount > 1 ? 'credits' : 'credit'
-                                }} if the skin is successfully generated.</span><br/>
-                            <span>You have {{ credits?.all?.balance }} credits remaining.</span>
-                        </div>
-                        <div v-else-if="showCreditsInfo && !generating">
-                            <span>You do not have any credits remaining.</span><br/>
-                            <span>This skin may take longer to generate.</span>
-                        </div>
-                        <div v-if="generating">
-                            <div>
-                                Your {{ imageCount > 1 ? 'skins are' : 'skin is' }} being generated...
+                        <ClientOnly>
+                            <CreditsStatus :generating="generating" :image-count="imageCount"/>
+                            <div v-if="generating">
+                                <div>
+                                    Your {{ imageCount > 1 ? 'skins are' : 'skin is' }} being generated...
+                                </div>
+                                <div>
+                                    Check the
+                                    <action-link @click.prevent="jobsDrawer = true" icon="mdi-list-status"
+                                                 tooltip="Show Jobs">Job List
+                                    </action-link>
+                                    for progress,
+                                    or
+                                    <action-link @click.prevent="reset" icon="mdi-reload"
+                                                 tooltip="Reset Image Selection">
+                                        generate more skins
+                                    </action-link>
+                                    .
+                                </div>
                             </div>
-                            <div>
-                                Check the
-                                <action-link @click.prevent="jobsDrawer = true" icon="mdi-list-status"
-                                             tooltip="Show Jobs">Job List
-                                </action-link>
-                                for progress,
-                                or
-                                <action-link @click.prevent="reset" icon="mdi-reload" tooltip="Reset Image Selection">
-                                    generate more skins
-                                </action-link>
-                                .
-                            </div>
-                        </div>
+                        </ClientOnly>
                     </v-row>
                 </v-col>
             </v-row>
@@ -199,6 +198,46 @@
         <!--            <dbg :data="{users,uploadFiles,urls,generateType}"/>-->
         <!--        </v-row>-->
     </v-sheet>
+    <v-dialog
+        v-model="variablesDialog"
+        width="auto"
+    >
+        <v-card
+            max-width="400"
+            prepend-icon="mdi-help-circle"
+            title="Variables / Placeholders"
+        >
+            <template v-slot:text>
+                <div>Names support variables that will get replaced with the matching values when you generate a skin.
+                    This is especially useful when generating multiple skins at once.
+                </div>
+                <br/>
+                <div>
+                    <b>Available variables:</b><br/>
+                    <ul>
+                        <li><b>{index}</b> - The index of the image in the list</li>
+                        <li><b>{user}</b> - The name/UUID of the user</li>
+                        <li><b>{file}</b> - The file name (also works for URLs)</li>
+                    </ul>
+                </div>
+                <br/>
+                <div>
+                    <b>Preview:</b><br/>
+                    <span v-if="replacedNamesPreview.length<=0">Enter a name first</span>
+                    <ul>
+                        <li v-for="name in replacedNamesPreview">{{ name }}</li>
+                    </ul>
+                </div>
+            </template>
+            <template v-slot:actions>
+                <v-btn
+                    class="ms-auto"
+                    text="Ok"
+                    @click="variablesDialog = false"
+                ></v-btn>
+            </template>
+        </v-card>
+    </v-dialog>
 </template>
 <script setup lang="ts">
 
@@ -224,18 +263,10 @@ const settingsStore = useSettingsStore();
 
 const {mdAndUp} = useDisplay();
 
-const {authed, grants} = storeToRefs(authStore);
+const {grants} = storeToRefs(authStore);
 const {jobsDrawer} = storeToRefs(queueStore);
 
 const {visibility: preferredVisibility} = storeToRefs(settingsStore);
-
-const {
-    data: credits,
-    status: creditsStatus,
-} = useLazyAsyncData<BasicCreditInfo>("credits", async () => {
-    return (await $mineskin.me.credits())?.credit;
-});
-
 
 const generateType = computed<Maybe<GenerateType>>(() => {
     if (urls.value.filter(url => url.length > 0).length > 0) {
@@ -257,6 +288,10 @@ const users = ref<string[]>(['']);
 
 const visibilities = ref<SkinVisibility2[]>([SkinVisibility2.PUBLIC, SkinVisibility2.UNLISTED]);
 
+const nameRules = [
+    (v: string) => v.length <= 24 || 'Max 24 characters',
+    (v: string) => /^[a-zA-Z0-9_.\-{} ]*$/g.test(v) || 'Only a-z, 0-9, _-.{} allowed'
+];
 
 const name = ref('');
 const visibility = ref(preferredVisibility.value || SkinVisibility2.PUBLIC);
@@ -288,11 +323,41 @@ watch(() => imageCount.value, (value) => {
     }
 });
 
+const variablesDialog = ref(false);
+const processNameVariables = (index: number, url: string | null, file: File | null, user: string | null) => {
+    const original = name.value;
+    let replaced = original;
+
+    replaced = replaced.replace(/{index}/g, index.toString());
+
+    if (generateType.value === GenerateType.USER && user) {
+        replaced = replaced.replace(/{user}/g, user);
+    }
+    if (generateType.value === GenerateType.UPLOAD && file) {
+        replaced = replaced.replace(/{file}/g, file.name.replace('.png', ''));
+    }
+    if (generateType.value === GenerateType.URL && url) {
+        const parsed = new URL(url);
+        const filename = parsed.pathname.split('/').pop();
+        if (filename) {
+            replaced = replaced.replace(/{file}/g, filename.replace('.png', ''));
+        }
+    }
+
+    return replaced;
+}
+
+const replacedNamesPreview = computed(() => {
+    return Array.from({length: imageCount.value}, (_, i) => {
+        return processNameVariables(i, urls.value[i] || null, uploadFiles.value[i] || null, users.value[i] || null);
+    }).filter(name => name.length > 0);
+});
+
 const canUsePrivateSkins = computed(() => {
-    return authed.value && grants.value?.private_skins;
+    return authStore.authed && grants.value?.private_skins;
 });
 const canGenerateMultiple = computed(() => {
-    return authed.value;
+    return authStore.authed;
 })
 
 const showCreditsInfo = computed(() => $flags.hasFeature('web.credits.show_info'));
@@ -302,16 +367,13 @@ const generating = ref(false);
 const dragging = ref(false);
 
 const onDragStart = (e: DragEvent) => {
-    console.log(e.type, e);
     dragging.value = true;
 };
 const onDragEnd = (e: DragEvent) => {
-    console.log(e.type, e);
     dragging.value = false;
 };
 
 function onDrop(e: DragEvent) {
-    console.log(e.type, e);
     dragging.value = false;
     if (!e.dataTransfer) return;
     const files = Array.from(e.dataTransfer.files);
@@ -420,16 +482,18 @@ async function generate() {
     generating.value = true;
     await sleep(100);
 
-    const options: GenerateOptions = getOptions();
+    const baseOptions: GenerateOptions = getOptions();
 
     let responses: GenerateJobResponse[] = [];
     switch (generateType.value) {
         case GenerateType.UPLOAD: {
-            //TODO: actually process all images
             if (!canGenerateMultiple.value) {
                 uploadFiles.value = [uploadFiles.value[0]];
             }
+            let index = 0;
             for (const file of uploadFiles.value) {
+                let options = {...baseOptions};
+                options.name = processNameVariables(index++, null, file, null);
                 await sleep(800);
                 responses.push(await $mineskin.queue.upload(file, options));
             }
@@ -439,7 +503,10 @@ async function generate() {
             if (!canGenerateMultiple.value) {
                 urls.value = [urls.value[0]];
             }
+            let index = 0;
             for (const url of urls.value) {
+                let options = {...baseOptions};
+                options.name = processNameVariables(index++, url, null, null);
                 await sleep(800);
                 responses.push(await $mineskin.queue.url(url, options))
             }
@@ -449,7 +516,7 @@ async function generate() {
             if (!canGenerateMultiple.value) {
                 users.value = [users.value[0]];
             }
-            let validated: string[] = [];
+            let validated: string[][] = [];
             for (let user of users.value) {
                 if (user.length < 32) {
                     const {valid, uuid} = await $mineskin.validate.name(user);
@@ -460,13 +527,16 @@ async function generate() {
                         });
                         continue;
                     }
-                    validated.push(uuid!);
+                    validated.push([user, uuid!]);
                 }
             }
-            users.value = validated;
-            for (const user of validated) {
+            //users.value = validated;
+            let index = 0;
+            for (const [user, uuid] of validated) {
+                let options = {...baseOptions};
+                options.name = processNameVariables(index++, null, null, user);
                 await sleep(800);
-                responses.push(await $mineskin.queue.user(user, options))
+                responses.push(await $mineskin.queue.user(uuid, options))
             }
             break;
         }
@@ -488,14 +558,18 @@ async function generate() {
     }
     queueStore.updateSortedJobs();
 
-    await sleep(1000);
+    await sleep(2000);
     generating.value = false;
 }
 
 
-onMounted(() => {
-    if ($flags.hasFeature('web.visibility.private')) {
-        visibilities.value.push(SkinVisibility2.PRIVATE);
+onMounted(async () => {
+    try {
+        if ($flags.hasFeature('web.visibility.private')) {
+            visibilities.value.push(SkinVisibility2.PRIVATE);
+        }
+    } catch (e) {
+        console.error(e);
     }
 })
 

@@ -13,6 +13,8 @@ export const useAuthStore = defineStore('auth', () => {
     const wasAuthed = ref(false);
     const _user: Ref<Maybe<AuthStatus>> = ref(null);
 
+    const grants = ref<Record<string, string | number | boolean>>({});
+
     const lastWebTokenRefresh = ref(0);
     const lastApiTokenRefresh = ref(0);
 
@@ -36,6 +38,7 @@ export const useAuthStore = defineStore('auth', () => {
             const payload = parseWebAccessToken(cookie);
             if (payload) {
                 console.debug(payload);
+                grants.value = payload.grants;
                 _user.value = {
                     user: payload.user,
                     email: payload.email,
@@ -80,6 +83,7 @@ export const useAuthStore = defineStore('auth', () => {
                 ...body,
                 authenticated: success
             };
+            grants.value = body.grants;
             return _user.value;
         }
 
@@ -126,11 +130,11 @@ export const useAuthStore = defineStore('auth', () => {
 
     const user = computed(() => _user.value);
     const userId = computed(() => _user.value?.id);
-    const grants = computed(() => _user.value?.grants);
 
     const reset = () => {
         authed.value = false;
         _user.value = null;
+        grants.value = {};
         lastApiTokenRefresh.value = 0;
         lastWebTokenRefresh.value = 0;
     }
@@ -149,7 +153,6 @@ export const useAuthStore = defineStore('auth', () => {
     }
 }, {
     persist: {
-        storage: persistedState.localStorage,
-        paths: ['lastWebTokenRefresh', 'lastApiTokenRefresh']
+        storage: persistedState.localStorage
     }
 });

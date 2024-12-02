@@ -1,5 +1,5 @@
 <template>
-    <nuxt-link :to="skin?('/'+skin.uuid):undefined">
+    <nuxt-link :to="skin?('/skins/'+skin.uuid):undefined">
         <v-sheet
             width="min(180px,max(90px,20vmin))"
         >
@@ -20,7 +20,7 @@ const props = defineProps<{
 }>();
 
 function viewSkin(uuid: string) {
-    router.push(`/${ uuid }`);
+    router.push(`/skins/${ uuid }`);
 }
 
 </script>

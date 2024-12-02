@@ -70,14 +70,23 @@
                                 download
                                 prepend-icon="mdi-download"
                             ></v-btn>
-                            <v-btn
-                                color="accent"
-                                text="Use This Skin"
-                                class="ma-2"
-                                size="large"
-                                :href="useSkinLink"
-                                prepend-icon="mdi-open-in-new"
-                            ></v-btn>
+                            <!--                            <v-btn-->
+                            <!--                                color="accent"-->
+                            <!--                                text="Use This Skin"-->
+                            <!--                                class="ma-2"-->
+                            <!--                                size="large"-->
+                            <!--                                :href="useSkinLink"-->
+                            <!--                                prepend-icon="mdi-open-in-new"-->
+                            <!--                            ></v-btn>-->
+                        </v-col>
+                        <InvisibleTurnstile v-if="skin" v-model:token="viewTurnstileToken" action="view-skin"/>
+                    </v-row>
+                    <v-row v-if="skin">
+                        <v-col v-if="tagsVisible">
+                            <SkinTags :skin="skin"/>
+                        </v-col>
+                        <v-col cols="12" md="3" v-if="reportVisible" align-self="end" class="text-end">
+                            <SkinReportDialog :skin="skin"/>
                         </v-col>
                     </v-row>
                 </v-col>
@@ -91,14 +100,25 @@ import CopyTextField from "./CopyTextField.vue";
 import { computed } from "vue";
 import { renderSkinBody } from "~/util/render";
 import { PLACEHOLDER_BODY, PLACEHOLDER_HEAD } from "~/util/skin";
+import SkinTags from "~/components/skin/SkinTags.vue";
+import InvisibleTurnstile from "~/components/InvisibleTurnstile.vue";
+import { useInteractionsStore } from "~/stores/interactions";
+
 const props = defineProps<{
     skin: SkinInfo2;
 }>();
 
 const {mdAndUp} = useDisplay();
 
+const {$flags, $mineskin} = useNuxtApp();
+const tagsVisible = computed(() => $flags.hasFeature('web.tags.visible'));
+const reportVisible = computed(() => $flags.hasFeature('web.report.visible'));
+
+const interactionsStore = useInteractionsStore();
+const {recentViews} = storeToRefs(interactionsStore);
+
 const skinLink = computed(() => {
-    return `https://2.minesk.in/${ props.skin.uuid }`;
+    return `https://2.minesk.in/${ props.skin.shortId || props.skin.uuid }`;
 });
 
 const skinTexture = computed<Maybe<SkinIdAndTexture>>(() => props.skin.texture);
@@ -116,12 +136,29 @@ const skinTextureUrl = computed(() => {
     return skinTexture.value?.url.skin;
 });
 
-const proxiedSkinTextureUrl = computed(()=>{
+const proxiedSkinTextureUrl = computed(() => {
     return `https://mineskin.org/textures/${ props.skin.texture.hash.skin }?attachment`;
 })
 
 //TODO: verify this actually still works
-const useSkinLink = computed(()=>{
+const useSkinLink = computed(() => {
     return `https://www.minecraft.net/profile/skin/remote?url=${ skinTextureUrl.value }`;
-})
+});
+
+const viewTurnstileToken: Ref<string | null> = ref(null);
+watch(viewTurnstileToken, async (token) => {
+    if (!token) return;
+    if (recentViews.value.includes(props.skin.uuid)) return;
+    recentViews.value.push(props.skin.uuid);
+    if (recentViews.value.length > 10) {
+        recentViews.value.shift();
+    }
+    await $mineskin.skins.trackView(props.skin.uuid, token);
+});
+
+const reportSkin = () => {
+    //TODO
+}
+
+
 </script>

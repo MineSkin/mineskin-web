@@ -6,10 +6,20 @@
             </v-col>
         </v-row>
         <v-infinite-scroll :items="skins" :onLoad="load" style="overflow: hidden">
-            <v-row justify="center">
+            <v-row justify="center" dense>
                 <template v-for="(item, index) in skins" :key="item">
                     <!--                    <v-col cols="4" sm="3" md="2">-->
-                    <skin-link-card class="ma-2" :skin="item"/>
+                    <v-col
+                        cols="5"
+                        xs="5"
+                        sm="3"
+                        md="2"
+                        lg="2"
+                        xl="1"
+                        class="gallery-item-group ma-2"
+                    >
+                        <skin-link-card :skin="item"/>
+                    </v-col>
                     <!--                    </v-col>-->
                 </template>
             </v-row>
@@ -77,9 +87,11 @@ async function load({done}) {
 }
 
 onMounted(async () => {
-    await load({done: () => {}})
+    await load({
+        done: () => {
+        }
+    })
 })
-
 
 
 </script>

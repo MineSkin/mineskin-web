@@ -1,9 +1,9 @@
 export function renderSkinHead(texture: string): string {
-    return renderSkinTexture(texture, {overlay: false, body: false});
+    return renderSkinTexture(texture, {overlay: true, body: false});
 }
 
 export function renderSkinBody(texture: string): string {
-    return renderSkinTexture(texture, {overlay: false, body: true});
+    return renderSkinTexture(texture, {overlay: true, body: true});
 }
 
 export function renderSkinTexture(texture: string, options: { overlay: boolean, body: boolean }): string {

@@ -3,10 +3,12 @@ export default defineNuxtConfig({
     compatibilityDate: '2024-04-03',
     devtools: {enabled: true},
     app: {
-        head: {
-        }
+        head: {}
     },
-    ssr: false,
+    ssr: true,
+    routeRules: {
+        '/my-skins': {ssr: false}
+    },
     plugins: [
         '@/plugins/logger',
         '@/plugins/notifier',
@@ -60,7 +62,8 @@ export default defineNuxtConfig({
             sentryDsn: process.env.SENTRY_DSN,
             google: {
                 adsense: process.env.GOOGLE_ADSENSE
-            }
+            },
+            turnstileSiteKey: process.env.TURNSTILE_SITE_KEY,
         }
     },
 })

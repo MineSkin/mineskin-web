@@ -17,6 +17,7 @@
                 @click:append="listAddOrRemove(index)"
             >
             </input-list-row>
+            <dbg :data="{rule,rules,item:items[index]}"/>
         </v-col>
     </v-row>
 </template>
@@ -37,11 +38,11 @@ const {$mineskin} = useNuxtApp();
 
 const allRules = {
     required: (value: string) => !!value || 'Required.',
-    url: (value: string) => !value || value?.startsWith('http') || 'Invalid URL',
-    uuidOrName: (value: string) => !value || value?.length > 1 && (value.length < 17 || value.length >= 32) || 'Invalid UUID or Name',
-    validNameOrUuid: async (value: string) => {
-        const {valid} = await validateUser(value);
-        return valid || 'User not found';
+    url: (value: string) => !value || value.startsWith('http') || 'Invalid URL',
+    uuidOrName: (value: string) => !value || (value.length > 1 && (value.length < 17 || value.length >= 32) && /^[a-z0-9_]+$/i.test(value)) || 'Invalid UUID or Name',
+    validNameOrUuid: (value: string) => {
+        validateUser(value);
+        return true;
     }
 };
 
@@ -82,7 +83,7 @@ function listAddOrRemove(index: number) {
 async function validateUser(user: string) {
     if (user.length < 32) {
         return await $mineskin.validate.name(user);
-    }else {
+    } else {
         return await $mineskin.validate.uuid(user);
     }
 }
