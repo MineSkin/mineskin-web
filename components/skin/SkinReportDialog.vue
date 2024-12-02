@@ -40,7 +40,7 @@
 
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                      <InvisibleTurnstile v-if="skin" v-model:token="reportTurnstileToken" action="report-skin"/>
+                      <InvisibleTurnstile v-if="skin && reportTurnstile" v-model:token="reportTurnstileToken" action="report-skin"/>
 
                     <v-btn
                         text="Cancel"
@@ -65,7 +65,7 @@ import type { SkinInfo2 } from "@mineskin/types";
 import { useAuthStore } from "~/stores/auth";
 import { storeToRefs } from "pinia";
 import InvisibleTurnstile from "~/components/InvisibleTurnstile.vue";
-import { until } from "@vueuse/core";
+import { until, useCounter } from "@vueuse/core";
 
 const props = defineProps<{
     skin: SkinInfo2
@@ -77,7 +77,8 @@ const {$mineskin} = useNuxtApp();
 const authStore = useAuthStore();
 const {authed} = storeToRefs(authStore);
 
-const reportTurnstileToken: Ref<string> = ref('');
+const reportTurnstile = ref(true);
+const reportTurnstileToken: Ref<string|null> = ref(null);
 
 const reportReasons = [
     {text: "Inappropriate Skin", value: "skin"},
@@ -92,7 +93,10 @@ const submitReport = async () => {
     if (reporting.value) return;
     console.log(`Reporting skin ${ props.skin.uuid } for ${ reason.value }`);
     const token = await until(reportTurnstileToken).not.toBeNull({timeout: 5000});
+    reportTurnstile.value = false;
     await $mineskin.skins.reportSkin(props.skin.uuid, reason.value, token);
+    reportTurnstileToken.value = null;
+    reportTurnstile.value = true;
     dialog.value = false;
 }
 </script>

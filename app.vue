@@ -52,6 +52,13 @@
         <v-app>
             <Snackbars/>
             <v-app-bar density="comfortable" class="px-4" color="mskindigo">
+                <v-img
+                    src="~/assets/img/mineskin-x64.png"
+                    aspect-ratio="1"
+                    max-width="40"
+                    max-height="40"
+                    @click="router.push('/')"
+                ></v-img>
                 <v-app-bar-title class="flex-0-1">
                     <nuxt-link v-if="mdAndUp" class="app-bar-link" to="/">
                         MineSkin
@@ -67,6 +74,7 @@
 
                 <div class="d-flex flex-auto">
                     <v-btn icon
+                           v-if="mdAndUp"
                            @click="searching ? search() : showSearch()"
                     >
                         <v-icon>mdi-magnify</v-icon>
@@ -317,7 +325,7 @@ const router = useRouter();
 const authStore = useAuthStore();
 const queueStore = useQueueStore();
 
-const {mdAndUp} = useDisplay();
+const {smAndUp,mdAndUp} = useDisplay();
 
 const {jobsSorted, jobsDrawer} = storeToRefs(queueStore);
 

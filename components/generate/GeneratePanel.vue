@@ -23,7 +23,7 @@
         :color="dragging ? 'secondary' : ''"
     >
         <h3 class="text-h6 mb-2 pt-1">
-            {{ $t("Generate New Skin Data") }}
+            <span class="d-inline-block pt-2">{{ $t("Generate New Skin Data") }}</span>
         </h3>
         <v-row class="my-2 d-flex text-center"
                :justify="generateType === GenerateType.UPLOAD ? 'center':generateType===GenerateType.USER?'end':'start'">
@@ -91,14 +91,12 @@
                         label="Name (optional)"
                         v-model="name"
                         :rules="nameRules"
-                        hint="Optional name for this skin, supports placeholders"
                         persistent-hint
                     >
-                        <template v-slot:hint>
-                            Optional name for this skin, supports variables <a @click.prevent="variablesDialog=true"
+                        <template v-slot:details>
+                            <span>Optional name for this skin, supports variables <a @click.prevent="variablesDialog=true"
                                                                                href="#">
-                            <v-icon icon="mdi-help-circle"/>
-                        </a>
+                                <v-icon icon="mdi-help-circle"/></a></span>
                         </template>
                     </v-text-field>
                 </v-col>
@@ -167,6 +165,7 @@
                             size="x-large"
                             @click="generate"
                             :disabled="generating"
+                            :loading="generating"
                         ></v-btn>
                     </v-row>
                     <v-row justify="center" class="mt-2 text-center">
@@ -291,7 +290,7 @@ const visibilities = ref<SkinVisibility2[]>([SkinVisibility2.PUBLIC, SkinVisibil
 
 const nameRules = [
     (v: string) => v.length <= 24 || 'Max 24 characters',
-    (v: string) => /^[a-zA-Z0-9_.\- ]*$/g.test(v) || 'Only a-z, 0-9, _-. allowed'
+    (v: string) => /^[a-zA-Z0-9_.\-{} ]*$/g.test(v) || 'Only a-z, 0-9, _-.{} allowed'
 ];
 
 const name = ref('');
@@ -559,7 +558,7 @@ async function generate() {
     }
     queueStore.updateSortedJobs();
 
-    await sleep(1000);
+    await sleep(2000);
     generating.value = false;
 }
 
