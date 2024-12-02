@@ -183,7 +183,7 @@ export class MineSkinAPI {
             return this.api.request(`/v2/skins/${ uuid }/interactions/views`, {
                 ...INIT,
                 method: 'POST',
-                 headers: {
+                headers: {
                     'Turnstile-Token': turnstileToken,
                     'Content-Type': 'application/json'
                 }
@@ -321,6 +321,17 @@ export class MineSkinAPI {
                 ...INIT,
                 credentials: 'include'
             });
+        }
+
+    }(this);
+
+    public stats = new class {
+
+        constructor(readonly api: MineSkinAPI) {
+        }
+
+        public async get(): Promise<string> {
+            return this.api.request(`/v2/stats`, {silent: true});
         }
 
     }(this);

@@ -74,6 +74,9 @@
                     </v-expansion-panel>
                 </v-expansion-panels>
             </v-col>
+            <v-col cols="12" md="3">
+                <StatsPanel/>
+            </v-col>
         </v-row>
 <!--        <v-btn @click="testNotify()">Notify Test</v-btn>-->
 <!--        <JobList/> &lt;!&ndash;TODO: move&ndash;&gt;-->
