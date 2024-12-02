@@ -62,6 +62,9 @@
                     <!--                <v-divider/>-->
                 </v-list>
                 <!--            <dbg :data="stats"/>-->
+<!--                <div class="float-end text-end">-->
+<!--                    <span>updated {{ updatedSecondsAgo }}s ago</span>-->
+<!--                </div>-->
             </v-card-text>
         </v-card>
         <v-card class="mt-2">
@@ -109,8 +112,41 @@ const monthTotal = computed(() => month.value.current.new + month.value.current.
 const year = computed(() => stats.value.generated.time.year);
 const yearTotal = computed(() => year.value.current.new + year.value.current.duplicate);
 
+
+const hour = computed(() => stats.value.generated.time.hour);
+const hourTotal = computed(() => hour.value.current.new + hour.value.current.duplicate);
+
+const totalPerMinute = computed(() => hourTotal.value / 60);
+const totalPerSecond = computed(() => hourTotal.value / 60 / 60);
+
 const total = computed(() => stats.value.generated.total?.new + stats.value.generated.total?.duplicate || 24568161);
 const totalFormatted = computed(() => numberFormat.format(total.value));
 
 const generator = computed(() => stats.value.generator);
+
+const updatedSecondsAgo = computed(() => Math.max(0, Math.floor((Date.now() - new Date(stats.value.timestamp).getTime()) / 1000 / 10) * 10));
+
+const tick = () => {
+    if (Math.random() < 0.5) {
+        today.value.current.new++;
+        month.value.current.new++;
+        year.value.current.new++;
+        // stats.value.generated.total.new++;
+    } else {
+        today.value.current.duplicate++;
+        month.value.current.duplicate++;
+        year.value.current.duplicate++;
+        // stats.value.generated.total.duplicate++;
+    }
+    setTimeout(() => {
+        tick();
+    }, (1000 / totalPerSecond.value) + 200*Math.random());
+}
+
+onMounted(() => {
+    setInterval(() => {
+        refreshStats();
+    }, 30000);
+    tick();
+})
 </script>
