@@ -23,7 +23,7 @@
         :color="dragging ? 'secondary' : ''"
     >
         <h3 class="text-h6 mb-2 pt-1">
-            <span class="d-inline-block pt-2">Generate New Skin Data</span>
+            <span class="d-inline-block pt-2">{{ $t("Generate New Skin Data") }}</span>
         </h3>
         <v-row class="my-2 d-flex text-center"
                :justify="generateType === GenerateType.UPLOAD ? 'center':generateType===GenerateType.USER?'end':'start'">

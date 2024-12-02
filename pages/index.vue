@@ -3,7 +3,7 @@
         <v-row>
             <v-col cols="12">
                 <h1>MineSkin</h1>
-                <p>Automate Minecraft Skin Signature Generation</p>
+                <p>{{ $t("Automate Minecraft Skin Signature Generation") }}</p>
             </v-col>
         </v-row>
         <v-row v-if="notificationBanner">
@@ -33,11 +33,11 @@
 
         <v-row justify="center" class="my-4">
             <v-col cols="12" md="8">
-                <h4 class="text-h5 mb-4">Frequently Asked Questions</h4>
+                <h4 class="text-h5 mb-4">{{ $t("Frequently Asked Questions") }}</h4>
                 <v-expansion-panels variant="accordion" multiple>
                     <v-expansion-panel
                         text="MineSkin.org is a Minecraft skin generator that allows you to quickly get skin texture data with valid signatures by just uploading skin images."
-                        title="What is MineSkin?"
+                        :title="$t('What is MineSkin?')"
                     />
                     <v-expansion-panel
                         text="With the skin data and signatures provided by MineSkin, you can easily apply custom skins to in-game player heads, player NPCs, or even change a player’s in-game appearance. This is useful for personalizing game experiences, creating unique avatars, and customizing characters in creative ways."
