@@ -74,7 +74,8 @@
                     </v-expansion-panel>
                 </v-expansion-panels>
             </v-col>
-            <v-col cols="12" md="3">
+            <v-col cols="12" md="4" xl="3">
+                 <h4 class="text-h5 mb-4">Stats</h4>
                 <StatsPanel/>
             </v-col>
         </v-row>
