@@ -9,6 +9,7 @@
                                $t("This request will consume 1 credit if the skin is successfully generated. | This request will consume {n} credits if the skins are successfully generated.", imageCount || 1)
                            }}
                        </span>
+                    <br/>
                     <span>{{
                             $t("You have {credits} remaining.", {
                                 credits: $t('n_credits', credits?.all?.balance)
