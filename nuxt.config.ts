@@ -52,18 +52,19 @@ export default defineNuxtConfig({
 
     i18n: {
         strategy: 'prefix_and_default',
+        baseUrl: 'https://beta.mineskin.org',
         defaultLocale: 'en',
         lazy: true,
         locales: [
-            {code: 'en', name: 'English', file: 'en.json'},
-            {code: 'de', name: 'German', file: 'de.json'},
-            {code: 'es', name: 'Spanish', file: 'es.json'},
-            {code: 'fr', name: 'French', file: 'fr.json'},
-            {code: 'ru', name: 'Russian', file: 'ru.json'},
-            {code: 'pl', name: 'Polish', file: 'pl.json'},
-            {code: 'hi', name: 'Hindi', file: 'hi.json'},
-            {code: 'pt', name: 'Portuguese', file: 'pt.json'},
-            {code: 'id', name: 'Indonesian', file: 'id.json'},
+            {code: 'en', language: 'en-US', name: 'English', file: 'en.json'},
+            {code: 'de', language: 'de-DE', name: 'German', file: 'de.json'},
+            {code: 'es', language: 'es-ES', name: 'Spanish', file: 'es.json'},
+            {code: 'fr', language: 'fr-FR', name: 'French', file: 'fr.json'},
+            {code: 'ru', language: 'ru-RU', name: 'Russian', file: 'ru.json'},
+            {code: 'pl', language: 'pl-PL', name: 'Polish', file: 'pl.json'},
+            {code: 'hi', language: 'hi-HI', name: 'Hindi', file: 'hi.json'},
+            {code: 'pt', language: 'pt-PT', name: 'Portuguese', file: 'pt.json'},
+            {code: 'id', language: 'id-ID', name: 'Indonesian', file: 'id.json'},
         ]
     },
 
