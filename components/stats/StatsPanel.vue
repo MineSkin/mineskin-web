@@ -2,6 +2,7 @@
     <div>
         <v-card>
             <v-card-text>
+                <v-skeleton-loader v-if="!stats" type="paragraph"></v-skeleton-loader>
                 <v-list>
                     <v-list-item>
                         <v-list-item-title class="text-h5">
@@ -67,6 +68,7 @@
         </v-card>
         <v-card class="mt-2">
             <v-card-text>
+                <v-skeleton-loader v-if="!stats" type="paragraph"></v-skeleton-loader>
                 <v-list>
                     <v-list-item>
                         <v-list-item-title>
