@@ -57,10 +57,10 @@
                     aspect-ratio="1"
                     max-width="40"
                     max-height="40"
-                    @click="router.push('/')"
+                    @click="router.push(localePath('/'))"
                 ></v-img>
                 <v-app-bar-title class="flex-0-1">
-                    <nuxt-link v-if="mdAndUp" class="app-bar-link" to="/">
+                    <nuxt-link v-if="mdAndUp" class="app-bar-link" :to="localePath('/')">
                         MineSkin
                         <v-chip
                             density="compact"
@@ -101,9 +101,9 @@
                 <v-tabs
                     align-tabs="center"
                 >
-                    <v-tab to="/">{{ $t("Generate") }}</v-tab>
-                    <v-tab to="/gallery">{{ $t("Gallery") }}</v-tab>
-                    <v-tab v-if="authStore.authed" to="/my-skins">{{ $t("My Skins") }}</v-tab>
+                    <v-tab :to="localePath('/')">{{ $t("Generate") }}</v-tab>
+                    <v-tab :to="localePath('/gallery')">{{ $t("Gallery") }}</v-tab>
+                    <v-tab v-if="authStore.authed" :to="localePath('/my-skins')">{{ $t("My Skins") }}</v-tab>
                 </v-tabs>
 
                 <v-divider vertical class="mx-4 my-2"/>
@@ -215,7 +215,8 @@ import { storeToRefs } from "pinia";
 
 const config = useRuntimeConfig();
 
-const { locale, locales, setLocale } = useI18n()
+const { locale, locales, setLocale } = useI18n();
+const localePath = useLocalePath();
 const switchLocalePath = useSwitchLocalePath()
 
 const description = 'MineSkin.org allows you to generate skin texture data for Minecraft which is signed by Mojang.';

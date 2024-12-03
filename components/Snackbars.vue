@@ -18,7 +18,7 @@
             <v-btn
                 variant="text"
                 v-if="snackbar.actionLabel && snackbar.actionLink"
-                @click="router.push(snackbar.actionLink)"
+                @click="router.push(localePath(snackbar.actionLink))"
             >
                 {{ snackbar.actionLabel }}
             </v-btn>
@@ -29,6 +29,7 @@
 const store = useSnackbarStore()
 const { snackbars } = storeToRefs(store)
 
+const localePath = useLocalePath();
 const router = useRouter();
 
 const onChanged = (id: number, isShow: boolean) => !isShow && store.remove(id)

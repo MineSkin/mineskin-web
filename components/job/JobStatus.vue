@@ -6,7 +6,7 @@
             </div>
         </template>
         <template v-slot:title>
-            <nuxt-link v-if="skin" :to="'/skins/'+skin.uuid" class="text-decoration-none">{{
+            <nuxt-link v-if="skin" :to="localePath('/skins/'+skin.uuid)" class="text-decoration-none">{{
                     job.id?.substring(0, 8)
                 }}
             </nuxt-link>
@@ -63,6 +63,7 @@ const props = defineProps<{
     id: string
 }>();
 
+const localePath = useLocalePath()
 const queueStore = useQueueStore();
 const {jobMap} = storeToRefs(queueStore);
 

@@ -15,6 +15,7 @@ export const useQueueStore = defineStore('queue', () => {
 
     let updateTimer: any;
 
+    const localePath = useLocalePath();
     const {$mineskin, $notify} = useNuxtApp();
 
     const router = useRouter();
@@ -155,7 +156,7 @@ export const useQueueStore = defineStore('queue', () => {
             skinStore.addSkin(now.result);
             setTimeout(() => {
                 if (!hasPendingJobs.value && now.timestamp > Date.now() - 1000 * 60) {
-                    router.push(`/skins/${ now.result }`);
+                    router.push(localePath(`/skins/${ now.result }`));
                 }
             }, 100);
         }
