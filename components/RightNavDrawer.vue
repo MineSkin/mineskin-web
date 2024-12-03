@@ -16,6 +16,32 @@
         class="pos-relative"
     >
         <v-list>
+            <v-list-item v-if="authStore.authed">
+                <template v-slot:prepend>
+                    <v-img :src="authStore.user?.picture" alt="User Avatar"></v-img>
+                </template>
+                <v-list-item-title>Hi {{ authStore.user?.name }}</v-list-item-title>
+                <v-list-item-action>
+                    <v-btn variant="tonal" color="primary" href="https://account.mineskin.org"
+                           append-icon="mdi-arrow-right">
+                        {{ $t("Manage Account") }}
+                    </v-btn>
+                </v-list-item-action>
+            </v-list-item>
+            <v-list-item v-else>
+                <v-list-item-action>
+                    <v-btn
+                        color="primary"
+                        @click.prevent="loginRedirect"
+                        href="https://account.mineskin.org"
+                        append-icon="mdi-arrow-right">
+                        {{ $t("Sign In") }}
+                    </v-btn>
+                </v-list-item-action>
+            </v-list-item>
+        </v-list>
+        <v-divider/>
+        <v-list>
             <v-list-subheader v-if="authStore.authed">{{ $t("Credits") }}</v-list-subheader>
             <v-list-item v-if="authStore.authed">
                 <CreditsInfo/>
@@ -56,4 +82,9 @@ const authStore = useAuthStore();
 const queueStore = useQueueStore();
 
 const {jobsSorted, jobsDrawer} = storeToRefs(queueStore);
+
+const loginRedirect = () => {
+    authStore.reset();
+    window.location.href = 'https://account.mineskin.org/login?redirect=https://beta.mineskin.org/';
+}
 </script>
