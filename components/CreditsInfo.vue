@@ -9,15 +9,15 @@
         <v-progress-linear
             v-else-if="credits"
             height="20"
-            :model-value="credits.all.total - credits.all.balance"
-            :max="credits.all.total"
+            :model-value="creditsUsed"
+            :max="totalCredits"
             color="success"
         >
             <template v-slot:default>
                 {{
                     $t('{used}/{total} credits used', {
-                        used: credits.all.total - credits.all.balance,
-                        total: credits.all.total
+                        used: creditsUsed,
+                        total: totalCredits
                     })
                 }}
             </template>
@@ -45,6 +45,9 @@ const {
     immediate: false,
     server: false
 });
+
+const totalCredits = computed(() => credits.value?.all?.total || 0);
+const creditsUsed = computed(() => totalCredits.value - (credits.value?.all?.balance || 0));
 
 onMounted(async () => {
     await authStore.checkAuth();

@@ -38,13 +38,6 @@
     }
 }
 
-.pos-absolute {
-    position: absolute;
-}
-
-.pos-relative {
-    position: relative;
-}
 
 </style>
 <template>
@@ -129,25 +122,15 @@
                         class="ml-2"
                         color="info"
                     >
-                        <a v-if="authStore.authed" class="img-link" href="https://account.mineskin.org">
+                        <a v-if="authStore.authed" class="img-link" href="https://account.mineskin.org"
+                           @click.prevent="jobsDrawer = !jobsDrawer">
                             <v-img :src="authStore.user?.picture" alt="User Avatar"></v-img>
-                            <v-tooltip
-                                activator="parent"
-                                location="bottom"
-                            >
-                                {{ $t("Go to Account") }}
-                            </v-tooltip>
                         </a>
                         <v-btn v-else icon>
-                            <a class="img-link text-white" @click.prevent="loginRedirect()"
+                            <a class="img-link text-white"
+                               @click.prevent="jobsDrawer = !jobsDrawer"
                                href="https://account.mineskin.org/">
                                 <v-icon>mdi-account</v-icon>
-                                <v-tooltip
-                                    activator="parent"
-                                    location="bottom"
-                                >
-                                    {{ $t("Sign In") }}
-                                </v-tooltip>
                             </a>
                         </v-btn>
                     </v-avatar>
@@ -174,38 +157,7 @@
                     </v-col>
                 </v-row>
             </v-footer>
-
-            <v-navigation-drawer
-                v-model="jobsDrawer"
-                location="end"
-                temporary
-                width="320"
-                class="pos-relative"
-            >
-                <v-list>
-                    <v-list-subheader v-if="authStore.authed">{{ $t("Credits") }}</v-list-subheader>
-                    <v-list-item v-if="authStore.authed">
-                        <CreditsInfo/>
-                    </v-list-item>
-                </v-list>
-                <JobList class="my-2"/>
-                <v-spacer/>
-                <div class="pos-absolute bottom-0 right-0 w-100">
-                    <v-divider/>
-                    <v-select
-                        density="compact"
-                        class="mx-4 mt-4"
-                        prepend-inner-icon="mdi-translate"
-                        :model-value="locale"
-                        :items="locales"
-                        item-title="name"
-                        item-value="code"
-                        @update:model-value="setLocale"
-                        hide-details
-                    ></v-select>
-                    <div class="my-1 mx-2">Help to <a href="https://crowdin.com/project/mineskin" target="_blank">translate MineSkin</a> </div>
-                </div>
-            </v-navigation-drawer>
+            <RightNavDrawer/>
         </v-app>
     </NuxtLayout>
 </template>
@@ -214,12 +166,11 @@
 import { useAuthStore } from "~/stores/auth";
 import { useQueueStore } from "~/stores/queue";
 import { storeToRefs } from "pinia";
+import RightNavDrawer from "~/components/RightNavDrawer.vue";
 
 const config = useRuntimeConfig();
 
-const { locale, locales, setLocale } = useI18n();
 const localePath = useLocalePath();
-const switchLocalePath = useSwitchLocalePath()
 
 const description = 'MineSkin.org allows you to generate skin texture data for Minecraft which is signed by Mojang.';
 
@@ -328,7 +279,7 @@ const router = useRouter();
 const authStore = useAuthStore();
 const queueStore = useQueueStore();
 
-const {smAndUp,mdAndUp} = useDisplay();
+const {smAndUp, mdAndUp} = useDisplay();
 
 const {jobsSorted, jobsDrawer} = storeToRefs(queueStore);
 
