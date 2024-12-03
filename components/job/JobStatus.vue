@@ -6,7 +6,7 @@
             </div>
         </template>
         <template v-slot:title>
-            <nuxt-link v-if="skin" :to="'/skins/'+skin.uuid" class="text-decoration-none">{{
+            <nuxt-link v-if="skin" :to="localePath('/skins/'+skin.uuid)" class="text-decoration-none">{{
                     job.id?.substring(0, 8)
                 }}
             </nuxt-link>
@@ -21,7 +21,7 @@
             indeterminate
             color="primary">
             <template v-slot:default>
-                Waiting
+                {{ $t("Waiting") }}
             </template>
         </v-progress-linear>
         <v-progress-linear
@@ -30,7 +30,7 @@
             indeterminate
             color="warning">
             <template v-slot:default>
-                Processing
+                {{ $t("Processing") }}
             </template>
         </v-progress-linear>
         <v-progress-linear
@@ -39,7 +39,7 @@
             model-value="100"
             :color="job.status === 'completed' ? 'success':'error'">
             <template v-slot:default>
-                {{ job.status === 'completed' ? 'Completed' : 'Failed' }}
+                {{ job.status === 'completed' ? $t('Completed') : $t('Failed') }}
             </template>
         </v-progress-linear>
         <v-divider/>
@@ -63,6 +63,7 @@ const props = defineProps<{
     id: string
 }>();
 
+const localePath = useLocalePath()
 const queueStore = useQueueStore();
 const {jobMap} = storeToRefs(queueStore);
 

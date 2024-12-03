@@ -1,5 +1,5 @@
 <template>
-    <NuxtLink :to="computedPath" @click="handleClick">
+    <NuxtLink :to="localePath(computedPath)" @click="handleClick">
         <slot></slot>
     </NuxtLink>
 </template>
@@ -9,6 +9,7 @@ const props = defineProps<{
     to: string;
 }>();
 
+const localePath = useLocalePath();
 const router = useRouter();
 const lastPath = computed<string>(() => router.options.history.state.back ?? "");
 

@@ -14,7 +14,12 @@
             color="success"
         >
             <template v-slot:default>
-                {{ credits.all.total - credits.all.balance }} / {{ credits.all.total }} credits used
+                {{
+                    $t('{used}/{total} credits used', {
+                        used: credits.all.total - credits.all.balance,
+                        total: credits.all.total
+                    })
+                }}
             </template>
         </v-progress-linear>
         <a href="https://account.mineskin.org/membership" target="_blank" class="float-end">Details</a>

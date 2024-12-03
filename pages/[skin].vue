@@ -7,6 +7,7 @@
 </template>
 <script setup lang="ts">
 
+const localePath = useLocalePath()
 const router = useRouter();
 
 const skinId = computed<string>(() => {
@@ -15,7 +16,7 @@ const skinId = computed<string>(() => {
 });
 
 onMounted(() => {
-    router.push(`/skins/${ skinId.value }`);
+    router.push(localePath(`/skins/${ skinId.value }`));
 })
 
 </script>

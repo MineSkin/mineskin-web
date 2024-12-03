@@ -38,6 +38,14 @@
     }
 }
 
+.pos-absolute {
+    position: absolute;
+}
+
+.pos-relative {
+    position: relative;
+}
+
 </style>
 <template>
     <NuxtLayout>
@@ -49,10 +57,10 @@
                     aspect-ratio="1"
                     max-width="40"
                     max-height="40"
-                    @click="router.push('/')"
+                    @click="router.push(localePath('/'))"
                 ></v-img>
                 <v-app-bar-title class="flex-0-1">
-                    <nuxt-link v-if="mdAndUp" class="app-bar-link" to="/">
+                    <nuxt-link v-if="mdAndUp" class="app-bar-link" :to="localePath('/')">
                         MineSkin
                         <v-chip
                             density="compact"
@@ -93,9 +101,9 @@
                 <v-tabs
                     align-tabs="center"
                 >
-                    <v-tab to="/">Generate</v-tab>
-                    <v-tab to="/gallery">Gallery</v-tab>
-                    <v-tab v-if="authStore.authed" to="/my-skins">My Skins</v-tab>
+                    <v-tab :to="localePath('/')">{{ $t("Generate") }}</v-tab>
+                    <v-tab :to="localePath('/gallery')">{{ $t("Gallery") }}</v-tab>
+                    <v-tab v-if="authStore.authed" :to="localePath('/my-skins')">{{ $t("My Skins") }}</v-tab>
                 </v-tabs>
 
                 <v-divider vertical class="mx-4 my-2"/>
@@ -112,7 +120,7 @@
                             activator="parent"
                             location="bottom"
                         >
-                            Show Jobs
+                            {{ $t("Show Jobs") }}
                         </v-tooltip>
                     </v-btn>
 
@@ -127,7 +135,7 @@
                                 activator="parent"
                                 location="bottom"
                             >
-                                Go to Account
+                                {{ $t("Go to Account") }}
                             </v-tooltip>
                         </a>
                         <v-btn v-else icon>
@@ -138,7 +146,7 @@
                                     activator="parent"
                                     location="bottom"
                                 >
-                                    Sign In
+                                    {{ $t("Sign In") }}
                                 </v-tooltip>
                             </a>
                         </v-btn>
@@ -172,14 +180,31 @@
                 location="end"
                 temporary
                 width="320"
+                class="pos-relative"
             >
                 <v-list>
-                    <v-list-subheader v-if="authStore.authed">Credits</v-list-subheader>
+                    <v-list-subheader v-if="authStore.authed">{{ $t("Credits") }}</v-list-subheader>
                     <v-list-item v-if="authStore.authed">
                         <CreditsInfo/>
                     </v-list-item>
                 </v-list>
                 <JobList class="my-2"/>
+                <v-spacer/>
+                <div class="pos-absolute bottom-0 right-0 w-100">
+                    <v-divider/>
+                    <v-select
+                        density="compact"
+                        class="mx-4 mt-4"
+                        prepend-inner-icon="mdi-translate"
+                        :model-value="locale"
+                        :items="locales"
+                        item-title="name"
+                        item-value="code"
+                        @update:model-value="setLocale"
+                        hide-details
+                    ></v-select>
+                    <div class="my-1 mx-2">Help to <a href="https://crowdin.com/project/mineskin" target="_blank">translate MineSkin</a> </div>
+                </div>
             </v-navigation-drawer>
         </v-app>
     </NuxtLayout>
@@ -191,6 +216,10 @@ import { useQueueStore } from "~/stores/queue";
 import { storeToRefs } from "pinia";
 
 const config = useRuntimeConfig();
+
+const { locale, locales, setLocale } = useI18n();
+const localePath = useLocalePath();
+const switchLocalePath = useSwitchLocalePath()
 
 const description = 'MineSkin.org allows you to generate skin texture data for Minecraft which is signed by Mojang.';
 
