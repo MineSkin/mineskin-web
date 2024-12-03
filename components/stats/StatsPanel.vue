@@ -72,7 +72,7 @@
                 <v-list>
                     <v-list-item>
                         <v-list-item-title>
-                            <div class="text-h6">{{ generator.capacity.global }}</div>
+                            <div class="text-h6">{{ generator?.capacity?.global || 0 }}</div>
                         </v-list-item-title>
                         <v-list-item-subtitle>
                             Generator Capacity
