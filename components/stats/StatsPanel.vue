@@ -86,6 +86,7 @@
 <script setup lang="ts">
 import { useLazyAsyncData } from "#app";
 import type { NewDup, Stats } from "~/types/Stats";
+import { useInterval, useIntervalFn, useTimeoutFn } from "@vueuse/core";
 
 const {$mineskin} = useNuxtApp();
 
@@ -137,13 +138,13 @@ const tick = () => {
             // stats.value.generated.total.duplicate++;
         }
     }
-    setTimeout(() => {
+    useTimeoutFn(() => {
         tick();
     }, (1000 / totalPerSecond.value) + 200 * Math.random());
 }
 
 onMounted(() => {
-    setInterval(() => {
+    useIntervalFn(() => {
         refreshStats();
     }, 30000);
     tick();
