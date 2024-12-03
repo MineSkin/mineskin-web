@@ -201,7 +201,9 @@
                         item-title="name"
                         item-value="code"
                         @update:model-value="setLocale"
+                        hide-details
                     ></v-select>
+                    <div class="my-1 mx-2">Help to <a href="https://crowdin.com/project/mineskin" target="_blank">translate MineSkin</a> </div>
                 </div>
             </v-navigation-drawer>
         </v-app>
