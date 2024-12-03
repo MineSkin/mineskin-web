@@ -25,6 +25,7 @@
   "n_skins": "нет скинов | 1 скин | Скины {n}",
   "skin_is_are": "кожа | скины",
   "This request will consume {credits} if the {skins} successfully generated.": "Этот запрос будет потреблять {credits} , если {skins} успешно создан.",
+  "This request will consume 1 credit if the skin is successfully generated. | This request will consume {n} credits if the skins are successfully generated.": "This request will consume 1 credit if the skin is successfully generated. | This request will consume {n} credits if the skins are successfully generated.",
   "You have {credits} remaining.": "У вас осталось {credits}.",
   "Download Skin": "Скачать скин",
   "Texture URL": "URL текстуры",
