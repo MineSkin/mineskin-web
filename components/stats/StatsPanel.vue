@@ -22,7 +22,7 @@
                         </v-list-item-title>
                         <v-list-item-subtitle>
                             <div class="d-inline">
-                                <span>{{ formatNumber(today.current.new) }} unique</span>
+                                <span>{{ formatNumber(today.new) }} unique</span>
                                 <!--                                <span>{{ formatNumber(today.current.duplicate) }} duplicate</span>-->
                             </div>
                             <div class="d-inline float-end text-end">since 00:00UTC</div>
@@ -36,7 +36,7 @@
                         </v-list-item-title>
                         <v-list-item-subtitle>
                             <div class="d-inline">
-                                <span>{{ formatNumber(month.current.new) }} unique</span>
+                                <span>{{ formatNumber(month.new) }} unique</span>
                                 <!--                                <span>{{ formatNumber(month.current.duplicate) }} duplicate</span>-->
                             </div>
                             <div class="d-inline float-end text-end">
@@ -52,7 +52,7 @@
                         </v-list-item-title>
                         <v-list-item-subtitle>
                             <div class="d-inline">
-                                <span>{{ formatNumber(year.current.new) }} unique</span>
+                                <span>{{ formatNumber(year.new) }} unique</span>
                                 <!--                                <span>{{ formatNumber(year.current.duplicate) }} duplicate</span>-->
                             </div>
                             <div class="d-inline float-end text-end">{{ date.getUTCFullYear() }}</div>
@@ -85,57 +85,55 @@
 </template>
 <script setup lang="ts">
 import { useLazyAsyncData } from "#app";
+import type { NewDup, Stats } from "~/types/Stats";
 
-const {$mineskin, $notify} = useNuxtApp();
+const {$mineskin} = useNuxtApp();
 
 const {
     data: stats,
     refresh: refreshStats
-} = useLazyAsyncData<any>(`stats`, async () => {
+} = useLazyAsyncData<Stats>(`stats`, async () => {
     return (await $mineskin.stats.get())?.stats;
 }, {});
 
 const date = new Date();
 
+const FALLBACK: NewDup = {new: 0, duplicate: 0};
+
 const numberFormat = new Intl.NumberFormat('en-US');
 
 const formatNumber = (num: number) => numberFormat.format(num);
 
-const today = computed(() => stats.value?.generated?.time?.day);
-const todayTotal = computed(() => (today.value?.current?.new + today.value?.current?.duplicate) || 0);
+const today = computed<NewDup>(() => stats.value?.generated?.time?.day?.current || FALLBACK);
+const todayTotal = computed(() => (today.value?.new + today.value?.duplicate) || 0);
 
-const month = computed(() => stats.value?.generated?.time?.month);
-const monthTotal = computed(() => (month.value?.current?.new + month.value?.current?.duplicate) || 0);
+const month = computed<NewDup>(() => stats.value?.generated?.time?.month?.current || FALLBACK);
+const monthTotal = computed(() => (month.value?.new + month.value?.duplicate) || 0);
 
-const year = computed(() => stats.value.generated?.time?.year);
-const yearTotal = computed(() => (year.value?.current?.new + year.value?.current?.duplicate) || 0);
+const year = computed<NewDup>(() => stats.value?.generated?.time?.year?.current || FALLBACK);
+const yearTotal = computed(() => (year.value?.new + year.value?.duplicate) || 0);
 
+const hour = computed<NewDup>(() => stats.value?.generated?.time?.hour?.current || FALLBACK);
+const hourTotal = computed(() => (hour.value?.new + hour.value?.duplicate) || 0);
 
-const hour = computed(() => stats.value.generated?.time?.hour);
-const hourTotal = computed(() => (hour.value?.current?.new + hour.value?.current?.duplicate) || 0);
-
-const totalPerMinute = computed(() => (hourTotal.value || 1) / 60);
 const totalPerSecond = computed(() => (hourTotal.value || 1) / 60 / 60);
 
-const total = computed(() => stats.value?.generated?.total);
+const total = computed<NewDup>(() => stats.value?.generated?.total || FALLBACK);
 const totalTotal = computed(() => (total.value?.new + total.value?.duplicate) || 0);
-const totalFormatted = computed(() => numberFormat.format(total.value));
 
-const generator = computed(() => stats.value.generator);
-
-const updatedSecondsAgo = computed(() => Math.max(0, Math.floor((Date.now() - new Date(stats.value.timestamp).getTime()) / 1000 / 10) * 10));
+const generator = computed(() => stats.value?.generator);
 
 const tick = () => {
     if (stats.value) {
         if (Math.random() < 0.5) {
-            today.value.current.new++;
-            month.value.current.new++;
-            year.value.current.new++;
+            today.value.new++;
+            month.value.new++;
+            year.value.new++;
             // stats.value.generated.total.new++;
         } else {
-            today.value.current.duplicate++;
-            month.value.current.duplicate++;
-            year.value.current.duplicate++;
+            today.value.duplicate++;
+            month.value.duplicate++;
+            year.value.duplicate++;
             // stats.value.generated.total.duplicate++;
         }
     }
