@@ -331,7 +331,9 @@ export class MineSkinAPI {
         }
 
         public async get(): Promise<string> {
-            return this.api.request(`/v2/stats`, {silent: true});
+            return this.api.request(`/v2/stats`, {
+                credentials: 'omit'
+            }, {silent: true});
         }
 
     }(this);
