@@ -2,7 +2,7 @@
     <v-container>
         <v-row>
             <v-col cols="12">
-                <h2>Skin Gallery <small v-if="filter">&quot;{{ filter }}&quot;</small></h2>
+                <h2>{{ $t("Skin Gallery") }} <small v-if="filter">&quot;{{ filter }}&quot;</small></h2>
                 <dbg :data="breakpoint"></dbg>
             </v-col>
         </v-row>

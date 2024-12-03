@@ -25,7 +25,7 @@
             />
         <v-row class="flex-1-1-100" align="end">
             <v-col>
-                Drag a skin image file here to generate data for it
+                {{ $t("Drag a skin image file here to generate data for it") }}
             </v-col>
         </v-row>
 <!--        <v-row justify="center" align="center" class="my-2">-->

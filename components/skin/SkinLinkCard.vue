@@ -6,7 +6,7 @@
 }
 </style>
 <template>
-    <nuxt-link :to="skin ? ('/skins/'+skin.uuid) : undefined">
+    <nuxt-link :to="skin ? localePath('/skins/'+skin.uuid) : undefined">
         <v-sheet
             class="pa-2"
         >
@@ -20,6 +20,7 @@
 import SkinHeadImg from "../SkinHeadImg.vue";
 import type { ListedSkin } from "../../types/SkinListResponse";
 
+const localePath = useLocalePath()
 const props = defineProps<{
     skin?: ListedSkin,
     noTitle?: boolean

@@ -12,9 +12,9 @@ pre.instructions {
             bg-color="primary"
             v-model="instructionsTab"
         >
-            <v-tab value="vanilla">Vanilla</v-tab>
-            <v-tab value="plugins">Plugins/Mods</v-tab>
-            <v-tab value="code">Code</v-tab>
+            <v-tab value="vanilla">{{ $t("Vanilla") }}</v-tab>
+            <v-tab value="plugins">{{ $t("Plugins/Mods") }}</v-tab>
+            <v-tab value="code">{{ $t("Code") }}</v-tab>
         </v-tabs>
         <v-card-text>
             <v-tabs-window v-model="instructionsTab" class="instructions-window">
@@ -25,7 +25,7 @@ pre.instructions {
                         <v-divider class="mt-2"/>
                         <div class="pt-2">
                             <v-icon icon="mdi-information-outline" color="secondary"/>
-                            Use these in a command block to give yourself a player head
+                            {{ $t("Use these in a command block to give yourself a player head") }}
                         </div>
                     </div>
                 </v-tabs-window-item>
@@ -37,7 +37,7 @@ pre.instructions {
                         <v-divider class="mt-2"/>
                         <div class="pt-2">
                             <v-icon icon="mdi-information-outline" color="secondary"/>
-                            Use these with supported plugins to change skins etc.
+                            {{ $t("Use these with supported plugins to change skins etc.") }}
                         </div>
                     </div>
                 </v-tabs-window-item>
@@ -49,7 +49,7 @@ pre.instructions {
                         <v-divider class="mt-2"/>
                         <div class="pt-2">
                             <v-icon icon="mdi-information-outline" color="secondary"/>
-                            Use these in your code to directly access the skin data
+                            {{ $t("Use these in your code to directly access the skin data") }}
                         </div>
                     </div>
                 </v-tabs-window-item>

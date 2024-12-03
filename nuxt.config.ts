@@ -19,8 +19,10 @@ export default defineNuxtConfig({
     ],
     modules: [
         'vuetify-nuxt-module',
+        '@nuxtjs/i18n',
         '@pinia/nuxt',
-        '@pinia-plugin-persistedstate/nuxt'
+        '@pinia-plugin-persistedstate/nuxt',
+
     ],
     vuetify: {
         moduleOptions: {
@@ -46,6 +48,23 @@ export default defineNuxtConfig({
             },
         }
 
+    },
+
+    i18n: {
+        strategy: 'prefix_and_default',
+        defaultLocale: 'en',
+        lazy: true,
+        locales: [
+            {code: 'en', name: 'English', file: 'en.json'},
+            {code: 'de', name: 'German', file: 'de.json'},
+            {code: 'es', name: 'Spanish', file: 'es.json'},
+            {code: 'fr', name: 'French', file: 'fr.json'},
+            {code: 'ru', name: 'Russian', file: 'ru.json'},
+            {code: 'pl', name: 'Polish', file: 'pl.json'},
+            {code: 'hi', name: 'Hindi', file: 'hi.json'},
+            {code: 'pt', name: 'Portuguese', file: 'pt.json'},
+            {code: 'id', name: 'Indonesian', file: 'id.json'},
+        ]
     },
 
     runtimeConfig: {

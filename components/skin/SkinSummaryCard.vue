@@ -16,7 +16,7 @@
                             <v-skeleton-loader v-if="!skin" type="text" width="100%"/>
                             <copy-text-field
                                 v-else
-                                label="Direct Link"
+                                :label="$t('Direct Link')"
                                 readonly
                                 :value="skinLink"
                             ></copy-text-field>
@@ -27,7 +27,7 @@
                             <v-skeleton-loader v-if="!skin" type="text" width="100%"/>
                             <copy-text-field
                                 v-else
-                                label="Skin Value"
+                                :label="$t('Skin Value')"
                                 readonly
                                 :value="skinValue"
                             ></copy-text-field>
@@ -38,7 +38,7 @@
                             <v-skeleton-loader v-if="!skin" type="text" width="100%"/>
                             <copy-text-field
                                 v-else
-                                label="Skin Signature"
+                                :label="$t('Skin Signature')"
                                 readonly
                                 :value="skinSignature"
                             ></copy-text-field>
@@ -49,7 +49,7 @@
                             <v-skeleton-loader v-if="!skin" type="text" width="100%"/>
                             <copy-text-field
                                 v-else
-                                label="Texture URL"
+                                :label="$t('Texture URL')"
                                 readonly
                                 :value="skinTextureUrl"
                             ></copy-text-field>
@@ -63,7 +63,7 @@
                         <v-col v-else>
                             <v-btn
                                 color="secondary"
-                                text="Download Skin"
+                                :text="$t('Download Skin')"
                                 class="ma-2"
                                 size="large"
                                 :href="proxiedSkinTextureUrl"
