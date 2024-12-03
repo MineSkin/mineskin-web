@@ -5,13 +5,12 @@
                 <v-list>
                     <v-list-item>
                         <v-list-item-title class="text-h5">
-                            <div class="d-inline"><strong>{{ formatNumber(total) }}</strong></div>
+                            <div class="d-inline"><strong>{{ formatNumber(totalTotal) }}</strong></div>
                             <div class="d-inline float-end text-end"><span>skins generated</span></div>
                         </v-list-item-title>
                         <v-list-item-subtitle>
-                            <div class="d-inline"><span>{{ 12345 }} unique</span> + <span>{{ 54321 }} duplicate</span>
-                            </div>
-                            <div class="d-inline float-end text-end">since idk/when</div>
+                            <div class="d-inline"><span>{{ formatNumber(total.new) }} unique</span></div>
+                            <div class="d-inline float-end text-end">since July 2016</div>
                         </v-list-item-subtitle>
                     </v-list-item>
                     <v-divider class="my-2"/>
@@ -22,8 +21,8 @@
                         </v-list-item-title>
                         <v-list-item-subtitle>
                             <div class="d-inline">
-                                <span>{{ formatNumber(today.current.new) }} unique</span> +
-                                <span>{{ formatNumber(today.current.duplicate) }} duplicate</span>
+                                <span>{{ formatNumber(today.current.new) }} unique</span>
+<!--                                <span>{{ formatNumber(today.current.duplicate) }} duplicate</span>-->
                             </div>
                             <div class="d-inline float-end text-end">since 00:00UTC</div>
                         </v-list-item-subtitle>
@@ -36,12 +35,11 @@
                         </v-list-item-title>
                         <v-list-item-subtitle>
                             <div class="d-inline">
-                                <span>{{ formatNumber(month.current.new) }} unique</span> +
-                                <span>{{ formatNumber(month.current.duplicate) }} duplicate</span>
+                                <span>{{ formatNumber(month.current.new) }} unique</span>
+<!--                                <span>{{ formatNumber(month.current.duplicate) }} duplicate</span>-->
                             </div>
-                            <div class="d-inline float-end text-end">{{ date.getUTCMonth() + 1 }}/{{
-                                    date.getUTCFullYear()
-                                }}
+                            <div class="d-inline float-end text-end">
+                                {{ date.getUTCMonth() + 1 }}/{{ date.getUTCFullYear() }}
                             </div>
                         </v-list-item-subtitle>
                     </v-list-item>
@@ -53,8 +51,8 @@
                         </v-list-item-title>
                         <v-list-item-subtitle>
                             <div class="d-inline">
-                                <span>{{ formatNumber(year.current.new) }} unique</span> +
-                                <span>{{ formatNumber(year.current.duplicate) }} duplicate</span>
+                                <span>{{ formatNumber(year.current.new) }} unique</span>
+<!--                                <span>{{ formatNumber(year.current.duplicate) }} duplicate</span>-->
                             </div>
                             <div class="d-inline float-end text-end">{{ date.getUTCFullYear() }}</div>
                         </v-list-item-subtitle>
@@ -62,9 +60,9 @@
                     <!--                <v-divider/>-->
                 </v-list>
                 <!--            <dbg :data="stats"/>-->
-<!--                <div class="float-end text-end">-->
-<!--                    <span>updated {{ updatedSecondsAgo }}s ago</span>-->
-<!--                </div>-->
+                <!--                <div class="float-end text-end">-->
+                <!--                    <span>updated {{ updatedSecondsAgo }}s ago</span>-->
+                <!--                </div>-->
             </v-card-text>
         </v-card>
         <v-card class="mt-2">
@@ -119,7 +117,8 @@ const hourTotal = computed(() => hour.value.current.new + hour.value.current.dup
 const totalPerMinute = computed(() => hourTotal.value / 60);
 const totalPerSecond = computed(() => hourTotal.value / 60 / 60);
 
-const total = computed(() => stats.value.generated.total?.new + stats.value.generated.total?.duplicate || 24568161);
+const total = computed(() => stats.value.generated.total);
+const totalTotal = computed(() => total.value.new + total.value.duplicate);
 const totalFormatted = computed(() => numberFormat.format(total.value));
 
 const generator = computed(() => stats.value.generator);
@@ -140,7 +139,7 @@ const tick = () => {
     }
     setTimeout(() => {
         tick();
-    }, (1000 / totalPerSecond.value) + 200*Math.random());
+    }, (1000 / totalPerSecond.value) + 200 * Math.random());
 }
 
 onMounted(() => {
