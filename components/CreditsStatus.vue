@@ -4,12 +4,11 @@
             <Dbg :data="{credits,creditsStatus,authed:authStore.authed}"></Dbg>
             <div v-if="credits">
                 <div v-if="credits?.all?.balance>0">
-                       <span>{{
-                               $t("This request will consume {credits} if the {skins} successfully generated.", {
-                                   credits: $t('n_credits', imageCount || 1),
-                                   skins: $t('skin_is_are', imageCount || 1)
-                               })
-                           }}</span>
+                       <span>
+                           {{
+                               $t("This request will consume 1 credit if the skin is successfully generated. | This request will consume {n} credits if the skins are successfully generated.", imageCount || 1)
+                           }}
+                       </span>
                     <span>{{
                             $t("You have {credits} remaining.", {
                                 credits: $t('n_credits', credits?.all?.balance)
