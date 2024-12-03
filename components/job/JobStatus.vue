@@ -21,7 +21,7 @@
             indeterminate
             color="primary">
             <template v-slot:default>
-                Waiting
+                {{ $t("Waiting") }}
             </template>
         </v-progress-linear>
         <v-progress-linear
@@ -30,7 +30,7 @@
             indeterminate
             color="warning">
             <template v-slot:default>
-                Processing
+                {{ $t("Processing") }}
             </template>
         </v-progress-linear>
         <v-progress-linear
@@ -39,7 +39,7 @@
             model-value="100"
             :color="job.status === 'completed' ? 'success':'error'">
             <template v-slot:default>
-                {{ job.status === 'completed' ? 'Completed' : 'Failed' }}
+                {{ job.status === 'completed' ? $t('Completed') : $t('Failed') }}
             </template>
         </v-progress-linear>
         <v-divider/>
