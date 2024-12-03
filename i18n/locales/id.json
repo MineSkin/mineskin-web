@@ -25,6 +25,7 @@
   "n_skins": "no skins | 1 skin | {n} skins",
   "skin_is_are": "skin is | skins are",
   "This request will consume {credits} if the {skins} successfully generated.": "This request will consume {credits} if the {skins} successfully generated.",
+  "This request will consume 1 credit if the skin is successfully generated. | This request will consume {n} credits if the skins are successfully generated.": "This request will consume 1 credit if the skin is successfully generated. | This request will consume {n} credits if the skins are successfully generated.",
   "You have {credits} remaining.": "You have {credits} remaining.",
   "Download Skin": "Download Skin",
   "Texture URL": "Texture URL",
