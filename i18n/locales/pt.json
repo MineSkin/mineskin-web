@@ -25,6 +25,7 @@
   "n_skins": "sem skins (skins) 1 skin ™️ {n}",
   "skin_is_are": "A pele é de buns são",
   "This request will consume {credits} if the {skins} successfully generated.": "Este pedido irá consumir {credits} se o {skins} gerado com sucesso.",
+  "This request will consume 1 credit if the skin is successfully generated. | This request will consume {n} credits if the skins are successfully generated.": "This request will consume 1 credit if the skin is successfully generated. | This request will consume {n} credits if the skins are successfully generated.",
   "You have {credits} remaining.": "Você tem {credits} restante(s).",
   "Download Skin": "Baixar Skin",
   "Texture URL": "URL da Textura",
