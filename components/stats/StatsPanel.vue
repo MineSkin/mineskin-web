@@ -23,7 +23,7 @@
                         <v-list-item-subtitle>
                             <div class="d-inline">
                                 <span>{{ formatNumber(today.current.new) }} unique</span>
-<!--                                <span>{{ formatNumber(today.current.duplicate) }} duplicate</span>-->
+                                <!--                                <span>{{ formatNumber(today.current.duplicate) }} duplicate</span>-->
                             </div>
                             <div class="d-inline float-end text-end">since 00:00UTC</div>
                         </v-list-item-subtitle>
@@ -37,7 +37,7 @@
                         <v-list-item-subtitle>
                             <div class="d-inline">
                                 <span>{{ formatNumber(month.current.new) }} unique</span>
-<!--                                <span>{{ formatNumber(month.current.duplicate) }} duplicate</span>-->
+                                <!--                                <span>{{ formatNumber(month.current.duplicate) }} duplicate</span>-->
                             </div>
                             <div class="d-inline float-end text-end">
                                 {{ date.getUTCMonth() + 1 }}/{{ date.getUTCFullYear() }}
@@ -53,7 +53,7 @@
                         <v-list-item-subtitle>
                             <div class="d-inline">
                                 <span>{{ formatNumber(year.current.new) }} unique</span>
-<!--                                <span>{{ formatNumber(year.current.duplicate) }} duplicate</span>-->
+                                <!--                                <span>{{ formatNumber(year.current.duplicate) }} duplicate</span>-->
                             </div>
                             <div class="d-inline float-end text-end">{{ date.getUTCFullYear() }}</div>
                         </v-list-item-subtitle>
@@ -101,26 +101,24 @@ const numberFormat = new Intl.NumberFormat('en-US');
 
 const formatNumber = (num: number) => numberFormat.format(num);
 
-const today = computed(() => stats.value.generated.time.day);
-const todayTotal = computed(() => today.value.current.new + today.value.current.duplicate);
-const yesterdayTotal = computed(() => today.value.last.new + today.value.last.duplicate);
-const todayTotalFormatted = computed(() => numberFormat.format(todayTotal.value));
+const today = computed(() => stats.value?.generated?.time?.day);
+const todayTotal = computed(() => (today.value?.current?.new + today.value?.current?.duplicate) || 0);
 
-const month = computed(() => stats.value.generated.time.month);
-const monthTotal = computed(() => month.value.current.new + month.value.current.duplicate);
+const month = computed(() => stats.value?.generated?.time?.month);
+const monthTotal = computed(() => (month.value?.current?.new + month.value?.current?.duplicate) || 0);
 
-const year = computed(() => stats.value.generated.time.year);
-const yearTotal = computed(() => year.value.current.new + year.value.current.duplicate);
+const year = computed(() => stats.value.generated?.time?.year);
+const yearTotal = computed(() => (year.value?.current?.new + year.value?.current?.duplicate) || 0);
 
 
-const hour = computed(() => stats.value.generated.time.hour);
-const hourTotal = computed(() => hour.value.current.new + hour.value.current.duplicate);
+const hour = computed(() => stats.value.generated?.time?.hour);
+const hourTotal = computed(() => (hour.value?.current?.new + hour.value?.current?.duplicate) || 0);
 
-const totalPerMinute = computed(() => hourTotal.value / 60);
-const totalPerSecond = computed(() => hourTotal.value / 60 / 60);
+const totalPerMinute = computed(() => hourTotal.value || 1 / 60);
+const totalPerSecond = computed(() => hourTotal.value || 1 / 60 / 60);
 
-const total = computed(() => stats.value.generated.total);
-const totalTotal = computed(() => total.value.new + total.value.duplicate);
+const total = computed(() => stats.value?.generated?.total);
+const totalTotal = computed(() => (total.value?.new + total.value?.duplicate) || 0);
 const totalFormatted = computed(() => numberFormat.format(total.value));
 
 const generator = computed(() => stats.value.generator);
