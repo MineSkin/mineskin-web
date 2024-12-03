@@ -126,16 +126,18 @@ const generator = computed(() => stats.value.generator);
 const updatedSecondsAgo = computed(() => Math.max(0, Math.floor((Date.now() - new Date(stats.value.timestamp).getTime()) / 1000 / 10) * 10));
 
 const tick = () => {
-    if (Math.random() < 0.5) {
-        today.value.current.new++;
-        month.value.current.new++;
-        year.value.current.new++;
-        // stats.value.generated.total.new++;
-    } else {
-        today.value.current.duplicate++;
-        month.value.current.duplicate++;
-        year.value.current.duplicate++;
-        // stats.value.generated.total.duplicate++;
+    if (stats.value) {
+        if (Math.random() < 0.5) {
+            today.value.current.new++;
+            month.value.current.new++;
+            year.value.current.new++;
+            // stats.value.generated.total.new++;
+        } else {
+            today.value.current.duplicate++;
+            month.value.current.duplicate++;
+            year.value.current.duplicate++;
+            // stats.value.generated.total.duplicate++;
+        }
     }
     setTimeout(() => {
         tick();
