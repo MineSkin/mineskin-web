@@ -330,10 +330,8 @@ export class MineSkinAPI {
         constructor(readonly api: MineSkinAPI) {
         }
 
-        public async get(): Promise<string> {
-            return this.api.request(`/v2/stats`, {
-                credentials: 'omit'
-            }, {silent: true});
+        public async get(): Promise<any> {
+            return fetch(`${ this.api.BASE }/v2/stats`).then(res => res.json());
         }
 
     }(this);

@@ -114,8 +114,8 @@ const yearTotal = computed(() => (year.value?.current?.new + year.value?.current
 const hour = computed(() => stats.value.generated?.time?.hour);
 const hourTotal = computed(() => (hour.value?.current?.new + hour.value?.current?.duplicate) || 0);
 
-const totalPerMinute = computed(() => hourTotal.value || 1 / 60);
-const totalPerSecond = computed(() => hourTotal.value || 1 / 60 / 60);
+const totalPerMinute = computed(() => (hourTotal.value || 1) / 60);
+const totalPerSecond = computed(() => (hourTotal.value || 1) / 60 / 60);
 
 const total = computed(() => stats.value?.generated?.total);
 const totalTotal = computed(() => (total.value?.new + total.value?.duplicate) || 0);
