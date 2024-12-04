@@ -44,6 +44,7 @@
     <NuxtLayout>
         <v-app>
             <Snackbars/>
+            <NewWebsiteBanner/>
             <v-app-bar density="comfortable" class="px-4" color="mskindigo">
                 <v-img
                     src="~/assets/img/mineskin-x64.png"
