@@ -9,7 +9,7 @@ export default defineNuxtPlugin(nuxtApp => {
                 Sentry.init({
                     dsn: config.public.sentryDsn,
                     environment: config.public.isDev ? 'development' : 'production',
-                    release: config.public.cfPagesBranch + '-' + config.public.cfPagesCommitSha,
+                    release: config.public.cfPagesBranch + '-' + config.public.cfPagesCommitSha?.substring(0, 7),
                     integrations: [
                         Sentry.browserTracingIntegration(),
                         Sentry.replayIntegration(),
