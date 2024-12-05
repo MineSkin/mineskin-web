@@ -79,20 +79,30 @@ const skinId = computed<string>(() => {
     const currentRoute = router.currentRoute.value;
     return currentRoute.params['skin'] as string;
 });
+const validSkinId = computed(() => {
+    return skinId.value && (skinId.value.length === 32 || skinId.value.length === 36 || skinId.value.length === 8)
+});
 
-const {$mineskin} = useNuxtApp();
+const {$mineskin, $notify} = useNuxtApp();
 
 const {
-    data: skin
+    data: skin,
+    refresh: refreshSkin
 } = useLazyAsyncData<Maybe<SkinInfo2>>(`skin-${ skinId.value }`, async () => {
+    if (!validSkinId.value) return;
     return (await $mineskin.skins.get(skinId.value))?.skin;
+}, {
+    immediate: false
 });
 
 const {
     data: randomSkinName,
     refresh: refreshRandomSkinName
 } = useLazyAsyncData<string>(`skin-rng-name-${ skin.value?.uuid || skinId.value }`, async () => {
+    if (!validSkinId.value) return;
     return (await $mineskin.util.randomName(skin.value?.uuid || skinId.value));
+}, {
+    immediate: false
 });
 
 const useRandomName = computed(() => {
@@ -177,7 +187,16 @@ watch(skin, (skin) => {
     immediate: true
 })
 
-onMounted(() => {
+onMounted(async () => {
+    await refreshSkin();
+    if (skinId.value) {
+        if (skinId.value.length !== 32 && skinId.value.length !== 36 && skinId.value.length !== 8) {
+            $notify({
+                text: "Invalid skin ID",
+                color: "error"
+            })
+        }
+    }
 })
 
 </script>
