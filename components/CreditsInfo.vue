@@ -50,6 +50,7 @@ const totalCredits = computed(() => credits.value?.all?.total || 0);
 const creditsUsed = computed(() => totalCredits.value - (credits.value?.all?.balance || 0));
 
 onMounted(async () => {
+    if (!process.client) return;
     await authStore.checkAuth();
     await refreshCredits();
 })

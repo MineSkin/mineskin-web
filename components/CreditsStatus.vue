@@ -57,6 +57,7 @@ const {
 });
 
 onMounted(async () => {
+    if (!process.client) return;
     await authStore.checkAuth();
     await refreshCredits();
 })

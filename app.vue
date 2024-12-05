@@ -11,10 +11,12 @@
 }
 
 
-
 </style>
 <template>
     <NuxtLayout>
+        <ClientOnly>
+            <SentryInit/>
+        </ClientOnly>
         <v-app>
             <Snackbars/>
             <NewWebsiteBanner/>
@@ -126,6 +128,7 @@ import { useQueueStore } from "~/stores/queue";
 import { storeToRefs } from "pinia";
 import RightNavDrawer from "~/components/RightNavDrawer.vue";
 import MainFooter from "~/components/MainFooter.vue";
+import SentryInit from "~/components/SentryInit.vue";
 
 const config = useRuntimeConfig();
 

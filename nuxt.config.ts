@@ -11,6 +11,7 @@ export default defineNuxtConfig({
         '/gallery': {redirect: '/skins'}
     },
     plugins: [
+        '@/plugins/sentry',
         '@/plugins/logger',
         '@/plugins/notifier',
         '@/plugins/mineskin',
