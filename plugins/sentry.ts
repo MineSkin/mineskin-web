@@ -8,6 +8,7 @@ export default defineNuxtPlugin(nuxtApp => {
             initSentry: (...args: any[]) => {
                 Sentry.init({
                     dsn: config.public.sentryDsn,
+                    environment: config.public.isDev ? 'development' : 'production',
                     integrations: [
                         Sentry.browserTracingIntegration(),
                         Sentry.replayIntegration(),
