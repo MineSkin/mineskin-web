@@ -3,10 +3,22 @@
     width: 100%;
     height: 100%;
 }
+
+.ad-fallback {
+    position: absolute;
+    z-index: 0;
+}
+
+.adsbygoogle {
+    z-index: 1;
+}
 </style>
 <template>
     <ClientOnly>
         <div class="ad-wrapper" v-if="ready && grants && !grants.ad_free">
+            <div class="ad-fallback text-red pa-6">
+                Please disable your ad blocker
+            </div>
             <component is="script" async
                        :src="'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=' + clientId"
                        crossorigin="anonymous"></component>
