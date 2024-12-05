@@ -280,6 +280,12 @@ const loginRedirect = () => {
 }
 
 onBeforeMount(() => {
-    authStore.checkAuth();
+    if (process.client) {
+        try {
+            authStore.checkAuth();
+        } catch (e) {
+            console.error(e)
+        }
+    }
 })
 </script>

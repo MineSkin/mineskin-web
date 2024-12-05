@@ -32,6 +32,7 @@ export const useAuthStore = defineStore('auth', () => {
 
     const checkAuth0 = async (): Promise<Maybe<AuthStatus>> => {
         console.debug('authStore.checkAuth');
+        if (!process.client) return;
 
         const cookie = getWebTokenCookie();
         if (cookie) {
@@ -57,11 +58,11 @@ export const useAuthStore = defineStore('auth', () => {
             }
         }
 
-        const response: Response = await $mineskin.me.get();
+        const response: Maybe<Response> = await $mineskin.me.get();
         console.log(response);
 
 
-        if (response.status === 401 || response.status === 404) {
+        if (response?.status === 401 || response?.status === 404) {
             if (Date.now() - lastApiTokenRefresh.value > TOKEN_TIMEOUT) {
                 if (await refreshApiAccessToken()) {
                     return checkAuth0();
@@ -71,7 +72,7 @@ export const useAuthStore = defineStore('auth', () => {
             }
         }
 
-        const success = response.ok;
+        const success = response && response.ok;
         authed.value = success;
         wasAuthed.value = success;
         $mineskin.setAuthed(success);

@@ -285,6 +285,8 @@ export class MineSkinAPI {
         public async get(options?: Partial<RequestOptions>) {
             return fetch(`${ this.api.BASE }/v2/me`, {
                 credentials: 'include'
+            }).catch(err => {
+                console.error('API error', err);
             });
         }
 
