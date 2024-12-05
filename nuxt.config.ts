@@ -1,4 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import { en } from 'vuetify/locale'
+
 export default defineNuxtConfig({
     compatibilityDate: '2024-04-03',
     devtools: {enabled: true},
@@ -67,7 +69,8 @@ export default defineNuxtConfig({
             {code: 'hi', language: 'hi-HI', name: 'Hindi', file: 'hi.json'},
             {code: 'pt', language: 'pt-PT', name: 'Portuguese', file: 'pt.json'},
             {code: 'id', language: 'id-ID', name: 'Indonesian', file: 'id.json'},
-        ]
+        ],
+        vueI18n: './nuxt-i18n.ts'
     },
 
     runtimeConfig: {
