@@ -1,6 +1,7 @@
 import type { Ref } from "vue";
 import type { Maybe } from "~/types/util";
 import type { AuthStatus } from "~/types/auth";
+import * as Sentry from "@sentry/browser"
 
 const TOKEN_TIMEOUT = 1000 * 60 * 45;
 
@@ -85,7 +86,20 @@ export const useAuthStore = defineStore('auth', () => {
                 authenticated: success
             };
             grants.value = body.grants;
+            try {
+                Sentry.setUser({
+                    id: _user.value?.user
+                });
+            } catch (e) {
+                console.error(e);
+            }
             return _user.value;
+        }
+
+        try {
+            Sentry.setExtra('authed', authed.value);
+        } catch (e) {
+            console.error(e);
         }
 
         return {
