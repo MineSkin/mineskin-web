@@ -5,7 +5,12 @@
                 <h2>{{ $t("Export Skins") }}</h2>
             </v-col>
         </v-row>
-        <v-row>
+        <v-row v-if="!authStore.authed" justify="center">
+            <v-col cols="auto">
+                <v-alert type="warning" text="Sign in to export your skins"></v-alert>
+            </v-col>
+        </v-row>
+        <v-row v-if="authStore.authed">
             <v-data-table
                 :items="skins"
                 item-value="uuid"
@@ -41,7 +46,7 @@
                 </template>
             </v-data-table>
         </v-row>
-        <v-row>
+        <v-row v-if="authStore.authed">
             <v-col cols="auto">
                 <v-select
                     v-model="exportFormat"
@@ -86,9 +91,12 @@ useHead({
     title: 'Export Skins'
 });
 
+
 const router = useRouter()
 
 const {$mineskin, $notify} = useNuxtApp();
+
+const authStore = useAuthStore();
 
 const headers = [
     {

@@ -6,10 +6,15 @@
             </v-col>
             <v-spacer/>
             <v-col cols="auto">
-                <v-btn :to="localePath('/export')" color="secondary">Export Skins</v-btn>
+                <v-btn v-if="authStore.authed" :to="localePath('/export')" color="secondary">Export Skins</v-btn>
             </v-col>
         </v-row>
-        <v-infinite-scroll :items="skins" :onLoad="load" style="overflow: hidden">
+        <v-row v-if="!authStore.authed" justify="center">
+            <v-col cols="auto">
+                <v-alert type="warning" text="Sign in to view your skins"></v-alert>
+            </v-col>
+        </v-row>
+        <v-infinite-scroll v-else :items="skins" :onLoad="load" style="overflow: hidden">
             <v-row justify="center" dense>
                 <template v-for="(item, index) in skins" :key="item">
                     <!--                    <v-col cols="4" sm="3" md="2">-->
@@ -49,6 +54,8 @@ const localePath = useLocalePath();
 const router = useRouter()
 
 const {$mineskin} = useNuxtApp();
+
+const authStore = useAuthStore();
 
 // const {
 //     data: skins,
