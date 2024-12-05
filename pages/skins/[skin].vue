@@ -6,7 +6,7 @@
 <template>
     <v-container class="mb-4">
         <h2>
-            <back-link to="/gallery" class="text-white">
+            <back-link to="/skins" class="text-white">
                 <v-icon icon="mdi-arrow-left" class="mx-2"/>
             </back-link>
             {{ skinNameDisplay }}
