@@ -113,7 +113,7 @@ function testNotify() {
         color: 'success',
         timeout: 20000,
         actionLabel: 'View',
-        actionLink:'/gallery'
+        actionLink:'/skins'
     });
 }
 </script>

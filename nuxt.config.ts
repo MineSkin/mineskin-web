@@ -7,7 +7,8 @@ export default defineNuxtConfig({
     },
     ssr: true,
     routeRules: {
-        '/my-skins': {ssr: false}
+        '/my-skins': {ssr: false},
+        '/gallery': {redirect: '/skins'}
     },
     plugins: [
         '@/plugins/logger',

@@ -69,7 +69,7 @@
                     align-tabs="center"
                 >
                     <v-tab :to="localePath('/')">{{ $t("Generate") }}</v-tab>
-                    <v-tab :to="localePath('/gallery')">{{ $t("Gallery") }}</v-tab>
+                    <v-tab :to="localePath('/skins')">{{ $t("Gallery") }}</v-tab>
                     <v-tab v-if="authStore.authed" :to="localePath('/my-skins')">{{ $t("My Skins") }}</v-tab>
                 </v-tabs>
 
@@ -222,7 +222,7 @@ useHead({
                     "@type": "SearchAction",
                     "target": {
                         "@type": "EntryPoint",
-                        "urlTemplate": "https://beta.mineskin.org/gallery?filter={search_term_string}"
+                        "urlTemplate": "https://beta.mineskin.org/skins?filter={search_term_string}"
                     },
                     "query-input": "required name=search_term_string"
                 }
@@ -266,7 +266,7 @@ const search = () => {
         return;
     }
     router.push({
-        path: '/gallery',
+        path: '/skins',
         query: {
             filter: filter.value
         },

@@ -8,7 +8,7 @@
     <v-sheet rounded elevation="1" class="mx-auto px-4 pt-0 pb-4">
         <h3 class="text-h6 mb-2 pt-1">
             <span class="d-inline-block pt-2">{{ $t("Latest Skins") }}</span>
-            <v-btn icon="mdi-arrow-right" variant="text" :to="localePath('/gallery')"></v-btn>
+            <v-btn icon="mdi-arrow-right" variant="text" :to="localePath('/skins')"></v-btn>
         </h3>
         <v-row  class="skin-single-row">
             <v-slide-group>
