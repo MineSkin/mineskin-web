@@ -5,7 +5,7 @@ export default defineNuxtConfig({
     app: {
         head: {}
     },
-    ssr: true,
+    ssr: process.env.NODE_ENV !== 'development',
     routeRules: {
         '/my-skins': {ssr: false},
         '/gallery': {redirect: '/skins'}
