@@ -2,8 +2,8 @@
     <ClientOnly>
         <div v-if="showCreditsInfo && !generating">
             <Dbg :data="{credits,creditsStatus,authed:authStore.authed}"></Dbg>
-            <div v-if="credits">
-                <div v-if="credits?.all?.balance>0">
+            <div>
+                <div v-if="credits && credits?.all?.balance>0">
                        <span>
                            {{
                                $t("This request will consume 1 credit if the skin is successfully generated. | This request will consume {n} credits if the skins are successfully generated.", imageCount || 1)
