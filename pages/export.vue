@@ -27,20 +27,21 @@
                     {{ item.texture }}
                 </template>
 
+                <template v-slot:footer.prepend>
+                    <v-select
+                        v-model="skinSource"
+                        :items="sourceItems"
+                        item-title="text"
+                        item-value="value"
+                        max-width="200"
+                        hide-details
+                        class="mx-2"
+                    ></v-select>
+                    <v-spacer/>
+                </template>
             </v-data-table>
         </v-row>
         <v-row>
-            <v-col cols="auto">
-                <v-select
-                    v-model="skinSource"
-                    :items="sourceItems"
-                    item-title="text"
-                    item-value="value"
-                    max-width="200"
-                    hide-details
-                    class="mx-2"
-                ></v-select>
-            </v-col>
             <v-col cols="auto">
                 <v-select
                     v-model="exportFormat"
