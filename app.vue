@@ -10,33 +10,6 @@
     height: 100%;
 }
 
-.v-footer {
-    max-height: 14em;
-}
-
-@media (min-width: 400px) {
-    .v-footer {
-        max-height: 10em;
-    }
-}
-
-@media (min-width: 600px) {
-    .v-footer {
-        max-height: 8em;
-    }
-}
-
-@media (min-width: 800px) {
-    .v-footer {
-        max-height: 6em;
-    }
-}
-
-@media (min-width: 1000px) {
-    .v-footer {
-        max-height: 4em;
-    }
-}
 
 
 </style>
@@ -141,23 +114,7 @@
             <v-main style="--v-layout-top: 56px">
                 <NuxtPage/>
             </v-main>
-            <v-footer :class="mdAndUp?'px-16':''">
-                <v-row no-gutters justify="center">
-                    <v-col>
-                        <v-btn variant="text" href="https://legal.inventivetalent.org/imprint">Imprint</v-btn>
-                        <v-btn variant="text" href="https://legal.inventivetalent.org/privacy/mineskin">Privacy</v-btn>
-                        <v-btn variant="text" href="https://legal.inventivetalent.org/terms/mineskin">Terms</v-btn>
-                        <a href="#" id="open_preferences_center">Cookie preferences</a>
-                    </v-col>
-                    <v-col class="text-center">
-                        Copyright &copy; {{ new Date().getFullYear() }} <a href="https://inventivetalent.org"
-                                                                           target="_blank">inventivetalent</a>
-                    </v-col>
-                    <v-col class="text-right">
-                        Not affiliated with Minecraft / Mojang AB / Microsoft.
-                    </v-col>
-                </v-row>
-            </v-footer>
+            <MainFooter/>
             <RightNavDrawer/>
         </v-app>
     </NuxtLayout>
@@ -168,6 +125,7 @@ import { useAuthStore } from "~/stores/auth";
 import { useQueueStore } from "~/stores/queue";
 import { storeToRefs } from "pinia";
 import RightNavDrawer from "~/components/RightNavDrawer.vue";
+import MainFooter from "~/components/MainFooter.vue";
 
 const config = useRuntimeConfig();
 
