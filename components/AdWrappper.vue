@@ -1,5 +1,6 @@
 <style scoped>
 .ad-wrapper {
+    position: relative;
     width: 100%;
     height: 100%;
 }
@@ -16,7 +17,7 @@
 <template>
     <ClientOnly>
         <div class="ad-wrapper" v-if="ready && grants && !grants.ad_free">
-            <div class="ad-fallback text-red pa-6">
+            <div class="ad-fallback text-red pa-6 text-center w-100">
                 Please disable your ad blocker
             </div>
             <component is="script" async
