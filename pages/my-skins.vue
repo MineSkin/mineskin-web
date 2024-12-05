@@ -86,6 +86,7 @@ async function api() {
 }
 
 async function load({done}) {
+    if (!authStore.authed) return;
     console.debug('load')
     // Perform API call
     const res = await api();
@@ -100,6 +101,7 @@ async function load({done}) {
 }
 
 onMounted(async () => {
+    if (!(await authStore.checkAuth())?.authenticated) return;
     await load({
         done: () => {
         }

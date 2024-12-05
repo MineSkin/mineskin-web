@@ -219,6 +219,7 @@ const makeExportString = async (limit: number = -1) => {
 
 
 onMounted(async () => {
+    if (!(await authStore.checkAuth())?.authenticated) return;
     // await load({
     //     done: () => {
     //     }
