@@ -1,8 +1,12 @@
 <template>
     <v-container>
         <v-row>
-            <v-col cols="12">
+            <v-col cols="6">
                 <h2>{{ $t("My Skins") }}</h2>
+            </v-col>
+            <v-spacer/>
+            <v-col cols="auto">
+                <v-btn :to="localePath('/export')" color="secondary">Export Skins</v-btn>
             </v-col>
         </v-row>
         <v-infinite-scroll :items="skins" :onLoad="load" style="overflow: hidden">
@@ -39,6 +43,8 @@ import { useNuxtApp } from "#app";
 useHead({
     title: 'My Skins'
 });
+
+const localePath = useLocalePath();
 
 const router = useRouter()
 
