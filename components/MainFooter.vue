@@ -12,12 +12,13 @@
                         <v-col>
                             <a href="https://account.mineskin.org">Account Manager</a><br/>
                             <a href="https://account.mineskin.org">API Keys</a><br/>
+                            <a href="https://classic.mineskin.org">Classic Website</a><br/>
                         </v-col>
                         <v-col>
                             <a href="https://docs.mineskin.org" target="_blank">Documentation</a><br/>
                             <a href="https://docs.mineskin.org/docs/category/mineskin-api" target="_blank">API
                                 Reference</a><br/>
-                            <a href="https://classic.mineskin.org">Classic Website</a><br/>
+                            <a href="https://api.mineskin.org/openapi" target="_blank">V1 API Reference (legacy)</a><br/>
                         </v-col>
                     </v-row>
                 </v-col>
