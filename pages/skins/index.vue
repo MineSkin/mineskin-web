@@ -36,11 +36,24 @@
                     <!--                    </v-col>-->
                 </template>
             </v-row>
+            <template v-slot:loading>
+                <v-progress-linear class="my-0 mx-4" indeterminate color="primary"/>
+            </template>
         </v-infinite-scroll>
-        <v-row justify="center">
-            <div class="gallery-item mb-4" v-for="n in 20" :key="n">
-                <skin-link-card no-title/>
-            </div>
+        <v-row justify="center" dense>
+            <v-col v-for="n in 20" :key="n"
+                   cols="5"
+                   xs="5"
+                   sm="3"
+                   md="2"
+                   lg="2"
+                   xl="1"
+                   class="mx-0 mx-sm-1 mx-md-2"
+            >
+                <div class="gallery-item mb-1 mb-sm-2 mb-md-4">
+                    <skin-link-card no-title/>
+                </div>
+            </v-col>
         </v-row>
         <!--            <v-col v-for="skin in skins">-->
         <!--                <v-card>-->
