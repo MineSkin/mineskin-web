@@ -124,6 +124,7 @@ const adsOnPage = ref(0);
 
 const skins = ref<Array<Array<ListedSkin> | { ad: boolean }>>([]);
 const after = ref<string | null>(null);
+const pageIndex = ref(0);
 const hasNext = ref(true);
 
 async function api() {
@@ -135,6 +136,7 @@ async function api() {
     hasNext.value = skins.length > 0;
     if (skins.length > 0) {
         after.value = skins[skins.length - 1].uuid!;
+        pageIndex.value++;
         galleryAnchor.value = after.value;
         // preload next
         $mineskin.skins.list(after.value, toLoad, filter.value);
@@ -153,10 +155,12 @@ async function load({done}) {
     const res = await api();
     if (res.length === 0) {
         done('empty');
-        $notify({
-            text: "No skins found",
-            color: "info"
-        })
+        if (pageIndex.value === 0) {
+            $notify({
+                text: "No skins found",
+                color: "info"
+            })
+        }
         return;
     }
 
