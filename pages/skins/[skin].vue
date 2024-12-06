@@ -159,7 +159,7 @@ const ldJsonContent = computed(() => {
         "@context": "https://schema.org",
         "@type": "WebPage",
         "name": skinNameDisplay.value,
-        "url": `https://beta.mineskin.org/skins/${ skin.value?.uuid || skinId.value }`,
+        "url": `https://mineskin.org/skins/${ skin.value?.uuid || skinId.value }`,
         "image": ogImage.value,
         "datePublished": new Date(skin.value?.generator?.timestamp || 0).toISOString(),
     });
@@ -168,7 +168,7 @@ const ldJsonContent = computed(() => {
 useHead({
     link: [{
         rel: 'canonical',
-        href: `https://beta.mineskin.org/skins/${ skin.value?.uuid || skinId.value }`
+        href: `https://mineskin.org/skins/${ skin.value?.uuid || skinId.value }`
     }],
     script: [{
         type: 'application/ld+json',

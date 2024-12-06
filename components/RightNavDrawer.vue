@@ -89,6 +89,6 @@ const {jobsSorted, jobsDrawer} = storeToRefs(queueStore);
 
 const loginRedirect = () => {
     authStore.reset();
-    window.location.href = 'https://account.mineskin.org/login?redirect=https://beta.mineskin.org/';
+    window.location.href = 'https://account.mineskin.org/login?redirect=https://mineskin.org/';
 }
 </script>

@@ -56,7 +56,7 @@ export default defineNuxtConfig({
 
     i18n: {
         strategy: 'prefix_and_default',
-        baseUrl: 'https://beta.mineskin.org',
+        baseUrl: 'https://mineskin.org',
         defaultLocale: 'en',
         lazy: true,
         locales: [

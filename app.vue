@@ -217,7 +217,7 @@ useHead({
             innerHTML: JSON.stringify({
                 "@context": "https://schema.org",
                 "@type": "WebSite",
-                "url": "https://beta.mineskin.org/",
+                "url": "https://mineskin.org/",
                 "name": "MineSkin",
                 "alternateName": "mineskin.org",
                 "description": description,
@@ -225,7 +225,7 @@ useHead({
                     "@type": "SearchAction",
                     "target": {
                         "@type": "EntryPoint",
-                        "urlTemplate": "https://beta.mineskin.org/skins?filter={search_term_string}"
+                        "urlTemplate": "https://mineskin.org/skins?filter={search_term_string}"
                     },
                     "query-input": "required name=search_term_string"
                 }
@@ -279,7 +279,7 @@ const search = () => {
 
 const loginRedirect = () => {
     authStore.reset();
-    window.location.href = 'https://account.mineskin.org/login?redirect=https://beta.mineskin.org/';
+    window.location.href = 'https://account.mineskin.org/login?redirect=https://mineskin.org/';
 }
 
 onBeforeMount(() => {

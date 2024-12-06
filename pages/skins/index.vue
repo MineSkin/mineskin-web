@@ -64,7 +64,7 @@ useHead({
     title: 'Gallery',
     link: [{
         rel: 'canonical',
-        href: 'https://beta.mineskin.org/skins'
+        href: 'https://mineskin.org/skins'
     }],
     script: [{
         type: 'application/ld+json',
@@ -72,7 +72,7 @@ useHead({
             "@context": "https://schema.org",
             "@type": "WebPage",
             "name": "Gallery",
-            "url": `https://beta.mineskin.org/skins`
+            "url": `https://mineskin.org/skins`
         })
     }]
 });
