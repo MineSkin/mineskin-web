@@ -23,7 +23,7 @@
             please share any feedback or issues on <a class="text-decoration-none text-indigo"
                                                       href="https://minesk.in/discord" target="_blank">Discord</a>.<br/>
             <small>You can also go back
-                to the <a class="text-decoration-none text-purple text-indigo" href="https://classic.mineskin.org">classic
+                to the <a class="text-decoration-none text-purple text-indigo" href="https://classic.mineskin.org?utm_source=website_v2&utm_medium=link&utm_campaign=announcement_banner">classic
                     website</a></small>
         </template>
     </v-alert>

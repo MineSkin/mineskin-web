@@ -20,7 +20,7 @@
                                 Reference</a><br/>
                             <a href="https://api.mineskin.org/openapi" target="_blank">V1 API Reference
                                 (legacy)</a><br/>
-                            <a href="https://classic.mineskin.org">Classic Website</a><br/>
+                            <a href="https://classic.mineskin.org?utm_source=website_v2&utm_medium=link&utm_campaign=footer_link">Classic Website</a><br/>
                         </v-col>
                     </v-row>
                 </v-col>
