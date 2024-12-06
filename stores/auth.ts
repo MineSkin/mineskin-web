@@ -26,7 +26,13 @@ export const useAuthStore = defineStore('auth', () => {
             _authCheckPromise = checkAuth0().then(res => {
                 _authCheckPromise = null;
                 return res;
-            });
+            }).catch(e => {
+                console.error(e);
+                _authCheckPromise = null;
+                return {
+                    authenticated: false
+                };
+            })
         }
         return _authCheckPromise;
     }
@@ -66,7 +72,7 @@ export const useAuthStore = defineStore('auth', () => {
         if (response?.status === 401 || response?.status === 404) {
             if (Date.now() - lastApiTokenRefresh.value > TOKEN_TIMEOUT) {
                 if (await refreshApiAccessToken()) {
-                    return checkAuth0();
+                    return await checkAuth0();
                 }
             } else {
                 console.debug('No api token cookie');
