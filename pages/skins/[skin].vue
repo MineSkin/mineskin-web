@@ -165,7 +165,7 @@ const ldJsonContent = computed(() => {
     });
 });
 const ldBreadcrumbContent = computed(() => {
-    JSON.stringify({
+    return JSON.stringify({
         "@context": "https://schema.org",
         "@type": "BreadcrumbList",
         "itemListElement": [
