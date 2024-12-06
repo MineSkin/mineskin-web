@@ -28,6 +28,9 @@ export class AccountAPI {
                 ...INIT,
                 method: 'POST',
                 credentials: 'include'
+            }).catch(e => {
+                console.error(e)
+                return undefined;
             })
         }
 
@@ -36,6 +39,9 @@ export class AccountAPI {
                 ...INIT,
                 method: 'POST',
                 credentials: 'include'
+            }).catch(e => {
+                console.error(e)
+                return undefined;
             })
         }
 
