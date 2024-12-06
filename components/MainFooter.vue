@@ -12,7 +12,7 @@
                         </v-col>
                         <v-col>
                             <a href="https://account.mineskin.org">Account Manager</a><br/>
-                            <a href="https://account.mineskin.org">API Keys</a><br/>
+                            <a href="https://account.mineskin.org/keys">API Keys</a><br/>
                         </v-col>
                         <v-col>
                             <a href="https://docs.mineskin.org" target="_blank">Documentation</a><br/>
