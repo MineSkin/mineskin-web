@@ -26,6 +26,7 @@
   "packageManager": "yarn@4.5.0",
   "devDependencies": {
     "flagsmith-cli": "^0.2.0",
+    "sass": "^1.82.0",
     "typescript": "^5.7.2"
   }
 }
