@@ -10,7 +10,9 @@ export default defineNuxtConfig({
     ssr: process.env.NODE_ENV !== 'development',
     routeRules: {
         '/my-skins': {ssr: false},
-        '/gallery': {redirect: '/skins'}
+        '/gallery': {redirect: '/skins'},
+        '/bulk': {redirect: '/'},
+        '/stats': {redirect: '/'}
     },
     plugins: [
         '@/plugins/sentry',
