@@ -11,7 +11,7 @@ const localePath = useLocalePath()
 const router = useRouter();
 
 onMounted(() => {
-    router.push(localePath(`/skins`));
+    router.replace(localePath(`/skins`));
 })
 
 </script>

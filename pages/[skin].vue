@@ -34,7 +34,7 @@ const skinId = computed<string>(() => {
 });
 
 onMounted(() => {
-    router.push(localePath(`/skins/${ skinId.value }`));
+    router.replace(localePath(`/skins/${ skinId.value }`));
 })
 
 </script>
