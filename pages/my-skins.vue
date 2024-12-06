@@ -102,10 +102,6 @@ async function load({done}) {
 
 onMounted(async () => {
     if (!(await authStore.checkAuth())?.authenticated) return;
-    await load({
-        done: () => {
-        }
-    })
 })
 
 

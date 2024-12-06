@@ -196,11 +196,6 @@ onMounted(async () => {
     after.value = galleryAnchor.value;
     window.addEventListener('scroll', handleScroll, {passive: true});
     window.scrollTo(0, galleryScroll.value);
-
-    await load({
-        done: () => {
-        }
-    })
 });
 onUnmounted(() => {
     window.removeEventListener('scroll', handleScroll);
