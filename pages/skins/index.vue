@@ -66,19 +66,36 @@ useHead({
         rel: 'canonical',
         href: 'https://mineskin.org/skins'
     }],
-    script: [{
-        type: 'application/ld+json',
-        innerHTML: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "WebPage",
-            "name": "Gallery",
-            "url": `https://mineskin.org/skins`
-        })
-    }]
+    script: [
+        {
+            type: 'application/ld+json',
+            innerHTML: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "WebPage",
+                "name": "Gallery",
+                "url": `https://mineskin.org/skins`
+            })
+        },
+        {
+            type: 'application/ld+json',
+            innerHTML: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "BreadcrumbList",
+                "itemListElement": [
+                    {
+                        "@type": "ListItem",
+                        "position": 1,
+                        "name": "Gallery",
+                        "item": "https://mineskin.org/skins"
+                    }
+                ]
+            })
+        }
+    ]
 });
 
 const router = useRouter();
-const {xl, lg, md, sm, xs,name:breakpoint} = useDisplay();
+const {xl, lg, md, sm, xs, name: breakpoint} = useDisplay();
 
 const {$mineskin, $flags, $notify} = useNuxtApp();
 
@@ -136,7 +153,7 @@ async function load({done}) {
     const res = await api();
     if (res.length === 0) {
         done('empty');
-          $notify({
+        $notify({
             text: "No skins found",
             color: "info"
         })

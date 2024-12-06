@@ -164,16 +164,45 @@ const ldJsonContent = computed(() => {
         "datePublished": new Date(skin.value?.generator?.timestamp || 0).toISOString(),
     });
 });
+const ldBreadcrumbItem = computed(() => {
+    return {
+        "@type": "ListItem",
+        "position": 2,
+        "name": skinNameDisplay.value,
+        "item": `https://mineskin.org/skins/${ skin.value?.uuid || skinId.value }`,
+    };
+});
+const ldBreadcrumbContent = computed(() => {
+    JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Gallery",
+                "item": "https://mineskin.org/skins"
+            },
+            ldBreadcrumbItem.value
+        ]
+    })
+})
 
 useHead({
     link: [{
         rel: 'canonical',
         href: `https://mineskin.org/skins/${ skin.value?.uuid || skinId.value }`
     }],
-    script: [{
-        type: 'application/ld+json',
-        innerHTML: ldJsonContent
-    }]
+    script: [
+        {
+            type: 'application/ld+json',
+            innerHTML: ldJsonContent
+        },
+        {
+            type: 'application/ld+json',
+            innerHTML: ldBreadcrumbContent
+        }
+    ]
 })
 
 watch(skin, (skin) => {
