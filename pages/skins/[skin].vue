@@ -83,7 +83,7 @@ const validSkinId = computed(() => {
     return skinId.value && (skinId.value.length === 32 || skinId.value.length === 36 || skinId.value.length === 8)
 });
 
-const {$mineskin, $notify} = useNuxtApp();
+const {$mineskin, $notify, $gtag} = useNuxtApp();
 
 const {
     data: skin,
@@ -196,6 +196,12 @@ onMounted(async () => {
                 color: "error"
             })
         }
+    }
+
+    try {
+        $gtag('event', 'view_skin')
+    } catch (e) {
+        console.error(e);
     }
 })
 

@@ -18,6 +18,7 @@
                                 v-else
                                 :label="$t('Direct Link')"
                                 readonly
+                                content-key="skin_link"
                                 :value="skinLink"
                             ></copy-text-field>
                         </v-col>
@@ -29,6 +30,7 @@
                                 v-else
                                 :label="$t('Skin Value')"
                                 readonly
+                                content-key="skin_value"
                                 :value="skinValue"
                             ></copy-text-field>
                         </v-col>
@@ -40,6 +42,7 @@
                                 v-else
                                 :label="$t('Skin Signature')"
                                 readonly
+                                content_key="skin_signature"
                                 :value="skinSignature"
                             ></copy-text-field>
                         </v-col>
@@ -51,6 +54,7 @@
                                 v-else
                                 :label="$t('Texture URL')"
                                 readonly
+                                content-key="skin_texture_url"
                                 :value="skinTextureUrl"
                             ></copy-text-field>
                         </v-col>

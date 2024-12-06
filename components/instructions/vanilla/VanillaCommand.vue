@@ -1,6 +1,9 @@
 <template>
     <div class="instructions-text-container">
-        <copy-text-area :value="getText()" readonly width="100%"/>
+        <copy-text-area
+            :content-key="'instructions_vanilla_'+version"
+            :value="getText()"
+            readonly width="100%"/>
         <component :is="format" ref="formatted">
             <template v-slot:skinValue>{{ skin.texture.data.value }}</template>
             <template v-slot:skinSignature>{{ skin.texture.data.signature }}</template>

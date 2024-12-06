@@ -1,6 +1,9 @@
 <template>
     <div class="instructions-text-container">
-        <copy-text-field  :value="getText()" readonly width="100%"/>
+        <copy-text-field
+             :content-key="'instructions_plugin_'+type"
+            :value="getText()"
+            readonly width="100%"/>
         <component :is="format" ref="formatted">
             <template v-slot:skinUuid>{{ skin.uuid }}</template>
         </component>

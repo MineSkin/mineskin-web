@@ -14,9 +14,14 @@
     </v-text-field>
 </template>
 <script setup lang="ts">
+import { useNuxtApp } from "nuxt/app";
+
 const props = defineProps<{
-    value: string
+    value: string,
+    contentKey?: string
 }>();
+
+const {$gtag} = useNuxtApp();
 
 const justCopied = ref(false);
 const tooltipText = computed(() => {
@@ -29,5 +34,15 @@ function copyToClipboard() {
     setTimeout(() => {
         justCopied.value = false;
     }, 2000);
+    try {
+        if (props.contentKey) {
+            $gtag('event', 'copy_text', {
+                content_key: props.contentKey,
+                element: 'textfield'
+            })
+        }
+    } catch (e) {
+        console.error(e);
+    }
 }
 </script>

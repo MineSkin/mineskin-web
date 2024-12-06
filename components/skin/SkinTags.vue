@@ -85,7 +85,7 @@ const authStore = useAuthStore();
 // const {authed} = storeToRefs(authStore);
 const authed = true;
 
-const {$mineskin, $notify} = useNuxtApp();
+const {$mineskin, $notify, $gtag} = useNuxtApp();
 
 const newTagInput = useTemplateRef('newTagInput');
 
@@ -113,6 +113,13 @@ const submittingVote = ref(false);
 const doVote = async (tag: TagInfo, vote: TagVoteType) => {
     if (submittingVote.value) return;
     console.log("Voting tag", tag, vote);
+    try {
+        $gtag('event', 'vote_skin_tag', {
+            vote_type: vote,
+        })
+    } catch (e) {
+        console.error(e);
+    }
     submittingVote.value = true;
     const token = await until(tagTurnstileToken).not.toBeNull({timeout: 5000});
     tagTurnstile.value = false;
@@ -145,6 +152,11 @@ const submitTag = async () => {
         return;
     }
     console.log("Submitting tag", tag);
+    try {
+        $gtag('event', 'create_skin_tag')
+    } catch (e) {
+        console.error(e);
+    }
     const token = await until(tagTurnstileToken).not.toBeNull({timeout: 5000});
     tagTurnstile.value = false;
     addingTag.value = false;

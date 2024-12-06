@@ -94,8 +94,9 @@
                         persistent-hint
                     >
                         <template v-slot:details>
-                            <span>Optional name for this skin, supports variables <a @click.prevent="variablesDialog=true"
-                                                                               href="#">
+                            <span>Optional name for this skin, supports variables <a
+                                @click.prevent="variablesDialog=true"
+                                href="#">
                                 <v-icon icon="mdi-help-circle"/></a></span>
                         </template>
                     </v-text-field>
@@ -255,7 +256,7 @@ import { sleep } from "~/util/misc";
 import { useSettingsStore } from "~/stores/settings";
 import { storeToRefs } from "pinia";
 
-const {$mineskin, $notify, $flags} = useNuxtApp();
+const {$mineskin, $notify, $flags, $gtag} = useNuxtApp();
 
 const authStore = useAuthStore();
 const queueStore = useQueueStore();
@@ -481,6 +482,17 @@ async function generate() {
     }
     generating.value = true;
     await sleep(100);
+
+
+    try {
+        $gtag('event', 'generate_skins', {
+            generate_type: generateType.value,
+            skin_count: imageCount.value,
+            skin_visibility: visibility.value
+        })
+    } catch (e) {
+        console.error(e);
+    }
 
     const baseOptions: GenerateOptions = getOptions();
 
