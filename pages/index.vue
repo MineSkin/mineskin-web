@@ -7,12 +7,12 @@
             </v-col>
         </v-row>
         <v-row v-if="notificationBanner">
-           <v-col>
-               <v-card :color="notificationBanner.color||'warning'">
-                   <v-card-title>{{ notificationBanner.title }}</v-card-title>
-                   <v-card-text>{{ notificationBanner.text }}</v-card-text>
-               </v-card>
-           </v-col>
+            <v-col>
+                <v-card :color="notificationBanner.color||'warning'">
+                    <v-card-title>{{ notificationBanner.title }}</v-card-title>
+                    <v-card-text>{{ notificationBanner.text }}</v-card-text>
+                </v-card>
+            </v-col>
         </v-row>
         <v-row>
             <v-col cols="12">
@@ -33,17 +33,18 @@
 
         <v-row justify="center" class="my-4">
             <v-col cols="12" md="8">
-                <MainFAQ/>
+                <MainFAQ class="mb-2"/>
+                <ad-wrappper ad-slot="8238741844"/>
             </v-col>
             <v-col cols="12" md="4" xl="3">
-                 <h4 class="text-h5 mb-4">Stats</h4>
+                <h4 class="text-h5 mb-4">Stats</h4>
                 <StatsPanel/>
             </v-col>
         </v-row>
-<!--        <v-btn @click="testNotify()">Notify Test</v-btn>-->
-<!--        <JobList/> &lt;!&ndash;TODO: move&ndash;&gt;-->
-<!--        <dbg :data="authStore.user"/>-->
-<!--        <CreditsInfo/> &lt;!&ndash;TODO: move&ndash;&gt;-->
+        <!--        <v-btn @click="testNotify()">Notify Test</v-btn>-->
+        <!--        <JobList/> &lt;!&ndash;TODO: move&ndash;&gt;-->
+        <!--        <dbg :data="authStore.user"/>-->
+        <!--        <CreditsInfo/> &lt;!&ndash;TODO: move&ndash;&gt;-->
         <v-row class="my-10">
         </v-row>
     </v-container>
@@ -55,7 +56,7 @@ import { useAuthStore } from "~/stores/auth";
 import LatestSkinsPreviewList from "~/components/skin/LatestSkinsPreviewList.vue";
 import MainFAQ from "~/components/MainFAQ.vue";
 
-const {$notify,$flags} = useNuxtApp();
+const {$notify, $flags} = useNuxtApp();
 
 const authStore = useAuthStore();
 
@@ -75,7 +76,7 @@ function testNotify() {
         color: 'success',
         timeout: 20000,
         actionLabel: 'View',
-        actionLink:'/skins'
+        actionLink: '/skins'
     });
 }
 </script>
