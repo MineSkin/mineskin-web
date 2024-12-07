@@ -33,6 +33,22 @@
                 </template>
             </v-row>
         </v-infinite-scroll>
+        <v-row v-if="mySkins && mySkins.length > 0" class="mt-4">
+            <v-divider class="my-2"/>
+            <v-col>
+                <h3>Local/Legacy Skins</h3>
+                <span class="text-medium-emphasis">Skins stored in your browser that may not be linked to your account (e.g. from the classic website)</span>
+                <v-list density="compact">
+                    <v-list-item v-for="skin in mySkins" :key="skin">
+                        <template v-slot:title>
+                            <NuxtLink :to="localePath('/skins/'+skin)">
+                                {{ skin }}
+                            </NuxtLink>
+                        </template>
+                    </v-list-item>
+                </v-list>
+            </v-col>
+        </v-row>
         <!--            <v-col v-for="skin in skins">-->
         <!--                <v-card>-->
         <!--                    <v-card-text>-->
@@ -44,6 +60,7 @@
 </template>
 <script setup lang="ts">
 import { useNuxtApp } from "#app";
+import { useSkinStore } from "#imports";
 
 useHead({
     title: 'My Skins'
@@ -56,6 +73,9 @@ const router = useRouter()
 const {$mineskin} = useNuxtApp();
 
 const authStore = useAuthStore();
+
+const skinStore = useSkinStore();
+const {mySkins} = storeToRefs(skinStore);
 
 // const {
 //     data: skins,
