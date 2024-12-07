@@ -52,8 +52,30 @@
                 </div>
             </v-col>
             <v-col cols="12" md="6" class="text-end line-break-anywhere">
-                <div class="text-grey-darken-2">{{ skin?.uuid }}</div>
-                <div class="text-grey-darken-3">{{ skin?.texture?.hash?.skin }}</div>
+                <div class="text-grey-darken-2">
+                    <span class="mx-1">
+                        {{ skin?.uuid }}
+                        <v-tooltip location="left" text="Skin ID" activator="parent"/>
+                    </span>
+                    <CopyBtn
+                        :text="skin?.uuid"
+                        size="small"
+                        tooltip-location="left"
+                        content-key="skin_uuid"
+                    />
+                </div>
+                <div class="text-grey-darken-3">
+                    <span class="mx-1">
+                        {{ skin?.texture?.hash?.skin }}
+                        <v-tooltip location="left" text="Texture Hash" activator="parent"/>
+                    </span>
+                    <CopyBtn
+                        :text="skin?.texture?.hash?.skin"
+                        size="small"
+                        tooltip-location="left"
+                        content-key="skin_texture_hash"
+                    />
+                </div>
             </v-col>
         </v-row>
     </v-container>
