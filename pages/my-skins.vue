@@ -122,9 +122,7 @@ async function load({done}) {
 }
 
 onMounted(async () => {
-    if (!(await authStore.checkAuth())?.authenticated) return;
-
-    if (process.client) {
+        if (process.client) {
         try {
             const legacyStorageStr = localStorage.getItem("ngStorage-recentSkins");
             if (legacyStorageStr) {
@@ -140,6 +138,8 @@ onMounted(async () => {
             console.error(e)
         }
     }
+
+    if (!(await authStore.checkAuth())?.authenticated) return;
 })
 
 
