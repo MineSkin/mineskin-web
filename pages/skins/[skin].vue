@@ -52,8 +52,8 @@
                 </div>
             </v-col>
             <v-col cols="12" md="6" class="text-end line-break-anywhere">
+                <div class="text-grey-darken-2">{{ skin?.uuid }}</div>
                 <div class="text-grey-darken-3">{{ skin?.texture?.hash?.skin }}</div>
-                <div class="text-grey-darken-3">{{ skin?.uuid }}</div>
             </v-col>
         </v-row>
     </v-container>
