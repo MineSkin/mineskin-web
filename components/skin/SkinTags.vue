@@ -82,8 +82,7 @@ const {
 
 
 const authStore = useAuthStore();
-// const {authed} = storeToRefs(authStore);
-const authed = true;
+const {authed} = storeToRefs(authStore);
 
 const {$mineskin, $notify, $gtag} = useNuxtApp();
 
