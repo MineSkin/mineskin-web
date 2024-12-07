@@ -73,6 +73,7 @@
                                 :href="proxiedSkinTextureUrl"
                                 download
                                 prepend-icon="mdi-download"
+                                @click="downloadSkin"
                             ></v-btn>
                             <!--                            <v-btn-->
                             <!--                                color="accent"-->
@@ -114,7 +115,8 @@ const props = defineProps<{
 
 const {mdAndUp} = useDisplay();
 
-const {$flags, $mineskin} = useNuxtApp();
+const {$flags, $mineskin, $gtag} = useNuxtApp();
+
 const tagsVisible = computed(() => $flags.hasFeature('web.tags.visible'));
 const reportVisible = computed(() => $flags.hasFeature('web.report.visible'));
 
@@ -159,6 +161,14 @@ watch(viewTurnstileToken, async (token) => {
     }
     await $mineskin.skins.trackView(props.skin.uuid, token);
 });
+
+const downloadSkin = () => {
+    try {
+        $gtag('event', 'download_skin')
+    } catch (e) {
+        console.error(e);
+    }
+}
 
 const reportSkin = () => {
     //TODO
