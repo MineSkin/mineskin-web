@@ -294,22 +294,4 @@ onBeforeMount(() => {
     }
 });
 
-onMounted(() => {
-    if (process.client) {
-        try {
-            const legacyStorageStr = localStorage.getItem("ngStorage-recentSkins");
-            if (legacyStorageStr) {
-                localStorage.setItem("ngStorage-recentSkins-legacy", legacyStorageStr);
-                console.info("Migrating legacy skin storage");
-                const parsed = JSON.parse(legacyStorageStr);
-                for (let id of parsed) {
-                    skinStore.addSkin(id);
-                }
-                localStorage.removeItem("ngStorage-recentSkins");
-            }
-        } catch (e) {
-            console.error(e)
-        }
-    }
-})
 </script>

@@ -36,10 +36,10 @@
         <v-row v-if="mySkins && mySkins.length > 0" class="mt-4">
             <v-divider class="my-2"/>
             <v-col>
-                <h3>Local/Legacy Skins</h3>
+                <h3>Legacy Skins</h3>
                 <span class="text-medium-emphasis">Skins stored in your browser that may not be linked to your account (e.g. from the classic website)</span>
                 <v-list density="compact">
-                    <v-list-item v-for="skin in mySkins" :key="skin">
+                    <v-list-item v-for="skin in legacySkins" :key="skin">
                         <template v-slot:title>
                             <NuxtLink :to="localePath('/skins/'+skin)">
                                 {{ skin }}
@@ -61,6 +61,7 @@
 <script setup lang="ts">
 import { useNuxtApp } from "#app";
 import { useSkinStore } from "#imports";
+import { onMounted } from "vue";
 
 useHead({
     title: 'My Skins'
@@ -75,7 +76,7 @@ const {$mineskin} = useNuxtApp();
 const authStore = useAuthStore();
 
 const skinStore = useSkinStore();
-const {mySkins} = storeToRefs(skinStore);
+const {mySkins, legacySkins} = storeToRefs(skinStore);
 
 // const {
 //     data: skins,
@@ -122,6 +123,23 @@ async function load({done}) {
 
 onMounted(async () => {
     if (!(await authStore.checkAuth())?.authenticated) return;
+
+    if (process.client) {
+        try {
+            const legacyStorageStr = localStorage.getItem("ngStorage-recentSkins");
+            if (legacyStorageStr) {
+                localStorage.setItem("ngStorage-recentSkins-legacy", legacyStorageStr);
+                console.info("Migrating legacy skin storage");
+                const parsed = JSON.parse(legacyStorageStr);
+                for (let id of parsed) {
+                    skinStore.addLegacySkin(id);
+                }
+                localStorage.removeItem("ngStorage-recentSkins");
+            }
+        } catch (e) {
+            console.error(e)
+        }
+    }
 })
 
 

@@ -4,6 +4,7 @@ import { SkinVisibility2 } from "@mineskin/types";
 export const useSkinStore = defineStore('skins', () => {
 
     const mySkins = ref<string[]>([]);
+    const legacySkins = ref<string[]>([]);
 
     const addSkin = (skinId: string) => {
         if (!mySkins.value.includes(skinId)) {
@@ -14,9 +15,20 @@ export const useSkinStore = defineStore('skins', () => {
         }
     }
 
+    const addLegacySkin = (skinId: string) => {
+        if (!legacySkins.value.includes(skinId)) {
+            legacySkins.value.push(skinId);
+        }
+        if (legacySkins.value.length > 100) {
+            legacySkins.value.shift();
+        }
+    }
+
     return {
         mySkins,
-        addSkin
+        legacySkins,
+        addSkin,
+        addLegacySkin
     }
 
 }, {
