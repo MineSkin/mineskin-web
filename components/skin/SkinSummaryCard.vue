@@ -88,7 +88,15 @@
                     </v-row>
                     <v-row v-if="skin">
                         <v-col v-if="tagsVisible">
-                            <SkinTags :skin="skin"/>
+                            <span class="text-medium-emphasis">
+                                <span v-if="authed">
+                                    Tags
+                                </span>
+                                <span v-else>
+                                    Sign in to add tags
+                                </span>
+                            </span>
+                            <SkinTags class="mt-1" :skin="skin"/>
                         </v-col>
                         <v-col cols="12" md="3" v-if="reportVisible" align-self="end" class="text-end">
                             <SkinReportDialog :skin="skin"/>
@@ -108,6 +116,8 @@ import { PLACEHOLDER_BODY, PLACEHOLDER_HEAD } from "~/util/skin";
 import SkinTags from "~/components/skin/SkinTags.vue";
 import InvisibleTurnstile from "~/components/InvisibleTurnstile.vue";
 import { useInteractionsStore } from "~/stores/interactions";
+import { useAuthStore } from "~/stores/auth";
+import { storeToRefs } from "pinia";
 
 const props = defineProps<{
     skin: SkinInfo2;
@@ -119,6 +129,9 @@ const {$flags, $mineskin, $gtag} = useNuxtApp();
 
 const tagsVisible = computed(() => $flags.hasFeature('web.tags.visible'));
 const reportVisible = computed(() => $flags.hasFeature('web.report.visible'));
+
+const authStore = useAuthStore();
+const {authed} = storeToRefs(authStore);
 
 const interactionsStore = useInteractionsStore();
 const {recentViews} = storeToRefs(interactionsStore);

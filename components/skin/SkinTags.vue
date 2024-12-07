@@ -27,8 +27,9 @@ a {
                 </template>
             </v-chip>
         </v-slide-group-item>
+
         <v-slide-group-item class="d-inline-block">
-            <v-chip @click="toggleNewTagInput" v-if="authed && !addingTag">
+            <v-chip @click="toggleNewTagInput" v-if="!addingTag" :disabled="!authed">
                 <template v-slot:prepend>
                     <v-icon>mdi-plus</v-icon>
                 </template>
@@ -137,6 +138,7 @@ const doVote = async (tag: TagInfo, vote: TagVoteType) => {
 };
 
 const toggleNewTagInput = () => {
+    if(!authed.value) return;
     addingTag.value = !addingTag.value;
     if (addingTag.value) {
         setTimeout(() => {
