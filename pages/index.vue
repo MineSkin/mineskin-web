@@ -34,6 +34,7 @@
         <v-row justify="center" class="my-4">
             <v-col cols="12" md="8">
                 <MainFAQ class="mb-2"/>
+                 <!-- web v2 faq banner -->
                 <ad-wrappper ad-slot="8238741844"/>
             </v-col>
             <v-col cols="12" md="4" xl="3">
