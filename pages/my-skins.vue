@@ -33,7 +33,7 @@
                 </template>
             </v-row>
         </v-infinite-scroll>
-        <v-row v-if="mySkins && mySkins.length > 0" class="mt-4">
+        <v-row v-if="legacySkins && legacySkins.length > 0" class="mt-4">
             <v-divider class="my-2"/>
             <v-col>
                 <h3>Legacy Skins</h3>
