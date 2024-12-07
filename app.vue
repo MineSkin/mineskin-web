@@ -129,6 +129,7 @@ import { storeToRefs } from "pinia";
 import RightNavDrawer from "~/components/RightNavDrawer.vue";
 import MainFooter from "~/components/MainFooter.vue";
 import SentryInit from "~/components/SentryInit.vue";
+import { onMounted } from "vue";
 
 const config = useRuntimeConfig();
 
@@ -247,6 +248,7 @@ const router = useRouter();
 
 const authStore = useAuthStore();
 const queueStore = useQueueStore();
+const skinStore = useSkinStore();
 
 const {smAndUp, mdAndUp} = useDisplay();
 
@@ -286,6 +288,25 @@ onBeforeMount(() => {
     if (process.client) {
         try {
             authStore.checkAuth();
+        } catch (e) {
+            console.error(e)
+        }
+    }
+});
+
+onMounted(() => {
+    if (process.client) {
+        try {
+            const legacyStorageStr = localStorage.getItem("ngStorage-recentSkins");
+            if (legacyStorageStr) {
+                localStorage.setItem("ngStorage-recentSkins-legacy", legacyStorageStr);
+                console.info("Migrating legacy skin storage");
+                const parsed = JSON.parse(legacyStorageStr);
+                for (let id of parsed) {
+                    skinStore.addSkin(id);
+                }
+                localStorage.removeItem("ngStorage-recentSkins");
+            }
         } catch (e) {
             console.error(e)
         }

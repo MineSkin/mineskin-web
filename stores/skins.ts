@@ -9,7 +9,7 @@ export const useSkinStore = defineStore('skins', () => {
         if (!mySkins.value.includes(skinId)) {
             mySkins.value.push(skinId);
         }
-        if (mySkins.value.length > 20) {
+        if (mySkins.value.length > 100) {
             mySkins.value.shift();
         }
     }
