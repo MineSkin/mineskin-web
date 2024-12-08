@@ -11,13 +11,9 @@
             <v-btn icon="mdi-arrow-right" variant="text" :to="localePath('/skins')"></v-btn>
         </h3>
         <v-row  class="skin-single-row">
-            <v-slide-group>
-<!--            <v-col cols="3" md="2" v-for="skin in latestSkins" :key="skin.uuid">-->
-                <skin-link-img class="ma-2" v-for="skin in latestSkins" :key="skin.uuid" :skin="skin"/>
-<!--            </v-col>-->
-<!--            <v-col cols="2" md="2" v-for="n in 6" :key="n">-->
-                <skin-link-img class="ma-2" v-if="!latestSkins" v-for="n in 16" :key="n"/>
-<!--            </v-col>-->
+            <v-slide-group :show-arrows="isHydrated ? 'desktop':'always'">
+                <skin-link-img class="ma-2" v-if="isHydrated && latestSkins" v-for="skin in latestSkins" :key="skin.uuid" :skin="skin"/>
+                <skin-link-img class="ma-2" v-else v-for="n in 16" :key="n"/>
             </v-slide-group>
         </v-row>
 <!--        <dbg :data="latestSkins"/>-->
@@ -26,9 +22,12 @@
 <script setup lang="ts">
 
 import { useLazyAsyncData, useNuxtApp } from "nuxt/app";
+import { onMounted } from "#imports";
 
 const localePath = useLocalePath();
 const {$mineskin} = useNuxtApp();
+
+const isHydrated = ref(false);
 
 const {
     data: latestSkins,
@@ -36,4 +35,8 @@ const {
 } = useLazyAsyncData(async () => {
     return (await $mineskin.skins.list())?.skins?.slice(0,16)||[];
 });
+
+onMounted(() => {
+    isHydrated.value = true;
+})
 </script>
