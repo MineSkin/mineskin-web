@@ -41,7 +41,7 @@
                     @continue="generate"
                 />
             </v-col>
-            <v-divider :vertical="mdAndUp" v-show="!generateType"/>
+            <v-divider :vertical="!mdAndDown" v-show="!generateType"/>
             <v-col
                 :cols="12"
                 :md="!generateType?'':generateType === GenerateType.UPLOAD ? 4 : 4"
@@ -56,7 +56,7 @@
                     @pick="showFilePicker()"
                 />
             </v-col>
-            <v-divider :vertical="mdAndUp" v-show="!generateType"/>
+            <v-divider :vertical="!mdAndDown" v-show="!generateType"/>
             <v-col
                 :cols="12"
                 :md="!generateType ? 4 : generateType === GenerateType.USER ? 6 : 'auto'"
@@ -262,7 +262,7 @@ const authStore = useAuthStore();
 const queueStore = useQueueStore();
 const settingsStore = useSettingsStore();
 
-const {mdAndUp} = useDisplay();
+const {mdAndUp,mdAndDown} = useDisplay();
 
 const {grants} = storeToRefs(authStore);
 const {jobsDrawer} = storeToRefs(queueStore);
