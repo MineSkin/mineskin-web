@@ -4,6 +4,7 @@
             <v-col cols="12">
                 <h1>MineSkin</h1>
                 <p>{{ $t("Automate Minecraft Skin Signature Generation") }}</p>
+                <dbg :data="breakpoint"></dbg>
             </v-col>
         </v-row>
         <v-row v-if="notificationBanner">
@@ -61,7 +62,7 @@ const {$notify, $flags} = useNuxtApp();
 
 const authStore = useAuthStore();
 
-const {mdAndUp} = useDisplay();
+const {mdAndUp,name:breakpoint} = useDisplay();
 
 const notificationBanner = computed(() => {
     if ($flags.hasFeature('web.notification_banner')) {

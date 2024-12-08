@@ -41,7 +41,7 @@
                     @continue="generate"
                 />
             </v-col>
-            <v-divider :vertical="!mdAndDown" v-show="!generateType"/>
+            <v-divider :vertical="!isHydrated||mdAndUp" v-show="!generateType"/>
             <v-col
                 :cols="12"
                 :md="!generateType?'':generateType === GenerateType.UPLOAD ? 4 : 4"
@@ -56,7 +56,7 @@
                     @pick="showFilePicker()"
                 />
             </v-col>
-            <v-divider :vertical="!mdAndDown" v-show="!generateType"/>
+            <v-divider :vertical="!isHydrated||mdAndUp" v-show="!generateType"/>
             <v-col
                 :cols="12"
                 :md="!generateType ? 4 : generateType === GenerateType.USER ? 6 : 'auto'"
@@ -257,6 +257,8 @@ import { useSettingsStore } from "~/stores/settings";
 import { storeToRefs } from "pinia";
 
 const {$mineskin, $notify, $flags, $gtag} = useNuxtApp();
+
+const isHydrated = ref(false);
 
 const authStore = useAuthStore();
 const queueStore = useQueueStore();
@@ -576,6 +578,7 @@ async function generate() {
 
 
 onMounted(async () => {
+    isHydrated.value = true;
     try {
         if ($flags.hasFeature('web.visibility.private')) {
             visibilities.value.push(SkinVisibility2.PRIVATE);
