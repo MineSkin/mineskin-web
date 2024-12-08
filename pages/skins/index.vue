@@ -37,7 +37,6 @@
                 </template>
             </v-row>
             <template v-slot:loading>
-                <v-progress-linear class="my-0 mx-4" indeterminate color="primary"/>
             </template>
         </v-infinite-scroll>
         <v-row justify="center" dense>
