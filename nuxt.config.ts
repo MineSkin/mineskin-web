@@ -12,7 +12,26 @@ export default defineNuxtConfig({
         '/my-skins': {ssr: false},
         '/gallery': {redirect: '/skins'},
         '/bulk': {redirect: '/'},
-        '/stats': {redirect: '/'}
+        '/stats': {redirect: '/'},
+
+        '/': {
+            isr: 60 * 2,
+            cache: {
+                maxAge: 60 * 60 * 24,
+            }
+        },
+        '/skins': {
+            isr: 60 * 2,
+            cache: {
+                maxAge: 60 * 60
+            }
+        },
+        '/skins/**': {
+            isr: 60 * 60,
+            cache: {
+                maxAge: 60 * 60 * 24,
+            }
+        },
     },
     plugins: [
         '@/plugins/sentry',
