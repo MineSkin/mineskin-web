@@ -5,7 +5,22 @@ export default defineNuxtConfig({
     compatibilityDate: '2024-04-03',
     devtools: {enabled: true},
     app: {
-        head: {}
+        head: {
+            link: [
+                {
+                    rel: 'preconnect',
+                    href: 'https://cdn.jsdelivr.net/'
+                },
+                {
+                    rel: 'dns-prefetch',
+                    href: 'https://imagedelivery.net/'
+                },
+                {
+                    rel: 'dns-prefetch',
+                    href: 'https://api.mineskin.org/'
+                }
+            ]
+        }
     },
     ssr: process.env.NODE_ENV !== 'development',
     routeRules: {
