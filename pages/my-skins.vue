@@ -6,7 +6,10 @@
             </v-col>
             <v-spacer/>
             <v-col cols="auto">
-                <v-btn v-if="authStore.authed" :to="localePath('/export')" color="secondary">Export Skins</v-btn>
+                <v-btn v-if="legacySkins || mySkins" @click="showLocal=!showLocal" color="secondary" class="mx-2">
+                    Toggle Local Skins
+                </v-btn>
+                <v-btn v-if="authStore.authed" :to="localePath('/export')" color="primary" class="mx-2">Export Skins</v-btn>
             </v-col>
         </v-row>
         <v-row v-if="!authStore.authed" justify="center">
@@ -14,7 +17,7 @@
                 <v-alert type="warning" text="Sign in to view your skins"></v-alert>
             </v-col>
         </v-row>
-        <v-infinite-scroll v-else :items="skins" :onLoad="load" style="overflow: hidden">
+        <v-infinite-scroll v-else-if="!showLocal" :items="skins" :onLoad="load" style="overflow: hidden">
             <v-row justify="center" dense>
                 <template v-for="(item, index) in skins" :key="item">
                     <!--                    <v-col cols="4" sm="3" md="2">-->
@@ -33,7 +36,7 @@
                 </template>
             </v-row>
         </v-infinite-scroll>
-        <v-row v-if="legacySkins || mySkins" class="mt-4">
+        <v-row v-if="showLocal && (legacySkins || mySkins)" class="mt-4">
             <v-divider class="my-2"/>
             <v-col cols="12" md="6" v-if="legacySkins && legacySkins.length > 0">
                 <h3>Legacy Skins</h3>
@@ -90,6 +93,8 @@ const authStore = useAuthStore();
 
 const skinStore = useSkinStore();
 const {mySkins, legacySkins} = storeToRefs(skinStore);
+
+const showLocal = ref(false);
 
 // const {
 //     data: skins,
