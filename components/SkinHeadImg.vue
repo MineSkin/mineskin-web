@@ -5,7 +5,7 @@
 }
 
 .skin-head-img .v-img__img.v-img__img--preload {
-    filter: sepia(1) hue-rotate(var(--skin-head-hue, 0deg)) saturate(var(--skin-head-sat, 100%)) blur(4px);
+    filter: sepia(1) hue-rotate(var(--skin-head-hue, 0deg)) saturate(var(--skin-head-sat, 100%)) blur(2px);
 }
 </style>
 <template>
