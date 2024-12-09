@@ -1,6 +1,6 @@
 import type { SkinInfo2 } from "@mineskin/types";
 
-export const PLACEHOLDER_HEAD = 'https://imagedelivery.net/3uwxrP7hx2SHdBFF5lTuXg/30ab0642-e5e0-41fa-64bf-b6d0eac30c00/public'
+export const PLACEHOLDER_HEAD = 'https://imagedelivery.net/3uwxrP7hx2SHdBFF5lTuXg/fdd1181f-9ebf-4930-84b3-eaae51985200/public'
 export const PLACEHOLDER_BODY = 'https://imagedelivery.net/3uwxrP7hx2SHdBFF5lTuXg/5385f922-8f90-4cff-d7e4-62edd12eb900/public';
 
 export function skinName(skin?: SkinInfo2, fallback: string = 'Skin'): string {
