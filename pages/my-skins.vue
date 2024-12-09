@@ -33,13 +33,26 @@
                 </template>
             </v-row>
         </v-infinite-scroll>
-        <v-row v-if="legacySkins && legacySkins.length > 0" class="mt-4">
+        <v-row v-if="legacySkins || mySkins" class="mt-4">
             <v-divider class="my-2"/>
-            <v-col>
+            <v-col cols="12" md="6" v-if="legacySkins && legacySkins.length > 0">
                 <h3>Legacy Skins</h3>
                 <span class="text-medium-emphasis">Skins stored in your browser that may not be linked to your account (e.g. from the classic website)</span>
                 <v-list density="compact">
                     <v-list-item v-for="skin in legacySkins" :key="skin">
+                        <template v-slot:title>
+                            <NuxtLink :to="localePath('/skins/'+skin)">
+                                {{ skin }}
+                            </NuxtLink>
+                        </template>
+                    </v-list-item>
+                </v-list>
+            </v-col>
+            <v-col cols="12" md="6" v-if="mySkins && mySkins.length > 0">
+                <h3>Local Skins</h3>
+                <span class="text-medium-emphasis">Skins stored in your browser that may not be linked to your account (e.g. generated without being logged in)</span>
+                <v-list density="compact">
+                    <v-list-item v-for="skin in mySkins" :key="skin">
                         <template v-slot:title>
                             <NuxtLink :to="localePath('/skins/'+skin)">
                                 {{ skin }}
@@ -122,7 +135,7 @@ async function load({done}) {
 }
 
 onMounted(async () => {
-        if (process.client) {
+    if (process.client) {
         try {
             const legacyStorageStr = localStorage.getItem("ngStorage-recentSkins");
             if (legacyStorageStr) {
