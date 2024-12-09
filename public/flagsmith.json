@@ -94,7 +94,7 @@
     },
     "web.credits.show_info": {
       "id": 110797,
-      "enabled": false,
+      "enabled": true,
       "value": null
     },
     "web.notification_banner": {
@@ -105,15 +105,54 @@
     "web.ads.gallery_inline_rate": {
       "id": 111105,
       "enabled": false,
-      "value": ".2"
+      "value": ".4"
     },
     "migrations.scheduled": {
       "id": 111200,
-      "enabled": false,
+      "enabled": true,
       "value": 60
+    },
+    "store.notification_banner": {
+      "id": 115066,
+      "enabled": false,
+      "value": "{\n\"title\":\"Black Friday Sale\",\n\"text\": \"Use code BLACKFRIDAY24 for 25% off subscriptions and credits!\",\n\"color\": \"purple-accent-3\"\n}"
+    },
+    "web.tags.visible": {
+      "id": 115147,
+      "enabled": true,
+      "value": null
+    },
+    "web.report.visible": {
+      "id": 115265,
+      "enabled": true,
+      "value": null
+    },
+    "tags.vote_threshold.visible": {
+      "id": 115522,
+      "enabled": false,
+      "value": 1
+    },
+    "account.billing.period_switch": {
+      "id": 115581,
+      "enabled": true,
+      "value": null
+    },
+    "account.billing.global_discount": {
+      "id": 115787,
+      "enabled": false,
+      "value": "0.25"
+    },
+    "account.notification_banner": {
+      "id": 115819,
+      "enabled": false,
+      "value": "{\n\"title\":\"Black Friday Sale\",\n\"text\": \"Use code BLACKFRIDAY24 for 25% off subscriptions and credits!\",\n\"color\": \"purple-accent-3\"\n}"
     }
   },
-  "ts": null,
-  "traits": {},
-  "evaluationEvent": null
+  "ts": 1733756393645,
+  "evaluationContext": {
+    "environment": {
+      "apiKey": "QdesrfNXeKrpbFPhi7bNEx"
+    }
+  },
+  "evaluationEvent": {}
 }
