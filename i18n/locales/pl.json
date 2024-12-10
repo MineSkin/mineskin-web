@@ -1,5 +1,5 @@
 {
-  "_language": "Polish",
+  "_language": "Polski",
   "What is MineSkin?": "Co to jest MineSkin?",
   "Skin Gallery": "Galeria Skórki",
   "Gallery": "Galeria",
@@ -25,7 +25,7 @@
   "n_skins": "brak skinów | 1 skórka | Skiny {n}",
   "skin_is_are": "skórka | skórki są",
   "This request will consume {credits} if the {skins} successfully generated.": "To żądanie zużyje {credits} jeśli {skins} zostanie pomyślnie wygenerowany.",
-  "This request will consume 1 credit if the skin is successfully generated. | This request will consume {n} credits if the skins are successfully generated.": "This request will consume 1 credit if the skin is successfully generated. | This request will consume {n} credits if the skins are successfully generated.",
+  "This request will consume 1 credit if the skin is successfully generated. | This request will consume {n} credits if the skins are successfully generated.": "To żądanie zużyje 1 kredyt, jeśli skórka zostanie pomyślnie wygenerowana. | To żądanie zużyje {n} kredytów, jeśli skórki zostaną pomyślnie wygenerowane.",
   "You have {credits} remaining.": "Pozostało Ci {credits}.",
   "Download Skin": "Pobierz skórkę",
   "Texture URL": "Adres URL tekstur",
