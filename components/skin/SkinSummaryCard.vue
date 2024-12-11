@@ -137,7 +137,7 @@ const interactionsStore = useInteractionsStore();
 const {recentViews} = storeToRefs(interactionsStore);
 
 const skinLink = computed(() => {
-    return `https://minesk.in/${ props.skin.shortId || props.skin.uuid }`;
+    return `https://minesk.in/${ /*props.skin.shortId ||*/ props.skin.uuid }`;
 });
 
 const skinTexture = computed<Maybe<SkinIdAndTexture>>(() => props.skin.texture);
