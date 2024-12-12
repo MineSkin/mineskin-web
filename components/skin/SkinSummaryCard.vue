@@ -84,6 +84,9 @@
                             <!--                                prepend-icon="mdi-open-in-new"-->
                             <!--                            ></v-btn>-->
                         </v-col>
+                        <v-col cols="12" md="3" v-if="reportVisible" align-self="end" class="text-end">
+                            <SkinReportDialog :skin="skin"/>
+                        </v-col>
                         <InvisibleTurnstile v-if="skin" v-model:token="viewTurnstileToken" action="view-skin"/>
                     </v-row>
                     <v-row v-if="skin">
@@ -97,9 +100,6 @@
                                 </span>
                             </span>
                             <SkinTags class="mt-1" :skin="skin"/>
-                        </v-col>
-                        <v-col cols="12" md="3" v-if="reportVisible" align-self="end" class="text-end">
-                            <SkinReportDialog :skin="skin"/>
                         </v-col>
                     </v-row>
                     <v-row class="pa-6" justify="end" style="position: absolute; bottom: 0; right: 0;" v-if="mdAndUp">
