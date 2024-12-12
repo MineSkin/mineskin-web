@@ -4,6 +4,9 @@ pre {
     max-height: 250px;
     overflow: auto;
     }
+script {
+        display: none !important;
+}
 </style>
 <template>
     <pre v-if="config.public.isDev">{{ json }}</pre>
