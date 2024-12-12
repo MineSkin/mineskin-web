@@ -102,6 +102,32 @@
                             <SkinReportDialog :skin="skin"/>
                         </v-col>
                     </v-row>
+                    <v-row class="pa-6" justify="end" style="position: absolute; bottom: 0; right: 0;" v-if="mdAndUp">
+                        <v-col class="text-end">
+                            <div class="text-grey-darken-2 mt-2" v-if="skin?.shortId">
+                                <span class="mx-1">
+                                    {{ skin?.shortId }}
+                                    <v-tooltip location="left" text="Short Skin ID" activator="parent" open-on-click/>
+                                </span>
+                                <CopyBtn
+                                    :text="skin?.uuid"
+                                    tooltip-location="left"
+                                    content-key="skin_summary_short_id"
+                                />
+                            </div>
+                             <div class="text-grey-darken-2 mt-2" v-if="skin?.uuid">
+                                <span class="mx-1">
+                                    {{ skin?.uuid }}
+                                    <v-tooltip location="left" text="Skin ID" activator="parent" open-on-click/>
+                                </span>
+                                <CopyBtn
+                                    :text="skin?.uuid"
+                                    tooltip-location="left"
+                                    content-key="skin_summary_uuid"
+                                />
+                            </div>
+                        </v-col>
+                    </v-row>
                 </v-col>
             </v-row>
         </v-card-text>
