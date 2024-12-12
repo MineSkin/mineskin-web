@@ -56,6 +56,7 @@ import DateUTC from "~/components/DateUTC.vue";
 import DateLocal from "~/components/DateLocal.vue";
 import { sleep } from "~/util/misc";
 import { storeToRefs } from "pinia";
+import type { JobWithMeta } from "~/types/JobWithMeta";
 
 const {$mineskin, $notify} = useNuxtApp();
 
@@ -113,17 +114,18 @@ const tryJobRefresh = async () => {
     await refreshJob();
     refreshCounter.value++;
 
-    queueStore.addJob(job.value);
-
-    if (oldStatus && oldStatus !== job.value?.status) {
-        console.log('status changed', oldStatus, job.value?.status)
-        if (job.value.status === 'failed' && jobRes.value?.errors) {
-            for (let error of jobRes.value.errors) {
-                $notify({
-                    text: error.message,
-                    color: 'error',
-                    timeout: 2000
-                });
+    if (job.value) {
+        queueStore.addJob(job.value as JobWithMeta);
+        if (oldStatus && oldStatus !== job.value?.status) {
+            console.log('status changed', oldStatus, job.value?.status)
+            if (job.value.status === 'failed' && jobRes.value?.errors) {
+                for (let error of jobRes.value.errors) {
+                    $notify({
+                        text: error.message,
+                        color: 'error',
+                        timeout: 2000
+                    });
+                }
             }
         }
     }
