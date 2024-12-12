@@ -164,13 +164,13 @@ useHead({
     script: [
         {
             src: '//cdn.cookie-script.com/s/639a4b90a98c39ff998dc9c06ffa14b9.js',
-            tagPosition: 'bodyOpen'
+            tagPosition: 'head'
         },
         {
             src: 'https://www.googletagmanager.com/gtag/js?id=G-5GVV9RF5HZ',
             async: true,
             'data-cookie-consent': 'tracking',
-            tagPosition: 'bodyClose'
+            tagPosition: 'head'
         },
         {
             innerHTML: `
@@ -181,7 +181,7 @@ useHead({
             gtag('config', 'G-5GVV9RF5HZ');
             `,
             'data-cookie-consent': 'tracking',
-            tagPosition: 'bodyClose'
+            tagPosition: 'head'
         },
         {
             type: 'application/ld+json',
