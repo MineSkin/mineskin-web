@@ -23,7 +23,8 @@
             please share any feedback or issues on <a class="text-decoration-none text-indigo"
                                                       href="https://minesk.in/discord" target="_blank">Discord</a>.<br/>
             <small>You can also go back
-                to the <a class="text-decoration-none text-purple text-indigo" href="https://classic.mineskin.org?utm_source=website_v2&utm_medium=link&utm_campaign=announcement_banner">classic
+                to the <a class="text-decoration-none text-purple text-indigo"
+                          href="https://classic.mineskin.org?utm_source=website_v2&utm_medium=link&utm_campaign=announcement_banner">classic
                     website</a></small>
         </template>
     </v-alert>
@@ -35,11 +36,16 @@ import { storeToRefs } from "pinia";
 const settingsStore = useSettingsStore();
 const {newWebsiteBannerClosed} = storeToRefs(settingsStore);
 
+const isHydrated = ref(false);
 const showBanner = computed(() => {
-    return !newWebsiteBannerClosed.value || newWebsiteBannerClosed.value < Math.floor(Date.now()) - 1000 * 60 * 60 * 24;
+    return isHydrated.value && (!newWebsiteBannerClosed.value || newWebsiteBannerClosed.value < Math.floor(Date.now()) - 1000 * 60 * 60 * 24);
 });
 
 const onClosed = () => {
     newWebsiteBannerClosed.value = Math.floor(Date.now());
 }
+
+onMounted(() => {
+    isHydrated.value = true;
+})
 </script>
