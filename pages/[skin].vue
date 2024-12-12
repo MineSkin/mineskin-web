@@ -10,6 +10,8 @@
 import { onBeforeRouteUpdate, useRoute } from "#app";
 import { definePageMeta } from "#imports";
 
+
+
 definePageMeta({
     middleware: [
         function (to, from) {
@@ -32,6 +34,15 @@ const skinId = computed<string>(() => {
     const currentRoute = router.currentRoute.value;
     return currentRoute.params['skin'] as string;
 });
+
+useHead({
+    meta: [
+        {
+            "http-equiv": 'refresh',
+            content: '0;url=' + localePath(`/skins/${ skinId.value }`)
+        }
+    ]
+})
 
 onMounted(() => {
     router.replace(localePath(`/skins/${ skinId.value }`));
