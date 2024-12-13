@@ -4,6 +4,7 @@ import type { I18nOptions } from "vue-i18n";
 export default {
     legacy: false,
     globalInjection: true,
+    fallbackLocale: 'en',
     messages: {
         en: {$vuetify: en},
         de: {$vuetify: de},

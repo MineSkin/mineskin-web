@@ -25,9 +25,9 @@ export default defineNuxtConfig({
     ssr: process.env.NODE_ENV !== 'development',
     routeRules: {
         '/my-skins': {ssr: false},
-        '/gallery': {redirect: '/skins'},
-        '/bulk': {redirect: '/'},
-        '/stats': {redirect: '/'},
+        '/gallery': {redirect: {to: '/skins', statusCode: 301}},
+        '/bulk': {redirect: {to: '/', statusCode: 301}},
+        '/stats': {redirect: {to: '/', statusCode: 301}},
 
         '/': {
             isr: 60 * 2,

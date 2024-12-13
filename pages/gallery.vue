@@ -10,6 +10,15 @@
 const localePath = useLocalePath()
 const router = useRouter();
 
+useHead({
+    meta: [
+        {
+            "http-equiv": 'refresh',
+            content: '0;url=' + localePath(`/skins`)
+        }
+    ]
+})
+
 onMounted(() => {
     router.replace(localePath(`/skins`));
 })

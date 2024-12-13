@@ -1,11 +1,11 @@
 <template>
     <div>
         <v-row justify="center" class="mb-2 flex-0-0">
-            URL
+            {{ $t("URL") }}
         </v-row>
         <InputList
             v-model="urls"
-            label="URL"
+            :label="$t('URL')"
             type="url"
             rule="url"
             prepend-icon="mdi-link"

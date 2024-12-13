@@ -84,6 +84,9 @@
                             <!--                                prepend-icon="mdi-open-in-new"-->
                             <!--                            ></v-btn>-->
                         </v-col>
+                        <v-col cols="12" md="3" v-if="reportVisible" align-self="end" class="text-end">
+                            <SkinReportDialog :skin="skin"/>
+                        </v-col>
                         <InvisibleTurnstile v-if="skin" v-model:token="viewTurnstileToken" action="view-skin"/>
                     </v-row>
                     <v-row v-if="skin">
@@ -98,8 +101,31 @@
                             </span>
                             <SkinTags class="mt-1" :skin="skin"/>
                         </v-col>
-                        <v-col cols="12" md="3" v-if="reportVisible" align-self="end" class="text-end">
-                            <SkinReportDialog :skin="skin"/>
+                    </v-row>
+                    <v-row class="pa-6" justify="end" style="position: absolute; bottom: 0; right: 0;" v-if="mdAndUp">
+                        <v-col class="text-end">
+                            <div class="text-grey-darken-2 mt-2" v-if="skin?.shortId">
+                                <span class="mx-1">
+                                    {{ skin?.shortId }}
+                                    <v-tooltip location="left" text="Short Skin ID" activator="parent" open-on-click/>
+                                </span>
+                                <CopyBtn
+                                    :text="skin?.uuid"
+                                    tooltip-location="left"
+                                    content-key="skin_summary_short_id"
+                                />
+                            </div>
+                             <div class="text-grey-darken-2 mt-2" v-if="skin?.uuid">
+                                <span class="mx-1">
+                                    {{ skin?.uuid }}
+                                    <v-tooltip location="left" text="Skin ID" activator="parent" open-on-click/>
+                                </span>
+                                <CopyBtn
+                                    :text="skin?.uuid"
+                                    tooltip-location="left"
+                                    content-key="skin_summary_uuid"
+                                />
+                            </div>
                         </v-col>
                     </v-row>
                 </v-col>
@@ -137,7 +163,7 @@ const interactionsStore = useInteractionsStore();
 const {recentViews} = storeToRefs(interactionsStore);
 
 const skinLink = computed(() => {
-    return `https://minesk.in/${ props.skin.shortId || props.skin.uuid }`;
+    return `https://minesk.in/${ /*props.skin.shortId ||*/ props.skin.uuid }`;
 });
 
 const skinTexture = computed<Maybe<SkinIdAndTexture>>(() => props.skin.texture);

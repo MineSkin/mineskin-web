@@ -163,44 +163,14 @@ useHead({
     ],
     script: [
         {
-
-            src: '//www.termsfeed.com/public/cookie-consent/4.1.0/cookie-consent.js',
-            tagPosition: 'bodyOpen'
+            src: '//cdn.cookie-script.com/s/639a4b90a98c39ff998dc9c06ffa14b9.js',
+            tagPosition: 'head'
         },
-        {
-            innerHTML: `
-        var runCookieConsent = function () {
-            if(!window.cookieconsent) {
-                console.error('CookieConsent not loaded');
-                setTimeout(runCookieConsent, 1000);
-                return;
-            }
-            cookieconsent.run({
-                "notice_banner_type":"simple",
-                "consent_type":"express",
-                "palette":"dark",
-                "language":"en",
-                "page_load_consent_levels":["strictly-necessary"],
-                "notice_banner_reject_button_hide":false,
-                "preferences_center_close_button_hide":false,
-                "page_refresh_confirmation_buttons":false,
-                "website_name":"MineSkin"
-            });
-        };
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', runCookieConsent);
-        } else {
-            runCookieConsent();
-        }
-    `,
-            tagPosition: 'bodyOpen'
-        },
-
         {
             src: 'https://www.googletagmanager.com/gtag/js?id=G-5GVV9RF5HZ',
             async: true,
             'data-cookie-consent': 'tracking',
-            tagPosition: 'bodyClose'
+            tagPosition: 'head'
         },
         {
             innerHTML: `
@@ -211,7 +181,7 @@ useHead({
             gtag('config', 'G-5GVV9RF5HZ');
             `,
             'data-cookie-consent': 'tracking',
-            tagPosition: 'bodyClose'
+            tagPosition: 'head'
         },
         {
             type: 'application/ld+json',
@@ -231,12 +201,6 @@ useHead({
                     "query-input": "required name=search_term_string"
                 }
             }),
-        }
-    ],
-    noscript: [
-        {
-            innerHTML: 'Free cookie consent management tool by <a href="https://www.termsfeed.com/">TermsFeed</a>',
-            tagPosition: 'bodyClose'
         }
     ]
 }, {mode: 'client'})

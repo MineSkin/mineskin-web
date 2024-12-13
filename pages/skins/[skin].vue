@@ -55,7 +55,7 @@
                 <div class="text-grey-darken-2">
                     <span class="mx-1">
                         {{ skin?.uuid }}
-                        <v-tooltip location="left" text="Skin ID" activator="parent"/>
+                        <v-tooltip location="left" text="Skin ID" activator="parent" open-on-click/>
                     </span>
                     <CopyBtn
                         :text="skin?.uuid"
@@ -67,7 +67,7 @@
                 <div class="text-grey-darken-3">
                     <span class="mx-1">
                         {{ skin?.texture?.hash?.skin }}
-                        <v-tooltip location="left" text="Texture Hash" activator="parent"/>
+                        <v-tooltip location="left" text="Texture Hash" activator="parent" open-on-click/>
                     </span>
                     <CopyBtn
                         :text="skin?.texture?.hash?.skin"

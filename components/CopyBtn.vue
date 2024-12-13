@@ -1,5 +1,5 @@
 <template>
-    <v-tooltip :location="tooltipLocation||'bottom'" :text="tooltipText">
+    <v-tooltip :location="tooltipLocation||'bottom'" :text="tooltipText" open-on-click>
         <template v-slot:activator="{ props }">
             <v-icon
                 v-bind="props"
