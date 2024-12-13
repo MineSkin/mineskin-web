@@ -1,5 +1,5 @@
 <template>
-    <nuxt-link :to="skin?localePath('/skins/'+skin.uuid):undefined">
+    <nuxt-link prefetch prefetch-on="interaction" :to="skin?localePath('/skins/'+skin.uuid):undefined">
         <v-sheet
             width="min(180px,max(90px,20vmin))"
         >

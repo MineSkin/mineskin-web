@@ -1,5 +1,5 @@
 <template>
-    <NuxtLink :to="localePath(computedPath)" @click="handleClick">
+    <NuxtLink prefetch prefetch-on="interaction" :to="localePath(computedPath)" @click="handleClick">
         <slot></slot>
     </NuxtLink>
 </template>

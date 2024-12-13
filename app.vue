@@ -114,6 +114,7 @@
 
             </v-app-bar>
             <v-main style="--v-layout-top: 56px">
+                <LoadingIndicator style="margin-top: var(--v-layout-top)"/>
                 <NuxtPage/>
             </v-main>
             <MainFooter/>
@@ -130,6 +131,7 @@ import RightNavDrawer from "~/components/RightNavDrawer.vue";
 import MainFooter from "~/components/MainFooter.vue";
 import SentryInit from "~/components/SentryInit.vue";
 import { onMounted } from "vue";
+import LoadingIndicator from "~/components/LoadingIndicator.vue";
 
 const config = useRuntimeConfig();
 

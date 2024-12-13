@@ -6,7 +6,7 @@
 }
 </style>
 <template>
-    <nuxt-link :to="skin ? localePath('/skins/'+skin.uuid) : undefined">
+    <nuxt-link prefetch prefetch-on="interaction" :to="skin ? localePath('/skins/'+skin.uuid) : undefined">
         <v-sheet
             class="pa-2"
         >
