@@ -71,15 +71,15 @@
                     align-tabs="end"
                 >
                     <v-tab :to="localePath('/')">
-                        <span v-if="mdAndUp">{{ $t("Generate") }}</span>
+                        <span v-if="!isHydrated||mdAndUp">{{ $t("Generate") }}</span>
                         <v-icon v-else icon="mdi-home"></v-icon>
                     </v-tab>
                     <v-tab :to="localePath('/skins')">
-                        <span v-if="mdAndUp">{{ $t("Gallery") }}</span>
+                        <span v-if="!isHydrated||mdAndUp">{{ $t("Gallery") }}</span>
                         <v-icon v-else icon="mdi-image-search"></v-icon>
                     </v-tab>
                     <v-tab v-if="authStore.authed" :to="localePath('/my-skins')">
-                        <span v-if="mdAndUp">{{ $t("My Skins") }}</span>
+                        <span v-if="!isHydrated||mdAndUp">{{ $t("My Skins") }}</span>
                         <v-icon v-else icon="mdi-view-grid"></v-icon>
                     </v-tab>
                 </v-tabs>
@@ -225,6 +225,8 @@ const authStore = useAuthStore();
 const queueStore = useQueueStore();
 const skinStore = useSkinStore();
 
+const isHydrated = ref(false);
+
 const {smAndUp, mdAndUp} = useDisplay();
 
 const {jobsSorted, jobsDrawer} = storeToRefs(queueStore);
@@ -268,5 +270,9 @@ onBeforeMount(() => {
         }
     }
 });
+
+onMounted(() => {
+    isHydrated.value = true;
+})
 
 </script>
