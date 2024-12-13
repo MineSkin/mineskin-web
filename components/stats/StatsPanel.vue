@@ -7,10 +7,18 @@
                     <v-list-item>
                         <v-list-item-title class="text-h5">
                             <div class="d-inline"><strong>{{ formatNumber(totalTotal) }}</strong></div>
-                            <div class="d-inline float-end text-end"><span>skins generated</span></div>
+                            <div class="d-inline float-end text-end"><span>{{ $t("skins generated") }}</span></div>
                         </v-list-item-title>
                         <v-list-item-subtitle>
-                            <div class="d-inline"><span>{{ formatNumber(total.new) }} unique</span></div>
+                            <div class="d-inline">
+                                <span>
+                                    {{
+                                        $t("{new} unique", {
+                                            new: formatNumber(total.new)
+                                        })
+                                    }}
+                                </span>
+                            </div>
                             <div class="d-inline float-end text-end">since July 2016</div>
                         </v-list-item-subtitle>
                     </v-list-item>
@@ -18,11 +26,17 @@
                     <v-list-item>
                         <v-list-item-title>
                             <div class="d-inline"><strong>{{ formatNumber(todayTotal) }}</strong></div>
-                            <div class="d-inline float-end text-end"><span>generated today</span></div>
+                            <div class="d-inline float-end text-end"><span>{{ $t("generated today") }}</span></div>
                         </v-list-item-title>
                         <v-list-item-subtitle>
                             <div class="d-inline">
-                                <span>{{ formatNumber(today.new) }} unique</span>
+                                <span>
+                                    {{
+                                        $t("{new} unique", {
+                                            new: formatNumber(today.new)
+                                        })
+                                    }}
+                                </span>
                                 <!--                                <span>{{ formatNumber(today.current.duplicate) }} duplicate</span>-->
                             </div>
                             <div class="d-inline float-end text-end">since 00:00UTC</div>
@@ -32,11 +46,17 @@
                     <v-list-item>
                         <v-list-item-title>
                             <div class="d-inline"><strong>{{ formatNumber(monthTotal) }}</strong></div>
-                            <div class="d-inline float-end text-end"><span>generated this month</span></div>
+                            <div class="d-inline float-end text-end"><span>{{ $t("generated this month") }}</span></div>
                         </v-list-item-title>
                         <v-list-item-subtitle>
                             <div class="d-inline">
-                                <span>{{ formatNumber(month.new) }} unique</span>
+                               <span>
+                                    {{
+                                        $t("{new} unique", {
+                                            new: formatNumber(month.new)
+                                        })
+                                    }}
+                                </span>
                                 <!--                                <span>{{ formatNumber(month.current.duplicate) }} duplicate</span>-->
                             </div>
                             <div class="d-inline float-end text-end">
@@ -48,11 +68,17 @@
                     <v-list-item>
                         <v-list-item-title>
                             <div class="d-inline"><strong>{{ formatNumber(yearTotal) }}</strong></div>
-                            <div class="d-inline float-end text-end"><span>generated this year</span></div>
+                            <div class="d-inline float-end text-end"><span>{{ $t("generated this year") }}</span></div>
                         </v-list-item-title>
                         <v-list-item-subtitle>
                             <div class="d-inline">
-                                <span>{{ formatNumber(year.new) }} unique</span>
+                               <span>
+                                    {{
+                                        $t("{new} unique", {
+                                            new: formatNumber(year.new)
+                                        })
+                                    }}
+                                </span>
                                 <!--                                <span>{{ formatNumber(year.current.duplicate) }} duplicate</span>-->
                             </div>
                             <div class="d-inline float-end text-end">{{ date.getUTCFullYear() }}</div>
@@ -75,7 +101,7 @@
                             <div class="text-h6">{{ generator?.capacity?.global || 0 }}</div>
                         </v-list-item-title>
                         <v-list-item-subtitle>
-                            Generator Capacity
+                            {{ $t("Generator Capacity") }}
                         </v-list-item-subtitle>
                     </v-list-item>
                 </v-list>

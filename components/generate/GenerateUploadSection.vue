@@ -1,7 +1,7 @@
 <template>
     <div class="text-center"    >
         <v-row justify="center" class="mb-2 flex-0-0">
-            UPLOAD
+            {{ $t("UPLOAD") }}
         </v-row>
         <v-row justify="center" align="center" class="my-2 flex-0-0">
             <v-sheet
@@ -19,7 +19,7 @@
         <FileList
             justify="center" class="text-center"
             v-model="uploadFiles"
-            label="UPLOAD"
+            :label="$t('UPLOAD')"
             prepend-icon="mdi-file"
             :image-provider="file=>fileToUrl(file)"
             />

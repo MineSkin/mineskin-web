@@ -1,11 +1,11 @@
 <template>
     <div>
         <v-row justify="center" class="mb-2 flex-0-0">
-            USER
+            {{ $t("USER") }}
         </v-row>
         <InputList
             v-model="users"
-            label="USER"
+            :label="$t('USER')"
             type="text"
             rule="user"
             prepend-icon="mdi-account"
