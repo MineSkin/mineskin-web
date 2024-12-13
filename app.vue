@@ -68,11 +68,20 @@
                 <v-spacer></v-spacer>
 
                 <v-tabs
-                    align-tabs="center"
+                    align-tabs="end"
                 >
-                    <v-tab :to="localePath('/')">{{ $t("Generate") }}</v-tab>
-                    <v-tab :to="localePath('/skins')">{{ $t("Gallery") }}</v-tab>
-                    <v-tab v-if="authStore.authed" :to="localePath('/my-skins')">{{ $t("My Skins") }}</v-tab>
+                    <v-tab :to="localePath('/')">
+                        <span v-if="mdAndUp">{{ $t("Generate") }}</span>
+                        <v-icon v-else icon="mdi-home"></v-icon>
+                    </v-tab>
+                    <v-tab :to="localePath('/skins')">
+                        <span v-if="mdAndUp">{{ $t("Gallery") }}</span>
+                        <v-icon v-else icon="mdi-image-search"></v-icon>
+                    </v-tab>
+                    <v-tab v-if="authStore.authed" :to="localePath('/my-skins')">
+                        <span v-if="mdAndUp">{{ $t("My Skins") }}</span>
+                        <v-icon v-else icon="mdi-view-grid"></v-icon>
+                    </v-tab>
                 </v-tabs>
 
                 <v-divider vertical class="mx-4 my-2"/>
