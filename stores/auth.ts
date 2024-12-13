@@ -1,5 +1,4 @@
 import type { Ref } from "vue";
-import type { Maybe } from "~/types/util";
 import type { AuthStatus } from "~/types/auth";
 import * as Sentry from "@sentry/browser"
 
@@ -12,34 +11,36 @@ export const useAuthStore = defineStore('auth', () => {
 
     const authed: Ref<boolean> = ref(false);
     const wasAuthed = ref(false);
-    const _user: Ref<Maybe<AuthStatus>> = ref(null);
+    const _user: Ref<AuthStatus | null> = ref(null);
 
     const grants = ref<Record<string, string | number | boolean>>({});
 
     const lastWebTokenRefresh = ref(0);
     const lastApiTokenRefresh = ref(0);
 
-    let _authCheckPromise: Promise<Maybe<AuthStatus>> | null = null;
+    let _authCheckPromise: Promise<AuthStatus | null> | null = null;
 
-    const checkAuth = async (): Promise<Maybe<AuthStatus>> => {
+    const checkAuth = async (): Promise<AuthStatus | null> => {
         if (!_authCheckPromise) {
-            _authCheckPromise = checkAuth0().then(res => {
-                _authCheckPromise = null;
-                return res;
-            }).catch(e => {
-                console.error(e);
-                _authCheckPromise = null;
-                return {
-                    authenticated: false
-                };
-            })
+            _authCheckPromise = checkAuth0()
+                .then(res => {
+                    _authCheckPromise = null;
+                    return res;
+                })
+                .catch(e => {
+                    console.error(e);
+                    _authCheckPromise = null;
+                    return {
+                        authenticated: false
+                    } as AuthStatus;
+                })
         }
-        return _authCheckPromise;
+        return await _authCheckPromise;
     }
 
-    const checkAuth0 = async (): Promise<Maybe<AuthStatus>> => {
+    const checkAuth0 = async (): Promise<AuthStatus | null> => {
         console.debug('authStore.checkAuth');
-        if (!process.client) return;
+        if (!process.client) return null;
 
         const cookie = getWebTokenCookie();
         if (cookie) {
@@ -52,7 +53,7 @@ export const useAuthStore = defineStore('auth', () => {
                     email: payload.email,
                     grants: payload.grants,
                     picture: payload.picture
-                };
+                } as AuthStatus;
             }
         }
 
@@ -65,7 +66,7 @@ export const useAuthStore = defineStore('auth', () => {
             }
         }
 
-        const response: Maybe<Response> = await $mineskin.me.get();
+        const response: Response | void = await $mineskin.me.get();
         console.log(response);
 
 
@@ -79,7 +80,7 @@ export const useAuthStore = defineStore('auth', () => {
             }
         }
 
-        const success = response && response.ok;
+        const success = !!response && response.ok;
         authed.value = success;
         wasAuthed.value = success;
         $mineskin.setAuthed(success);
@@ -110,7 +111,7 @@ export const useAuthStore = defineStore('auth', () => {
 
         return {
             authenticated: authed.value
-        };
+        } as AuthStatus;
     }
 
     const refreshWebAccessToken = async (): Promise<boolean> => {
@@ -135,7 +136,7 @@ export const useAuthStore = defineStore('auth', () => {
         return false;
     }
 
-    const getWebTokenCookie = (): Maybe<string> => {
+    const getWebTokenCookie = (): string | undefined => {
         return document.cookie.split('; ').find(row => row.startsWith('mskweb'))?.split('=')[1];
     }
 
@@ -150,7 +151,7 @@ export const useAuthStore = defineStore('auth', () => {
     }
 
     const user = computed(() => _user.value);
-    const userId = computed(() => _user.value?.id);
+    const userId = computed(() => _user.value?.user);
 
     const reset = () => {
         authed.value = false;

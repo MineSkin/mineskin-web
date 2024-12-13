@@ -338,7 +338,7 @@ export class MineSkinAPI {
 
     }(this);
 
-    private async request<T extends MineSkinResponse>(path: string, init: RequestInit, options?: Partial<RequestOptions>): Promise<T> {
+    private async request<K extends string, B, T extends MineSkinResponse<K, B>>(path: string, init: RequestInit, options?: Partial<RequestOptions>): Promise<T> {
         const baseInit = {
             ...INIT
         };
@@ -352,8 +352,8 @@ export class MineSkinAPI {
             .then(res => this.handleResponse(res, options));
     }
 
-    private async handleResponse<T extends MineSkinResponse>(res: Response, options?: Partial<RequestOptions>): Promise<T> {
-        const json: MineSkinResponse = res.status !== 204 ? await res.json() : null;
+    private async handleResponse<K extends string, B, T extends MineSkinResponse<K, B>>(res: Response, options?: Partial<RequestOptions>): Promise<T> {
+        const json: MineSkinResponse<K, B> = res.status !== 204 ? await res.json() : null;
         if (json?.errors?.length > 0) {
             for (let error of json.errors) {
                 console.error('API error', error);

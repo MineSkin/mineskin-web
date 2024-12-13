@@ -7,7 +7,7 @@ export type MineSkinResponse<K extends string, T> = {
     errors: CodeAndMessage[];
     warnings: CodeAndMessage[];
     messages: CodeAndMessage[];
-    links:{
+    links: {
         [key: string]: string;
     }
 };

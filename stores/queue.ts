@@ -36,7 +36,7 @@ export const useQueueStore = defineStore('queue', () => {
             return {
                 success: true,
                 jobs: Object.values(jobMap.value),
-            }
+            } as unknown as JobListResponse;
         }
     });
 
@@ -74,7 +74,7 @@ export const useQueueStore = defineStore('queue', () => {
             await refreshLazyJobList();
             // const response = await $mineskin.queue.list({silent: true});
             const response = lazyJobList.value;
-            if (response.success) {
+            if (response?.success) {
                 for (const job of response.jobs) {
                     addJob(job as JobWithMeta);
                 }
@@ -181,7 +181,6 @@ export const useQueueStore = defineStore('queue', () => {
     }
 }, {
     persist: {
-        storage: persistedState.localStorage,
-        paths: ['jobMap']
+        storage: persistedState.localStorage
     }
 })
