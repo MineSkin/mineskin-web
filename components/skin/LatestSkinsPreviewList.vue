@@ -11,7 +11,7 @@
             <v-btn icon="mdi-arrow-right" variant="text" :to="localePath('/skins')"></v-btn>
         </h3>
         <v-row  class="skin-single-row">
-            <v-slide-group :show-arrows="isHydrated ? 'desktop':'always'">
+            <v-slide-group>
                 <skin-link-img class="ma-2" v-if="isHydrated && latestSkins" v-for="skin in latestSkins" :key="skin.uuid" :skin="skin"/>
                 <skin-link-img class="ma-2" v-else v-for="n in 16" :key="n"/>
             </v-slide-group>
