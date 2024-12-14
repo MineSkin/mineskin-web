@@ -30,15 +30,24 @@ export default defineNuxtConfig({
         '/bulk': {redirect: {to: '/', statusCode: 301}},
         '/stats': {redirect: {to: '/', statusCode: 301}},
 
-        '/': {
-            isr: 60 * 2
-        },
-        '/skins': {
-            isr: 60 * 2
-        },
-        '/skins/**': {
-            isr: 60 * 60
-        },
+        // '/': {
+        //     isr: 60 * 2,
+        //     cache: {
+        //         maxAge: 60 * 60 * 24,
+        //     }
+        // },
+        // '/skins': {
+        //     isr: 60 * 2,
+        //     cache: {
+        //         maxAge: 60 * 60
+        //     }
+        // },
+        // '/skins/**': {
+        //     isr: 60 * 60,
+        //     cache: {
+        //         maxAge: 60 * 60 * 24,
+        //     }
+        // },
     },
     plugins: [
         '@/plugins/sentry',
