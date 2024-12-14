@@ -41,7 +41,7 @@
                     @continue="generate"
                 />
             </v-col>
-            <v-divider :vertical=|mdAndUp" v-show="!generateType"/>
+            <v-divider :vertical="mdAndUp" v-show="!generateType"/>
             <v-col
                 :cols="12"
                 :md="!generateType?'':generateType === GenerateType.UPLOAD ? 4 : 4"
