@@ -4,6 +4,10 @@ import { en } from 'vuetify/locale'
 export default defineNuxtConfig({
     compatibilityDate: '2024-04-03',
     devtools: {enabled: true},
+    sourcemap: {
+        server: true,
+        client: true
+    },
     app: {
         head: {
             link: [
