@@ -31,22 +31,13 @@ export default defineNuxtConfig({
         '/stats': {redirect: {to: '/', statusCode: 301}},
 
         '/': {
-            isr: 60 * 2,
-            cache: {
-                maxAge: 60 * 60 * 24,
-            }
+            isr: 60 * 2
         },
         '/skins': {
-            isr: 60 * 2,
-            cache: {
-                maxAge: 60 * 60
-            }
+            isr: 60 * 2
         },
         '/skins/**': {
-            isr: 60 * 60,
-            cache: {
-                maxAge: 60 * 60 * 24,
-            }
+            isr: 60 * 60
         },
     },
     plugins: [
