@@ -12,8 +12,8 @@
         </h3>
         <v-row  class="skin-single-row">
             <v-slide-group :show-arrows="isHydrated ? 'desktop':'always'">
-                <skin-link-img class="ma-2" v-if="isHydrated && latestSkins" v-for="skin in latestSkins" :key="skin.uuid" :skin="skin"/>
-                <skin-link-img class="ma-2" v-else v-for="n in 16" :key="n"/>
+                <skin-link-img class="ma-2" v-show="isHydrated && latestSkins" v-for="skin in latestSkins" :key="skin.uuid" :skin="skin"/>
+                <skin-link-img class="ma-2" v-show="!isHydrated || !latestSkins" v-for="n in 16" :key="n"/>
             </v-slide-group>
         </v-row>
 <!--        <dbg :data="latestSkins"/>-->
@@ -32,11 +32,15 @@ const isHydrated = ref(false);
 const {
     data: latestSkins,
     status: latestSkinsStatus,
+    refresh: refreshLatestSkins
 } = useLazyAsyncData(async () => {
     return (await $mineskin.skins.list())?.skins?.slice(0,16)||[];
+},{
+    immediate: false
 });
 
 onMounted(() => {
     isHydrated.value = true;
+    refreshLatestSkins();
 })
 </script>
