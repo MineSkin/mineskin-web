@@ -1,7 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 import { en } from 'vuetify/locale'
 
-const CACHE_VARIES = ['host', 'x-forwarded-host', 'accept-encoding', 'user-agent', 'sec-ch-viewport-height', 'sec-ch-viewport-width'];
+const CACHE_VARIES = ['host', 'accept-encoding', 'user-agent', 'sec-ch-viewport-height', 'sec-ch-viewport-width'];
 
 export default defineNuxtConfig({
     compatibilityDate: '2024-04-03',
