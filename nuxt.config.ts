@@ -1,6 +1,8 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 import { en } from 'vuetify/locale'
 
+const CACHE_VARIES = ['host', 'x-forwarded-host', 'accept-encoding', 'user-agent', 'sec-ch-viewport-height', 'sec-ch-viewport-width'];
+
 export default defineNuxtConfig({
     compatibilityDate: '2024-04-03',
     devtools: {enabled: true},
@@ -30,24 +32,27 @@ export default defineNuxtConfig({
         '/bulk': {redirect: {to: '/', statusCode: 301}},
         '/stats': {redirect: {to: '/', statusCode: 301}},
 
-        // '/': {
-        //     isr: 60 * 2,
-        //     cache: {
-        //         maxAge: 60 * 60 * 24,
-        //     }
-        // },
-        // '/skins': {
-        //     isr: 60 * 2,
-        //     cache: {
-        //         maxAge: 60 * 60
-        //     }
-        // },
-        // '/skins/**': {
-        //     isr: 60 * 60,
-        //     cache: {
-        //         maxAge: 60 * 60 * 24,
-        //     }
-        // },
+        '/': {
+            isr: 60 * 2,
+            cache: {
+                maxAge: 60 * 60 * 24,
+                varies: CACHE_VARIES
+            }
+        },
+        '/skins': {
+            isr: 60 * 2,
+            cache: {
+                maxAge: 60 * 60,
+                varies: CACHE_VARIES
+            }
+        },
+        '/skins/**': {
+            isr: 60 * 60,
+            cache: {
+                maxAge: 60 * 60 * 24,
+                varies: CACHE_VARIES
+            }
+        },
     },
     plugins: [
         '@/plugins/sentry',
@@ -69,8 +74,7 @@ export default defineNuxtConfig({
         moduleOptions: {
             ssrClientHints: {
                 reloadOnFirstRequest: true,
-                viewportSize: true,
-                prefersColorScheme: true
+                viewportSize: true
             }
         },
         vuetifyOptions: {
