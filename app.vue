@@ -10,6 +10,12 @@
     height: 100%;
 }
 
+.green {
+  background-color: green !important;
+}
+.red {
+  background-color: red !important;
+}
 
 </style>
 <template>
@@ -38,6 +44,7 @@
                         >
                             {{ config.public.isDev ? 'Dev Mode' : 'V2 Beta' }}
                         </v-chip>
+                        {{ breakpoint }}
                     </nuxt-link>
                 </v-app-bar-title>
 
@@ -122,7 +129,7 @@
                 </template>
 
             </v-app-bar>
-            <v-main style="--v-layout-top: 56px">
+            <v-main style="--v-layout-top: 56px" :class="dbgClass">
                 <LoadingIndicator style="margin-top: var(--v-layout-top)"/>
                 <NuxtPage/>
             </v-main>
@@ -141,6 +148,16 @@ import MainFooter from "~/components/MainFooter.vue";
 import SentryInit from "~/components/SentryInit.vue";
 import { onMounted } from "vue";
 import LoadingIndicator from "~/components/LoadingIndicator.vue";
+
+const {smAndUp, mdAndUp,name:breakpoint} = useDisplay();
+const {$ssrClientHints} = useNuxtApp();
+console.log($ssrClientHints)
+
+const dbgClass=ref('');
+watch(mdAndUp,(val)=>{
+    console.log(val);
+    dbgClass.value = val?'green':'red'
+},{immediate:true})
 
 const config = useRuntimeConfig();
 
@@ -227,7 +244,7 @@ const skinStore = useSkinStore();
 
 const isHydrated = ref(false);
 
-const {smAndUp, mdAndUp} = useDisplay();
+
 
 const {jobsSorted, jobsDrawer} = storeToRefs(queueStore);
 

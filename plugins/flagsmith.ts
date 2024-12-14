@@ -1,6 +1,6 @@
 import { defineNuxtPlugin } from "#app";
 import flagsmith from 'flagsmith'
-import type { IFlagsmith } from "flagsmith/types";
+import type { GetValueOptions, HasFeatureOptions, IFlagsmith } from "flagsmith/types";
 
 export default defineNuxtPlugin({
     name: 'flags',
@@ -15,11 +15,24 @@ export default defineNuxtPlugin({
                 cacheFlags: true,
                 state: state
             });
+            return {
+                provide: {
+                    flags: flagsmith as IFlagsmith
+                }
+            };
         }
         return {
             provide: {
-                flags: flagsmith as IFlagsmith
+                // server polyfill
+                flags: {
+                    hasFeature: (key: string, options?: HasFeatureOptions): boolean => {
+                        return (typeof options === "object" && options?.fallback) || false;
+                    },
+                    getValue: <T = any>(key: string, options?: GetValueOptions<T>, skipAnalytics?: boolean): any => {
+                        return options?.fallback || undefined;
+                    }
+                } as IFlagsmith
             }
-        };
+        }
     }
 });

@@ -4,6 +4,7 @@ import { en } from 'vuetify/locale'
 export default defineNuxtConfig({
     compatibilityDate: '2024-04-03',
     devtools: {enabled: true},
+    nitro: {},
     app: {
         head: {
             link: [
@@ -22,7 +23,7 @@ export default defineNuxtConfig({
             ]
         }
     },
-    ssr: process.env.NODE_ENV !== 'development',
+    ssr: true,
     routeRules: {
         '/my-skins': {ssr: false},
         '/gallery': {redirect: {to: '/skins', statusCode: 301}},
@@ -33,6 +34,9 @@ export default defineNuxtConfig({
             isr: 60 * 2,
             cache: {
                 maxAge: 60 * 60 * 24,
+            },
+            headers: {
+                'Accept-CH': 'Width, Viewport-Width'
             }
         },
         '/skins': {
@@ -66,7 +70,11 @@ export default defineNuxtConfig({
     ],
     vuetify: {
         moduleOptions: {
-            /* module specific options */
+            ssrClientHints: {
+                reloadOnFirstRequest: true,
+                viewportSize: true,
+                prefersColorScheme: true
+            }
         },
         vuetifyOptions: {
             labComponents: 'VSnackbarQueue',
