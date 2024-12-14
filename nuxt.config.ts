@@ -34,9 +34,6 @@ export default defineNuxtConfig({
             isr: 60 * 2,
             cache: {
                 maxAge: 60 * 60 * 24,
-            },
-            headers: {
-                'Accept-CH': 'Width, Viewport-Width'
             }
         },
         '/skins': {
