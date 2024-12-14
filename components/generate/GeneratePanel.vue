@@ -73,7 +73,7 @@
             </v-col>
         </v-row>
         <v-divider class="my-4"/>
-        <v-expand-transition>
+        <v-expand-transition v-if="isHydrated">
             <v-row v-show="generateType" class="my-2" justify="center">
                 <v-spacer></v-spacer>
                 <v-col cols="12" md="3">
@@ -156,7 +156,7 @@
                 <!--                </v-col>-->
             </v-row>
         </v-expand-transition>
-        <v-expand-transition>
+        <v-expand-transition v-if="isHydrated">
             <v-row v-show="generateType" class="my-4" justify="center">
                 <v-col>
                     <v-row justify="center" class="mb-2 text-center">
@@ -200,6 +200,7 @@
         <!--        </v-row>-->
     </v-sheet>
     <v-dialog
+        v-if="isHydrated"
         v-model="variablesDialog"
         width="auto"
     >

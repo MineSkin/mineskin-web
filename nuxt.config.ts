@@ -6,7 +6,10 @@ const CACHE_VARIES = ['host', 'accept-encoding', 'user-agent', 'sec-ch-viewport-
 export default defineNuxtConfig({
     compatibilityDate: '2024-04-03',
     devtools: {enabled: true},
-    nitro: {},
+    sourcemap: {
+        server: true,
+        client: true
+    },
     app: {
         head: {
             link: [
@@ -25,7 +28,7 @@ export default defineNuxtConfig({
             ]
         }
     },
-    ssr: true,
+    ssr: process.env.NODE_ENV !== 'development',
     routeRules: {
         '/my-skins': {ssr: false},
         '/gallery': {redirect: {to: '/skins', statusCode: 301}},

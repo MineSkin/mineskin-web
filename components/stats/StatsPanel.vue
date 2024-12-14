@@ -2,8 +2,8 @@
     <div>
         <v-card>
             <v-card-text>
-                <v-skeleton-loader v-if="!stats" type="paragraph"></v-skeleton-loader>
-                <v-list>
+                <v-skeleton-loader v-if="!isHydrated || !stats" type="list-item-two-line@4"></v-skeleton-loader>
+                <v-list v-else>
                     <v-list-item>
                         <v-list-item-title class="text-h5">
                             <div class="d-inline"><strong>{{ formatNumber(totalTotal) }}</strong></div>
@@ -52,10 +52,10 @@
                             <div class="d-inline">
                                <span>
                                     {{
-                                        $t("{new} unique", {
-                                            new: formatNumber(month.new)
-                                        })
-                                    }}
+                                       $t("{new} unique", {
+                                           new: formatNumber(month.new)
+                                       })
+                                   }}
                                 </span>
                                 <!--                                <span>{{ formatNumber(month.current.duplicate) }} duplicate</span>-->
                             </div>
@@ -74,10 +74,10 @@
                             <div class="d-inline">
                                <span>
                                     {{
-                                        $t("{new} unique", {
-                                            new: formatNumber(year.new)
-                                        })
-                                    }}
+                                       $t("{new} unique", {
+                                           new: formatNumber(year.new)
+                                       })
+                                   }}
                                 </span>
                                 <!--                                <span>{{ formatNumber(year.current.duplicate) }} duplicate</span>-->
                             </div>
@@ -94,8 +94,8 @@
         </v-card>
         <v-card class="mt-2">
             <v-card-text>
-                <v-skeleton-loader v-if="!stats" type="paragraph"></v-skeleton-loader>
-                <v-list>
+                <v-skeleton-loader v-if="!isHydrated || !stats" type="list-item-two-line"></v-skeleton-loader>
+                <v-list v-else>
                     <v-list-item>
                         <v-list-item-title>
                             <div class="text-h6">{{ generator?.capacity?.global || 0 }}</div>
@@ -116,12 +116,16 @@ import { useInterval, useIntervalFn, useTimeoutFn } from "@vueuse/core";
 
 const {$mineskin} = useNuxtApp();
 
+const isHydrated = ref(false);
+
 const {
     data: stats,
     refresh: refreshStats
 } = useLazyAsyncData<Stats>(`stats`, async () => {
     return (await $mineskin.stats.get())?.stats;
-}, {});
+}, {
+    immediate: false
+});
 
 const date = new Date();
 
@@ -170,9 +174,11 @@ const tick = () => {
 }
 
 onMounted(() => {
+    isHydrated.value = true;
     useIntervalFn(() => {
         refreshStats();
     }, 30000);
     tick();
+    refreshStats();
 })
 </script>
