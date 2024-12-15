@@ -1,5 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-import { en } from 'vuetify/locale'
+
+const CACHE_VARIES = ['host', 'accept-encoding', 'user-agent', 'sec-ch-viewport-height', 'sec-ch-viewport-width'];
 
 export default defineNuxtConfig({
     compatibilityDate: '2024-04-03',
@@ -37,18 +38,21 @@ export default defineNuxtConfig({
             isr: 60 * 2,
             cache: {
                 maxAge: 60 * 60 * 24,
+                varies: CACHE_VARIES
             }
         },
         '/skins': {
             isr: 60 * 2,
             cache: {
-                maxAge: 60 * 60
+                maxAge: 60 * 60,
+                varies: CACHE_VARIES
             }
         },
         '/skins/**': {
             isr: 60 * 60,
             cache: {
                 maxAge: 60 * 60 * 24,
+                varies: CACHE_VARIES
             }
         },
     },
@@ -70,7 +74,10 @@ export default defineNuxtConfig({
     ],
     vuetify: {
         moduleOptions: {
-            /* module specific options */
+            ssrClientHints: {
+                reloadOnFirstRequest: true,
+                viewportSize: true
+            }
         },
         vuetifyOptions: {
             labComponents: 'VSnackbarQueue',

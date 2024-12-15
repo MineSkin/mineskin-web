@@ -25,10 +25,6 @@ import { onMounted } from "vue";
 import LoadingIndicator from "~/components/LoadingIndicator.vue";
 import MainAppBar from "~/components/MainAppBar.vue";
 
-const config = useRuntimeConfig();
-
-const localePath = useLocalePath();
-
 const description = 'MineSkin.org allows you to generate skin texture data for Minecraft which is signed by Mojang.';
 
 useSeoMeta({
@@ -100,8 +96,6 @@ useHead({
 }, {
     mode: 'client'
 })
-
-const router = useRouter();
 
 const authStore = useAuthStore();
 

@@ -31,7 +31,7 @@
                 :cols="12"
                 :md="!generateType ? 4:generateType === GenerateType.URL ? 6 : 'auto'"
                 class="section-col"
-                :class="{'mx-4':!isHydrated||mdAndUp,'my-2':!mdAndUp}"
+                :class="{'mx-4':mdAndUp,'my-2':!mdAndUp}"
             >
                 <GenerateUrlSection
                     class="section-url flex-column"
@@ -41,12 +41,12 @@
                     @continue="generate"
                 />
             </v-col>
-            <v-divider :vertical="!isHydrated||mdAndUp" v-show="!generateType"/>
+            <v-divider :vertical="mdAndUp" v-show="!generateType"/>
             <v-col
                 :cols="12"
                 :md="!generateType?'':generateType === GenerateType.UPLOAD ? 4 : 4"
                 class="section-col"
-                :class="{'mx-4':!isHydrated||mdAndUp,'my-2':!mdAndUp}"
+                :class="{'mx-4':mdAndUp,'my-2':!mdAndUp}"
             >
                 <GenerateUploadSection
                     class="section-upload flex-column"
@@ -56,12 +56,12 @@
                     @pick="showFilePicker()"
                 />
             </v-col>
-            <v-divider :vertical="!isHydrated||mdAndUp" v-show="!generateType"/>
+            <v-divider :vertical="mdAndUp" v-show="!generateType"/>
             <v-col
                 :cols="12"
                 :md="!generateType ? 4 : generateType === GenerateType.USER ? 6 : 'auto'"
                 class="section-col"
-                :class="{'mx-4':!isHydrated||mdAndUp,'my-2':!mdAndUp}"
+                :class="{'mx-4':mdAndUp,'my-2':!mdAndUp}"
             >
                 <GenerateUserSection
                     class="section-user flex-column"
