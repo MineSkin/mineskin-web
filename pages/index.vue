@@ -4,8 +4,6 @@
             <v-col cols="12">
                 <h1>MineSkin</h1>
                 <p>{{ $t("Automate Minecraft Skin Signature Generation") }}</p>
-                {{ breakpoint }}
-                {{ $ssrClientHints }}
             </v-col>
         </v-row>
         <v-row v-if="notificationBanner">
@@ -55,15 +53,10 @@
 <script setup lang="ts">
 import { useNuxtApp, useState } from "#app";
 import AdWrappper from "~/components/AdWrappper.vue";
-import { useAuthStore } from "~/stores/auth";
 import LatestSkinsPreviewList from "~/components/skin/LatestSkinsPreviewList.vue";
 import MainFAQ from "~/components/MainFAQ.vue";
 
-const {$notify, $flags, $ssrClientHints} = useNuxtApp();
-
-const authStore = useAuthStore();
-
-const {mdAndUp, name: breakpoint} = useDisplay();
+const {$notify, $flags} = useNuxtApp();
 
 const notificationBanner = computed(() => {
     if ($flags.hasFeature('web.notification_banner')) {
@@ -71,15 +64,4 @@ const notificationBanner = computed(() => {
     }
     return undefined;
 })
-
-
-function testNotify() {
-    $notify({
-        text: 'Hello World\n\nTest',
-        color: 'success',
-        timeout: 20000,
-        actionLabel: 'View',
-        actionLink: '/skins'
-    });
-}
 </script>

@@ -1,19 +1,3 @@
-<style>
-
-.green {
-  background-color: green !important;
-}
-.red {
-  background-color: red !important;
-}
-.orange {
-    background-color: orange !important;
-}
-.blue {
-    background-color: blue !important;
-}
-
-</style>
 <template>
     <NuxtLayout>
         <ClientOnly>
@@ -42,20 +26,6 @@ import LoadingIndicator from "~/components/LoadingIndicator.vue";
 import MainAppBar from "~/components/MainAppBar.vue";
 
 const {smAndUp, mdAndUp,name:breakpoint} = useDisplay();
-const {$ssrClientHints} = useNuxtApp();
-console.log($ssrClientHints)
-
-const dbgClass=ref('');
-watch(mdAndUp,(val)=>{
-    console.log(val);
-    dbgClass.value = val?'green':'red'
-},{immediate:true});
-watch($ssrClientHints,(val)=>{
-    console.log(val);
-    dbgClass.value = val.firstRequest?'orange':'blue'
-},{immediate:true})
-
-const config = useRuntimeConfig();
 
 const localePath = useLocalePath();
 
