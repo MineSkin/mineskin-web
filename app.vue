@@ -7,7 +7,7 @@
             <Snackbars/>
             <NewWebsiteBanner/>
             <MainAppBar/>
-            <v-main style="--v-layout-top: 56px" :class="dbgClass">
+            <v-main style="--v-layout-top: 56px">
                 <LoadingIndicator style="margin-top: var(--v-layout-top)"/>
                 <NuxtPage/>
             </v-main>
@@ -24,10 +24,6 @@ import SentryInit from "~/components/SentryInit.vue";
 import { onMounted } from "vue";
 import LoadingIndicator from "~/components/LoadingIndicator.vue";
 import MainAppBar from "~/components/MainAppBar.vue";
-
-const {smAndUp, mdAndUp,name:breakpoint} = useDisplay();
-
-const localePath = useLocalePath();
 
 const description = 'MineSkin.org allows you to generate skin texture data for Minecraft which is signed by Mojang.';
 
@@ -100,8 +96,6 @@ useHead({
 }, {
     mode: 'client'
 })
-
-const router = useRouter();
 
 const authStore = useAuthStore();
 
