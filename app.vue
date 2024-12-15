@@ -1,3 +1,13 @@
+<style>
+
+.green {
+  background-color: green !important;
+}
+.red {
+  background-color: red !important;
+}
+
+</style>
 <template>
     <NuxtLayout>
         <ClientOnly>
@@ -7,7 +17,7 @@
             <Snackbars/>
             <NewWebsiteBanner/>
             <MainAppBar/>
-            <v-main style="--v-layout-top: 56px">
+            <v-main style="--v-layout-top: 56px" :class="dbgClass">
                 <LoadingIndicator style="margin-top: var(--v-layout-top)"/>
                 <NuxtPage/>
             </v-main>
@@ -33,6 +43,10 @@ const dbgClass=ref('');
 watch(mdAndUp,(val)=>{
     console.log(val);
     dbgClass.value = val?'green':'red'
+},{immediate:true});
+watch($ssrClientHints,(val)=>{
+    console.log(val);
+    dbgClass.value = val.firstRequest?'orange':'blue'
 },{immediate:true})
 
 const config = useRuntimeConfig();
