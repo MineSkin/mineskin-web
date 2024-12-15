@@ -6,6 +6,12 @@
 .red {
   background-color: red !important;
 }
+.orange {
+    background-color: orange !important;
+}
+.blue {
+    background-color: blue !important;
+}
 
 </style>
 <template>
