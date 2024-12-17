@@ -52,8 +52,7 @@ function renderTurnstile() {
 onMounted(() => {
     const win = window as any;
 
-    if (!win.hasOwnProperty('turnstile')) {
-        win['turnstile'] = {};
+    if (!win.hasOwnProperty('turnstile') && !win.hasOwnProperty('onTurnstileLoadedCallback')) {
         win['onTurnstileLoadedCallback'] = () => {
             renderTurnstile();
         };
