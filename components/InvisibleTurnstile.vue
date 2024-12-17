@@ -52,9 +52,14 @@ function renderTurnstile() {
 onMounted(() => {
     const win = window as any;
 
+    if (!win.hasOwnProperty('pendingTurnstile')) {
+        win.pendingTurnstile = [];
+    }
+
     if (!win.hasOwnProperty('turnstile') && !win.hasOwnProperty('onTurnstileLoadedCallback')) {
         win['onTurnstileLoadedCallback'] = () => {
-            renderTurnstile();
+            win.pendingTurnstile.forEach((cb: () => void) => cb());
+            win.pendingTurnstile = [];
         };
 
         const script = document.createElement("script");
@@ -63,8 +68,12 @@ onMounted(() => {
         script.async = true;
         script.defer = true;
         document.body.appendChild(script);
-    } else {
+    }
+
+    if (window.hasOwnProperty('turnstile')) {
         renderTurnstile();
+    } else {
+        win.pendingTurnstile.push(() => renderTurnstile());
     }
 })
 
