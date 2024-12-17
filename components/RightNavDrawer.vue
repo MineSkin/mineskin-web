@@ -98,7 +98,9 @@ const isHydrated = ref(false);
 
 const loginRedirect = () => {
     authStore.reset();
-    window.location.href = 'https://account.mineskin.org/login?redirect=https://mineskin.org/';
+    setTimeout(() => {
+        window.location.href = 'https://account.mineskin.org/login?redirect=https://mineskin.org/';
+    }, 100);
 }
 
 onMounted(() => {
