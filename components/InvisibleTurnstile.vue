@@ -19,7 +19,7 @@ const emit = defineEmits(['error', 'timeout']);
 
 const id = (Math.random() + 1).toString(36).substring(2);
 
-let widget: any;
+let widget: Ref<any> = ref(null);
 
 function turnstileCallback(token: string) {
     model.value = token;
@@ -46,13 +46,14 @@ function renderTurnstile() {
     if (props.action) {
         turnstileConfig.action = props.action;
     }
-    widget = (window as any).turnstile.render('#cf-turnstile-' + id, turnstileConfig);
+    widget.value = (window as any).turnstile.render('#cf-turnstile-' + id, turnstileConfig);
 }
 
 onMounted(() => {
     const win = window as any;
 
     if (!win.hasOwnProperty('turnstile')) {
+        win['turnstile'] = {};
         win['onTurnstileLoadedCallback'] = () => {
             renderTurnstile();
         };
@@ -70,7 +71,7 @@ onMounted(() => {
 
 onUnmounted(() => {
     try {
-        (window as any).turnstile.remove(widget);
+        (window as any).turnstile.remove(widget.value);
     } catch (e) {
         console.warn(e);
     }
