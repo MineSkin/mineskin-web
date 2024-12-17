@@ -104,6 +104,7 @@
                 </a>
                 <v-btn v-else icon @click="jobsDrawer = !jobsDrawer">
                     <a class="img-link text-white"
+                       @click.prevent
                        href="https://account.mineskin.org/">
                         <v-icon>mdi-account</v-icon>
                     </a>
