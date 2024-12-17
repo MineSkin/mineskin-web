@@ -38,7 +38,7 @@ const {newWebsiteBannerClosed} = storeToRefs(settingsStore);
 
 const isHydrated = ref(false);
 const showBanner = computed(() => {
-    return isHydrated.value && (!newWebsiteBannerClosed.value || newWebsiteBannerClosed.value < Math.floor(Date.now()) - 1000 * 60 * 60 * 24);
+    return isHydrated.value && (!newWebsiteBannerClosed.value || newWebsiteBannerClosed.value < Math.floor(Date.now()) - 1000 * 60 * 60 * 24 * 7);
 });
 
 const onClosed = () => {
