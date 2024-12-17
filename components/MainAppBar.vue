@@ -102,9 +102,8 @@
                    @click.prevent="jobsDrawer = !jobsDrawer">
                     <v-img :src="authStore.user?.picture" alt="User Avatar"></v-img>
                 </a>
-                <v-btn v-else icon @click.prevent="jobsDrawer = !jobsDrawer">
+                <v-btn v-else icon @click="jobsDrawer = !jobsDrawer">
                     <a class="img-link text-white"
-                       @click.prevent="jobsDrawer = !jobsDrawer"
                        href="https://account.mineskin.org/">
                         <v-icon>mdi-account</v-icon>
                     </a>
