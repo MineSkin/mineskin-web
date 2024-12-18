@@ -75,7 +75,7 @@ export default defineNuxtConfig({
     vuetify: {
         moduleOptions: {
             ssrClientHints: {
-                reloadOnFirstRequest: true,
+                reloadOnFirstRequest: false,
                 viewportSize: true
             }
         },
