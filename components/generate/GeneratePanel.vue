@@ -39,6 +39,7 @@
                     v-show="!generateType || generateType === GenerateType.URL"
                     v-model="urls"
                     @continue="generate"
+                    :generating="generating"
                 />
             </v-col>
             <v-divider :vertical="mdAndUp" v-show="!generateType"/>
@@ -54,6 +55,7 @@
                     v-show="!generateType || generateType === GenerateType.UPLOAD"
                     v-model="uploadFiles"
                     @pick="showFilePicker()"
+                    :generating="generating"
                 />
             </v-col>
             <v-divider :vertical="mdAndUp" v-show="!generateType"/>
@@ -69,6 +71,7 @@
                     v-show="!generateType || generateType === GenerateType.USER"
                     v-model="users"
                     @continue="generate"
+                    :generating="generating"
                 />
             </v-col>
         </v-row>
@@ -159,6 +162,7 @@
         <v-expand-transition v-if="isHydrated">
             <v-row v-show="generateType" class="my-4" justify="center">
                 <v-col>
+                    <dbg :data="jobMap"></dbg>
                     <v-row justify="center" class="mb-2 text-center">
                         <v-btn
                             color="primary"
@@ -265,10 +269,10 @@ const authStore = useAuthStore();
 const queueStore = useQueueStore();
 const settingsStore = useSettingsStore();
 
-const {mdAndUp,mdAndDown} = useDisplay();
+const {mdAndUp, mdAndDown} = useDisplay();
 
 const {grants} = storeToRefs(authStore);
-const {jobsDrawer} = storeToRefs(queueStore);
+const {jobsDrawer, jobMap} = storeToRefs(queueStore);
 
 const {visibility: preferredVisibility} = storeToRefs(settingsStore);
 
@@ -499,7 +503,7 @@ async function generate() {
 
     const baseOptions: GenerateOptions = getOptions();
 
-    let responses: GenerateJobResponse[] = [];
+    let responses: [GenerateJobResponse, { name: string }][] = [];
     switch (generateType.value) {
         case GenerateType.UPLOAD: {
             if (!canGenerateMultiple.value) {
@@ -510,7 +514,7 @@ async function generate() {
                 let options = {...baseOptions};
                 options.name = processNameVariables(index++, null, file, null);
                 await sleep(800);
-                responses.push(await $mineskin.queue.upload(file, options));
+                responses.push([await $mineskin.queue.upload(file, options), {name: file.name}]);
             }
             break;
         }
@@ -523,7 +527,7 @@ async function generate() {
                 let options = {...baseOptions};
                 options.name = processNameVariables(index++, url, null, null);
                 await sleep(800);
-                responses.push(await $mineskin.queue.url(url, options))
+                responses.push([await $mineskin.queue.url(url, options), {name: url}])
             }
             break;
         }
@@ -551,7 +555,7 @@ async function generate() {
                 let options = {...baseOptions};
                 options.name = processNameVariables(index++, null, null, user);
                 await sleep(800);
-                responses.push(await $mineskin.queue.user(uuid, options))
+                responses.push([await $mineskin.queue.user(uuid, options), {name: user}])
             }
             break;
         }
@@ -564,10 +568,17 @@ async function generate() {
             return;
         }
     }
-    for (const response of responses) {
+    for (const [response, meta] of responses) {
         if (response.success) {
             if ('job' in response) {
-                queueStore.addJob((response as GenerateJobResponse).job);
+                queueStore.addJob({
+                    ...(response as GenerateJobResponse).job,
+                    ...{
+                        originalName: meta.name,
+                        lastStatusCheck: Date.now(),
+                        statusCheckCount: 0
+                    }
+                });
             }
         }
     }

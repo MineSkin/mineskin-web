@@ -10,6 +10,7 @@
             rule="user"
             prepend-icon="mdi-account"
             :image-provider="user=>userToImage(user)"
+            :waiting="generating"
         />
         <v-row align="end">
             <v-col>
@@ -35,6 +36,11 @@ import { textureUrlForUuid } from "../../util/render";
 const users = defineModel<string[]>(['']);
 const hasUser = computed(() => users.value.filter(user => user.length > 0).length > 0);
 const emit = defineEmits(['continue']);
+
+const props = defineProps<{
+    generating?: boolean
+}>()
+
 
 const {$mineskin} = useNuxtApp();
 

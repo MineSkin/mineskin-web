@@ -17,6 +17,7 @@
                 @click:append="listAddOrRemove(index)"
             >
             </input-list-row>
+            <inline-job-progress :original-name="items[index]" :waiting="waiting"/>
             <dbg :data="{rule,rules,item:items[index]}"/>
         </v-col>
     </v-row>
@@ -24,6 +25,7 @@
 <script setup lang="ts">
 import { computedAsync, useDebounceFn } from '@vueuse/core'
 import InputListRow from "./InputListRow.vue";
+import InlineJobProgress from "~/components/generate/InlineJobProgress.vue";
 
 const items = defineModel<string[]>(['']);
 const props = defineProps<{
@@ -32,6 +34,7 @@ const props = defineProps<{
     type?: string;
     rule?: string;
     imageProvider?: (item: string) => string | Promise<string>;
+    waiting?: boolean;
 }>();
 
 const {$mineskin} = useNuxtApp();

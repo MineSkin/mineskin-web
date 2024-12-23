@@ -22,6 +22,7 @@
             :label="$t('UPLOAD')"
             prepend-icon="mdi-file"
             :image-provider="file=>fileToUrl(file)"
+            :waiting="generating"
             />
         <v-row class="flex-1-1-100" align="end">
             <v-col>
@@ -47,6 +48,10 @@ import FileList from "./list/FileList.vue";
 
 const uploadFiles = defineModel<File[]>([]);
 const hasFile = computed(() => uploadFiles.value.length > 0);
+
+const props = defineProps<{
+    generating?: boolean
+}>()
 
 const emit = defineEmits(['pick']);
 

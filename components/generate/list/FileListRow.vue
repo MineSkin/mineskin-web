@@ -1,7 +1,9 @@
 <template>
     <v-text-field
         type="text"
-        append-icon="mdi-minus">
+        append-icon="mdi-minus"
+        hide-details
+    >
         <template v-slot:prepend>
             <div>
                 <v-img v-if="imageProvider && image" class="pixelated input-prepend-image" :src="image"
@@ -21,7 +23,7 @@ const props = defineProps<{
 }>();
 
 const image = computed(() => {
-    if(!props.item||!props.imageProvider) return undefined;
+    if (!props.item || !props.imageProvider) return undefined;
     return props.imageProvider(props.item);
 });
 </script>

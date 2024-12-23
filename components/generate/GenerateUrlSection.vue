@@ -10,6 +10,7 @@
             rule="url"
             prepend-icon="mdi-link"
             :image-provider="item=>item"
+            :waiting="generating"
         />
         <v-row align="end">
             <v-col>
@@ -34,6 +35,11 @@ import InputList from "./list/InputList.vue";
 const urls = defineModel<string[]>(['']);
 const hasUrl = computed(() => urls.value.filter(url=>url.length>0).length > 0);
 const emit = defineEmits(['continue']);
+
+const props = defineProps<{
+    generating?: boolean
+}>()
+
 
 function cont(){
     if(!hasUrl.value) return;
