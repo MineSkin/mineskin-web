@@ -57,12 +57,9 @@ const rules = computed(() => {
     }
 })
 
-function change0(index: number, value: string) {
-    console.log(index, value);
+function change(index: number, value: string) {
     items.value[index] = value;
 }
-
-const change = useDebounceFn(change0, 500);
 
 function canAdd(index: number) {
     return index === items.value.length - 1 && items.value[index] !== '';
@@ -80,7 +77,9 @@ function listAddOrRemove(index: number) {
     }
 }
 
-async function validateUser(user: string) {
+const validateUser = useDebounceFn(validateUser0, 500);
+
+async function validateUser0(user: string) {
     if (user.length < 32) {
         return await $mineskin.validate.name(user);
     } else {

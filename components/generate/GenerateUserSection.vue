@@ -31,6 +31,7 @@
 <script setup lang="ts">
 import InputList from "./list/InputList.vue";
 import { textureUrlForUuid } from "../../util/render";
+import { useDebounceFn } from "@vueuse/core";
 
 const users = defineModel<string[]>(['']);
 const hasUser = computed(() => users.value.filter(user => user.length > 0).length > 0);
@@ -44,7 +45,9 @@ function cont() {
 }
 
 
-async function userToImage(user: string) {
+const userToImage = useDebounceFn(userToImage0, 500);
+
+async function userToImage0(user: string) {
     console.debug('userToImage', user)
     let validation;
     if (user.length < 32) {
