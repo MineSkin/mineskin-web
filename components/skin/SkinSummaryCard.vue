@@ -115,17 +115,6 @@
                                     content-key="skin_summary_short_id"
                                 />
                             </div>
-                             <div class="text-grey-darken-2 mt-2" v-if="skin?.uuid">
-                                <span class="mx-1">
-                                    {{ skin?.uuid }}
-                                    <v-tooltip location="left" text="Skin ID" activator="parent" open-on-click/>
-                                </span>
-                                <CopyBtn
-                                    :text="skin?.uuid"
-                                    tooltip-location="left"
-                                    content-key="skin_summary_uuid"
-                                />
-                            </div>
                         </v-col>
                     </v-row>
                 </v-col>
