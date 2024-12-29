@@ -163,7 +163,7 @@ const doExport = async () => {
     $notify({
         text: `Exporting ${ selected.value.length } skins as ${ exportFormat.value }`,
         color: 'info',
-        timeout: 1200
+        timeout: 3000
     });
 
     const str = await makeExportString();

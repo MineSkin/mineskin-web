@@ -148,7 +148,7 @@ export const useQueueStore = defineStore('queue', () => {
         $notify({
             text: `Job ${ now.id ? now.id : '' } is ${ now.status }`,
             color: now.status === 'completed' ? 'success' : now.status === 'failed' ? 'error' : 'info',
-            timeout: (now.status === 'completed' || now.status === 'failed') ? 1200 : 800,
+            timeout: (now.status === 'completed' || now.status === 'failed') ? 2000 : 1400,
             actionLabel: now.status === 'completed' ? 'View' : undefined,
             actionLink: now.status === 'completed' && now.result ? `/skins/${ now.result }` : undefined
         });
