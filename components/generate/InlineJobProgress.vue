@@ -6,9 +6,6 @@
             height="8"
             indeterminate
             color="primary">
-            <template v-slot:default>
-                {{ $t("Waiting") }}
-            </template>
         </v-progress-linear>
         <v-progress-linear
             v-else-if="job && job.status === 'processing'"
