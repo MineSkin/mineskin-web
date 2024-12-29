@@ -6,7 +6,7 @@ export default defineNuxtPlugin(nuxtApp => {
         color: '',
         text: '',
         multiline: false,
-        timeout: -1,
+        timeout: 2000,
         closable: true
     }
 
