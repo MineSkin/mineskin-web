@@ -23,6 +23,14 @@
                 {{ snackbar.actionLabel }}
             </v-btn>
         </template>
+        <template v-else-if="snackbar.closable" v-slot:actions>
+            <v-btn
+                variant="text"
+                @click="onChanged(snackbar.id, false)"
+            >
+                {{ $t('Close') }}
+            </v-btn>
+        </template>
     </VSnackbar>
 </template>
 <script setup lang="ts">
