@@ -17,6 +17,8 @@ export const useSnackbarStore = defineStore('snackbar', () => {
             actionLabel: config.actionLabel,
             actionLink: config.actionLink,
             position: theSizeOfSnackbar * snackbars.value.length,
+            timeout: config.timeout,
+            closable: config.closable
         })
     }
 
