@@ -3,7 +3,7 @@
 <!--        <dbg :data="{originalName,job}"></dbg>-->
         <v-progress-linear
             v-if="(waiting&&!job)||(job && job.status === 'waiting')"
-            height="20"
+            height="8"
             indeterminate
             color="primary">
             <template v-slot:default>
@@ -12,21 +12,15 @@
         </v-progress-linear>
         <v-progress-linear
             v-else-if="job && job.status === 'processing'"
-            height="20"
+            height="8"
             indeterminate
             color="warning">
-            <template v-slot:default>
-                {{ $t("Processing") }}
-            </template>
         </v-progress-linear>
         <v-progress-linear
             v-else-if="job &&( job.status === 'completed'||job.status === 'failed')"
-            height="20"
+            height="8"
             model-value="100"
             :color="job.status === 'completed' ? 'success':'error'">
-            <template v-slot:default>
-                {{ job.status === 'completed' ? $t('Completed') : $t('Failed') }}
-            </template>
         </v-progress-linear>
     </div>
 </template>
