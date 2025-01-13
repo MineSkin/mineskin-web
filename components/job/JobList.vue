@@ -1,6 +1,11 @@
 <template>
     <v-list>
-        <v-list-subheader>Jobs</v-list-subheader>
+        <v-list-subheader>
+            {{ $t("Jobs") }}
+            <span v-if="authStore.authed">- <nuxt-link :to="localePath('/my-skins')">{{
+                    $t("Show My Skins")
+                }}</nuxt-link></span>
+        </v-list-subheader>
         <JobStatus v-for="job in jobsSorted" :id="job.id" :key="job.id"/>
         <v-list-item v-if="jobsSorted.length<=0">
             <v-list-item-title>{{ $t("No jobs in queue") }}</v-list-item-title>
@@ -15,6 +20,7 @@ import { storeToRefs } from "pinia";
 
 const queueStore = useQueueStore();
 const authStore = useAuthStore();
+const localePath = useLocalePath();
 
 const {jobsSorted} = storeToRefs(queueStore);
 
