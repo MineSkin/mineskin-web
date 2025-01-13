@@ -17,7 +17,7 @@ const localePath = useLocalePath()
 const router = useRouter();
 
 const props = defineProps<{
-    skin: ListedSkin
+    skin?: ListedSkin
 }>();
 
 function viewSkin(uuid: string) {
