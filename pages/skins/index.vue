@@ -169,7 +169,7 @@ async function load({done}) {
         done('empty');
         if (pageIndex.value === 0) {
             $notify({
-                text: "No skins found",
+                text: $t("No more skins found"),
                 color: "info"
             })
         }
