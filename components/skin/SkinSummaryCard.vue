@@ -123,10 +123,10 @@
                         <v-col v-if="tagsVisible">
                             <span class="text-medium-emphasis">
                                 <span v-if="authed">
-                                    Tags
+                                    {{ $t("Tags") }}
                                 </span>
                                 <span v-else>
-                                    Sign in to add tags
+                                    {{ $t("Sign in to add tags") }}
                                 </span>
                             </span>
                             <SkinTags class="mt-1" :skin="skin"/>
