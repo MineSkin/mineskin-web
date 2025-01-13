@@ -11,6 +11,15 @@
                         />
                     </v-row>
                     <v-row justify="end" v-if="mdAndUp">
+                        <v-col>
+                            <div class="text-grey-darken-2 mt-2" v-if="skin">
+                                <span class="mx-1">
+                                    <v-icon icon="mdi-eye"></v-icon>
+                                    {{ skin.views + 1 }}
+                                    <v-tooltip location="right" text="Views" activator="parent" open-on-click/>
+                                </span>
+                            </div>
+                        </v-col>
                         <v-col class="text-end">
                             <div class="text-grey-darken-2 mt-2" v-if="skin?.shortId">
                                 <span class="mx-1">
