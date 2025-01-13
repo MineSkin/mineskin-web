@@ -2,12 +2,29 @@
     <v-card>
         <v-card-text>
             <v-row>
-                <v-col cols="12" md="4">
-                    <v-img
-                        :lazy-src="PLACEHOLDER_BODY"
-                        :src="renderSkinBody(skin?.texture?.hash?.skin)"
-                        aspect-ratio="1"
-                    />
+                <v-col cols="12" md="4" class="d-flex flex-column">
+                    <v-row class="flex-1-1-100">
+                        <v-img
+                            :lazy-src="PLACEHOLDER_BODY"
+                            :src="renderSkinBody(skin?.texture?.hash?.skin)"
+                            aspect-ratio="1"
+                        />
+                    </v-row>
+                    <v-row justify="end" v-if="mdAndUp">
+                        <v-col class="text-end">
+                            <div class="text-grey-darken-2 mt-2" v-if="skin?.shortId">
+                                <span class="mx-1">
+                                    {{ skin?.shortId }}
+                                    <v-tooltip location="left" text="Short Skin ID" activator="parent" open-on-click/>
+                                </span>
+                                <CopyBtn
+                                    :text="skin?.uuid"
+                                    tooltip-location="left"
+                                    content-key="skin_summary_short_id"
+                                />
+                            </div>
+                        </v-col>
+                    </v-row>
                 </v-col>
                 <v-divider :vertical="mdAndUp" class="my-4"/>
                 <v-col cols="12" md="8">
@@ -100,21 +117,6 @@
                                 </span>
                             </span>
                             <SkinTags class="mt-1" :skin="skin"/>
-                        </v-col>
-                    </v-row>
-                    <v-row class="pa-6" justify="end" style="position: absolute; bottom: 0; right: 0;" v-if="mdAndUp">
-                        <v-col class="text-end">
-                            <div class="text-grey-darken-2 mt-2" v-if="skin?.shortId">
-                                <span class="mx-1">
-                                    {{ skin?.shortId }}
-                                    <v-tooltip location="left" text="Short Skin ID" activator="parent" open-on-click/>
-                                </span>
-                                <CopyBtn
-                                    :text="skin?.uuid"
-                                    tooltip-location="left"
-                                    content-key="skin_summary_short_id"
-                                />
-                            </div>
                         </v-col>
                     </v-row>
                 </v-col>
