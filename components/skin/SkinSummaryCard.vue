@@ -27,7 +27,7 @@
                                     <v-tooltip location="left" text="Short Skin ID" activator="parent" open-on-click/>
                                 </span>
                                 <CopyBtn
-                                    :text="skin?.uuid"
+                                    :text="skin?.shortId"
                                     tooltip-location="left"
                                     content-key="skin_summary_short_id"
                                 />
