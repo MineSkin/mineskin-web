@@ -3,7 +3,7 @@
         <v-card-text>
             <v-row>
                 <v-col cols="12" md="4" class="d-flex flex-column">
-                    <v-row class="flex-1-1-100">
+                    <v-row class="flex-1-1-100 my-2">
                         <v-img
                             :lazy-src="PLACEHOLDER_BODY"
                             :src="renderSkinBody(skin?.texture?.hash?.skin)"
