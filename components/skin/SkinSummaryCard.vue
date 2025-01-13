@@ -10,7 +10,7 @@
                     />
                 </v-col>
                 <v-divider :vertical="mdAndUp" class="my-4"/>
-                <v-col>
+                <v-col cols="12" md="8">
                     <v-row dense>
                         <v-col>
                             <v-skeleton-loader v-if="!skin" type="text" width="100%"/>
