@@ -33,6 +33,7 @@
                             <v-skeleton-loader v-if="!skin" type="text" width="100%"/>
                             <copy-text-field
                                 v-else
+                                location="append"
                                 :label="$t('Direct Link')"
                                 readonly
                                 content-key="skin_link"
@@ -45,6 +46,7 @@
                             <v-skeleton-loader v-if="!skin" type="text" width="100%"/>
                             <copy-text-field
                                 v-else
+                                location="append"
                                 :label="$t('Skin Value')"
                                 readonly
                                 content-key="skin_value"
@@ -57,6 +59,7 @@
                             <v-skeleton-loader v-if="!skin" type="text" width="100%"/>
                             <copy-text-field
                                 v-else
+                                location="append"
                                 :label="$t('Skin Signature')"
                                 readonly
                                 content_key="skin_signature"
@@ -69,6 +72,7 @@
                             <v-skeleton-loader v-if="!skin" type="text" width="100%"/>
                             <copy-text-field
                                 v-else
+                                location="append"
                                 :label="$t('Texture URL')"
                                 readonly
                                 content-key="skin_texture_url"

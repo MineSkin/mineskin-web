@@ -1,6 +1,7 @@
 <template>
     <div class="instructions-text-container">
         <copy-text-area
+            location="prepend"
             :content-key="'instructions_code_'+type"
             :value="getText()"
             readonly width="100%"/>
