@@ -2,6 +2,7 @@
 .line-break-anywhere {
     line-break: anywhere;
 }
+
 .skin-title {
     white-space: nowrap;
     overflow: hidden;
@@ -33,7 +34,7 @@
         </h2>
         <v-row class="mt-1">
             <v-col cols="12">
-                <SkinSummaryCard :skin="skin"/>
+                <SkinSummaryCard :skin="skin" :skin-meta="skinMeta"/>
             </v-col>
         </v-row>
         <v-row class="text-center">
@@ -100,6 +101,7 @@ import SkinInstructionsCard from "~/components/skin/SkinInstructionsCard.vue";
 import { skinName } from "../../util/skin";
 import AdWrappper from "~/components/AdWrappper.vue";
 import { renderSkinBody, renderSkinHead } from "~/util/render";
+import type { SkinMeta } from "~/types/SkinMeta";
 
 const router = useRouter();
 
@@ -133,6 +135,16 @@ const {
     immediate: false
 });
 
+const {
+    data: skinMeta,
+    refresh: refreshSkinMeta
+} = useLazyAsyncData<SkinMeta>(`skin-meta-${ skin.value?.uuid || skinId.value }`, async () => {
+    return (await $mineskin.skins.getMeta(skin.value?.uuid || skinId.value))?.meta;
+}, {
+    immediate: false
+});
+
+
 const useRandomName = computed(() => {
     return !skin.value?.name && randomSkinName.value;
 })
@@ -157,12 +169,17 @@ const ogImage = computed(() => {
 });
 
 const description = computed(() => {
-    let desc = `A Minecraft Skin`;
-    if (skin.value?.name) {
-        desc += ` named ${ skin.value.name }`;
-    }
-    if (skin.value?.tags && skin.value.tags.length > 0) {
-        desc += ` with tags ${ skin.value.tags.map(t => t.tag.replace(/[^a-z]/ig, ' ')).join(', ') }`;
+    let desc = '';
+    if (skinMeta?.value?.description) {
+        desc += skinMeta.value.description;
+    } else {
+        desc += `A Minecraft Skin`;
+        if (skin.value?.name) {
+            desc += ` named ${ skin.value.name }`;
+        }
+        if (skin.value?.tags && skin.value.tags.length > 0) {
+            desc += ` with tags ${ skin.value.tags.map(t => t.tag.replace(/[^a-z]/ig, ' ')).join(', ') }`;
+        }
     }
     desc += ' - generated'
     if (skin.value?.generator?.timestamp) {
@@ -239,6 +256,7 @@ watch(skin, (skin) => {
         }
     }
     refreshRandomSkinName();
+    refreshSkinMeta();
 }, {
     immediate: true
 })

@@ -8,6 +8,8 @@
                             :lazy-src="PLACEHOLDER_BODY"
                             :src="renderSkinBody(skin?.texture?.hash?.skin)"
                             aspect-ratio="1"
+                            :alt="skinMeta?.description"
+                            :title="skinMeta?.description"
                         />
                     </v-row>
                     <v-row justify="end" v-if="mdAndUp">
@@ -148,9 +150,11 @@ import InvisibleTurnstile from "~/components/InvisibleTurnstile.vue";
 import { useInteractionsStore } from "~/stores/interactions";
 import { useAuthStore } from "~/stores/auth";
 import { storeToRefs } from "pinia";
+import type { SkinMeta } from "~/types/SkinMeta";
 
 const props = defineProps<{
     skin: SkinInfo2;
+    skinMeta?: SkinMeta
 }>();
 
 const {mdAndUp} = useDisplay();
@@ -216,6 +220,5 @@ const downloadSkin = () => {
 const reportSkin = () => {
     //TODO
 }
-
 
 </script>

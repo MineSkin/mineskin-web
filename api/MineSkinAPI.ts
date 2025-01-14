@@ -204,6 +204,10 @@ export class MineSkinAPI {
             })
         }
 
+        public async getMeta(uuid: string) {
+            return this.api.request(`/v2/skins/${ uuid }/meta`, INIT);
+        }
+
         public async getTags(uuid: string) {
             return this.api.request(`/v2/skins/${ uuid }/tags`, {
                 ...INIT,
