@@ -2,7 +2,16 @@
     <v-row>
         <v-col cols="12">
             <h2 v-if="mode==='popular'">Popular Skins</h2>
-            <h2 v-else>{{ $t("Skin Gallery") }} <small v-if="filter">&quot;{{ filter }}&quot;</small></h2>
+            <h2 v-else>{{ $t("Skin Gallery") }}
+                <v-chip
+                    v-if="filter"
+                    class="ma-2"
+                    closable
+                    @click:close="clearFilter()"
+                >
+                    {{ filter }}
+                </v-chip>
+            </h2>
             <dbg :data="breakpoint"></dbg>
         </v-col>
     </v-row>
@@ -130,6 +139,15 @@ watch(() => router.currentRoute.value.query.filter, (newVal) => {
         ttl: 100
     });
 });
+
+const clearFilter = () => {
+    filter.value = '';
+    router.push({
+        query: {
+            filter: undefined
+        }
+    });
+}
 
 const adsOnPage = ref(0);
 
