@@ -1,6 +1,6 @@
 <template>
     <v-container>
-        <SkinGallery/>
+        <SkinGallery mode="popular"/>
     </v-container>
 </template>
 <script setup lang="ts">
