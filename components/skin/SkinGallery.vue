@@ -157,7 +157,7 @@ async function api() {
         pageIndex.value++;
         galleryAnchor.value = after.value;
         // preload next
-        $mineskin.skins.list(after.value, toLoad, filter.value);
+        $mineskin.skins.list(after.value, toLoad, filter.value, props.mode);
     }
     return skins;
     // return new Promise(resolve => {
