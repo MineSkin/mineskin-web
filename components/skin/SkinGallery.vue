@@ -39,7 +39,7 @@
         <template v-slot:loading>
         </template>
     </v-infinite-scroll>
-    <v-row justify="center" dense>
+    <v-row justify="center" dense v-if="hasNext">
         <v-col v-for="n in 20" :key="n"
                cols="5"
                xs="5"
