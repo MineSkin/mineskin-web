@@ -113,6 +113,13 @@ const authStore = useAuthStore();
 const galleryStore = useGalleryStore();
 const {galleryItems, galleryAnchor, galleryScroll} = storeToRefs(galleryStore);
 
+
+const props = withDefaults(defineProps<{
+    mode?: 'latest' | 'popular' | 'random';
+}>(), {
+    mode: 'latest'
+});
+
 const adFree = computed(() => authStore.grants?.ad_free);
 
 const filter = ref<string>(router.currentRoute.value.query.filter as string || '');
@@ -140,7 +147,7 @@ const hasNext = ref(true);
 async function api() {
     if (!hasNext.value) return [];
     const toLoad = 80 - (adsOnPage.value * 4);
-    const response = await $mineskin.skins.list(after.value, toLoad, filter.value);
+    const response = await $mineskin.skins.list(after.value, toLoad, filter.value, props.mode);
     console.debug(response);
     const skins = response?.skins || [];
     hasNext.value = skins.length > 0;

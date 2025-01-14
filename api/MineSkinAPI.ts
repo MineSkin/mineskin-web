@@ -161,7 +161,7 @@ export class MineSkinAPI {
         constructor(readonly api: MineSkinAPI) {
         }
 
-        public async list(after?: string, size?: number, filter?: string): Promise<SkinListResponse> {
+        public async list(after?: string, size?: number, filter?: string, mode: '' | 'latest' | 'popular' | 'random' = ''): Promise<SkinListResponse> {
             const params = new URLSearchParams();
             if (after) {
                 params.set('after', after);
@@ -172,7 +172,10 @@ export class MineSkinAPI {
             if (filter) {
                 params.set('filter', filter);
             }
-            return this.api.request(`/v2/skins?${ params.toString() }`, INIT);
+            if (mode === 'latest') {
+                mode = '';
+            }
+            return this.api.request(`/v2/skins/${ mode }?${ params.toString() }`, INIT);
         }
 
         public async get(uuid: string): Promise<SkinResponse> {
