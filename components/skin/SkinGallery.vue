@@ -6,6 +6,7 @@
                 <v-chip
                     v-if="filter"
                     class="ma-2"
+                    size="large"
                     closable
                     @click:close="clearFilter()"
                 >
