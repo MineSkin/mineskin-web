@@ -1,6 +1,6 @@
 <template>
     <v-textarea :model-value="value">
-        <template v-slot:append>
+        <template v-slot:[location]>
             <v-tooltip location="bottom" :text="tooltipText">
                 <template v-slot:activator="{ props }">
                     <v-icon
@@ -18,7 +18,8 @@ import { useNuxtApp } from "nuxt/app";
 
 const props = defineProps<{
     value: string,
-    contentKey?: string
+    contentKey?: string,
+    location: 'append' | 'prepend'
 }>();
 
 const {$gtag} = useNuxtApp();

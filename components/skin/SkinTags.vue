@@ -13,7 +13,7 @@ a {
                 <template v-slot:prepend v-if="authed">
                     <a @click="upvote(tag)" :title="tag.vote==='up'?'Upvoted':'Upvote'" style="min-width: 18px">
                         <v-progress-circular indeterminate color="green" size="16" width="2" v-if="submittingVote"/>
-                        <v-icon v-else :color="tag.vote === 'up' ? 'green' : ''">mdi-arrow-up</v-icon>
+                        <v-icon v-else :color="tag.vote === 'up' ? 'green' : ''" :icon="tag.suggested ? 'mdi-check' : 'mdi-arrow-up'"></v-icon>
                     </a>
                 </template>
                 <span class="mx-1" :title="tag.suggested ? 'Suggested Tag' : ''">
@@ -22,7 +22,7 @@ a {
                 <template v-slot:append v-if="authed">
                     <a @click="downvote(tag)" :title="tag.vote==='down'?'Downvoted':'Downvote'" style="min-width: 18px">
                         <v-progress-circular indeterminate color="red" size="16" width="2" v-if="submittingVote"/>
-                        <v-icon v-else :color="tag.vote === 'down' ? 'red' : ''">mdi-arrow-down</v-icon>
+                        <v-icon v-else :color="tag.vote === 'down' ? 'red' : ''" :icon="tag.suggested ? 'mdi-close' : 'mdi-arrow-down'"></v-icon>
                     </a>
                 </template>
             </v-chip>

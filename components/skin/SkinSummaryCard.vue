@@ -2,20 +2,47 @@
     <v-card>
         <v-card-text>
             <v-row>
-                <v-col cols="12" md="4">
-                    <v-img
-                        :lazy-src="PLACEHOLDER_BODY"
-                        :src="renderSkinBody(skin?.texture?.hash?.skin)"
-                        aspect-ratio="1"
-                    />
+                <v-col cols="12" md="4" class="d-flex flex-column">
+                    <v-row class="flex-1-1-100 my-2">
+                        <v-img
+                            :lazy-src="PLACEHOLDER_BODY"
+                            :src="renderSkinBody(skin?.texture?.hash?.skin)"
+                            aspect-ratio="1"
+                        />
+                    </v-row>
+                    <v-row justify="end" v-if="mdAndUp">
+                        <v-col>
+                            <div class="text-grey-darken-2 mt-2" v-if="skin">
+                                <span class="mx-1">
+                                    <v-icon icon="mdi-eye"></v-icon>
+                                    {{ skin.views + 1 }}
+                                    <v-tooltip location="right" text="Views" activator="parent" open-on-click/>
+                                </span>
+                            </div>
+                        </v-col>
+                        <v-col class="text-end">
+                            <div class="text-grey-darken-2 mt-2" v-if="skin?.shortId">
+                                <span class="mx-1">
+                                    {{ skin?.shortId }}
+                                    <v-tooltip location="left" text="Short Skin ID" activator="parent" open-on-click/>
+                                </span>
+                                <CopyBtn
+                                    :text="skin?.shortId"
+                                    tooltip-location="left"
+                                    content-key="skin_summary_short_id"
+                                />
+                            </div>
+                        </v-col>
+                    </v-row>
                 </v-col>
                 <v-divider :vertical="mdAndUp" class="my-4"/>
-                <v-col>
+                <v-col cols="12" md="8">
                     <v-row dense>
                         <v-col>
                             <v-skeleton-loader v-if="!skin" type="text" width="100%"/>
                             <copy-text-field
                                 v-else
+                                location="append"
                                 :label="$t('Direct Link')"
                                 readonly
                                 content-key="skin_link"
@@ -28,6 +55,7 @@
                             <v-skeleton-loader v-if="!skin" type="text" width="100%"/>
                             <copy-text-field
                                 v-else
+                                location="append"
                                 :label="$t('Skin Value')"
                                 readonly
                                 content-key="skin_value"
@@ -40,6 +68,7 @@
                             <v-skeleton-loader v-if="!skin" type="text" width="100%"/>
                             <copy-text-field
                                 v-else
+                                location="append"
                                 :label="$t('Skin Signature')"
                                 readonly
                                 content_key="skin_signature"
@@ -52,6 +81,7 @@
                             <v-skeleton-loader v-if="!skin" type="text" width="100%"/>
                             <copy-text-field
                                 v-else
+                                location="append"
                                 :label="$t('Texture URL')"
                                 readonly
                                 content-key="skin_texture_url"
@@ -93,28 +123,13 @@
                         <v-col v-if="tagsVisible">
                             <span class="text-medium-emphasis">
                                 <span v-if="authed">
-                                    Tags
+                                    {{ $t("Tags") }}
                                 </span>
                                 <span v-else>
-                                    Sign in to add tags
+                                    {{ $t("Sign in to add tags") }}
                                 </span>
                             </span>
                             <SkinTags class="mt-1" :skin="skin"/>
-                        </v-col>
-                    </v-row>
-                    <v-row class="pa-6" justify="end" style="position: absolute; bottom: 0; right: 0;" v-if="mdAndUp">
-                        <v-col class="text-end">
-                            <div class="text-grey-darken-2 mt-2" v-if="skin?.shortId">
-                                <span class="mx-1">
-                                    {{ skin?.shortId }}
-                                    <v-tooltip location="left" text="Short Skin ID" activator="parent" open-on-click/>
-                                </span>
-                                <CopyBtn
-                                    :text="skin?.uuid"
-                                    tooltip-location="left"
-                                    content-key="skin_summary_short_id"
-                                />
-                            </div>
                         </v-col>
                     </v-row>
                 </v-col>

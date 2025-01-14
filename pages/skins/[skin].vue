@@ -2,10 +2,15 @@
 .line-break-anywhere {
     line-break: anywhere;
 }
+.skin-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 </style>
 <template>
     <v-container class="mb-4">
-        <h2>
+        <h2 class="skin-title">
             <back-link to="/skins" class="text-white">
                 <v-icon icon="mdi-arrow-left" class="mx-2"/>
             </back-link>

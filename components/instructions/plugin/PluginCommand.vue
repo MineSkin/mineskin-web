@@ -1,6 +1,7 @@
 <template>
     <div class="instructions-text-container">
         <copy-text-field
+            location="prepend"
              :content-key="'instructions_plugin_'+type"
             :value="getText()"
             readonly width="100%"/>
