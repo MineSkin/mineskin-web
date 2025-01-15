@@ -1,3 +1,10 @@
+<style scoped>
+.minerender{
+    left: 50%;
+    top:50%;
+    transform: translate(-50%, -50%);
+}
+</style>
 <template>
     <v-card>
         <v-card-text>
@@ -10,7 +17,12 @@
                             aspect-ratio="1"
                             :alt="skinMeta?.description"
                             :title="skinMeta?.description"
+                            v-show="!mineRenderReady"
                         />
+                        <div v-if="skin" v-show="mineRenderReady" style="position: relative;width:100%">
+                            <iframe v-show="mineRenderReady" :src="mineRenderEmbedUrl" class="minerender v-responsive"
+                                    frameborder="0" @load="mineRenderLoaded()" @error="mineRenderReady=false" height="451"></iframe>
+                        </div>
                     </v-row>
                     <v-row justify="end" v-if="mdAndUp">
                         <v-col>
@@ -191,7 +203,17 @@ const skinTextureUrl = computed(() => {
 
 const proxiedSkinTextureUrl = computed(() => {
     return `https://mineskin.org/textures/${ props.skin.texture.hash.skin }?attachment`;
-})
+});
+
+const mineRenderReady = ref(false);
+const mineRenderEmbedUrl = computed(() => {
+    return `https://minerender.org/embed/skin/?skin.url=${ proxiedSkinTextureUrl.value }&autoResize=true&shadow=false&camera.position=-16,36,16&controls.pan=false`
+});
+const mineRenderLoaded=()=>{
+    setTimeout(()=>{
+        mineRenderReady.value=true;
+    },500)
+}
 
 //TODO: verify this actually still works
 const useSkinLink = computed(() => {
