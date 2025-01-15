@@ -272,7 +272,7 @@ const settingsStore = useSettingsStore();
 const {mdAndUp, mdAndDown} = useDisplay();
 
 const {grants} = storeToRefs(authStore);
-const {jobsDrawer, jobMap} = storeToRefs(queueStore);
+const {jobsDrawer, jobMap, lastJobSubmit} = storeToRefs(queueStore);
 
 const {visibility: preferredVisibility} = storeToRefs(settingsStore);
 
@@ -514,6 +514,7 @@ async function generate() {
                 let options = {...baseOptions};
                 options.name = processNameVariables(index++, null, file, null);
                 await sleep(800);
+                lastJobSubmit.value = Date.now();
                 responses.push([await $mineskin.queue.upload(file, options), {name: file.name}]);
             }
             break;
@@ -527,6 +528,7 @@ async function generate() {
                 let options = {...baseOptions};
                 options.name = processNameVariables(index++, url, null, null);
                 await sleep(800);
+                lastJobSubmit.value = Date.now();
                 responses.push([await $mineskin.queue.url(url, options), {name: url}])
             }
             break;
@@ -555,6 +557,7 @@ async function generate() {
                 let options = {...baseOptions};
                 options.name = processNameVariables(index++, null, null, user);
                 await sleep(800);
+                lastJobSubmit.value = Date.now();
                 responses.push([await $mineskin.queue.user(uuid, options), {name: user}])
             }
             break;

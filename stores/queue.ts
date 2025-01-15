@@ -24,6 +24,8 @@ export const useQueueStore = defineStore('queue', () => {
 
     const jobsSorted = ref<JobWithMeta[]>([]);
 
+    const lastJobSubmit = ref(0);
+
     const {
         data: lazyJobList,
         refresh: refreshLazyJobList
@@ -177,7 +179,8 @@ export const useQueueStore = defineStore('queue', () => {
         // updatePendingJobs,
         updateSortedJobs,
         hasPendingJobs,
-        jobsDrawer
+        jobsDrawer,
+        lastJobSubmit
     }
 }, {
     persist: {
