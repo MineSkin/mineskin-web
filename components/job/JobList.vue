@@ -2,7 +2,7 @@
     <v-list>
         <v-list-subheader>
             {{ $t("Jobs") }}
-            <span v-if="authStore.authed">- <nuxt-link :to="localePath('/my-skins')">{{
+            <span>- <nuxt-link :to="localePath('/my-skins')">{{
                     $t("Show My Skins")
                 }}</nuxt-link></span>
         </v-list-subheader>
