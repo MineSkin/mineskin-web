@@ -166,10 +166,10 @@
                     <v-row justify="center" class="mb-2 text-center">
                         <v-btn
                             color="primary"
-                            text="Generate"
+                            :text="$t('Generate') + (waitTime>0?' ('+waitTime+')':'')"
                             size="x-large"
                             @click="generate"
-                            :disabled="generating"
+                            :disabled="!canGenerate"
                             :loading="generating"
                         ></v-btn>
                     </v-row>
@@ -275,6 +275,8 @@ const {grants} = storeToRefs(authStore);
 const {jobsDrawer, jobMap, lastJobSubmit} = storeToRefs(queueStore);
 
 const {visibility: preferredVisibility} = storeToRefs(settingsStore);
+
+const waitTime = ref(0);
 
 const generateType = computed<Maybe<GenerateType>>(() => {
     if (urls.value.filter(url => url.length > 0).length > 0) {
@@ -468,6 +470,7 @@ function reset() {
     visibility.value = preferredVisibility.value || SkinVisibility2.PUBLIC;
     variant.value = SkinVariant.UNKNOWN;
     generating.value = false;
+    refreshWaitTime();
 }
 
 function getOptions(): GenerateOptions {
@@ -477,6 +480,10 @@ function getOptions(): GenerateOptions {
         name: name.value
     }
 }
+
+const canGenerate = computed(() => {
+    return imageCount.value > 0 && !generating.value && waitTime.value <= 0;
+});
 
 async function generate() {
     console.log('generate');
@@ -589,8 +596,21 @@ async function generate() {
 
     await sleep(2000);
     generating.value = false;
+    refreshWaitTime();
 }
 
+const refreshWaitTime = () => {
+    if (authStore.authed) {
+        waitTime.value = 0;
+        return;
+    }
+    waitTime.value = Math.max(0, 6 - (Math.ceil(Date.now() / 1000) - Math.ceil(lastJobSubmit.value / 1000)));
+    if (waitTime.value > 0) {
+        setTimeout(() => {
+            refreshWaitTime();
+        }, 1000);
+    }
+}
 
 onMounted(async () => {
     isHydrated.value = true;
@@ -601,6 +621,7 @@ onMounted(async () => {
     } catch (e) {
         console.error(e);
     }
+    refreshWaitTime();
 })
 
 </script>
