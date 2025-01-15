@@ -44,8 +44,16 @@ const statusMap: Record<string, { color: string; text: string; }> = {
 const status = computed(() => props.waiting ? 'waiting' : props.job?.status || 'waiting');
 
 const indeterminate = computed(() => {
-    return status.value !== 'completed' && status.value !== 'failed';
+    const isPending = status.value !== 'completed' && status.value !== 'failed';
+    if (props.job?.eta) {
+        if (isPending) {
+            return etaProgress.value >= 100;
+        }
+        return false;
+    }
+    return isPending;
 });
+
 const progress = computed(() => {
     if (status.value === 'completed') {
         return 100;
@@ -53,7 +61,27 @@ const progress = computed(() => {
     if (status.value === 'failed') {
         return 100;
     }
-    return 0;
+    return etaProgress.value || 0;
 });
+
+const etaProgress = ref(0);
+const refreshEtaProgress = () => {
+    if (props.job?.eta) {
+        const started: number = props.job.timestamp;
+        const eta: number = props.job.eta + 100;
+        const now: number = Date.now();
+        etaProgress.value = Math.min(100, Math.max(0, Math.floor(100 * (now - started) / (eta - started))));
+        if (etaProgress.value < 100) {
+            setTimeout(refreshEtaProgress, 500);
+        }
+    }
+    if (!props.job) {
+        setTimeout(refreshEtaProgress, 200);
+    }
+}
+
+onMounted(() => {
+    refreshEtaProgress();
+})
 
 </script>

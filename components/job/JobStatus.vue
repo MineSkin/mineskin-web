@@ -69,7 +69,7 @@ const jobTexture = computed(() => {
 });
 
 const tryJobRefresh = async () => {
-    if (refreshCounter.value > 3) return;
+    if (refreshCounter.value > 5) return;
     if (job.value) {
         if (job.value?.status !== 'waiting' && job.value?.status !== 'processing' && skin.value) {
             return;
@@ -102,7 +102,7 @@ const tryJobRefresh = async () => {
         }
     }
 
-    setTimeout(() => tryJobRefresh(), 1300 + Math.random() * 1000);
+    setTimeout(() => tryJobRefresh(), 600 + Math.random() * 600 + refreshCounter.value * 200);
 }
 
 onMounted(async () => {
