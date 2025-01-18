@@ -1,18 +1,27 @@
 export function renderSkinHead(texture: string): string {
-    return renderSkinTexture(texture, {overlay: true, body: false});
+    return renderSkinTexture(texture, {overlay: true, body: false, scale: 10});
+}
+
+export function renderSkinHeadIcon(texture: string): string {
+    return renderSkinTexture(texture, {overlay: true, body: false, scale: 2});
 }
 
 export function renderSkinBody(texture: string): string {
-    return renderSkinTexture(texture, {overlay: true, body: true});
+    return renderSkinTexture(texture, {overlay: true, body: true, scale: 10});
 }
 
-export function renderSkinTexture(texture: string, options: { overlay: boolean, body: boolean }): string {
+export function renderSkinTexture(texture: string, options: {
+    overlay: boolean,
+    body: boolean,
+    scale: number
+}): string {
     if (!texture) {
         return;
     }
     const params = new URLSearchParams()
     params.set('overlay', `${ options.overlay || false }`)
     params.set('body', `${ options.body || false }`)
+    params.set('scale', `${ options.scale || 10 }`)
     if (!texture.startsWith('http') && !texture.startsWith('data')) {
         texture = `http://textures.minecraft.net/texture/${ texture }`
     }
