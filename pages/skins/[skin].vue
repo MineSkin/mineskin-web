@@ -164,12 +164,12 @@ const skinHeadIcon = computed(() => {
     if (!skin.value) return null;
     return renderSkinHeadIcon(skin.value.texture.hash.skin);
 });
-// const skinBodyImage = computed(() => {
-//     if (!skin.value) return null;
-//     return renderSkinBody(skin.value.texture.hash.skin);
-// });
+const skinBodyImage = computed(() => {
+    if (!skin.value) return null;
+    return renderSkinBody(skin.value.texture.hash.skin);
+});
 const ogImage = computed(() => {
-    return skinHeadImage.value || '/img/mineskin-social-card.jpg';
+    return skinBodyImage.value || '/img/mineskin-social-card.jpg';
 });
 
 const description = computed(() => {
