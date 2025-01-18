@@ -172,6 +172,10 @@ const ogImage = computed(() => {
     return skinBodyImage.value || '/img/mineskin-social-card.jpg';
 });
 
+const imageAlt = computed(() => {
+    return skinMeta?.value?.description || skinNameDisplay.value;
+});
+
 const description = computed(() => {
     let desc = '';
     if (skinMeta?.value?.description) {
@@ -198,6 +202,7 @@ useSeoMeta({
     ogTitle: skinNameDisplay,
     twitterTitle: skinNameDisplay,
     ogImage: ogImage,
+    ogImageAlt: imageAlt,
     description: description,
     ogDescription: description,
     twitterDescription: description,
