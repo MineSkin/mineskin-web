@@ -47,7 +47,7 @@ const indeterminate = computed(() => {
     const isPending = status.value !== 'completed' && status.value !== 'failed';
     if (props.job?.eta) {
         if (isPending) {
-            return etaProgress.value >= 100;
+            return etaProgress.value >= 100 && stillProcessing.value;
         }
         return false;
     }
@@ -65,15 +65,20 @@ const progress = computed(() => {
 });
 
 const etaProgress = ref(0);
+const stillProcessing = ref(false);
 const refreshEtaProgress = () => {
     if (props.job?.eta) {
         const started: number = props.job.timestamp;
         const eta: number = props.job.eta + 100;
         const now: number = Date.now();
-        etaProgress.value = Math.min(100, Math.max(0, Math.floor(100 * (now - started) / (eta - started))));
         if (etaProgress.value < 100) {
             setTimeout(refreshEtaProgress, 500);
         }
+        if (etaProgress.value >= 100) {
+            stillProcessing.value = true;
+            setTimeout(refreshEtaProgress, 500);
+        }
+        etaProgress.value = Math.min(100, Math.max(0, Math.floor(100 * (now - started) / (eta - started))));
     }
     if (!props.job) {
         setTimeout(refreshEtaProgress, 200);
