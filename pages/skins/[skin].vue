@@ -100,7 +100,7 @@ import SkinSummaryCard from "~/components/skin/SkinSummaryCard.vue";
 import SkinInstructionsCard from "~/components/skin/SkinInstructionsCard.vue";
 import { skinName } from "../../util/skin";
 import AdWrappper from "~/components/AdWrappper.vue";
-import { renderSkinBody, renderSkinHead } from "~/util/render";
+import { renderSkinBody, renderSkinHead, renderSkinHeadIcon } from "~/util/render";
 import type { SkinMeta } from "~/types/SkinMeta";
 
 const router = useRouter();
@@ -160,12 +160,20 @@ const skinHeadImage = computed(() => {
     if (!skin.value) return null;
     return renderSkinHead(skin.value.texture.hash.skin);
 });
-// const skinBodyImage = computed(() => {
-//     if (!skin.value) return null;
-//     return renderSkinBody(skin.value.texture.hash.skin);
-// });
+const skinHeadIcon = computed(() => {
+    if (!skin.value) return null;
+    return renderSkinHeadIcon(skin.value.texture.hash.skin);
+});
+const skinBodyImage = computed(() => {
+    if (!skin.value) return null;
+    return renderSkinBody(skin.value.texture.hash.skin);
+});
 const ogImage = computed(() => {
-    return skinHeadImage.value || '/img/mineskin-social-card.jpg';
+    return skinBodyImage.value || '/img/mineskin-social-card.jpg';
+});
+
+const imageAlt = computed(() => {
+    return skinMeta?.value?.description || skinNameDisplay.value;
 });
 
 const description = computed(() => {
@@ -194,6 +202,7 @@ useSeoMeta({
     ogTitle: skinNameDisplay,
     twitterTitle: skinNameDisplay,
     ogImage: ogImage,
+    ogImageAlt: imageAlt,
     description: description,
     ogDescription: description,
     twitterDescription: description,
@@ -231,10 +240,18 @@ const ldBreadcrumbContent = computed(() => {
 })
 
 useHead({
-    link: [{
-        rel: 'canonical',
-        href: `https://mineskin.org/skins/${ skin.value?.uuid || skinId.value }`
-    }],
+    link: [
+        {
+            rel: 'canonical',
+            href: `https://mineskin.org/skins/${ skin.value?.uuid || skinId.value }`
+        },
+        {
+            rel: 'icon',
+            type: 'image/png',
+            href: skinHeadIcon,
+            id: 'skin-icon'
+        }
+    ],
     script: [
         {
             type: 'application/ld+json',
