@@ -12,9 +12,31 @@
                 >
                     {{ filter }}
                 </v-chip>
+                <v-btn icon
+                       v-if="!mdAndUp && !filter"
+                       @click="searching ? search() : showSearch()"
+                       variant="text"
+                >
+                    <v-icon>mdi-magnify</v-icon>
+                </v-btn>
             </h2>
-            <dbg :data="breakpoint"></dbg>
         </v-col>
+        <v-expand-x-transition v-if="!mdAndUp">
+            <v-text-field
+                v-show="searching"
+                ref="searchField"
+                density="compact"
+                v-model="searchFilter"
+                placeholder="Search"
+                append-inner-icon="mdi-close"
+                @click:append-inner="searchFilter = ''; searching = false"
+                @keydown.enter="searching = false; search()"
+                @keydown.esc="searching = false"
+                hide-details
+                single-line
+                min-width="20vw"
+            />
+        </v-expand-x-transition>
     </v-row>
     <v-infinite-scroll :items="skins" :onLoad="load" style="overflow: hidden">
         <v-row justify="center" dense>
@@ -116,7 +138,7 @@ useHead({
 });
 
 const router = useRouter();
-const {xl, lg, md, sm, xs, name: breakpoint} = useDisplay();
+const {xl, lg, md, sm, xs, name: breakpoint, mdAndUp} = useDisplay();
 
 const {$mineskin, $flags, $notify} = useNuxtApp();
 
@@ -124,6 +146,30 @@ const authStore = useAuthStore();
 const galleryStore = useGalleryStore();
 const {galleryItems, galleryAnchor, galleryScroll} = storeToRefs(galleryStore);
 
+const searching = ref(false);
+const searchFilter = ref('');
+const searchField = useTemplateRef('searchField');
+
+const showSearch = () => {
+    searching.value = true;
+    setTimeout(() => {
+        searchField.value.focus();
+    }, 0);
+}
+
+const search = () => {
+    searching.value = false;
+    if (searchFilter.value === '') {
+        return;
+    }
+    router.push({
+        path: '/skins',
+        query: {
+            filter: searchFilter.value
+        },
+        force: true,
+    });
+}
 
 const props = withDefaults(defineProps<{
     mode?: 'latest' | 'popular' | 'random';
