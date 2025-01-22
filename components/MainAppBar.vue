@@ -78,7 +78,7 @@
         <v-divider vertical class="mx-4 my-2"/>
 
         <template v-slot:append>
-            <v-btn icon @click="jobsDrawer = !jobsDrawer">
+            <v-btn icon @click="jobsDrawer = !jobsDrawer" v-show="mdAndUp">
                 <component :is="jobsSorted?.length>0?'v-badge':'div'"
                            :content="jobsSorted?.length"
                            location="bottom right"
