@@ -7,9 +7,9 @@
                  :data-ad-client="clientId"
                  :data-ad-slot="adSlot"
                  data-ad-format="autorelaxed"
-                 data-matched-content-ui-type="image_stacked"
-                 :data-matched-content-rows-num="1"
-                 :data-matched-content-columns-num="1"></ins>
+                 :data-matched-content-ui-type="uiType"
+                 :data-matched-content-rows-num="rows"
+                 :data-matched-content-columns-num="cols"></ins>
         </template>
     </AdWrappper>
 </template>
@@ -20,5 +20,8 @@ const clientId = runtimeConfig.public.google.adsense;
 
 const props = defineProps<{
     adSlot?: string;
+    uiType?: string;
+    rows?: number;
+    cols?: number;
 }>();
 </script>

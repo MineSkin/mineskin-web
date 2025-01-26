@@ -64,6 +64,9 @@
                         <multiplex-ad-wrapper
                             v-else-if="item0.adType===2"
                             ad-slot="8545261932"
+                            ui-type="image_stacked"
+                            :rows="1"
+                            :cols="1"
                         />
                         <display-ad-wrapper
                             v-else-if="item0.adType===3"

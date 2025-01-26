@@ -38,7 +38,8 @@
             </v-col>
         </v-row>
         <v-row class="text-center">
-            <ad-wrappper ad-slot="4431802313" ad-format="auto" :responsive="true"/>
+            <ad-wrappper v-if="randomBoolean()" ad-slot="4431802313" ad-format="auto" :responsive="true"/>
+            <multiplex-ad-wrapper v-else ad-slot="3298209656"/>
         </v-row>
         <!--        <dbg :data="skin"/>-->
         <v-row>
@@ -102,6 +103,7 @@ import { skinName } from "../../util/skin";
 import AdWrappper from "~/components/ad/AdWrappper.vue";
 import { renderSkinBody, renderSkinHead, renderSkinHeadIcon } from "~/util/render";
 import type { SkinMeta } from "~/types/SkinMeta";
+import MultiplexAdWrapper from "~/components/ad/MultiplexAdWrapper.vue";
 
 const router = useRouter();
 
@@ -196,6 +198,8 @@ const description = computed(() => {
     desc += ' by MineSkin, a generator for Minecraft skin texture signatures.';
     return desc;
 });
+
+const randomBoolean = () => Math.random() > 0.5;
 
 useSeoMeta({
     title: skinNameDisplay,
