@@ -47,7 +47,7 @@
                     :xs="item0.ad? 12:5"
                     :sm="item0.ad?8:3"
                     :md="item0.ad?4:2"
-                    :lg="item0.ad?2:2"
+                    :lg="item0.ad?4:2"
                     :xl="item0.ad?2:1"
                     class="gallery-item-group"
                     :class="item0.ad?'mx-4':'mx-0 mx-sm-1 mx-md-2'"
