@@ -166,7 +166,7 @@ const skinHeadIcon = computed(() => {
 });
 const skinBodyImage = computed(() => {
     if (!skin.value) return null;
-    return renderSkinBody(skin.value.texture.hash.skin);
+    return renderSkinBody(skin.value.texture.hash.skin, skin.value.variant);
 });
 const ogImage = computed(() => {
     return skinBodyImage.value || '/img/mineskin-social-card.jpg';

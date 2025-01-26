@@ -1,3 +1,5 @@
+import type { SkinVariant } from "@mineskin/types";
+
 export function renderSkinHead(texture: string): string {
     return renderSkinTexture(texture, {overlay: true, body: false, scale: 10});
 }
@@ -6,15 +8,23 @@ export function renderSkinHeadIcon(texture: string): string {
     return renderSkinTexture(texture, {overlay: true, body: false, scale: 2});
 }
 
-export function renderSkinBody(texture: string): string {
-    return renderSkinTexture(texture, {overlay: true, body: true, scale: 10});
+export function renderSkinBody(texture: string, variant?: SkinVariant): string {
+    return renderSkinTexture(texture, {
+        overlay: true,
+        body: true,
+        scale: 10,
+        slim: variant === 'slim'
+    });
 }
 
-export function renderSkinTexture(texture: string, options: {
-    overlay: boolean,
-    body: boolean,
-    scale: number
-}): string {
+export interface SkinRenderOptions {
+    overlay: boolean;
+    body: boolean;
+    scale: number;
+    slim: boolean;
+}
+
+export function renderSkinTexture(texture: string, options: Partial<SkinRenderOptions>): string {
     if (!texture) {
         return;
     }
@@ -22,6 +32,7 @@ export function renderSkinTexture(texture: string, options: {
     params.set('overlay', `${ options.overlay || false }`)
     params.set('body', `${ options.body || false }`)
     params.set('scale', `${ options.scale || 10 }`)
+    params.set('slim', `${ options.slim || false }`)
     if (!texture.startsWith('http') && !texture.startsWith('data')) {
         texture = `http://textures.minecraft.net/texture/${ texture }`
     }
