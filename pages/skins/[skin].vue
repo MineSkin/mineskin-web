@@ -38,7 +38,7 @@
             </v-col>
         </v-row>
         <v-row class="text-center">
-            <ad-wrappper ad-slot="4431802313"/>
+            <ad-wrappper ad-slot="4431802313" ad-format="auto" :responsive="true"/>
         </v-row>
         <!--        <dbg :data="skin"/>-->
         <v-row>
