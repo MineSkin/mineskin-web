@@ -56,9 +56,15 @@
                          style="max-height: 1200px;width:100%"
                     >
                         <ad-wrappper
+                            v-if="randomBool()"
                             ad-format="fluid"
                             ad-layout-key="+1i+s2-10-1k+6v"
                             ad-slot="3361952161"
+                        />
+                        <ad-wrappper
+                            v-else
+                            ad-format="autorelaxed"
+                            ad-slot="8545261932"
                         />
                     </div>
                     <div v-else class="gallery-item mb-1 mb-sm-2 mb-md-4" v-for="item in item0" :key="item">
@@ -269,6 +275,8 @@ async function load({done}) {
 const inlineAdRate = computed(() => Number($flags.getValue('web.ads.gallery_inline_rate', {
     fallback: .6
 })));
+
+const randomBool = () => Math.random() < 0.5;
 
 const handleScroll = useThrottleFn((e: Event) => {
     galleryScroll.value = window.scrollY;
