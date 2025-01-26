@@ -99,7 +99,7 @@ import {
 import SkinSummaryCard from "~/components/skin/SkinSummaryCard.vue";
 import SkinInstructionsCard from "~/components/skin/SkinInstructionsCard.vue";
 import { skinName } from "../../util/skin";
-import AdWrappper from "~/components/AdWrappper.vue";
+import AdWrappper from "~/components/ad/AdWrappper.vue";
 import { renderSkinBody, renderSkinHead, renderSkinHeadIcon } from "~/util/render";
 import type { SkinMeta } from "~/types/SkinMeta";
 
