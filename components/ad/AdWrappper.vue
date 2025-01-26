@@ -31,7 +31,7 @@
                      :data-ad-slot="adSlot"
                      :data-ad-format="adFormat||'auto'"
                      :data-ad-layout-key="adLayoutKey"
-                     :data-full-width-responsive="responsive||true"></ins>
+                     :data-full-width-responsive="responsive"></ins>
             </slot>
             <component is="script">
                 {{ isDev ? 'google_adtest = "on";' : '' }}

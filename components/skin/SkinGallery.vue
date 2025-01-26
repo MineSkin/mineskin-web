@@ -68,6 +68,8 @@
                         <display-ad-wrapper
                             v-else-if="item0.adType===3"
                             ad-slot="2426312811"
+                            :height="400"
+                            :width="380"
                         />
                     </div>
                     <div v-else class="gallery-item mb-1 mb-sm-2 mb-md-4" v-for="item in item0" :key="item">
