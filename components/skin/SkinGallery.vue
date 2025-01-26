@@ -55,6 +55,7 @@
                     <div v-if="item0.ad"
                          style="max-height: 1200px;width:100%"
                     >
+                        <dbg :data="{t:item0.adType}"/>
                         <fluid-ad-wrapper
                             v-if="item0.adType===1"
                             ad-layout-key="+1i+s2-10-1k+6v"
@@ -65,7 +66,7 @@
                             ad-slot="8545261932"
                         />
                         <display-ad-wrapper
-                            v-else-if="item0.adType===2"
+                            v-else-if="item0.adType===3"
                             ad-slot="2426312811"
                         />
                     </div>
