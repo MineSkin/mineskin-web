@@ -55,15 +55,13 @@
                     <div v-if="item0.ad"
                          style="max-height: 1200px;width:100%"
                     >
-                        <ad-wrappper
+                        <fluid-ad-wrapper
                             v-if="randomBool()"
-                            ad-format="fluid"
                             ad-layout-key="+1i+s2-10-1k+6v"
                             ad-slot="3361952161"
                         />
-                        <ad-wrappper
+                        <multiplex-ad-wrapper
                             v-else
-                            ad-format="autorelaxed"
                             ad-slot="8545261932"
                         />
                     </div>
@@ -108,6 +106,8 @@ import { useAuthStore } from "~/stores/auth";
 import { useGalleryStore } from "~/stores/gallery";
 import { onMounted } from "#imports";
 import { computedAsync, useDebounceFn, useThrottleFn } from '@vueuse/core'
+import FluidAdWrapper from "~/components/ad/FluidAdWrapper.vue";
+import MultiplexAdWrapper from "~/components/ad/MultiplexAdWrapper.vue";
 
 useHead({
     title: 'Gallery',
