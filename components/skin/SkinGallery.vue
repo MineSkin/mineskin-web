@@ -56,13 +56,17 @@
                          style="max-height: 1200px;width:100%"
                     >
                         <fluid-ad-wrapper
-                            v-if="randomBool()"
+                            v-if="item0.adType===1"
                             ad-layout-key="+1i+s2-10-1k+6v"
                             ad-slot="3361952161"
                         />
                         <multiplex-ad-wrapper
-                            v-else
+                            v-else-if="item0.adType===2"
                             ad-slot="8545261932"
+                        />
+                        <display-ad-wrapper
+                            v-else-if="item0.adType===2"
+                            ad-slot="2426312811"
                         />
                     </div>
                     <div v-else class="gallery-item mb-1 mb-sm-2 mb-md-4" v-for="item in item0" :key="item">
@@ -108,6 +112,7 @@ import { onMounted } from "#imports";
 import { computedAsync, useDebounceFn, useThrottleFn } from '@vueuse/core'
 import FluidAdWrapper from "~/components/ad/FluidAdWrapper.vue";
 import MultiplexAdWrapper from "~/components/ad/MultiplexAdWrapper.vue";
+import DisplayAdWrapper from "~/components/ad/DisplayAdWrapper.vue";
 
 useHead({
     title: 'Gallery',
@@ -211,7 +216,7 @@ const adsOnPage = ref(0);
 //     return $mineskin.skins.list();
 // });
 
-const skins = ref<Array<Array<ListedSkin> | { ad: boolean }>>([]);
+const skins = ref<Array<Array<ListedSkin> | { ad: boolean; adType: number; }>>([]);
 const after = ref<string | null>(null);
 const pageIndex = ref(0);
 const hasNext = ref(true);
@@ -263,7 +268,10 @@ async function load({done}) {
         return acc;
     }, [] as ListedSkin[][]);
     if (!adFree.value && inlineAdRate.value != 0 && Math.random() < inlineAdRate.value) {
-        grouped.splice((Math.floor(Math.floor(Math.random() * grouped.length) / 2) * 2) + 1, 0, {ad: true});
+        grouped.splice((Math.floor(Math.floor(Math.random() * grouped.length) / 2) * 2) + 1, 0, {
+            ad: true,
+            adType: getAdType()
+        });
         adsOnPage.value++;
     }
     skins.value.push(...grouped);
@@ -276,7 +284,10 @@ const inlineAdRate = computed(() => Number($flags.getValue('web.ads.gallery_inli
     fallback: .6
 })));
 
-const randomBool = () => Math.random() < 0.5;
+const getAdType = () => {
+    const options = [1, 2, 3];
+    return options[Math.floor(Math.random() * options.length)];
+}
 
 const handleScroll = useThrottleFn((e: Event) => {
     galleryScroll.value = window.scrollY;
