@@ -53,7 +53,7 @@
                     :class="item0.ad?'mx-4':'mx-0 mx-sm-1 mx-md-2'"
                 >
                     <div v-if="item0.ad"
-                         style="max-height: 1200px;width:100%"
+                         style="width:100%"
                     >
                         <dbg :data="{t:item0.adType}"/>
                         <fluid-ad-wrapper
