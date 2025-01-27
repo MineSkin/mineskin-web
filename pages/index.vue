@@ -52,7 +52,7 @@
 </template>
 <script setup lang="ts">
 import { useNuxtApp, useState } from "#app";
-import AdWrappper from "~/components/AdWrappper.vue";
+import AdWrappper from "~/components/ad/AdWrappper.vue";
 import LatestSkinsPreviewList from "~/components/skin/LatestSkinsPreviewList.vue";
 import MainFAQ from "~/components/MainFAQ.vue";
 

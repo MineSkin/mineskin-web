@@ -15,48 +15,20 @@
         <template v-slot:subtitle>
             <DateLocal class="float-end" :date="job.timestamp"></DateLocal>
         </template>
-        <v-progress-linear
-            v-if="job.status === 'waiting'"
-            height="20"
-            indeterminate
-            color="primary">
-            <template v-slot:default>
-                {{ $t("Waiting") }}
-            </template>
-        </v-progress-linear>
-        <v-progress-linear
-            v-else-if="job.status === 'processing'"
-            height="20"
-            indeterminate
-            color="warning">
-            <template v-slot:default>
-                {{ $t("Processing") }}
-            </template>
-        </v-progress-linear>
-        <v-progress-linear
-            v-else-if="job.status === 'completed'||job.status === 'failed'"
-            height="20"
-            model-value="100"
-            :color="job.status === 'completed' ? 'success':'error'">
-            <template v-slot:default>
-                {{ job.status === 'completed' ? $t('Completed') : $t('Failed') }}
-            </template>
-        </v-progress-linear>
+        <JobProgressBar :job="job" height="20"/>
         <v-divider/>
     </v-list-item>
 </template>
 <script setup lang="ts">
 import type { JobInfo, Maybe, SkinInfo2 } from "@mineskin/types";
-import { computedAsync } from "@vueuse/core";
 import { useLazyAsyncData } from "#app";
 import { useQueueStore } from "~/stores/queue";
-import type { GenerateJobResponse } from "~/types/GenerateJobResponse";
 import type { JobResponse } from "~/types/JobResponse";
-import DateUTC from "~/components/DateUTC.vue";
 import DateLocal from "~/components/DateLocal.vue";
 import { sleep } from "~/util/misc";
 import { storeToRefs } from "pinia";
 import type { JobWithMeta } from "~/types/JobWithMeta";
+import JobProgressBar from "~/components/job/JobProgressBar.vue";
 
 const {$mineskin, $notify} = useNuxtApp();
 
@@ -97,7 +69,7 @@ const jobTexture = computed(() => {
 });
 
 const tryJobRefresh = async () => {
-    if (refreshCounter.value > 3) return;
+    if (refreshCounter.value > 5) return;
     if (job.value) {
         if (job.value?.status !== 'waiting' && job.value?.status !== 'processing' && skin.value) {
             return;
@@ -130,7 +102,7 @@ const tryJobRefresh = async () => {
         }
     }
 
-    setTimeout(() => tryJobRefresh(), 1300 + Math.random() * 1000);
+    setTimeout(() => tryJobRefresh(), 600 + Math.random() * 600 + refreshCounter.value * 200);
 }
 
 onMounted(async () => {
