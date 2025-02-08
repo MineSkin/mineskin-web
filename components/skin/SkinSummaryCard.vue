@@ -1,3 +1,10 @@
+<style scoped>
+.cape-image {
+    position: absolute;
+    image-rendering: pixelated;
+    clip: rect(0, 32px, 64px, 0);
+}
+</style>
 <template>
     <v-card>
         <v-card-text>
@@ -10,6 +17,13 @@
                             aspect-ratio="1"
                             :alt="skinMeta?.description"
                             :title="skinMeta?.description"
+                        />
+                    </v-row>
+                    <v-row class="flex-1-1-100 my-2">
+                        <v-img
+                            class="cape-image"
+                            v-if="skin?.texture?.hash?.cape"
+                            :src="skin?.texture?.url?.cape"
                         />
                     </v-row>
                     <v-row justify="end" v-if="mdAndUp">
