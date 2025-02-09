@@ -3,18 +3,31 @@
         <div v-if="showCreditsInfo && !generating">
             <Dbg :data="{credits,creditsStatus,authed:authStore.authed}"></Dbg>
             <div>
-                <div v-if="credits && credits?.all?.balance>0">
-                       <span>
-                           {{
-                               $t("This request will consume 1 credit if the skin is successfully generated. | This request will consume {n} credits if the skins are successfully generated.", imageCount || 1)
-                           }}
-                       </span>
+                <div v-if="true">
+                    <span>
+                       {{
+                            $t("This request will consume 1 credit if the skin is successfully generated. | This request will consume {n} credits if the skins are successfully generated.", imageCount || 1)
+                        }}
+                    </span>
                     <br/>
-                    <span>{{
+                    <span>
+                        {{
                             $t("You have {credits} remaining.", {
                                 credits: $t('n_credits', credits?.all?.balance)
                             })
-                        }}</span>
+                        }}
+                        <a href="https://account.mineskin.org/store#faq" target="_blank">
+                            <v-icon icon="mdi-help-circle" size="small"/>
+                        </a>
+                        <v-tooltip location="right" activator="parent">
+                            <template v-slot:default>
+                                {{
+                                    $t("You can still generate skins if you run out of credits, but they will take longer to complete.")
+                                }}<br/>
+                                {{ $t("Learn more in the store FAQs.") }}
+                            </template>
+                        </v-tooltip>
+                    </span>
                 </div>
                 <div v-else>
                     <span>{{ $t("You do not have any credits remaining.") }}</span><br/>
