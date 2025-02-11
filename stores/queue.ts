@@ -1,4 +1,4 @@
-import { defineStore } from "pinia";
+import { defineStore, storeToRefs } from "pinia";
 import type { JobInfo } from "@mineskin/types";
 import type { JobWithMeta } from "~/types/JobWithMeta";
 import { useAuthStore } from "~/stores/auth";
@@ -10,6 +10,8 @@ import { useSkinStore } from "~/stores/skins";
 import type { WrappedJob } from "~/types/WrappedJob";
 import type { JobResponse } from "~/types/JobResponse";
 import { isCompletedJobRes } from "~/types/CompletedJob";
+import { useGenerateStore } from "~/stores/generate";
+import type { FileJson } from "~/util/file";
 
 export const useQueueStore = defineStore('queue', () => {
     /**@deprecated**/
@@ -26,6 +28,12 @@ export const useQueueStore = defineStore('queue', () => {
     const router = useRouter();
     const authStore = useAuthStore();
     const skinStore = useSkinStore();
+    const generateStore = useGenerateStore();
+    const {
+        uploadFiles,
+        urls,
+        users,
+    } = storeToRefs(generateStore);
 
     const jobsSorted = ref<WrappedJob[]>([]);
 
@@ -87,7 +95,6 @@ export const useQueueStore = defineStore('queue', () => {
     }
 
     const updateJob = (job: JobInfo, jobRes?: JobResponse): WrappedJob | undefined => {
-
         console.debug('updateJob', job);
         if (!job.id) return;
         let wrappedJob = wrappedJobMap.value[job.id];
@@ -95,7 +102,7 @@ export const useQueueStore = defineStore('queue', () => {
             console.debug('job to update not found', job.id);
             return;
         }
-        const prevJob = wrappedJob;
+        const prevJob = {...{}, ...wrappedJob};
         wrappedJob.job = {
             ...wrappedJob.job,
             ...job
@@ -198,6 +205,7 @@ export const useQueueStore = defineStore('queue', () => {
     // }
 
     const checkJobStatusChange = (wrappedNow: WrappedJob, wrappedPrev?: WrappedJob) => {
+        console.debug('checkJobStatusChange', wrappedNow, wrappedPrev);
         const now = wrappedNow.job;
         const prev = wrappedPrev?.job;
         if (prev?.status === now.status) return;
@@ -216,6 +224,15 @@ export const useQueueStore = defineStore('queue', () => {
                     router.push(localePath(`/skins/${ now.result }`));
                 }
             }, 100);
+            if (wrappedNow.source.type === 'file') {
+                uploadFiles.value = uploadFiles.value.filter(file => file.name !== (wrappedNow.source.content as FileJson).name);
+            }
+            if (wrappedNow.source.type === 'url') {
+                urls.value = urls.value.filter(url => url !== wrappedNow.source.content as string);
+            }
+            if (wrappedNow.source.type === 'user') {
+                users.value = users.value.filter(user => user !== wrappedNow.source.content as string);
+            }
         }
     }
 
