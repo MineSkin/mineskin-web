@@ -79,12 +79,16 @@
 
         <template v-slot:append>
             <v-btn icon @click="jobsDrawer = !jobsDrawer" v-show="mdAndUp">
-                <component :is="jobCount>0?'v-badge':'div'"
-                           :content="jobCount"
-                           location="bottom right"
+                <v-badge v-if="jobCount>0"
+                         :content="jobCount"
+                         dot
+                         :color="pendingJobCount>0 ? 'warning':'success'"
                 >
                     <v-icon icon="mdi-list-status"></v-icon>
-                </component>
+                </v-badge>
+                <div v-else>
+                    <v-icon icon="mdi-list-status"></v-icon>
+                </div>
                 <v-tooltip
                     activator="parent"
                     location="bottom"
