@@ -27,7 +27,7 @@ import FileListRow from "./FileListRow.vue";
 import InlineJobProgress from "~/components/generate/InlineJobProgress.vue";
 import type { FileJson } from "~/util/file";
 
-const items = defineModel<FileJson[]>([]);
+const items = defineModel<FileJson[]>();
 const props = defineProps<{
     label?: string;
     prependIcon?: string;

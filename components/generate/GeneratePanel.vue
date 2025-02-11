@@ -162,7 +162,7 @@
         <v-expand-transition v-if="isHydrated">
             <v-row v-show="generateType" class="my-4" justify="center">
                 <v-col>
-                    <dbg :data="jobMap"></dbg>
+                    <dbg :data="wrappedJobMap"></dbg>
                     <v-row justify="center" class="mb-2 text-center">
                         <v-btn
                             color="primary"
@@ -262,6 +262,7 @@ import { useSettingsStore } from "~/stores/settings";
 import { storeToRefs } from "pinia";
 import { useGenerateStore } from "~/stores/generate";
 import { fileFromJson, type FileJson, fileToJson } from "~/util/file";
+import type { JobSource, WrappedJob } from "~/types/WrappedJob";
 
 const {$mineskin, $notify, $flags, $gtag} = useNuxtApp();
 
@@ -274,7 +275,7 @@ const settingsStore = useSettingsStore();
 const {mdAndUp, mdAndDown} = useDisplay();
 
 const {grants} = storeToRefs(authStore);
-const {jobsDrawer, jobMap, lastJobSubmit} = storeToRefs(queueStore);
+const {jobsDrawer, lastJobSubmit, wrappedJobMap} = storeToRefs(queueStore);
 
 const {visibility: preferredVisibility} = storeToRefs(settingsStore);
 
@@ -490,7 +491,7 @@ async function generate() {
 
     const baseOptions: GenerateOptions = getOptions();
 
-    let responses: [GenerateJobResponse, { name: string }][] = [];
+    let responses: [GenerateJobResponse, JobSource][] = [];
     switch (generateType.value) {
         case GenerateType.UPLOAD: {
             if (!canGenerateMultiple.value) {
@@ -502,7 +503,12 @@ async function generate() {
                 options.name = processNameVariables(index++, null, file, null);
                 await sleep(800);
                 lastJobSubmit.value = Date.now();
-                responses.push([await $mineskin.queue.upload(await fileFromJson(file), options), {name: file.name}]);
+                const source: JobSource = {
+                    type: 'file',
+                    content: file,
+                    name: file.name
+                };
+                responses.push([await $mineskin.queue.upload(await fileFromJson(file), options), source]);
             }
             break;
         }
@@ -516,7 +522,12 @@ async function generate() {
                 options.name = processNameVariables(index++, url, null, null);
                 await sleep(800);
                 lastJobSubmit.value = Date.now();
-                responses.push([await $mineskin.queue.url(url, options), {name: url}])
+                const source: JobSource = {
+                    type: 'url',
+                    content: url,
+                    name: url
+                }
+                responses.push([await $mineskin.queue.url(url, options), source])
             }
             break;
         }
@@ -545,7 +556,12 @@ async function generate() {
                 options.name = processNameVariables(index++, null, null, user);
                 await sleep(800);
                 lastJobSubmit.value = Date.now();
-                responses.push([await $mineskin.queue.user(uuid, options), {name: user}])
+                const source: JobSource = {
+                    type: 'user',
+                    content: uuid,
+                    name: user
+                }
+                responses.push([await $mineskin.queue.user(uuid, options), source])
             }
             break;
         }
@@ -558,17 +574,18 @@ async function generate() {
             return;
         }
     }
-    for (const [response, meta] of responses) {
+    for (const [response, source] of responses) {
         if (response.success) {
             if ('job' in response) {
-                queueStore.addJob({
-                    ...(response as GenerateJobResponse).job,
-                    ...{
-                        originalName: meta.name,
-                        lastStatusCheck: Date.now(),
-                        statusCheckCount: 0
+                const wrapped: WrappedJob = {
+                    source: source,
+                    job: (response as GenerateJobResponse).job,
+                    check: {
+                        last: Date.now(),
+                        count: 0
                     }
-                });
+                };
+                queueStore.addJob(wrapped);
             }
         }
     }

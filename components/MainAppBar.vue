@@ -79,8 +79,8 @@
 
         <template v-slot:append>
             <v-btn icon @click="jobsDrawer = !jobsDrawer" v-show="mdAndUp">
-                <component :is="jobsSorted?.length>0?'v-badge':'div'"
-                           :content="jobsSorted?.length"
+                <component :is="jobCount>0?'v-badge':'div'"
+                           :content="jobCount"
                            location="bottom right"
                 >
                     <v-icon icon="mdi-list-status"></v-icon>
@@ -134,7 +134,7 @@ const isHydrated = ref(false);
 
 const {smAndUp, mdAndUp} = useDisplay();
 
-const {jobsSorted, jobsDrawer} = storeToRefs(queueStore);
+const {jobsSorted, jobsDrawer, jobCount, pendingJobCount} = storeToRefs(queueStore);
 
 const searching = ref(false);
 const filter = ref('');

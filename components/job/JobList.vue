@@ -6,7 +6,7 @@
                     $t("Show My Skins")
                 }}</nuxt-link></span>
         </v-list-subheader>
-        <JobStatus v-for="job in jobsSorted" :id="job.id" :key="job.id"/>
+        <JobStatus v-for="job in jobsSorted" :id="job.job.id" :key="job.job.id"/>
         <v-list-item v-if="jobsSorted.length<=0">
             <v-list-item-title>{{ $t("No jobs in queue") }}</v-list-item-title>
         </v-list-item>
