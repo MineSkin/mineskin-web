@@ -260,6 +260,8 @@ import type { BasicCreditInfo } from "~/types/BasicCreditInfo";
 import { sleep } from "~/util/misc";
 import { useSettingsStore } from "~/stores/settings";
 import { storeToRefs } from "pinia";
+import { useGenerateStore } from "~/stores/generate";
+import { fileFromJson, type FileJson, fileToJson } from "~/util/file";
 
 const {$mineskin, $notify, $flags, $gtag} = useNuxtApp();
 
@@ -276,25 +278,28 @@ const {jobsDrawer, jobMap, lastJobSubmit} = storeToRefs(queueStore);
 
 const {visibility: preferredVisibility} = storeToRefs(settingsStore);
 
+const generateStore = useGenerateStore();
+const {
+    name,
+    visibility,
+    variant,
+
+    uploadFiles,
+    urls,
+    users,
+
+    generateType,
+    imageCount,
+
+    canUsePrivateSkins,
+    canGenerateMultiple
+} = storeToRefs(generateStore);
+
 const waitTime = ref(0);
 
-const generateType = computed<Maybe<GenerateType>>(() => {
-    if (urls.value.filter(url => url.length > 0).length > 0) {
-        return GenerateType.URL;
-    }
-    if (users.value.filter(user => user.length > 0).length > 0) {
-        return GenerateType.USER;
-    }
-    if (uploadFiles.value.length > 0) {
-        return GenerateType.UPLOAD;
-    }
-});
 
 //TODO: limit number of images
 
-const uploadFiles = ref<File[]>([]);
-const urls = ref<string[]>(['']);
-const users = ref<string[]>(['']);
 
 const visibilities = ref<SkinVisibility2[]>([SkinVisibility2.PUBLIC, SkinVisibility2.UNLISTED]);
 
@@ -302,26 +307,6 @@ const nameRules = [
     (v: string) => v.length <= 24 || 'Max 24 characters',
     (v: string) => /^[a-zA-Z0-9_.\-{} ]*$/g.test(v) || 'Only a-z, 0-9, _-.{} allowed'
 ];
-
-const name = ref('');
-const visibility = ref(preferredVisibility.value || SkinVisibility2.PUBLIC);
-const variant = ref(SkinVariant.UNKNOWN);
-
-watch(() => visibility.value, (value) => {
-    preferredVisibility.value = value;
-});
-
-const imageCount = computed(() => {
-    switch (generateType.value) {
-        case GenerateType.UPLOAD:
-            return uploadFiles.value.length;
-        case GenerateType.URL:
-            return urls.value.filter(url => url.length > 0).length;
-        case GenerateType.USER:
-            return users.value.filter(user => user.length > 0).length;
-    }
-    return 0;
-});
 
 watch(() => imageCount.value, (value) => {
     if (value > 1 && !canGenerateMultiple.value) {
@@ -334,7 +319,7 @@ watch(() => imageCount.value, (value) => {
 });
 
 const variablesDialog = ref(false);
-const processNameVariables = (index: number, url: string | null, file: File | null, user: string | null) => {
+const processNameVariables = (index: number, url: string | null, file: File | FileJson | null, user: string | null) => {
     const original = name.value;
     let replaced = original;
 
@@ -362,13 +347,6 @@ const replacedNamesPreview = computed(() => {
         return processNameVariables(i, urls.value[i] || null, uploadFiles.value[i] || null, users.value[i] || null);
     }).filter(name => name.length > 0);
 });
-
-const canUsePrivateSkins = computed(() => {
-    return authStore.authed && grants.value?.private_skins;
-});
-const canGenerateMultiple = computed(() => {
-    return authStore.authed;
-})
 
 const showCreditsInfo = computed(() => $flags.hasFeature('web.credits.show_info'));
 
@@ -413,7 +391,9 @@ function collectUploadedFiles(files: File[]) {
         })
         return;
     }
-    uploadFiles.value.push(...filtered);
+    Promise.all(filtered.map(f => fileToJson(f))).then(mapped => {
+        uploadFiles.value.push(...mapped);
+    });
 }
 
 
@@ -522,7 +502,7 @@ async function generate() {
                 options.name = processNameVariables(index++, null, file, null);
                 await sleep(800);
                 lastJobSubmit.value = Date.now();
-                responses.push([await $mineskin.queue.upload(file, options), {name: file.name}]);
+                responses.push([await $mineskin.queue.upload(await fileFromJson(file), options), {name: file.name}]);
             }
             break;
         }

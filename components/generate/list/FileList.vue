@@ -25,14 +25,15 @@
 import '~/assets/css/img.css'
 import FileListRow from "./FileListRow.vue";
 import InlineJobProgress from "~/components/generate/InlineJobProgress.vue";
+import type { FileJson } from "~/util/file";
 
-const items = defineModel<File[]>([]);
+const items = defineModel<FileJson[]>([]);
 const props = defineProps<{
     label?: string;
     prependIcon?: string;
     type?: string;
     rule?: string;
-    imageProvider?: (file: File) => string;
+    imageProvider?: (file: FileJson) => string;
     waiting?: boolean;
 }>()
 </script>
