@@ -302,8 +302,8 @@ const {
 } = storeToRefs(generateStore);
 
 
-
 const generateType = computed(() => {
+    if (!isHydrated.value) return undefined;
     if (urls.value.filter(url => url.length > 0).length > 0) {
         return GenerateType.URL;
     }
@@ -316,6 +316,7 @@ const generateType = computed(() => {
 });
 
 const imageCount = computed(() => {
+    if (!isHydrated.value) return 0;
     switch (generateType.value) {
         case GenerateType.UPLOAD:
             return uploadFiles.value.length;
