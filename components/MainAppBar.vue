@@ -80,7 +80,6 @@
         <template v-slot:append>
             <v-btn icon @click="jobsDrawer = !jobsDrawer" v-show="mdAndUp">
                 <v-badge v-if="jobCount>0"
-                         :content="jobCount"
                          dot
                          :color="pendingJobCount>0 ? 'warning':'success'"
                 >
