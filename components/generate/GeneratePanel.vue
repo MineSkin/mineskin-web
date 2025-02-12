@@ -632,7 +632,6 @@ onMounted(async () => {
         console.error(e);
     }
     refreshWaitTime();
-    generateStore.$hydrate();
 })
 
 </script>

@@ -1,4 +1,4 @@
-import { defineStore, storeToRefs } from "pinia";
+import { defineStore, skipHydrate, storeToRefs } from "pinia";
 import { GenerateType, type Maybe, SkinVariant, SkinVisibility2 } from "@mineskin/types";
 import { useSettingsStore } from "~/stores/settings";
 import { computed, ref } from "vue";
@@ -69,13 +69,13 @@ export const useGenerateStore = defineStore('generate', () => {
         urls,
         users,
 
-        generateType,
-        imageCount,
+        generateType: skipHydrate(generateType),
+        imageCount: skipHydrate(imageCount),
 
         canUsePrivateSkins,
         canGenerateMultiple,
 
-        generating
+        generating: skipHydrate(generating)
     }
 
 }, {
