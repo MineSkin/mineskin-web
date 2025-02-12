@@ -1,6 +1,6 @@
 {
   "_language": "Français",
-  "Skin Gallery": "Galerie de Peau",
+  "Skin Gallery": "Galerie de skin",
   "Gallery": "Galerie",
   "My Skins": "Mes skins",
   "Private": "Privé",
@@ -25,7 +25,7 @@
   "credit_plural": "Crédit | Crédits",
   "n_credits": "pas de crédits | 1 crédit | {n} crédits",
   "skin_plural": "skin | skins",
-  "n_skins": "sans skins | 1 skin | Apparences {n}",
+  "n_skins": "sans skins | 1 skin | {n} skins",
   "skin_is_are": "skin est | skins sont",
   "This request will consume {credits} if the {skins} successfully generated.": "Cette requête consommera {credits} si l' {skins} a été générée avec succès.",
   "This request will consume 1 credit if the skin is successfully generated. | This request will consume {n} credits if the skins are successfully generated.": "Cette requête coûtera 1 crédit si l'apparence est générée. | Cette requête coûtera {n} crédits si les apparences sont générées avec succès.",
