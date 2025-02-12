@@ -11,10 +11,12 @@
                 :type="type"
                 :label="label"
                 :rules="rules"
-                :append-icon="isJobDone(index) ? 'mdi-open-in-new': canAdd(index) ? 'mdi-plus' : canRemove(index)? 'mdi-minus':''"
+                :append-icon="isJobDone(index) ? 'mdi-open-in-new': canAdd(index) ? 'mdi-plus' :''"
+                :append-inner-icon="canRemove(index)? 'mdi-minus':''"
                 :prepend-icon="prependIcon"
                 :image-provider="imageProvider"
                 @click:append="listClick(index)"
+                @click:append-inner="listClick(index, true)"
             >
             </input-list-row>
             <inline-job-progress :original-name="items[index]" :waiting="waiting"/>
@@ -88,16 +90,18 @@ function isJobDone(index: number): boolean {
     return getJob(index)?.job?.status === 'completed';
 }
 
-function listClick(index: number) {
-    const job = getJob(index);
-    if (job?.job?.status === 'completed') {
-        if (job?.job?.result) {
-            router.push(localePath(`/skins/${ job?.job?.result }`));
+function listClick(index: number, inner: boolean = false) {
+    if (!inner) {
+        const job = getJob(index);
+        if (job?.job?.status === 'completed') {
+            if (job?.job?.result) {
+                router.push(localePath(`/skins/${ job?.job?.result }`));
+            }
+            return;
         }
-        return;
     }
 
-    if (canAdd(index)) {
+    if (!inner&&canAdd(index)) {
         items.value.push('');
     } else if (canRemove(index)) {
         items.value.splice(index, 1);

@@ -11,10 +11,13 @@
                     :label="label"
                     readonly
                     type="text"
-                    :append-icon="isJobDone(index)?'mdi-open-in-new':'mdi-minus'"
+                    :append-icon="isJobDone(index)?'mdi-open-in-new':''"
+                    append-inner-icon="mdi-minus"
                     :prepend-icon="prependIcon"
                     :image-provider="imageProvider"
-                    @click:append="listClick(index)">
+                    @click:append="listClick(index)"
+                    @click:append-inner="listClick(index,false)"
+                >
                 </file-list-row>
                 <inline-job-progress :original-name="item.name" :waiting="waiting"/>
             </v-col>
@@ -53,13 +56,15 @@ function isJobDone(index: number): boolean {
     return getJob(index)?.job?.status === 'completed';
 }
 
-function listClick(index: number) {
-    const job = getJob(index);
-    if (job?.job?.status === 'completed') {
-        if (job?.job?.result) {
-            router.push(localePath(`/skins/${ job?.job?.result }`));
+function listClick(index: number, open: boolean = true) {
+    if(open) {
+        const job = getJob(index);
+        if (job?.job?.status === 'completed') {
+            if (job?.job?.result) {
+                router.push(localePath(`/skins/${ job?.job?.result }`));
+            }
+            return;
         }
-        return;
     }
     items.value.splice(index, 1);
 }
