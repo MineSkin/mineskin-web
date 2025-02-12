@@ -47,7 +47,7 @@ import { computed } from "vue";
 import FileList from "./list/FileList.vue";
 import type { FileJson } from "~/util/file";
 
-const uploadFiles = defineModel<FileJson[]>([]);
+const uploadFiles = defineModel<FileJson[]>({required: true});
 const hasFile = computed(() => uploadFiles.value.length > 0);
 
 const props = defineProps<{

@@ -7,7 +7,7 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted } from "vue";
 
-const model = defineModel('token');
+const model = defineModel('token', {required: true});
 
 const props = defineProps<{
     action?: string,

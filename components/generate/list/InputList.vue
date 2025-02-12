@@ -27,7 +27,7 @@ import { computedAsync, useDebounceFn } from '@vueuse/core'
 import InputListRow from "./InputListRow.vue";
 import InlineJobProgress from "~/components/generate/InlineJobProgress.vue";
 
-const items = defineModel<string[]>(['']);
+const items = defineModel<string[]>({required: true});
 const props = defineProps<{
     label?: string;
     prependIcon?: string;

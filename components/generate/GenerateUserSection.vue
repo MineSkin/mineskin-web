@@ -34,7 +34,7 @@ import InputList from "./list/InputList.vue";
 import { textureUrlForUuid } from "../../util/render";
 import { useDebounceFn } from "@vueuse/core";
 
-const users = defineModel<string[]>(['']);
+const users = defineModel<string[]>({required: true});
 const hasUser = computed(() => users.value.filter(user => user.length > 0).length > 0);
 const emit = defineEmits(['continue']);
 
