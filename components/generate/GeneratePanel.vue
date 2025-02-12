@@ -25,7 +25,7 @@
         <h3 class="text-h6 mb-2 pt-1">
             <span class="d-inline-block pt-2">{{ $t("Generate New Skin Data") }}</span>
         </h3>
-        <dbg :data="{generateType,imageCount}"/>
+        <dbg :data="{generateType,generateType_,imageCount}"/>
         <v-row class="my-2 d-flex text-center"
                :justify="generateType === GenerateType.UPLOAD ? 'center':generateType===GenerateType.USER?'end':'start'">
             <v-col
@@ -307,6 +307,8 @@ const {
 watch(() => visibility.value, (value) => {
     preferredVisibility.value = value;
 }, {immediate: true});
+
+const generateType_ = computed(() => generateType.value);
 
 const waitTime = ref(0);
 
