@@ -57,6 +57,8 @@ export const useGenerateStore = defineStore('generate', () => {
         return authStore.authed;
     });
 
+    const generating = ref(false);
+
     return {
         name,
         visibility,
@@ -70,7 +72,9 @@ export const useGenerateStore = defineStore('generate', () => {
         imageCount,
 
         canUsePrivateSkins,
-        canGenerateMultiple
+        canGenerateMultiple,
+
+        generating
     }
 
 }, {

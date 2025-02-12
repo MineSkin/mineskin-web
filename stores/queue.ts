@@ -33,6 +33,8 @@ export const useQueueStore = defineStore('queue', () => {
         uploadFiles,
         urls,
         users,
+
+        generating
     } = storeToRefs(generateStore);
 
     const jobsSorted = ref<WrappedJob[]>([]);
@@ -220,19 +222,26 @@ export const useQueueStore = defineStore('queue', () => {
         if (now.status === 'completed' && now.result) {
             skinStore.addSkin(now.result);
             setTimeout(() => {
+                if (!hasPendingJobs.value) {
+                    generating.value = false;
+                }
+            }, 100);
+            setTimeout(() => {
                 if (!hasPendingJobs.value && now.timestamp > Date.now() - 1000 * 60) {
                     router.push(localePath(`/skins/${ now.result }`));
                 }
-            }, 100);
-            if (wrappedNow.source.type === 'file') {
-                uploadFiles.value = uploadFiles.value.filter(file => file.name !== (wrappedNow.source.content as FileJson).name);
-            }
-            if (wrappedNow.source.type === 'url') {
-                urls.value = urls.value.filter(url => url !== wrappedNow.source.content as string);
-            }
-            if (wrappedNow.source.type === 'user') {
-                users.value = users.value.filter(user => user !== wrappedNow.source.content as string);
-            }
+            }, 300);
+            setTimeout(() => {
+                if (wrappedNow.source.type === 'file') {
+                    uploadFiles.value = uploadFiles.value.filter(file => file.name !== (wrappedNow.source.content as FileJson).name);
+                }
+                if (wrappedNow.source.type === 'url') {
+                    urls.value = urls.value.filter(url => url !== wrappedNow.source.content as string);
+                }
+                if (wrappedNow.source.type === 'user') {
+                    users.value = users.value.filter(user => user !== wrappedNow.source.content as string);
+                }
+            }, 1000);
         }
     }
 

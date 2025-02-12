@@ -302,7 +302,9 @@ const {
     imageCount,
 
     canUsePrivateSkins,
-    canGenerateMultiple
+    canGenerateMultiple,
+
+    generating
 } = storeToRefs(generateStore);
 
 const waitTime = ref(0);
@@ -359,8 +361,6 @@ const replacedNamesPreview = computed(() => {
 });
 
 const showCreditsInfo = computed(() => $flags.hasFeature('web.credits.show_info'));
-
-const generating = ref(false);
 
 const dragging = ref(false);
 
