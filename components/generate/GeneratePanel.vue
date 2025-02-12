@@ -301,11 +301,12 @@ const {
     generateType,
     imageCount,
 
-    canUsePrivateSkins,
-    canGenerateMultiple,
-
     generating
 } = storeToRefs(generateStore);
+
+watch(() => visibility.value, (value) => {
+    preferredVisibility.value = value;
+}, {immediate: true});
 
 const waitTime = ref(0);
 
@@ -451,6 +452,13 @@ function variantProps(item: SkinVariant) {
             };
     }
 }
+
+const canUsePrivateSkins = computed(() => {
+    return authStore.authed && grants.value?.private_skins;
+});
+const canGenerateMultiple = computed(() => {
+    return authStore.authed;
+});
 
 function reset() {
     uploadFiles.value = [];
@@ -620,7 +628,7 @@ const refreshWaitTime = () => {
 
 watch(generateType, () => {
     console.debug('generateType', generateType.value);
-},{immediate:true})
+}, {immediate: true})
 
 onMounted(async () => {
     isHydrated.value = true;

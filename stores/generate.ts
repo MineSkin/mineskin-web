@@ -1,26 +1,14 @@
 import { defineStore, skipHydrate, storeToRefs } from "pinia";
 import { GenerateType, type Maybe, SkinVariant, SkinVisibility2 } from "@mineskin/types";
-import { useSettingsStore } from "~/stores/settings";
 import { computed, ref } from "vue";
 import { type FileJson } from "~/util/file";
 import destr from "destr";
 
 export const useGenerateStore = defineStore('generate', () => {
 
-    const authStore = useAuthStore();
-    const settingsStore = useSettingsStore();
-
-    const {grants} = storeToRefs(authStore);
-
-    const {visibility: preferredVisibility} = storeToRefs(settingsStore);
-
     const name = ref<string>('');
-    const visibility = ref<SkinVisibility2>(preferredVisibility.value || SkinVisibility2.PUBLIC);
+    const visibility = ref<SkinVisibility2>(SkinVisibility2.PUBLIC);
     const variant = ref<SkinVariant>(SkinVariant.UNKNOWN);
-
-    watch(() => visibility.value, (value) => {
-        preferredVisibility.value = value;
-    });
 
     const uploadFiles = ref<FileJson[]>([]);
     const urls = ref<string[]>([]);
@@ -51,12 +39,6 @@ export const useGenerateStore = defineStore('generate', () => {
         return 0;
     });
 
-    const canUsePrivateSkins = computed(() => {
-        return authStore.authed && grants.value?.private_skins;
-    });
-    const canGenerateMultiple = computed(() => {
-        return authStore.authed;
-    });
 
     const generating = ref(false);
 
@@ -71,9 +53,6 @@ export const useGenerateStore = defineStore('generate', () => {
 
         generateType: skipHydrate(generateType),
         imageCount: skipHydrate(imageCount),
-
-        canUsePrivateSkins,
-        canGenerateMultiple,
 
         generating: skipHydrate(generating)
     }
