@@ -620,7 +620,7 @@ const refreshWaitTime = () => {
 
 watch(generateType, () => {
     console.debug('generateType', generateType.value);
-})
+},{immediate:true})
 
 onMounted(async () => {
     isHydrated.value = true;
