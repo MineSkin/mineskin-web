@@ -94,6 +94,11 @@ export const useQueueStore = defineStore('queue', () => {
         console.debug(jobsSorted.value.length);
         //checkJobStatusChange(job, existing);
         updateSortedJobs();
+
+        if (!existing && (job.job.status !== 'waiting' && job.job.status !== 'processing')) {
+            // trigger status check for e.g. duplicate skins
+            checkJobStatusChange(job);
+        }
     }
 
     const updateJob = (job: JobInfo, jobRes?: JobResponse): WrappedJob | undefined => {
