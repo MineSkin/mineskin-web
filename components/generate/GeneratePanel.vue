@@ -303,7 +303,7 @@ const {
 
 
 
-const generateType = computed<GenerateType | null>(() => {
+const generateType = computed(() => {
     if (urls.value.filter(url => url.length > 0).length > 0) {
         return GenerateType.URL;
     }
@@ -313,7 +313,6 @@ const generateType = computed<GenerateType | null>(() => {
     if (uploadFiles.value.length > 0) {
         return GenerateType.UPLOAD;
     }
-    return null;
 });
 
 const imageCount = computed(() => {
