@@ -298,11 +298,35 @@ const {
     urls,
     users,
 
-    generateType,
-    imageCount,
-
     generating
 } = storeToRefs(generateStore);
+
+
+
+const generateType = computed<GenerateType | null>(() => {
+    if (urls.value.filter(url => url.length > 0).length > 0) {
+        return GenerateType.URL;
+    }
+    if (users.value.filter(user => user.length > 0).length > 0) {
+        return GenerateType.USER;
+    }
+    if (uploadFiles.value.length > 0) {
+        return GenerateType.UPLOAD;
+    }
+    return null;
+});
+
+const imageCount = computed(() => {
+    switch (generateType.value) {
+        case GenerateType.UPLOAD:
+            return uploadFiles.value.length;
+        case GenerateType.URL:
+            return urls.value.filter(url => url.length > 0).length;
+        case GenerateType.USER:
+            return users.value.filter(user => user.length > 0).length;
+    }
+    return 0;
+});
 
 watch(() => visibility.value, (value) => {
     preferredVisibility.value = value;

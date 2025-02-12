@@ -14,32 +14,6 @@ export const useGenerateStore = defineStore('generate', () => {
     const urls = ref<string[]>([]);
     const users = ref<string[]>([]);
 
-    const generateType = computed<GenerateType | null>(() => {
-        if (urls.value.filter(url => url.length > 0).length > 0) {
-            return GenerateType.URL;
-        }
-        if (users.value.filter(user => user.length > 0).length > 0) {
-            return GenerateType.USER;
-        }
-        if (uploadFiles.value.length > 0) {
-            return GenerateType.UPLOAD;
-        }
-        return null;
-    });
-
-    const imageCount = computed(() => {
-        switch (generateType.value) {
-            case GenerateType.UPLOAD:
-                return uploadFiles.value.length;
-            case GenerateType.URL:
-                return urls.value.filter(url => url.length > 0).length;
-            case GenerateType.USER:
-                return users.value.filter(user => user.length > 0).length;
-        }
-        return 0;
-    });
-
-
     const generating = ref(false);
 
     return {
@@ -50,9 +24,6 @@ export const useGenerateStore = defineStore('generate', () => {
         uploadFiles,
         urls,
         users,
-
-        generateType: skipHydrate(generateType),
-        imageCount: skipHydrate(imageCount),
 
         generating: skipHydrate(generating)
     }
