@@ -3,6 +3,7 @@ import { GenerateType, type Maybe, SkinVariant, SkinVisibility2 } from "@mineski
 import { useSettingsStore } from "~/stores/settings";
 import { computed, ref } from "vue";
 import { type FileJson } from "~/util/file";
+import destr from "destr";
 
 export const useGenerateStore = defineStore('generate', () => {
 
@@ -79,6 +80,15 @@ export const useGenerateStore = defineStore('generate', () => {
 
 }, {
     persist: {
-        storage: persistedState.localStorage
+        storage: persistedState.localStorage,
+        serializer: {
+            serialize: value => {
+                const copy = {...value};
+                copy.urls = (value.urls as string[]).filter(url => url.length > 0);
+                copy.users = (value.users as string[]).filter(user => user.length > 0);
+                return JSON.stringify(copy);
+            },
+            deserialize: destr
+        }
     }
 })
