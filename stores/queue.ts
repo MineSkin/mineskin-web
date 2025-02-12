@@ -281,7 +281,7 @@ export const useQueueStore = defineStore('queue', () => {
     }
 }, {
     persist: {
-        storage: persistedState.localStorage,
+        storage: piniaPluginPersistedstate.localStorage(),
         pick: ['jobMap', 'wrappedJobMap']
     }
 })

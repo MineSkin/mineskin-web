@@ -80,7 +80,7 @@ export const useGenerateStore = defineStore('generate', () => {
 
 }, {
     persist: {
-        storage: persistedState.localStorage,
+        storage: piniaPluginPersistedstate.localStorage(),
         serializer: {
             serialize: value => {
                 const copy = {...value};
