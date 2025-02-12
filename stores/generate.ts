@@ -25,7 +25,7 @@ export const useGenerateStore = defineStore('generate', () => {
     const urls = ref<string[]>(['']);
     const users = ref<string[]>(['']);
 
-    const generateType = computed<Maybe<GenerateType>>(() => {
+    const generateType = computed<GenerateType | null>(() => {
         if (urls.value.filter(url => url.length > 0).length > 0) {
             return GenerateType.URL;
         }
@@ -35,6 +35,7 @@ export const useGenerateStore = defineStore('generate', () => {
         if (uploadFiles.value.length > 0) {
             return GenerateType.UPLOAD;
         }
+        return null;
     });
 
     const imageCount = computed(() => {
