@@ -76,6 +76,14 @@
                 />
             </v-col>
         </v-row>
+        <v-row dense justify="center" v-if="imageCount>0">
+            <action-link
+                @click.prevent="reset"
+                icon="mdi-reload"
+                tooltip="Reset Image Selection">
+                Clear Images
+            </action-link>
+        </v-row>
         <v-divider class="my-4"/>
         <v-expand-transition v-if="isHydrated">
             <v-row v-show="generateType" class="my-2" justify="center">
