@@ -42,6 +42,11 @@ const props = defineProps<{
     generating?: boolean
 }>()
 
+onBeforeMount(() => {
+    if (users.value.length === 0) {
+        users.value.push('');
+    }
+});
 
 const {$mineskin} = useNuxtApp();
 

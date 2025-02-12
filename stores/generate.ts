@@ -22,8 +22,8 @@ export const useGenerateStore = defineStore('generate', () => {
     });
 
     const uploadFiles = ref<FileJson[]>([]);
-    const urls = ref<string[]>(['']);
-    const users = ref<string[]>(['']);
+    const urls = ref<string[]>([]);
+    const users = ref<string[]>([]);
 
     const generateType = computed<GenerateType | null>(() => {
         if (urls.value.filter(url => url.length > 0).length > 0) {
