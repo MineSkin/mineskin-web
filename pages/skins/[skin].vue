@@ -266,6 +266,16 @@ useHead({
             type: 'application/ld+json',
             'data-ld-id': 'skin-breadcrumb',
             innerHTML: ldBreadcrumbContent
+        },
+        {
+            src:'https://cdnjs.cloudflare.com/ajax/libs/three.js/94/three.min.js',
+            type: 'text/javascript',
+            async: true,
+        },
+        {
+            src:'https://cdn.jsdelivr.net/gh/InventivetalentDev/MineRender@1.4.6/dist/skin.min.js',
+            type: 'text/javascript',
+            async: true,
         }
     ]
 })
