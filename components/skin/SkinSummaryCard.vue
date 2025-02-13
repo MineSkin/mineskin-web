@@ -10,12 +10,14 @@
         <v-card-text>
             <v-row>
                 <v-col cols="12" md="4" class="d-flex flex-column">
-                    <div class="text-grey-darken-2 mt-2" v-if="skin&&mineRenderStatus!=='loading'&&mineRenderStatus!=='initializing'" style="position:absolute;z-index:500">
-                        <v-btn icon class="mx-1" @click="skinView3D=!skinView3D">
-                            <v-icon icon="mdi-video-3d"></v-icon>
-                            <v-tooltip location="right" text="Toggle 3D View" activator="parent" open-on-click/>
-                        </v-btn>
-                    </div>
+                    <ClientOnly>
+                        <div class="text-grey-darken-2 mt-2" v-if="skin" style="position:absolute;z-index:500">
+                            <v-btn icon class="mx-1" @click="skinView3D=!skinView3D">
+                                <v-icon icon="mdi-video-3d"></v-icon>
+                                <v-tooltip location="right" text="Toggle 3D View" activator="parent" open-on-click/>
+                            </v-btn>
+                        </div>
+                    </ClientOnly>
                     <v-row class="flex-1-1-100 my-2">
                         <v-img
                             :lazy-src="PLACEHOLDER_BODY"
