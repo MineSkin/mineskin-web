@@ -13,7 +13,7 @@
                     <ClientOnly>
                         <div class="text-grey-darken-2 mt-2" v-if="skin" style="position:absolute;z-index:500">
                             <v-btn icon class="mx-1" @click="skinView3D=!skinView3D">
-                                <v-icon icon="mdi-video-3d"></v-icon>
+                                <v-icon :icon="skinView3D?'mdi-video-3d-off':'mdi-video-3d'"></v-icon>
                                 <v-tooltip location="right" text="Toggle 3D View" activator="parent" open-on-click/>
                             </v-btn>
                         </div>
