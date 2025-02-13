@@ -10,7 +10,7 @@
         <v-card-text>
             <v-row>
                 <v-col cols="12" md="4" class="d-flex flex-column">
-                    <div class="text-grey-darken-2 mt-2" v-if="skin" style="position:absolute;z-index:500">
+                    <div class="text-grey-darken-2 mt-2" v-if="skin&&mineRenderStatus!=='loading'&&mineRenderStatus!=='initializing'" style="position:absolute;z-index:500">
                         <v-btn icon class="mx-1" @click="skinView3D=!skinView3D">
                             <v-icon icon="mdi-video-3d"></v-icon>
                             <v-tooltip location="right" text="Toggle 3D View" activator="parent" open-on-click/>
@@ -221,7 +221,7 @@ const proxiedSkinTextureUrl = computed(() => {
     return `https://mineskin.org/textures/${ props.skin.texture.hash.skin }?attachment`;
 });
 
-const mineRenderStatus = ref('unknown');
+const mineRenderStatus = ref('loading');
 // const mineRenderEmbedUrl = computed(() => {
 //     return `https://minerender.org/embed/skin/?skin.url=${ proxiedSkinTextureUrl.value }&autoResize=true&shadow=false&camera.position=-16,36,16&controls.pan=false`
 // });
