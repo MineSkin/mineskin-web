@@ -92,7 +92,7 @@ function doRender() {
             setTimeout(()=>{
                 skinRender.value.resize(container.value.offsetWidth, container.value.offsetWidth);
             })
-        }, 500);
+        }, 100);
     });
 }
 

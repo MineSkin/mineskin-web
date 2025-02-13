@@ -5,10 +5,12 @@ export const useSettingsStore = defineStore('settings', () => {
 
     const visibility = ref<SkinVisibility2>(SkinVisibility2.PUBLIC);
     const newWebsiteBannerClosed = ref<number>(0);
+    const skinView3D = ref<boolean>(false);
 
     return {
         visibility,
-        newWebsiteBannerClosed
+        newWebsiteBannerClosed,
+        skinView3D
     }
 
 }, {

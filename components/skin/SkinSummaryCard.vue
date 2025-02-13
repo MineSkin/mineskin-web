@@ -10,6 +10,12 @@
         <v-card-text>
             <v-row>
                 <v-col cols="12" md="4" class="d-flex flex-column">
+                    <div class="text-grey-darken-2 mt-2" v-if="skin" style="position:absolute;z-index:500">
+                        <v-btn icon class="mx-1" @click="skinView3D=!skinView3D">
+                            <v-icon icon="mdi-video-3d"></v-icon>
+                            <v-tooltip location="right" text="Toggle 3D View" activator="parent" open-on-click/>
+                        </v-btn>
+                    </div>
                     <v-row class="flex-1-1-100 my-2">
                         <v-img
                             :lazy-src="PLACEHOLDER_BODY"
@@ -17,16 +23,20 @@
                             aspect-ratio="1"
                             :alt="skinMeta?.description"
                             :title="skinMeta?.description"
-                            v-show="mineRenderStatus!=='rendered'"
+                            v-show="!skinView3D||mineRenderStatus!=='rendered'"
                         />
-                        <MineRenderWrapper
-                            v-model="mineRenderStatus"
-                            :style="{position:mineRenderStatus!=='rendered'?'absolute':''}"
-                            :variant="skin?.variant"
-                            :texture="skin?.texture?.url?.skin"
-                            :cape="skin?.texture?.url?.cape"
-                        />
+                        <ClientOnly>
+                            <MineRenderWrapper
+                                v-if="skinView3D"
+                                v-model="mineRenderStatus"
+                                :style="{position:mineRenderStatus!=='rendered'?'absolute':''}"
+                                :variant="skin?.variant"
+                                :texture="skin?.texture?.url?.skin"
+                                :cape="skin?.texture?.url?.cape"
+                            />
+                        </ClientOnly>
                     </v-row>
+                    <dbg :data="{skinView3D}"/>
                     <v-row justify="end" v-if="mdAndUp">
                         <v-col>
                             <div class="text-grey-darken-2 mt-2" v-if="skin">
@@ -184,6 +194,9 @@ const {authed} = storeToRefs(authStore);
 
 const interactionsStore = useInteractionsStore();
 const {recentViews} = storeToRefs(interactionsStore);
+
+const settingsStore = useSettingsStore();
+const {skinView3D} = storeToRefs(settingsStore);
 
 const skinLink = computed(() => {
     return `https://minesk.in/${ /*props.skin.shortId ||*/ props.skin.uuid }`;
