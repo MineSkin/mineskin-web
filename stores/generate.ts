@@ -25,7 +25,7 @@ export const useGenerateStore = defineStore('generate', () => {
         urls,
         users,
 
-        generating: skipHydrate(generating)
+        generating
     }
 
 }, {
