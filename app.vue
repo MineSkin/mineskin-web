@@ -46,7 +46,13 @@ useHead({
         lang: i18nHead.value.htmlAttrs?.lang || 'en'
     },
     link: [
-        ...(i18nHead.value.link || [])
+        ...(i18nHead.value.link || []),
+        {
+            rel: 'icon',
+            type: 'image/png',
+            href: '/img/mineskin-x64.png',
+            id: 'skin-icon'
+        }
     ],
     meta: [
         ...(i18nHead.value.meta || [])

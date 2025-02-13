@@ -78,13 +78,16 @@
         <v-divider vertical class="mx-4 my-2"/>
 
         <template v-slot:append>
-            <v-btn icon @click="jobsDrawer = !jobsDrawer">
-                <component :is="jobsSorted?.length>0?'v-badge':'div'"
-                           :content="jobsSorted?.length"
-                           location="bottom right"
+            <v-btn icon @click="jobsDrawer = !jobsDrawer" v-show="mdAndUp">
+                <v-badge dot
+                         v-if="isHydrated && jobCount>0"
+                         :color="pendingJobCount>0 ? 'warning':'success'"
                 >
                     <v-icon icon="mdi-list-status"></v-icon>
-                </component>
+                </v-badge>
+                <div v-else>
+                    <v-icon icon="mdi-list-status"></v-icon>
+                </div>
                 <v-tooltip
                     activator="parent"
                     location="bottom"
@@ -134,7 +137,7 @@ const isHydrated = ref(false);
 
 const {smAndUp, mdAndUp} = useDisplay();
 
-const {jobsSorted, jobsDrawer} = storeToRefs(queueStore);
+const {jobsSorted, jobsDrawer, jobCount, pendingJobCount} = storeToRefs(queueStore);
 
 const searching = ref(false);
 const filter = ref('');

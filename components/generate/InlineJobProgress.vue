@@ -1,38 +1,11 @@
 <template>
-    <div v-if="job||waiting">
-<!--        <dbg :data="{originalName,job}"></dbg>-->
-        <v-progress-linear
-            v-if="(waiting&&!job)||(job && job.status === 'waiting')"
-            height="8"
-            indeterminate
-            color="primary">
-        </v-progress-linear>
-        <v-progress-linear
-            v-else-if="job && job.status === 'processing'"
-            height="8"
-            indeterminate
-            color="warning">
-        </v-progress-linear>
-        <v-progress-linear
-            v-else-if="job &&( job.status === 'completed'||job.status === 'failed')"
-            height="8"
-            model-value="100"
-            :color="job.status === 'completed' ? 'success':'error'">
-        </v-progress-linear>
+    <div v-if="(wrappedJob&&wrappedJob?.job)||waiting">
+        <JobProgressBar :job="wrappedJob?.job" :waiting="waiting" height="8" hide-text/>
     </div>
 </template>
 <script setup lang="ts">
-import type { JobInfo, Maybe, SkinInfo2 } from "@mineskin/types";
-import { computedAsync } from "@vueuse/core";
-import { useLazyAsyncData } from "#app";
 import { useQueueStore } from "~/stores/queue";
-import type { GenerateJobResponse } from "~/types/GenerateJobResponse";
-import type { JobResponse } from "~/types/JobResponse";
-import DateUTC from "~/components/DateUTC.vue";
-import DateLocal from "~/components/DateLocal.vue";
-import { sleep } from "~/util/misc";
 import { storeToRefs } from "pinia";
-import type { JobWithMeta } from "~/types/JobWithMeta";
 
 const {$mineskin, $notify} = useNuxtApp();
 
@@ -43,21 +16,8 @@ const props = defineProps<{
 
 const localePath = useLocalePath()
 const queueStore = useQueueStore();
-const {jobMap} = storeToRefs(queueStore);
+const {wrappedJobMap} = storeToRefs(queueStore);
 
-const job = computed(() => Object.values(jobMap.value).find(job => job.originalName === props.originalName));
+const wrappedJob = computed(() => Object.values(wrappedJobMap.value).find(job => job.source.name === props.originalName));
 
-// const {
-//     data: jobRes,
-//     refresh: refreshJob
-// } = useLazyAsyncData<JobResponse>(`job-res-${ id.value }`, async () => {
-//     return (await $mineskin.queue.get(id.value, {silent: true}));
-// }, {
-//     default: () => {
-//         return {job: jobMap.value[id.value]}
-//     }
-// });
-
-// const job = computed<JobInfo>(() => id.value && jobRes.value?.job);
-//const skin = computed(() => jobRes.value?.skin);
 </script>

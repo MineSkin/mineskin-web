@@ -11,6 +11,6 @@ export const useInteractionsStore = defineStore('interactions', () => {
 
 }, {
     persist: {
-        storage: persistedState.localStorage
+        storage: piniaPluginPersistedstate.localStorage()
     }
 })

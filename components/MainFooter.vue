@@ -55,7 +55,7 @@
     </v-footer>
 </template>
 <script setup lang="ts">
-import AdWrappper from "~/components/AdWrappper.vue";
+import AdWrappper from "~/components/ad/AdWrappper.vue";
 
 const {smAndUp, mdAndUp} = useDisplay();
 </script>

@@ -15,10 +15,11 @@
 </template>
 <script setup lang="ts">
 import '~/assets/css/img.css'
+import type { FileJson } from "~/util/file";
 
 const props = defineProps<{
-    item: File,
-    imageProvider?: (file: File) => string;
+    item: FileJson,
+    imageProvider?: (file: FileJson) => string;
     prependIcon?: string;
 }>();
 

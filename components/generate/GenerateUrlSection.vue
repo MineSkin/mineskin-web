@@ -32,9 +32,15 @@
 <script setup lang="ts">
 import InputList from "./list/InputList.vue";
 
-const urls = defineModel<string[]>(['']);
+const urls = defineModel<string[]>({required: true});
 const hasUrl = computed(() => urls.value.filter(url=>url.length>0).length > 0);
 const emit = defineEmits(['continue']);
+
+onBeforeMount(()=>{
+    if(urls.value.length === 0){
+        urls.value.push('');
+    }
+});
 
 const props = defineProps<{
     generating?: boolean

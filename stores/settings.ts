@@ -13,6 +13,6 @@ export const useSettingsStore = defineStore('settings', () => {
 
 }, {
     persist: {
-        storage: persistedState.localStorage
+        storage: piniaPluginPersistedstate.localStorage()
     }
 })

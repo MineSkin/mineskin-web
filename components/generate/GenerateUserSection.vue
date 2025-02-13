@@ -34,7 +34,7 @@ import InputList from "./list/InputList.vue";
 import { textureUrlForUuid } from "../../util/render";
 import { useDebounceFn } from "@vueuse/core";
 
-const users = defineModel<string[]>(['']);
+const users = defineModel<string[]>({required: true});
 const hasUser = computed(() => users.value.filter(user => user.length > 0).length > 0);
 const emit = defineEmits(['continue']);
 
@@ -42,6 +42,11 @@ const props = defineProps<{
     generating?: boolean
 }>()
 
+onBeforeMount(() => {
+    if (users.value.length === 0) {
+        users.value.push('');
+    }
+});
 
 const {$mineskin} = useNuxtApp();
 

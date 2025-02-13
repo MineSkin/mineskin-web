@@ -1,62 +1,32 @@
 <template>
-    <v-list-item v-if="id  &&job">
+    <v-list-item v-if="id  &&wrappedJob && wrappedJob.job">
         <template v-slot:prepend>
             <div class="mr-2" style="width: 48px">
                 <SkinHeadImg :texture="jobTexture"></SkinHeadImg>
             </div>
         </template>
         <template v-slot:title>
-            <nuxt-link v-if="skin" :to="localePath('/skins/'+skin.uuid)" class="text-decoration-none">{{
-                    job.id?.substring(0, 8)
-                }}
+            <nuxt-link v-if="skin" :to="localePath('/skins/'+skin.uuid)" class="text-decoration-none">
+                {{ jobDisplayName }}
             </nuxt-link>
-            <span v-else>{{ job.id?.substring(0, 8) }}</span>
+            <span v-else>{{ wrappedJob.job?.id?.substring(0, 8) }}</span>
         </template>
         <template v-slot:subtitle>
-            <DateLocal class="float-end" :date="job.timestamp"></DateLocal>
+            <DateLocal class="float-end" :date="wrappedJob.job?.timestamp"></DateLocal>
         </template>
-        <v-progress-linear
-            v-if="job.status === 'waiting'"
-            height="20"
-            indeterminate
-            color="primary">
-            <template v-slot:default>
-                {{ $t("Waiting") }}
-            </template>
-        </v-progress-linear>
-        <v-progress-linear
-            v-else-if="job.status === 'processing'"
-            height="20"
-            indeterminate
-            color="warning">
-            <template v-slot:default>
-                {{ $t("Processing") }}
-            </template>
-        </v-progress-linear>
-        <v-progress-linear
-            v-else-if="job.status === 'completed'||job.status === 'failed'"
-            height="20"
-            model-value="100"
-            :color="job.status === 'completed' ? 'success':'error'">
-            <template v-slot:default>
-                {{ job.status === 'completed' ? $t('Completed') : $t('Failed') }}
-            </template>
-        </v-progress-linear>
+        <JobProgressBar :job="wrappedJob.job" height="20"/>
         <v-divider/>
     </v-list-item>
 </template>
 <script setup lang="ts">
 import type { JobInfo, Maybe, SkinInfo2 } from "@mineskin/types";
-import { computedAsync } from "@vueuse/core";
-import { useLazyAsyncData } from "#app";
 import { useQueueStore } from "~/stores/queue";
-import type { GenerateJobResponse } from "~/types/GenerateJobResponse";
 import type { JobResponse } from "~/types/JobResponse";
-import DateUTC from "~/components/DateUTC.vue";
 import DateLocal from "~/components/DateLocal.vue";
 import { sleep } from "~/util/misc";
 import { storeToRefs } from "pinia";
-import type { JobWithMeta } from "~/types/JobWithMeta";
+import JobProgressBar from "~/components/job/JobProgressBar.vue";
+import type { WrappedJob } from "~/types/WrappedJob";
 
 const {$mineskin, $notify} = useNuxtApp();
 
@@ -66,60 +36,84 @@ const props = defineProps<{
 
 const localePath = useLocalePath()
 const queueStore = useQueueStore();
-const {jobMap} = storeToRefs(queueStore);
+const {wrappedJobMap} = storeToRefs(queueStore);
 
-const {
-    data: jobRes,
-    refresh: refreshJob
-} = useLazyAsyncData<JobResponse>(`job-res-${ props.id }`, async () => {
-    return (await $mineskin.queue.get(props.id, {silent: true}));
-}, {
-    immediate: false,
-    server: false,
-    default: () => {
-        return {job: jobMap.value[props.id]}
-    }
-});
+// const {
+//     data: jobRes,
+//     refresh: refreshJob
+// } = useLazyAsyncData<JobResponse>(`job-res-${ props.id }`, async () => {
+//     return (await $mineskin.queue.get(props.id, {silent: true}));
+// }, {
+//     immediate: false,
+//     server: false,
+//     default: () => {
+//         return {job: jobMap.value[props.id]}
+//     }
+// });
 
-const job = computed<JobInfo>(() => props.id && jobRes.value?.job);
-const skin = computed(() => jobRes.value?.skin);
+const wrappedJob = ref<WrappedJob | undefined>(wrappedJobMap.value[props.id]);
+const skin = computed<SkinInfo2 | undefined>(() => wrappedJob.value?.skin);
 
 const refreshCounter = ref(0);
 
-const jobTexture = computed(() => {
-    if (jobRes.value?.links?.image) {
-        return 'https://api.mineskin.org' + jobRes.value.links.image;
+const jobDisplayName = computed(() => {
+    if (wrappedJob.value?.source) {
+        let name = wrappedJob.value.source.name;
+        if (wrappedJob.value.source.type === 'url') {
+            // url basename
+            name = name.split('/').pop() || '';
+        }
+        // remove extension
+        name = name.split('.')[0];
+        // limit length
+        name = name.substring(0, 32);
+
+        return `${ name } (${ wrappedJob.value.job?.id?.substring(0, 8) })`;
     }
-    if (jobRes?.value?.skin) {
-        return jobRes.value?.skin.texture.url.skin;
+})
+
+const jobTexture = computed<string | null>(() => {
+    if (wrappedJob.value?.image) {
+        return wrappedJob.value?.image;
+    }
+    if (wrappedJob.value?.skin) {
+        return wrappedJob.value?.skin.texture.url.skin;
     }
     return null;
 });
 
 const tryJobRefresh = async () => {
-    if (refreshCounter.value > 3) return;
-    if (job.value) {
-        if (job.value?.status !== 'waiting' && job.value?.status !== 'processing' && skin.value) {
+    if (refreshCounter.value > 5) return;
+    if (wrappedJob.value) {
+        if (wrappedJob.value?.job?.status !== 'waiting' && wrappedJob.value?.job?.status !== 'processing' && skin.value) {
             return;
         }
-        if (job.value?.status === 'failed') {
+        if (wrappedJob.value?.job?.status === 'failed') {
             return;
         }
     }
 
-    let oldStatus = job.value?.status;
+    let oldStatus = wrappedJob.value?.job?.status;
 
     await sleep(500 + Math.random() * 800);
 
-    await refreshJob();
+    //await refreshJob();
+    const jobRes: JobResponse = await $mineskin.queue.get(props.id, {silent: true});
+
     refreshCounter.value++;
 
-    if (job.value) {
-        queueStore.addJob(job.value as JobWithMeta);
-        if (oldStatus && oldStatus !== job.value?.status) {
-            console.log('status changed', oldStatus, job.value?.status)
-            if (job.value.status === 'failed' && jobRes.value?.errors) {
-                for (let error of jobRes.value.errors) {
+    if (jobRes) {
+        const job = jobRes.job;
+
+        const wrapped = queueStore.updateJob(job, jobRes);
+        if (wrapped) {
+            wrappedJob.value = wrapped;
+        }
+
+        if (oldStatus && oldStatus !== job?.status) {
+            console.log('status changed', oldStatus, job?.status)
+            if (job.status === 'failed' && jobRes?.errors) {
+                for (let error of jobRes.errors) {
                     $notify({
                         text: error.message,
                         color: 'error',
@@ -130,7 +124,7 @@ const tryJobRefresh = async () => {
         }
     }
 
-    setTimeout(() => tryJobRefresh(), 1300 + Math.random() * 1000);
+    setTimeout(() => tryJobRefresh(), 600 + Math.random() * 600 + refreshCounter.value * 200);
 }
 
 onMounted(async () => {

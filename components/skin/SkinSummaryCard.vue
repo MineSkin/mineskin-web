@@ -13,7 +13,7 @@
                     <v-row class="flex-1-1-100 my-2">
                         <v-img
                             :lazy-src="PLACEHOLDER_BODY"
-                            :src="renderSkinBody(skin?.texture?.hash?.skin)"
+                            :src="renderSkinBody(skin?.texture?.hash?.skin, skin?.variant)"
                             aspect-ratio="1"
                             :alt="skinMeta?.description"
                             :title="skinMeta?.description"

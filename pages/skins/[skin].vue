@@ -38,7 +38,8 @@
             </v-col>
         </v-row>
         <v-row class="text-center">
-            <ad-wrappper ad-slot="4431802313"/>
+            <ad-wrappper v-if="randomBoolean()" ad-slot="4431802313" ad-format="auto" :responsive="true"/>
+            <multiplex-ad-wrapper v-else ad-slot="3298209656" ui-type="image_stacked" :rows="1" :cols="6"/>
         </v-row>
         <!--        <dbg :data="skin"/>-->
         <v-row>
@@ -99,9 +100,10 @@ import {
 import SkinSummaryCard from "~/components/skin/SkinSummaryCard.vue";
 import SkinInstructionsCard from "~/components/skin/SkinInstructionsCard.vue";
 import { skinName } from "../../util/skin";
-import AdWrappper from "~/components/AdWrappper.vue";
-import { renderSkinBody, renderSkinHead } from "~/util/render";
+import AdWrappper from "~/components/ad/AdWrappper.vue";
+import { renderSkinBody, renderSkinHead, renderSkinHeadIcon } from "~/util/render";
 import type { SkinMeta } from "~/types/SkinMeta";
+import MultiplexAdWrapper from "~/components/ad/MultiplexAdWrapper.vue";
 
 const router = useRouter();
 
@@ -160,12 +162,20 @@ const skinHeadImage = computed(() => {
     if (!skin.value) return null;
     return renderSkinHead(skin.value.texture.hash.skin);
 });
-// const skinBodyImage = computed(() => {
-//     if (!skin.value) return null;
-//     return renderSkinBody(skin.value.texture.hash.skin);
-// });
+const skinHeadIcon = computed(() => {
+    if (!skin.value) return null;
+    return renderSkinHeadIcon(skin.value.texture.hash.skin);
+});
+const skinBodyImage = computed(() => {
+    if (!skin.value) return null;
+    return renderSkinBody(skin.value.texture.hash.skin, skin.value.variant);
+});
 const ogImage = computed(() => {
-    return skinHeadImage.value || '/img/mineskin-social-card.jpg';
+    return skinBodyImage.value || '/img/mineskin-social-card.jpg';
+});
+
+const imageAlt = computed(() => {
+    return skinMeta?.value?.description || skinNameDisplay.value;
 });
 
 const description = computed(() => {
@@ -189,11 +199,14 @@ const description = computed(() => {
     return desc;
 });
 
+const randomBoolean = () => Math.random() > 0.5;
+
 useSeoMeta({
     title: skinNameDisplay,
     ogTitle: skinNameDisplay,
     twitterTitle: skinNameDisplay,
     ogImage: ogImage,
+    ogImageAlt: imageAlt,
     description: description,
     ogDescription: description,
     twitterDescription: description,
@@ -231,10 +244,18 @@ const ldBreadcrumbContent = computed(() => {
 })
 
 useHead({
-    link: [{
-        rel: 'canonical',
-        href: `https://mineskin.org/skins/${ skin.value?.uuid || skinId.value }`
-    }],
+    link: [
+        {
+            rel: 'canonical',
+            href: `https://mineskin.org/skins/${ skin.value?.uuid || skinId.value }`
+        },
+        {
+            rel: 'icon',
+            type: 'image/png',
+            href: skinHeadIcon,
+            id: 'skin-icon'
+        }
+    ],
     script: [
         {
             type: 'application/ld+json',

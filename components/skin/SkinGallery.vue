@@ -12,9 +12,31 @@
                 >
                     {{ filter }}
                 </v-chip>
+                <v-btn icon
+                       v-if="!mdAndUp && !filter"
+                       @click="searching ? search() : showSearch()"
+                       variant="text"
+                >
+                    <v-icon>mdi-magnify</v-icon>
+                </v-btn>
             </h2>
-            <dbg :data="breakpoint"></dbg>
         </v-col>
+        <v-expand-x-transition v-if="!mdAndUp">
+            <v-text-field
+                v-show="searching"
+                ref="searchField"
+                density="compact"
+                v-model="searchFilter"
+                placeholder="Search"
+                append-inner-icon="mdi-close"
+                @click:append-inner="searchFilter = ''; searching = false"
+                @keydown.enter="searching = false; search()"
+                @keydown.esc="searching = false"
+                hide-details
+                single-line
+                min-width="20vw"
+            />
+        </v-expand-x-transition>
     </v-row>
     <v-infinite-scroll :items="skins" :onLoad="load" style="overflow: hidden">
         <v-row justify="center" dense>
@@ -25,18 +47,32 @@
                     :xs="item0.ad? 12:5"
                     :sm="item0.ad?8:3"
                     :md="item0.ad?4:2"
-                    :lg="item0.ad?2:2"
+                    :lg="item0.ad?4:2"
                     :xl="item0.ad?2:1"
                     class="gallery-item-group"
                     :class="item0.ad?'mx-4':'mx-0 mx-sm-1 mx-md-2'"
                 >
                     <div v-if="item0.ad"
-                         style="max-height: 1200px;width:100%"
+                         style="width:100%"
                     >
-                        <ad-wrappper
-                            ad-format="fluid"
+                        <dbg :data="{t:item0.adType}"/>
+                        <fluid-ad-wrapper
+                            v-if="item0.adType===1"
                             ad-layout-key="+1i+s2-10-1k+6v"
                             ad-slot="3361952161"
+                        />
+                        <multiplex-ad-wrapper
+                            v-else-if="item0.adType===2"
+                            ad-slot="8545261932"
+                            ui-type="image_stacked"
+                            :rows="1"
+                            :cols="1"
+                        />
+                        <display-ad-wrapper
+                            v-else-if="item0.adType===3"
+                            ad-slot="2426312811"
+                            :height="400"
+                            :width="380"
                         />
                     </div>
                     <div v-else class="gallery-item mb-1 mb-sm-2 mb-md-4" v-for="item in item0" :key="item">
@@ -80,6 +116,9 @@ import { useAuthStore } from "~/stores/auth";
 import { useGalleryStore } from "~/stores/gallery";
 import { onMounted } from "#imports";
 import { computedAsync, useDebounceFn, useThrottleFn } from '@vueuse/core'
+import FluidAdWrapper from "~/components/ad/FluidAdWrapper.vue";
+import MultiplexAdWrapper from "~/components/ad/MultiplexAdWrapper.vue";
+import DisplayAdWrapper from "~/components/ad/DisplayAdWrapper.vue";
 
 useHead({
     title: 'Gallery',
@@ -116,7 +155,7 @@ useHead({
 });
 
 const router = useRouter();
-const {xl, lg, md, sm, xs, name: breakpoint} = useDisplay();
+const {xl, lg, md, sm, xs, name: breakpoint, mdAndUp} = useDisplay();
 
 const {$mineskin, $flags, $notify} = useNuxtApp();
 
@@ -124,6 +163,30 @@ const authStore = useAuthStore();
 const galleryStore = useGalleryStore();
 const {galleryItems, galleryAnchor, galleryScroll} = storeToRefs(galleryStore);
 
+const searching = ref(false);
+const searchFilter = ref('');
+const searchField = useTemplateRef('searchField');
+
+const showSearch = () => {
+    searching.value = true;
+    setTimeout(() => {
+        searchField.value.focus();
+    }, 0);
+}
+
+const search = () => {
+    searching.value = false;
+    if (searchFilter.value === '') {
+        return;
+    }
+    router.push({
+        path: '/skins',
+        query: {
+            filter: searchFilter.value
+        },
+        force: true,
+    });
+}
 
 const props = withDefaults(defineProps<{
     mode?: 'latest' | 'popular' | 'random';
@@ -159,7 +222,7 @@ const adsOnPage = ref(0);
 //     return $mineskin.skins.list();
 // });
 
-const skins = ref<Array<Array<ListedSkin> | { ad: boolean }>>([]);
+const skins = ref<Array<Array<ListedSkin> | { ad: boolean; adType: number; }>>([]);
 const after = ref<string | null>(null);
 const pageIndex = ref(0);
 const hasNext = ref(true);
@@ -211,7 +274,10 @@ async function load({done}) {
         return acc;
     }, [] as ListedSkin[][]);
     if (!adFree.value && inlineAdRate.value != 0 && Math.random() < inlineAdRate.value) {
-        grouped.splice((Math.floor(Math.floor(Math.random() * grouped.length) / 2) * 2) + 1, 0, {ad: true});
+        grouped.splice((Math.floor(Math.floor(Math.random() * grouped.length) / 2) * 2) + 1, 0, {
+            ad: true,
+            adType: getAdType()
+        });
         adsOnPage.value++;
     }
     skins.value.push(...grouped);
@@ -223,6 +289,11 @@ async function load({done}) {
 const inlineAdRate = computed(() => Number($flags.getValue('web.ads.gallery_inline_rate', {
     fallback: .6
 })));
+
+const getAdType = () => {
+    const options = [1, 2, 3];
+    return options[Math.floor(Math.random() * options.length)];
+}
 
 const handleScroll = useThrottleFn((e: Event) => {
     galleryScroll.value = window.scrollY;
