@@ -80,7 +80,7 @@
         <template v-slot:append>
             <v-btn icon @click="jobsDrawer = !jobsDrawer" v-show="mdAndUp">
                 <v-badge dot
-                         v-if="jobCount>0"
+                         v-if="isHydrated && jobCount>0"
                          :color="pendingJobCount>0 ? 'warning':'success'"
                 >
                     <v-icon icon="mdi-list-status"></v-icon>
