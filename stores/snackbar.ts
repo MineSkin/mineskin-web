@@ -1,3 +1,4 @@
+import { defineStore, storeToRefs } from "pinia";
 import type { SnackbarConfig } from "~/types/SnackbarConfig";
 
 // https://github.com/alihdev/vuetify-helper/blob/main/snackbars-stack-way.md
@@ -31,5 +32,5 @@ export const useSnackbarStore = defineStore('snackbar', () => {
         snackbars.value.forEach((x, idx) => (x.position = theSizeOfSnackbar * idx))
     }
 
-    return { snackbars, show, remove, showError }
+    return {snackbars, ids, show, remove, showError}
 })

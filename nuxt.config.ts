@@ -56,6 +56,12 @@ export default defineNuxtConfig({
             }
         },
     },
+    modules: [
+        'vuetify-nuxt-module',
+        '@nuxtjs/i18n',
+        '@pinia/nuxt',
+        'pinia-plugin-persistedstate/nuxt',
+    ],
     plugins: [
         '@/plugins/sentry',
         '@/plugins/logger',
@@ -64,13 +70,6 @@ export default defineNuxtConfig({
         '@/plugins/account',
         '@/plugins/flagsmith',
         '@/plugins/gtag',
-    ],
-    modules: [
-        'vuetify-nuxt-module',
-        '@nuxtjs/i18n',
-        '@pinia/nuxt',
-        '@pinia-plugin-persistedstate/nuxt',
-
     ],
     vuetify: {
         moduleOptions: {
@@ -119,6 +118,10 @@ export default defineNuxtConfig({
         ],
         vueI18n: './nuxt-i18n.ts'
     },
+    piniaPluginPersistedstate: {
+        storage: 'localStorage',
+        debug: true,
+    },
 
     runtimeConfig: {
         public: {
@@ -135,7 +138,7 @@ export default defineNuxtConfig({
             google: {
                 adsense: process.env.GOOGLE_ADSENSE
             },
-            turnstileSiteKey: process.env.TURNSTILE_SITE_KEY,
+            turnstileSiteKey: process.env.TURNSTILE_SITE_KEY
         }
     },
 })

@@ -1,5 +1,7 @@
 import { defineNuxtPlugin, useState } from "#app";
 import type { SnackbarConfig } from "~/types/SnackbarConfig";
+import { useSnackbarStore } from "~/stores/snackbar";
+import {storeToRefs } from "pinia";
 
 export default defineNuxtPlugin(nuxtApp => {
     const def: SnackbarConfig = {
@@ -10,7 +12,8 @@ export default defineNuxtPlugin(nuxtApp => {
         closable: true
     }
 
-    const store = useSnackbarStore()
+    const config = useRuntimeConfig();
+    const store = useSnackbarStore();
 
     const { snackbars } = storeToRefs(store)
 

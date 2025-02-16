@@ -11,10 +11,12 @@
                 :type="type"
                 :label="label"
                 :rules="rules"
-                :append-icon="canAdd(index) ? 'mdi-plus' : canRemove(index)? 'mdi-minus':''"
+                :append-icon="isJobDone(index) ? 'mdi-open-in-new': canAdd(index) ? 'mdi-plus' :''"
+                :append-inner-icon="canRemove(index)? 'mdi-minus':''"
                 :prepend-icon="prependIcon"
                 :image-provider="imageProvider"
-                @click:append="listAddOrRemove(index)"
+                @click:append="listClick(index)"
+                @click:append-inner="listClick(index, true)"
             >
             </input-list-row>
             <inline-job-progress :original-name="items[index]" :waiting="waiting"/>
@@ -26,8 +28,11 @@
 import { computedAsync, useDebounceFn } from '@vueuse/core'
 import InputListRow from "./InputListRow.vue";
 import InlineJobProgress from "~/components/generate/InlineJobProgress.vue";
+import { useQueueStore } from "~/stores/queue";
+import { storeToRefs } from "pinia";
+import type { WrappedJob } from "~/types/WrappedJob";
 
-const items = defineModel<string[]>(['']);
+const items = defineModel<string[]>({required: true});
 const props = defineProps<{
     label?: string;
     prependIcon?: string;
@@ -38,6 +43,11 @@ const props = defineProps<{
 }>();
 
 const {$mineskin} = useNuxtApp();
+
+const router = useRouter();
+const localePath = useLocalePath();
+const queueStore = useQueueStore();
+const {wrappedJobMap} = storeToRefs(queueStore);
 
 const allRules = {
     required: (value: string) => !!value || 'Required.',
@@ -72,8 +82,26 @@ function canRemove(index: number) {
     return (index !== 0 || items.value.length > 1) && items.value.length > 1;
 }
 
-function listAddOrRemove(index: number) {
-    if (canAdd(index)) {
+function getJob(index: number): WrappedJob | undefined {
+    return Object.values(wrappedJobMap.value).find(job => job.source.name === items.value[index].name)
+}
+
+function isJobDone(index: number): boolean {
+    return getJob(index)?.job?.status === 'completed';
+}
+
+function listClick(index: number, inner: boolean = false) {
+    if (!inner) {
+        const job = getJob(index);
+        if (job?.job?.status === 'completed') {
+            if (job?.job?.result) {
+                router.push(localePath(`/skins/${ job?.job?.result }`));
+            }
+            return;
+        }
+    }
+
+    if (!inner&&canAdd(index)) {
         items.value.push('');
     } else if (canRemove(index)) {
         items.value.splice(index, 1);

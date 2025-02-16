@@ -25,6 +25,7 @@
         <h3 class="text-h6 mb-2 pt-1">
             <span class="d-inline-block pt-2">{{ $t("Generate New Skin Data") }}</span>
         </h3>
+        <dbg :data="{generateType,generateType_,imageCount}"/>
         <v-row class="my-2 d-flex text-center"
                :justify="generateType === GenerateType.UPLOAD ? 'center':generateType===GenerateType.USER?'end':'start'">
             <v-col
@@ -74,6 +75,14 @@
                     :generating="generating"
                 />
             </v-col>
+        </v-row>
+        <v-row dense justify="center" v-if="imageCount>0">
+            <action-link
+                @click.prevent="reset"
+                icon="mdi-reload"
+                tooltip="Reset Image Selection">
+                Clear Images
+            </action-link>
         </v-row>
         <v-divider class="my-4"/>
         <v-expand-transition v-if="isHydrated">
@@ -162,7 +171,7 @@
         <v-expand-transition v-if="isHydrated">
             <v-row v-show="generateType" class="my-4" justify="center">
                 <v-col>
-                    <dbg :data="jobMap"></dbg>
+                    <dbg :data="wrappedJobMap"></dbg>
                     <v-row justify="center" class="mb-2 text-center">
                         <v-btn
                             color="primary"
@@ -260,6 +269,9 @@ import type { BasicCreditInfo } from "~/types/BasicCreditInfo";
 import { sleep } from "~/util/misc";
 import { useSettingsStore } from "~/stores/settings";
 import { storeToRefs } from "pinia";
+import { useGenerateStore } from "~/stores/generate";
+import { fileFromJson, type FileJson, fileToJson } from "~/util/file";
+import type { JobSource, WrappedJob } from "~/types/WrappedJob";
 
 const {$mineskin, $notify, $flags, $gtag} = useNuxtApp();
 
@@ -272,13 +284,26 @@ const settingsStore = useSettingsStore();
 const {mdAndUp, mdAndDown} = useDisplay();
 
 const {grants} = storeToRefs(authStore);
-const {jobsDrawer, jobMap, lastJobSubmit} = storeToRefs(queueStore);
+const {jobsDrawer, lastJobSubmit, wrappedJobMap} = storeToRefs(queueStore);
 
 const {visibility: preferredVisibility} = storeToRefs(settingsStore);
 
-const waitTime = ref(0);
+const generateStore = useGenerateStore();
+const {
+    name,
+    visibility,
+    variant,
 
-const generateType = computed<Maybe<GenerateType>>(() => {
+    uploadFiles,
+    urls,
+    users,
+
+    generating
+} = storeToRefs(generateStore);
+
+
+const generateType = computed(() => {
+    if (!isHydrated.value) return undefined;
     if (urls.value.filter(url => url.length > 0).length > 0) {
         return GenerateType.URL;
     }
@@ -290,28 +315,8 @@ const generateType = computed<Maybe<GenerateType>>(() => {
     }
 });
 
-//TODO: limit number of images
-
-const uploadFiles = ref<File[]>([]);
-const urls = ref<string[]>(['']);
-const users = ref<string[]>(['']);
-
-const visibilities = ref<SkinVisibility2[]>([SkinVisibility2.PUBLIC, SkinVisibility2.UNLISTED]);
-
-const nameRules = [
-    (v: string) => v.length <= 24 || 'Max 24 characters',
-    (v: string) => /^[a-zA-Z0-9_.\-{} ]*$/g.test(v) || 'Only a-z, 0-9, _-.{} allowed'
-];
-
-const name = ref('');
-const visibility = ref(preferredVisibility.value || SkinVisibility2.PUBLIC);
-const variant = ref(SkinVariant.UNKNOWN);
-
-watch(() => visibility.value, (value) => {
-    preferredVisibility.value = value;
-});
-
 const imageCount = computed(() => {
+    if (!isHydrated.value) return 0;
     switch (generateType.value) {
         case GenerateType.UPLOAD:
             return uploadFiles.value.length;
@@ -322,6 +327,25 @@ const imageCount = computed(() => {
     }
     return 0;
 });
+
+watch(() => visibility.value, (value) => {
+    preferredVisibility.value = value;
+}, {immediate: true});
+
+const generateType_ = computed(() => generateType.value);
+
+const waitTime = ref(0);
+
+
+//TODO: limit number of images
+
+
+const visibilities = ref<SkinVisibility2[]>([SkinVisibility2.PUBLIC, SkinVisibility2.UNLISTED]);
+
+const nameRules = [
+    (v: string) => v.length <= 24 || 'Max 24 characters',
+    (v: string) => /^[a-zA-Z0-9_.\-{} ]*$/g.test(v) || 'Only a-z, 0-9, _-.{} allowed'
+];
 
 watch(() => imageCount.value, (value) => {
     if (value > 1 && !canGenerateMultiple.value) {
@@ -334,7 +358,7 @@ watch(() => imageCount.value, (value) => {
 });
 
 const variablesDialog = ref(false);
-const processNameVariables = (index: number, url: string | null, file: File | null, user: string | null) => {
+const processNameVariables = (index: number, url: string | null, file: File | FileJson | null, user: string | null) => {
     const original = name.value;
     let replaced = original;
 
@@ -363,16 +387,7 @@ const replacedNamesPreview = computed(() => {
     }).filter(name => name.length > 0);
 });
 
-const canUsePrivateSkins = computed(() => {
-    return authStore.authed && grants.value?.private_skins;
-});
-const canGenerateMultiple = computed(() => {
-    return authStore.authed;
-})
-
 const showCreditsInfo = computed(() => $flags.hasFeature('web.credits.show_info'));
-
-const generating = ref(false);
 
 const dragging = ref(false);
 
@@ -413,7 +428,9 @@ function collectUploadedFiles(files: File[]) {
         })
         return;
     }
-    uploadFiles.value.push(...filtered);
+    Promise.all(filtered.map(f => fileToJson(f))).then(mapped => {
+        uploadFiles.value.push(...mapped);
+    });
 }
 
 
@@ -461,6 +478,13 @@ function variantProps(item: SkinVariant) {
             };
     }
 }
+
+const canUsePrivateSkins = computed(() => {
+    return authStore.authed && grants.value?.private_skins;
+});
+const canGenerateMultiple = computed(() => {
+    return authStore.authed;
+});
 
 function reset() {
     uploadFiles.value = [];
@@ -510,7 +534,7 @@ async function generate() {
 
     const baseOptions: GenerateOptions = getOptions();
 
-    let responses: [GenerateJobResponse, { name: string }][] = [];
+    let responses: [GenerateJobResponse, JobSource][] = [];
     switch (generateType.value) {
         case GenerateType.UPLOAD: {
             if (!canGenerateMultiple.value) {
@@ -522,7 +546,12 @@ async function generate() {
                 options.name = processNameVariables(index++, null, file, null);
                 await sleep(800);
                 lastJobSubmit.value = Date.now();
-                responses.push([await $mineskin.queue.upload(file, options), {name: file.name}]);
+                const source: JobSource = {
+                    type: 'file',
+                    content: file,
+                    name: file.name
+                };
+                responses.push([await $mineskin.queue.upload(await fileFromJson(file), options), source]);
             }
             break;
         }
@@ -536,7 +565,12 @@ async function generate() {
                 options.name = processNameVariables(index++, url, null, null);
                 await sleep(800);
                 lastJobSubmit.value = Date.now();
-                responses.push([await $mineskin.queue.url(url, options), {name: url}])
+                const source: JobSource = {
+                    type: 'url',
+                    content: url,
+                    name: url
+                }
+                responses.push([await $mineskin.queue.url(url, options), source])
             }
             break;
         }
@@ -565,7 +599,12 @@ async function generate() {
                 options.name = processNameVariables(index++, null, null, user);
                 await sleep(800);
                 lastJobSubmit.value = Date.now();
-                responses.push([await $mineskin.queue.user(uuid, options), {name: user}])
+                const source: JobSource = {
+                    type: 'user',
+                    content: uuid,
+                    name: user
+                }
+                responses.push([await $mineskin.queue.user(uuid, options), source])
             }
             break;
         }
@@ -578,17 +617,18 @@ async function generate() {
             return;
         }
     }
-    for (const [response, meta] of responses) {
+    for (const [response, source] of responses) {
         if (response.success) {
             if ('job' in response) {
-                queueStore.addJob({
-                    ...(response as GenerateJobResponse).job,
-                    ...{
-                        originalName: meta.name,
-                        lastStatusCheck: Date.now(),
-                        statusCheckCount: 0
+                const wrapped: WrappedJob = {
+                    source: source,
+                    job: (response as GenerateJobResponse).job,
+                    check: {
+                        last: Date.now(),
+                        count: 0
                     }
-                });
+                };
+                queueStore.addJob(wrapped);
             }
         }
     }
@@ -611,6 +651,10 @@ const refreshWaitTime = () => {
         }, 1000);
     }
 }
+
+watch(generateType, () => {
+    console.debug('generateType', generateType.value);
+}, {immediate: true})
 
 onMounted(async () => {
     isHydrated.value = true;

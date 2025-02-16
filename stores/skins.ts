@@ -33,6 +33,6 @@ export const useSkinStore = defineStore('skins', () => {
 
 }, {
     persist: {
-        storage: persistedState.localStorage
+        storage: piniaPluginPersistedstate.localStorage()
     }
 })

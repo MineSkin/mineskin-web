@@ -1,7 +1,6 @@
 <template>
-    <div v-if="job||waiting">
-<!--        <dbg :data="{originalName,job}"></dbg>-->
-        <JobProgressBar :job="job" :waiting="waiting" height="8" hide-text/>
+    <div v-if="(wrappedJob&&wrappedJob?.job)||waiting">
+        <JobProgressBar :job="wrappedJob?.job" :waiting="waiting" height="8" hide-text/>
     </div>
 </template>
 <script setup lang="ts">
@@ -17,8 +16,8 @@ const props = defineProps<{
 
 const localePath = useLocalePath()
 const queueStore = useQueueStore();
-const {jobMap} = storeToRefs(queueStore);
+const {wrappedJobMap} = storeToRefs(queueStore);
 
-const job = computed(() => Object.values(jobMap.value).find(job => job.originalName === props.originalName));
+const wrappedJob = computed(() => Object.values(wrappedJobMap.value).find(job => job.source.name === props.originalName));
 
 </script>
