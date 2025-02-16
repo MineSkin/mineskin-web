@@ -125,7 +125,7 @@
                 </v-col>
                 <v-col cols="12" :md="optionsColSize" v-if="canGenerateCapes">
                     <v-select
-                        label="Cape"
+                        label="Cape (optional)"
                         v-model="cape"
                         :items="supportedCapes"
                         item-value="uuid"
@@ -134,7 +134,11 @@
                         persistent-hint
                         clearable
                         placeholder="No Cape"
-                    />
+                    >
+                        <template v-slot:message>
+                            <span>Optional cape to apply <v-chip text="EXPERIMENTAL" size="x-small" color="warning" variant="outlined"/></span>
+                        </template>
+                    </v-select>
                 </v-col>
                 <v-spacer></v-spacer>
                 <!--                <v-col>-->
