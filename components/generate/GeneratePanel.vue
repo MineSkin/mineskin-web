@@ -130,7 +130,6 @@
                         :items="supportedCapes"
                         item-value="uuid"
                         item-title="alias"
-                        :item-props="capeProps"
                         hint="Cape to apply"
                         persistent-hint
                     />
@@ -503,13 +502,6 @@ function variantProps(item: SkinVariant) {
                 title: "Auto",
                 subtitle: "Auto-detect"
             };
-    }
-}
-
-
-function capeProps(item: KnownCape) {
-    return {
-        title: item.alias
     }
 }
 
