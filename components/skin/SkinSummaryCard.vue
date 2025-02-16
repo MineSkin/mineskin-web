@@ -1,9 +1,30 @@
 <style scoped>
 .cape-image {
     position: absolute;
-    image-rendering: pixelated;
-    clip: rect(0, 32px, 64px, 0);
+    min-width: 10vw;
+    z-index: 1;
+    transform-origin: top left;
+    transition: transform 0.2s;
 }
+
+.cape-image:hover {
+    cursor: pointer;
+    transform: scale(2);
+}
+
+@media (min-width: 1280px) {
+    .cape-image {
+        min-width: 5vw !important;
+    }
+}
+
+@media (min-width: 600px) {
+    .cape-image {
+        min-width: 4vw !important;
+    }
+}
+
+
 </style>
 <template>
     <v-card>
@@ -11,19 +32,17 @@
             <v-row>
                 <v-col cols="12" md="4" class="d-flex flex-column">
                     <v-row class="flex-1-1-100 my-2">
+                        <cape-view
+                            class="cape-image mx-4"
+                            v-if="skin?.texture?.url?.cape"
+                            :texture="skin?.texture?.url?.cape"
+                        />
                         <v-img
                             :lazy-src="PLACEHOLDER_BODY"
                             :src="renderSkinBody(skin?.texture?.hash?.skin, skin?.variant)"
                             aspect-ratio="1"
                             :alt="skinMeta?.description"
                             :title="skinMeta?.description"
-                        />
-                    </v-row>
-                    <v-row class="flex-1-1-100 my-2">
-                        <v-img
-                            class="cape-image"
-                            v-if="skin?.texture?.hash?.cape"
-                            :src="skin?.texture?.url?.cape"
                         />
                     </v-row>
                     <v-row justify="end" v-if="mdAndUp">
@@ -165,6 +184,7 @@ import { useInteractionsStore } from "~/stores/interactions";
 import { useAuthStore } from "~/stores/auth";
 import { storeToRefs } from "pinia";
 import type { SkinMeta } from "~/types/SkinMeta";
+import CapeView from "~/components/skin/CapeView.vue";
 
 const props = defineProps<{
     skin: SkinInfo2;
