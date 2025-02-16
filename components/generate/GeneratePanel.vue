@@ -25,7 +25,7 @@
         <h3 class="text-h6 mb-2 pt-1">
             <span class="d-inline-block pt-2">{{ $t("Generate New Skin Data") }}</span>
         </h3>
-        <dbg :data="{generateType,generateType_,imageCount,cape}"/>
+        <dbg :data="{generateType,generateType_,imageCount,cape,capePreview}"/>
         <v-row class="my-2 d-flex text-center"
                :justify="generateType === GenerateType.UPLOAD ? 'center':generateType===GenerateType.USER?'end':'start'">
             <v-col
@@ -135,8 +135,14 @@
                         clearable
                         placeholder="No Cape"
                     >
+                        <template v-slot:append v-if="capePreview">
+                            <div>
+                                <cape-view :texture="capePreview"/>
+                            </div>
+                        </template>
                         <template v-slot:message>
-                            <span>Optional cape to apply <v-chip text="EXPERIMENTAL" size="x-small" color="warning" variant="outlined"/></span>
+                            <span>Optional cape to apply <v-chip text="EXPERIMENTAL" size="x-small" color="warning"
+                                                                 variant="outlined"/></span>
                         </template>
                     </v-select>
                 </v-col>
@@ -292,6 +298,7 @@ import type { JobSource, WrappedJob } from "~/types/WrappedJob";
 import type { SkinListResponse } from "~/types/SkinListResponse";
 import type { CapeListResponse, KnownCape } from "~/types/CapeListResponse";
 import type { GenerateOptions } from "~/types/GenerateOptions";
+import CapeView from "~/components/skin/CapeView.vue";
 
 const {$mineskin, $notify, $flags, $gtag} = useNuxtApp();
 
@@ -374,9 +381,14 @@ const {
     return (await $mineskin.capes.list());
 });
 
-const supportedCapes = computed<KnownCape>(() => {
+const supportedCapes = computed<KnownCape[]>(() => {
     return knownCapesRes?.value?.capes?.filter(c => c.supported) || [];
 });
+const capePreview = computed(() => {
+    if (!cape.value) return undefined;
+    const url = supportedCapes.value?.find(c => c.uuid === cape.value)?.url;
+    return url?.replace('http://', 'https://');
+})
 
 const nameRules = [
     (v: string) => v.length <= 24 || 'Max 24 characters',
@@ -523,6 +535,7 @@ const canGenerateMultiple = computed(() => {
     return authStore.authed;
 });
 const canGenerateCapes = computed(() => {
+    return true;
     return authStore.authed && grants.value?.capes && generateType.value !== GenerateType.USER;
 });
 
