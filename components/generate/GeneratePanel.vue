@@ -513,8 +513,7 @@ const canGenerateMultiple = computed(() => {
     return authStore.authed;
 });
 const canGenerateCapes = computed(() => {
-    return generateType.value !== GenerateType.USER; //TODO: CHANGE THIS
-    //return authStore.authed && grants.value?.capes && generateType.value!==GenerateType.USER;
+    return authStore.authed && grants.value?.capes && generateType.value !== GenerateType.USER;
 });
 
 const optionsColSize = computed(() => {
