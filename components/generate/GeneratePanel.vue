@@ -197,7 +197,7 @@
                     </v-row>
                     <v-row justify="center" class="mt-2 text-center">
                         <ClientOnly>
-                            <CreditsStatus :generating="generating" :image-count="imageCount"/>
+                            <CreditsStatus :generating="generating" :estimate="creditsEstimate"/>
                             <div v-if="generating">
                                 <div>
                                     Your {{ imageCount > 1 ? 'skins are' : 'skin is' }} being generated...
@@ -343,6 +343,10 @@ const imageCount = computed(() => {
             return users.value.filter(user => user.length > 0).length;
     }
     return 0;
+});
+
+const creditsEstimate = computed(() => {
+    return imageCount.value + (cape.value ? 1 : 0);
 });
 
 watch(() => visibility.value, (value) => {

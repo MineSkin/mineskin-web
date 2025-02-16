@@ -6,7 +6,7 @@
                 <div v-if="true">
                     <span>
                        {{
-                            $t("This request will consume 1 credit if the skin is successfully generated. | This request will consume {n} credits if the skins are successfully generated.", imageCount || 1)
+                            $t("This request will consume 1 credit if the skin is successfully generated. | This request will consume {n} credits if the skins are successfully generated.", estimate || 1)
                         }}
                     </span>
                     <br/>
@@ -48,7 +48,7 @@ import { computed } from "vue";
 import { useNuxtData } from "#imports";
 
 const props = defineProps<{
-    imageCount: number;
+    estimate: number;
     generating: boolean;
 }>();
 
