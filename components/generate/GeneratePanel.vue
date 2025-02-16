@@ -132,6 +132,8 @@
                         item-title="alias"
                         hint="Cape to apply"
                         persistent-hint
+                        clearable
+                        placeholder="No Cape"
                     />
                 </v-col>
                 <v-spacer></v-spacer>
