@@ -5,9 +5,10 @@ import type { SkinListResponse } from "~/types/SkinListResponse";
 import type { GenerateJobResponse } from "~/types/GenerateJobResponse";
 import type { JobListResponse } from "~/types/JobListResponse";
 import type { UserValidation } from "~/types/UserValidation";
-import type { GenerateOptions } from "@mineskin/types";
 import { TagVoteType } from "@mineskin/types";
 import type { BasicCreditInfo } from "~/types/BasicCreditInfo";
+import type { CapeListResponse } from "~/types/CapeListResponse";
+import type { GenerateOptions } from "~/types/GenerateOptions";
 
 const INIT: RequestInit = {
     headers: {
@@ -50,6 +51,9 @@ export class MineSkinAPI {
             if (options.name) {
                 formData.append('name', options.name);
             }
+            if (options.cape) {
+                formData.append('cape', options.cape);
+            }
             return this.api.request(`/v2/generate`, {
                 headers: {},
                 method: 'POST',
@@ -69,6 +73,9 @@ export class MineSkinAPI {
             }
             if (options.name) {
                 body['name'] = options.name;
+            }
+            if (options.cape) {
+                body['cape'] = options.cape;
             }
             return this.api.request(`/v2/generate`, {
                 ...INIT,
@@ -96,6 +103,9 @@ export class MineSkinAPI {
             if (options.name) {
                 formData.append('name', options.name);
             }
+            if (options.cape) {
+                formData.append('cape', options.cape);
+            }
             return this.api.request(`/v2/queue`, {
                 headers: {},
                 method: 'POST',
@@ -115,6 +125,9 @@ export class MineSkinAPI {
             }
             if (options.name) {
                 body['name'] = options.name;
+            }
+            if (options.cape) {
+                body['cape'] = options.cape;
             }
             return this.api.request(`/v2/queue`, {
                 ...INIT,
@@ -239,6 +252,16 @@ export class MineSkinAPI {
             })
         }
 
+    }(this);
+
+    public capes = new class {
+
+        constructor(readonly api: MineSkinAPI) {
+        }
+
+        public async list(): Promise<CapeListResponse> {
+            return this.api.request(`/v2/capes`, INIT);
+        }
     }(this);
 
     public validate = new class {

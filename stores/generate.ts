@@ -9,6 +9,7 @@ export const useGenerateStore = defineStore('generate', () => {
     const name = ref<string>('');
     const visibility = ref<SkinVisibility2>(SkinVisibility2.PUBLIC);
     const variant = ref<SkinVariant>(SkinVariant.UNKNOWN);
+    const cape = ref<string>('');
 
     const uploadFiles = ref<FileJson[]>([]);
     const urls = ref<string[]>([]);
@@ -20,6 +21,7 @@ export const useGenerateStore = defineStore('generate', () => {
         name,
         visibility,
         variant,
+        cape,
 
         uploadFiles,
         urls,

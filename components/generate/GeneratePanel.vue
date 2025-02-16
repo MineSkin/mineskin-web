@@ -25,7 +25,7 @@
         <h3 class="text-h6 mb-2 pt-1">
             <span class="d-inline-block pt-2">{{ $t("Generate New Skin Data") }}</span>
         </h3>
-        <dbg :data="{generateType,generateType_,imageCount}"/>
+        <dbg :data="{generateType,generateType_,imageCount,cape}"/>
         <v-row class="my-2 d-flex text-center"
                :justify="generateType === GenerateType.UPLOAD ? 'center':generateType===GenerateType.USER?'end':'start'">
             <v-col
@@ -88,7 +88,7 @@
         <v-expand-transition v-if="isHydrated">
             <v-row v-show="generateType" class="my-2" justify="center">
                 <v-spacer></v-spacer>
-                <v-col cols="12" md="3">
+                <v-col cols="12" :md="optionsColSize">
                     <v-select
                         label="Visibility"
                         v-model="visibility"
@@ -98,7 +98,7 @@
                         persistent-hint
                     />
                 </v-col>
-                <v-col cols="12" md="3">
+                <v-col cols="12" :md="optionsColSize">
                     <v-text-field
                         label="Name (optional)"
                         v-model="name"
@@ -113,13 +113,25 @@
                         </template>
                     </v-text-field>
                 </v-col>
-                <v-col cols="12" md="3">
+                <v-col cols="12" :md="optionsColSize">
                     <v-select
                         label="Variant"
                         v-model="variant"
                         :items="Object.values(SkinVariant)"
                         :item-props="variantProps"
                         hint="Variant of the skin"
+                        persistent-hint
+                    />
+                </v-col>
+                <v-col cols="12" :md="optionsColSize" v-if="canGenerateCapes">
+                    <v-select
+                        label="Cape"
+                        v-model="cape"
+                        :items="supportedCapes"
+                        item-value="uuid"
+                        item-title="alias"
+                        :item-props="capeProps"
+                        hint="Cape to apply"
                         persistent-hint
                     />
                 </v-col>
@@ -256,7 +268,7 @@
 </template>
 <script setup lang="ts">
 
-import { type GenerateOptions, GenerateType, type Maybe, SkinVariant, SkinVisibility2 } from "@mineskin/types";
+import { GenerateType, type Maybe, SkinVariant, SkinVisibility2 } from "@mineskin/types";
 import { useLazyAsyncData, useNuxtApp } from "nuxt/app";
 import { useQueueStore } from "../../stores/queue";
 import { computed, ref } from "vue";
@@ -272,6 +284,9 @@ import { storeToRefs } from "pinia";
 import { useGenerateStore } from "~/stores/generate";
 import { fileFromJson, type FileJson, fileToJson } from "~/util/file";
 import type { JobSource, WrappedJob } from "~/types/WrappedJob";
+import type { SkinListResponse } from "~/types/SkinListResponse";
+import type { CapeListResponse, KnownCape } from "~/types/CapeListResponse";
+import type { GenerateOptions } from "~/types/GenerateOptions";
 
 const {$mineskin, $notify, $flags, $gtag} = useNuxtApp();
 
@@ -293,6 +308,7 @@ const {
     name,
     visibility,
     variant,
+    cape,
 
     uploadFiles,
     urls,
@@ -341,6 +357,17 @@ const waitTime = ref(0);
 
 
 const visibilities = ref<SkinVisibility2[]>([SkinVisibility2.PUBLIC, SkinVisibility2.UNLISTED]);
+
+const {
+    data: knownCapesRes,
+    refresh: refreshKnownCapes,
+} = useLazyAsyncData<CapeListResponse>(`known-capes`, async () => {
+    return (await $mineskin.capes.list());
+});
+
+const supportedCapes = computed<KnownCape>(() => {
+    return knownCapesRes?.value?.capes?.filter(c => c.supported) || [];
+});
 
 const nameRules = [
     (v: string) => v.length <= 24 || 'Max 24 characters',
@@ -479,12 +506,28 @@ function variantProps(item: SkinVariant) {
     }
 }
 
+
+function capeProps(item: KnownCape) {
+    return {
+        title: item.alias
+    }
+}
+
+
 const canUsePrivateSkins = computed(() => {
     return authStore.authed && grants.value?.private_skins;
 });
 const canGenerateMultiple = computed(() => {
     return authStore.authed;
 });
+const canGenerateCapes = computed(() => {
+    return generateType.value !== GenerateType.USER; //TODO: CHANGE THIS
+    //return authStore.authed && grants.value?.capes && generateType.value!==GenerateType.USER;
+});
+
+const optionsColSize = computed(() => {
+    return canGenerateCapes.value ? 2 : 3;
+})
 
 function reset() {
     uploadFiles.value = [];
@@ -498,10 +541,12 @@ function reset() {
 }
 
 function getOptions(): GenerateOptions {
+    console.log(cape.value)
     return {
         visibility: visibility.value,
         variant: variant.value || undefined,
-        name: name.value
+        name: name.value,
+        cape: cape.value
     }
 }
 
