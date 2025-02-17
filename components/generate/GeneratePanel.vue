@@ -535,7 +535,6 @@ const canGenerateMultiple = computed(() => {
     return authStore.authed;
 });
 const canGenerateCapes = computed(() => {
-    return true;
     return authStore.authed && grants.value?.capes && generateType.value !== GenerateType.USER;
 });
 
