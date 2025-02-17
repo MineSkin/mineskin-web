@@ -554,7 +554,6 @@ function reset() {
 }
 
 function getOptions(): GenerateOptions {
-    console.log(cape.value)
     return {
         visibility: visibility.value,
         variant: variant.value || undefined,
