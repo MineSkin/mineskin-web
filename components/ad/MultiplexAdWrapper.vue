@@ -3,7 +3,7 @@
         <template v-slot:ad>
             <ins class="adsbygoogle"
                  style="display:block"
-                 :data-adtest="isDev ? 'on': ''"
+                 :data-adtest="isDev ? 'on': undefined"
                  :data-ad-client="clientId"
                  :data-ad-slot="adSlot"
                  data-ad-format="autorelaxed"

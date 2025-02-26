@@ -4,7 +4,7 @@
             <ins class="adsbygoogle"
                  style="display:block"
                  :style="{width: width ? width + 'px' : 'auto', height: height ? height + 'px' : 'auto'}"
-                 :data-adtest="isDev ? 'on': ''"
+                 :data-adtest="isDev ? 'on': undefined"
                  :data-ad-client="clientId"
                  :data-ad-slot="adSlot"
                  :data-full-width-responsive="responsive||true"></ins>
