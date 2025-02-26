@@ -7,7 +7,7 @@ pre.instructions {
 }
 </style>
 <template>
-    <v-card min-height="260">
+    <v-card min-height="290">
         <v-tabs
             bg-color="primary"
             v-model="instructionsTab"

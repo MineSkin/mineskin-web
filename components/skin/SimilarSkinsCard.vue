@@ -1,5 +1,5 @@
 <template>
-    <v-sheet rounded elevation="1" class="mx-auto px-4 pt-0 pb-4"
+    <v-sheet  min-height="290" rounded elevation="1" class="mx-auto px-4 pt-0 pb-4"
              v-show="isHydrated && similarSkins && similarSkins?.length>2">
         <h3 class="text-h6 mb-2 pt-1">
             <span class="d-inline-block pt-2">{{ $t("Similar Skins") }}</span>
