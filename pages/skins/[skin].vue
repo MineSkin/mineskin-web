@@ -44,7 +44,13 @@
         <!--        <dbg :data="skin"/>-->
         <v-row>
             <v-col cols="12">
-                <SkinInstructionsCard :skin="skin"/>
+                <SkinInstructionsCard v-if="skin" :skin="skin"/>
+            </v-col>
+        </v-row>
+
+         <v-row>
+            <v-col cols="12">
+                <SimilarSkinsCard v-if="skin" :skin="skin"/>
             </v-col>
         </v-row>
 
@@ -104,6 +110,7 @@ import AdWrappper from "~/components/ad/AdWrappper.vue";
 import { renderSkinBody, renderSkinHead, renderSkinHeadIcon } from "~/util/render";
 import type { SkinMeta } from "~/types/SkinMeta";
 import MultiplexAdWrapper from "~/components/ad/MultiplexAdWrapper.vue";
+import SimilarSkinsCard from "~/components/skin/SimilarSkinsCard.vue";
 
 const router = useRouter();
 

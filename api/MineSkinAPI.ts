@@ -221,6 +221,12 @@ export class MineSkinAPI {
             return this.api.request(`/v2/skins/${ uuid }/meta`, INIT);
         }
 
+        public async listSimilar(uuid: string) {
+            return this.api.request(`/v2/skins/${ uuid }/similar`, {
+                ...INIT
+            });
+        }
+
         public async getTags(uuid: string) {
             return this.api.request(`/v2/skins/${ uuid }/tags`, {
                 ...INIT,
