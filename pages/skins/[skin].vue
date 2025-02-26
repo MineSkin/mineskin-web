@@ -38,21 +38,11 @@
             </v-col>
         </v-row>
         <v-row class="text-center">
-            <ad-wrappper v-if="randomBoolean()" ad-slot="4431802313" ad-format="auto" :responsive="true"/>
-            <multiplex-ad-wrapper v-else ad-slot="3298209656" ui-type="image_stacked" :rows="1" :cols="6"/>
+            <ad-wrappper v-if="randomBoolean()" ad-slot="4431802313" ad-format="auto" :responsive="true" no-fallback/>
+            <multiplex-ad-wrapper v-else ad-slot="3298209656" ui-type="image_stacked" :rows="1" :cols="6" no-fallback/>
         </v-row>
         <!--        <dbg :data="skin"/>-->
-        <v-row>
-            <v-col cols="12">
-                <SkinInstructionsCard v-if="skin" :skin="skin"/>
-            </v-col>
-        </v-row>
-
-         <v-row>
-            <v-col cols="12">
-                <SimilarSkinsCard v-if="skin" :skin="skin"/>
-            </v-col>
-        </v-row>
+        <InstructionsAndSimiliarRow v-if="skin" :skin="skin"/>
 
         <v-row class="my-4">
             <v-col cols="12" md="6">
@@ -111,6 +101,7 @@ import { renderSkinBody, renderSkinHead, renderSkinHeadIcon } from "~/util/rende
 import type { SkinMeta } from "~/types/SkinMeta";
 import MultiplexAdWrapper from "~/components/ad/MultiplexAdWrapper.vue";
 import SimilarSkinsCard from "~/components/skin/SimilarSkinsCard.vue";
+import InstructionsAndSimiliarRow from "~/components/skin/InstructionsAndSimiliarRow.vue";
 
 const router = useRouter();
 

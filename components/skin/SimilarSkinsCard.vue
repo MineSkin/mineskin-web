@@ -28,6 +28,8 @@ const props = defineProps<{
     skin: SkinInfo2;
 }>();
 
+const model = defineModel<boolean>();
+
 const {
     data: similarSkins,
     status: similarSkinsStatus,
@@ -38,9 +40,10 @@ const {
     immediate: false
 });
 
-onMounted(() => {
+onMounted(async () => {
     isHydrated.value = true;
-    refreshSimilarSkins();
+    await refreshSimilarSkins();
+    model.value = true;
 })
 
 
