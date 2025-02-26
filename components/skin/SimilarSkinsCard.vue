@@ -43,7 +43,7 @@ const {
 onMounted(async () => {
     isHydrated.value = true;
     await refreshSimilarSkins();
-    model.value = true;
+    model.value = similarSkins.value && similarSkins.value?.length>2;
 })
 
 
