@@ -60,17 +60,20 @@
                             v-if="item0.adType===1"
                             ad-layout-key="+1i+s2-10-1k+6v"
                             ad-slot="3361952161"
+                            no-fallback
                         />
                         <multiplex-ad-wrapper
                             v-else-if="item0.adType===2"
                             ad-slot="8545261932"
                             ui-type="image_stacked"
+                            no-fallback
                             :rows="1"
                             :cols="1"
                         />
                         <display-ad-wrapper
                             v-else-if="item0.adType===3"
                             ad-slot="2426312811"
+                            no-fallback
                             :height="400"
                             :width="380"
                         />

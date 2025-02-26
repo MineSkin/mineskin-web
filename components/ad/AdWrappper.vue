@@ -17,7 +17,7 @@
 <template>
     <ClientOnly>
         <div class="ad-wrapper" v-if="ready && grants && !grants.ad_free">
-            <div class="ad-fallback text-red pa-6 text-center w-100">
+            <div class="ad-fallback text-red pa-6 text-center w-100" v-show="!noFallback">
                 Please disable your ad blocker
             </div>
             <component is="script" async
@@ -54,6 +54,7 @@ const props = defineProps<{
     adFormat?: string;
     adLayoutKey?: string;
     responsive?: boolean;
+    noFallback?: boolean
 }>();
 
 const authStore = useAuthStore();
