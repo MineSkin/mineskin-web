@@ -38,7 +38,7 @@
             </v-col>
         </v-row>
         <v-row class="text-center">
-            <ad-wrappper v-if="randomBoolean()" ad-slot="4431802313" ad-format="auto" :responsive="true" no-fallback/>
+            <ad-wrappper v-if="randomBoolean()" ad-slot="4431802313" no-fallback/>
             <multiplex-ad-wrapper v-else ad-slot="3298209656" ui-type="image_stacked" :rows="1" :cols="6" no-fallback/>
         </v-row>
         <!--        <dbg :data="skin"/>-->
