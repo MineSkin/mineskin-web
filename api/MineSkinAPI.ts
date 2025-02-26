@@ -224,7 +224,7 @@ export class MineSkinAPI {
         public async listSimilar(uuid: string) {
             return this.api.request(`/v2/skins/${ uuid }/similar`, {
                 ...INIT
-            });
+            }, {silent: true});
         }
 
         public async getTags(uuid: string) {
