@@ -20,7 +20,7 @@
             width="auto"
         >
             <v-card
-                max-width="400"
+                min-width="250"
                 prepend-icon="mdi-bell"
                 title="Notifications"
             >
