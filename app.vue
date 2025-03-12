@@ -5,7 +5,7 @@
         </ClientOnly>
         <v-app>
             <Snackbars/>
-            <NewWebsiteBanner/>
+<!--            <NewWebsiteBanner/>-->
             <MainAppBar/>
             <v-main style="--v-layout-top: 56px">
                 <LoadingIndicator style="margin-top: var(--v-layout-top)"/>
