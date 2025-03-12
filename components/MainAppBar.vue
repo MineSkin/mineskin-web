@@ -96,6 +96,7 @@
                 </v-tooltip>
             </v-btn>
 
+            <NotificationModalButton v-if="mdAndUp"/>
 
             <v-avatar
                 class="ml-2"

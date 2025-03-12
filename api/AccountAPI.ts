@@ -1,5 +1,6 @@
 import type { RuntimeConfig } from "nuxt/schema";
 import type { Maybe } from "@mineskin/types";
+import type { SimpleNotification } from "@mineskin/types/src";
 
 const INIT: RequestInit = {
     headers: {
@@ -45,6 +46,38 @@ export class AccountAPI {
             })
         }
 
+
+    }(this);
+
+
+    public notifications = new class {
+
+        constructor(readonly api: AccountAPI) {
+        }
+
+        public async list(): Promise<Maybe<{notifications:SimpleNotification[]}>> {
+            return fetch(`${ this.api.BASE }/notifications`, {
+                ...INIT,
+                credentials: 'include'
+            })
+                .then(res => res.json())
+                .catch(e => {
+                    console.error(e)
+                    return undefined;
+                })
+        }
+
+        public async dismiss(id: string): Promise<Maybe<Response>> {
+            return fetch(`${ this.api.BASE }/notifications/${ id }`, {
+                ...INIT,
+                method: 'DELETE',
+                credentials: 'include'
+            })
+                .catch(e => {
+                    console.error(e)
+                    return undefined;
+                })
+        }
 
     }(this);
 
