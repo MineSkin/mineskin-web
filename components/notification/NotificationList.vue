@@ -32,6 +32,6 @@ const {data: notifications} = useNuxtData<SimpleNotification[]>('notifications')
 
 const dismissNotification = async (id: string) => {
     notifications.value = notifications.value?.filter(n => n.id !== id) || [];
-    //await $account.notifications.dismiss(id);
+    await $account.notifications.dismiss(id);
 }
 </script>
