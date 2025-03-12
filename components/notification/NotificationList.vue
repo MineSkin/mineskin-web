@@ -11,7 +11,11 @@
             <template v-slot:text>
                 <div>{{ notification.message }}</div>
                 <div v-if="notification.links?.length>0" class="mt-2">
-                    <v-btn v-for="link in notification.links" :key="link.url" :href="link.url" variant="text">
+                    <v-btn v-for="link in notification.links" :key="link.url"
+                           :href="link.url"
+                           target="_blank"
+                           variant="text"
+                           append-icon="mdi-open-in-new">
                         {{ link.title }}
                     </v-btn>
                 </div>
