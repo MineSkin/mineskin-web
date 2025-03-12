@@ -15,6 +15,9 @@
                         {{ link.title }}
                     </v-btn>
                 </div>
+                <div>
+                    <span class="text-caption"><DateLocal :date="notification.createdAt"/></span>
+                </div>
             </template>
         </v-alert>
     </div>
