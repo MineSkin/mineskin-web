@@ -2,10 +2,6 @@
     <v-footer>
         <v-container :class="mdAndUp?'px-16':''">
             <v-row no-gutters justify="center" class="text-center">
-                <v-col v-if="mdAndUp" cols="3">
-                    <!-- web v2 left footer -->
-                    <ad-wrappper v-if="showFooterAds" ad-slot="7851729034"/>
-                </v-col>
                 <v-col cols="12" md="6">
                     <v-row class="mb-1">
                         <v-col>
@@ -29,10 +25,6 @@
                                 Website</a><br/>
                         </v-col>
                     </v-row>
-                </v-col>
-                <v-col v-if="mdAndUp" cols="3">
-                    <!-- web v2 right footer -->
-                    <ad-wrappper v-if="showFooterAds" ad-slot="8200853440"/>
                 </v-col>
             </v-row>
             <v-divider class="my-2"/>
