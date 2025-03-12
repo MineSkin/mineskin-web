@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-show="isHydrated&&notifications?.length>0">
         <slot name="button">
             <v-btn @click="dialog = true" icon="mdi-bell">
                 <v-badge dot
