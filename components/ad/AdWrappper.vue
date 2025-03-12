@@ -17,9 +17,9 @@
 <template>
     <ClientOnly>
         <div class="ad-wrapper" v-if="ready && grants && !grants.ad_free">
-            <div class="ad-fallback text-red pa-6 text-center w-100" v-show="!noFallback">
-                Please disable your ad blocker
-            </div>
+<!--            <div class="ad-fallback text-red pa-6 text-center w-100" v-show="!noFallback">-->
+<!--                Please disable your ad blocker-->
+<!--            </div>-->
             <component is="script" async
                        :src="'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=' + clientId"
                        crossorigin="anonymous"></component>
