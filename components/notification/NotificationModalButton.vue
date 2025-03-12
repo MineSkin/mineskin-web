@@ -1,5 +1,5 @@
 <template>
-    <div v-show="isHydrated&&notifications?.length>0">
+    <div v-show="isHydrated&& showNotifications && notifications?.length>0">
         <slot name="button">
             <v-btn @click="dialog = true" icon="mdi-bell">
                 <v-badge dot
@@ -35,10 +35,11 @@
 import { useAuthStore } from "~/stores/auth";
 import { useLazyAsyncData } from "#app";
 import type { SimpleNotification } from "@mineskin/types/src";
+import { computed } from "vue";
 
 const dialog = ref(false);
 
-const {$mineskin, $account} = useNuxtApp();
+const {$mineskin, $account, $flags} = useNuxtApp();
 const authStore = useAuthStore();
 
 const isHydrated = ref(false);
@@ -51,6 +52,8 @@ const {
 }, {
     immediate: false
 });
+
+const showNotifications = computed(() => $flags.hasFeature('web.show_notifications'));
 
 onMounted(() => {
     isHydrated.value = true;
