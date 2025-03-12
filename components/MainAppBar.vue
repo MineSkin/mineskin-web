@@ -78,6 +78,8 @@
         <v-divider vertical class="mx-4 my-2"/>
 
         <template v-slot:append>
+            <NotificationModalButton v-if="mdAndUp"/>
+
             <v-btn icon @click="jobsDrawer = !jobsDrawer" v-show="mdAndUp">
                 <v-badge dot
                          v-if="isHydrated && jobCount>0"
@@ -95,8 +97,6 @@
                     {{ $t("Show Jobs") }}
                 </v-tooltip>
             </v-btn>
-
-            <NotificationModalButton v-if="mdAndUp"/>
 
             <v-avatar
                 class="ml-2"
