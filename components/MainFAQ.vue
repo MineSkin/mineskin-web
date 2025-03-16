@@ -45,6 +45,14 @@
                                                                                       target="_blank">MineSkin Docs</a>.
                 </template>
             </v-expansion-panel>
+            <v-expansion-panel>
+                <a href="https://docs.mineskin.org/docs/wiki/faq" target="_blank" class="v-expansion-panel-title py-0">
+                        <span>
+                            All FAQs
+                            <v-icon icon="mdi-open-in-new"></v-icon>
+                        </span>
+                </a>
+            </v-expansion-panel>
         </v-expansion-panels>
     </div>
 </template>
