@@ -276,12 +276,20 @@ async function load({done}) {
         }
         return acc;
     }, [] as ListedSkin[][]);
-    if (!adFree.value && inlineAdRate.value != 0 && Math.random() < inlineAdRate.value) {
-        grouped.splice((Math.floor(Math.floor(Math.random() * grouped.length) / 2) * 2) + 1, 0, {
-            ad: true,
-            adType: getAdType()
-        });
-        adsOnPage.value++;
+    if (!adFree.value && inlineAdRate.value != 0) {
+        if (adsOnPage.value === 0) {
+            grouped.splice(Math.floor(Math.random() * (mdAndUp.value ? 4 : 2)) + 2, 0, {
+                ad: true,
+                adType: getAdType()
+            });
+            adsOnPage.value++;
+        } else if (Math.random() < inlineAdRate.value) {
+            grouped.splice((Math.floor(Math.floor(Math.random() * grouped.length) / 2) * 2) + 1, 0, {
+                ad: true,
+                adType: getAdType()
+            });
+            adsOnPage.value++;
+        }
     }
     skins.value.push(...grouped);
     galleryItems.value = skins.value;
