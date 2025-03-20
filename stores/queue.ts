@@ -235,18 +235,18 @@ export const useQueueStore = defineStore('queue', () => {
                 if (!hasPendingJobs.value && now.timestamp > Date.now() - 1000 * 60) {
                     router.push(localePath(`/skins/${ now.result }`));
                 }
-            }, 300);
-            setTimeout(() => {
-                if (wrappedNow.source.type === 'file') {
-                    uploadFiles.value = uploadFiles.value.filter(file => file.name !== (wrappedNow.source.content as FileJson).name);
-                }
-                if (wrappedNow.source.type === 'url') {
-                    urls.value = urls.value.filter(url => url !== wrappedNow.source.content as string);
-                }
-                if (wrappedNow.source.type === 'user') {
-                    users.value = users.value.filter(user => user !== wrappedNow.source.content as string);
-                }
-            }, 1000);
+            }, 500);
+            // setTimeout(() => {
+            //     if (wrappedNow.source.type === 'file') {
+            //         uploadFiles.value = uploadFiles.value.filter(file => file.name !== (wrappedNow.source.content as FileJson).name);
+            //     }
+            //     if (wrappedNow.source.type === 'url') {
+            //         urls.value = urls.value.filter(url => url !== wrappedNow.source.content as string);
+            //     }
+            //     if (wrappedNow.source.type === 'user') {
+            //         users.value = users.value.filter(user => user !== wrappedNow.source.content as string);
+            //     }
+            // }, 1000);
         }
     }
 
