@@ -595,7 +595,9 @@ async function generate() {
             generate_type: generateType.value,
             skin_count: imageCount.value,
             skin_count_bucket: skinCountBucket,
-            skin_visibility: visibility.value
+            multiple_allowed: `${canGenerateMultiple.value}`,
+            skin_visibility: visibility.value,
+            skin_variant: variant.value,
         })
     } catch (e) {
         console.error(e);
