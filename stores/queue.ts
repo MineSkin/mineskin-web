@@ -231,11 +231,11 @@ export const useQueueStore = defineStore('queue', () => {
                     generating.value = false;
                 }
             }, 100);
-            setTimeout(() => {
-                if (!hasPendingJobs.value && now.timestamp > Date.now() - 1000 * 60) {
-                    router.push(localePath(`/skins/${ now.result }`));
-                }
-            }, 500);
+            // setTimeout(() => {
+            //     if (!hasPendingJobs.value && now.timestamp > Date.now() - 1000 * 60) {
+            //         router.push(localePath(`/skins/${ now.result }`));
+            //     }
+            // }, 500);
             // setTimeout(() => {
             //     if (wrappedNow.source.type === 'file') {
             //         uploadFiles.value = uploadFiles.value.filter(file => file.name !== (wrappedNow.source.content as FileJson).name);
