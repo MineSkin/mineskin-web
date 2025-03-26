@@ -580,9 +580,21 @@ async function generate() {
 
 
     try {
+        // 1, 2-4, 4-8, 8-10, 10+
+        let skinCountBucket = '1';
+        if (imageCount.value >= 10) {
+            skinCountBucket = '10+';
+        } else if (imageCount.value >= 8) {
+            skinCountBucket = '8-10';
+        } else if (imageCount.value >= 4) {
+            skinCountBucket = '4-8';
+        } else if (imageCount.value >= 2) {
+            skinCountBucket = '2-4';
+        }
         $gtag('event', 'generate_skins', {
             generate_type: generateType.value,
             skin_count: imageCount.value,
+            skin_count_bucket: skinCountBucket,
             skin_visibility: visibility.value
         })
     } catch (e) {
