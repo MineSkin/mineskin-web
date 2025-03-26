@@ -566,6 +566,33 @@ const canGenerate = computed(() => {
     return imageCount.value > 0 && !generating.value && waitTime.value <= 0;
 });
 
+async function handleQueueResponse(response: GenerateJobResponse, source: JobSource, index: number) {
+    if (response.success) {
+        if ('job' in response) {
+            const wrapped: WrappedJob = {
+                source: source,
+                job: (response as GenerateJobResponse).job,
+                check: {
+                    last: Date.now(),
+                    count: 0
+                }
+            };
+            queueStore.addJob(wrapped);
+
+            if (response.job.status === 'completed' || index % 2 === 0) {
+                queueStore.updateSortedJobs();
+            }
+
+            const interval = Math.max(60 / (authStore.grants?.per_minute as number || 20), 0.5);
+            if (response.job.status === 'completed') {
+                await sleep(interval * 0.5);
+            } else {
+                await sleep(interval * 0.8);
+            }
+        }
+    }
+}
+
 async function generate() {
     console.log('generate');
     if (imageCount.value > 1 && !canGenerateMultiple.value) {
@@ -595,7 +622,7 @@ async function generate() {
             generate_type: generateType.value,
             skin_count: imageCount.value,
             skin_count_bucket: skinCountBucket,
-            multiple_allowed: `${canGenerateMultiple.value}`,
+            multiple_allowed: `${ canGenerateMultiple.value }`,
             skin_visibility: visibility.value,
             skin_variant: variant.value,
         })
@@ -605,7 +632,7 @@ async function generate() {
 
     const baseOptions: GenerateOptions = getOptions();
 
-    let responses: [GenerateJobResponse, JobSource][] = [];
+    // let responses: [GenerateJobResponse, JobSource][] = [];
     switch (generateType.value) {
         case GenerateType.UPLOAD: {
             if (!canGenerateMultiple.value) {
@@ -615,14 +642,19 @@ async function generate() {
             for (const file of uploadFiles.value) {
                 let options = {...baseOptions};
                 options.name = processNameVariables(index++, null, file, null);
-                await sleep(800);
+                await sleep(100);
                 lastJobSubmit.value = Date.now();
                 const source: JobSource = {
                     type: 'file',
                     content: file,
                     name: file.name
                 };
-                responses.push([await $mineskin.queue.upload(await fileFromJson(file), options), source]);
+                //responses.push([await $mineskin.queue.upload(await fileFromJson(file), options), source]);
+                await handleQueueResponse(
+                    await $mineskin.queue.upload(await fileFromJson(file), options),
+                    source,
+                    index
+                )
             }
             break;
         }
@@ -634,14 +666,19 @@ async function generate() {
             for (const url of urls.value) {
                 let options = {...baseOptions};
                 options.name = processNameVariables(index++, url, null, null);
-                await sleep(800);
+                await sleep(100);
                 lastJobSubmit.value = Date.now();
                 const source: JobSource = {
                     type: 'url',
                     content: url,
                     name: url
                 }
-                responses.push([await $mineskin.queue.url(url, options), source])
+                // responses.push([await $mineskin.queue.url(url, options), source])
+                await handleQueueResponse(
+                    await $mineskin.queue.url(url, options),
+                    source,
+                    index
+                )
             }
             break;
         }
@@ -668,14 +705,19 @@ async function generate() {
             for (const [user, uuid] of validated) {
                 let options = {...baseOptions};
                 options.name = processNameVariables(index++, null, null, user);
-                await sleep(800);
+                await sleep(100);
                 lastJobSubmit.value = Date.now();
                 const source: JobSource = {
                     type: 'user',
                     content: uuid,
                     name: user
                 }
-                responses.push([await $mineskin.queue.user(uuid, options), source])
+                //responses.push([await $mineskin.queue.user(uuid, options), source])
+                await handleQueueResponse(
+                    await $mineskin.queue.user(uuid, options),
+                    source,
+                    index
+                )
             }
             break;
         }
@@ -688,21 +730,21 @@ async function generate() {
             return;
         }
     }
-    for (const [response, source] of responses) {
-        if (response.success) {
-            if ('job' in response) {
-                const wrapped: WrappedJob = {
-                    source: source,
-                    job: (response as GenerateJobResponse).job,
-                    check: {
-                        last: Date.now(),
-                        count: 0
-                    }
-                };
-                queueStore.addJob(wrapped);
-            }
-        }
-    }
+    // for (const [response, source] of responses) {
+    //     if (response.success) {
+    //         if ('job' in response) {
+    //             const wrapped: WrappedJob = {
+    //                 source: source,
+    //                 job: (response as GenerateJobResponse).job,
+    //                 check: {
+    //                     last: Date.now(),
+    //                     count: 0
+    //                 }
+    //             };
+    //             queueStore.addJob(wrapped);
+    //         }
+    //     }
+    // }
     queueStore.updateSortedJobs();
 
     await sleep(2000);
