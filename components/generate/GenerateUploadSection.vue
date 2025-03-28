@@ -26,7 +26,7 @@
         />
         <v-row class="flex-1-1-100" align="end">
             <v-col>
-                {{ $t("Drag a skin image file here to generate data for it") }}
+                {{ $t("Drag skin image files here to generate signatures for them") }}
             </v-col>
         </v-row>
         <!--        <v-row justify="center" align="center" class="my-2">-->

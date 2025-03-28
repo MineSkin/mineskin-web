@@ -14,7 +14,7 @@
         />
         <v-row align="end">
             <v-col>
-                {{ $t("Enter the URL of a skin image you want to generate data for") }}
+                {{ $t("Enter the URLs of skin images you want to generate signatures for") }}
             </v-col>
         </v-row>
 <!--        <v-row justify="center" align="center" class="my-2">-->
