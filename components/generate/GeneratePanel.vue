@@ -226,6 +226,11 @@
                                     .
                                 </div>
                             </div>
+                            <div v-else-if="!authStore.authed">
+                                <span>
+                                    Please <action-link href="https://account.mineskin.org/login?redirect=https://mineskin.org/">sign in</action-link> to generate multiple skins at once and to keep track of your skins.
+                                </span>
+                            </div>
                         </ClientOnly>
                     </v-row>
                 </v-col>
