@@ -104,7 +104,7 @@
             >
                 <a v-if="authStore.authed" class="img-link" href="https://account.mineskin.org"
                    @click.prevent="jobsDrawer = !jobsDrawer">
-                    <v-img :src="authStore.user?.picture" alt="User Avatar"></v-img>
+                    <v-img :src="authStore.user?.picture||PLACEHOLDER_HEAD" alt="User Avatar"></v-img>
                 </a>
                 <v-btn v-else icon @click="jobsDrawer = !jobsDrawer">
                     <a class="img-link text-white"
@@ -124,6 +124,7 @@ import { useAuthStore } from "~/stores/auth";
 import { useQueueStore } from "~/stores/queue";
 import { storeToRefs } from "pinia";
 import { onMounted } from "vue";
+import { PLACEHOLDER_HEAD } from "~/util/skin";
 
 const config = useRuntimeConfig();
 
