@@ -630,7 +630,8 @@ async function generate() {
             multiple_allowed: `${ canGenerateMultiple.value }`,
             skin_visibility: visibility.value,
             skin_variant: variant.value,
-            is_anonymous: `${ !authStore.authed }`
+            is_anonymous: `${ !authStore.authed }`,
+            skin_cape: cape.value
         })
     } catch (e) {
         console.error(e);
