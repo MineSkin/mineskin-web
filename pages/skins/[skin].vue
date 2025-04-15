@@ -37,9 +37,17 @@
                 <SkinSummaryCard :skin="skin" :skin-meta="skinMeta"/>
             </v-col>
         </v-row>
+        <!--        <v-row class="text-center">-->
+        <!--            <ad-wrappper v-if="randomBoolean()" ad-slot="4431802313" no-fallback/>-->
+        <!--            <multiplex-ad-wrapper v-else ad-slot="3298209656" ui-type="image_stacked" :rows="1" :cols="6" no-fallback/>-->
+        <!--        </v-row>-->
         <v-row class="text-center">
-            <ad-wrappper v-if="randomBoolean()" ad-slot="4431802313" no-fallback/>
-            <multiplex-ad-wrapper v-else ad-slot="3298209656" ui-type="image_stacked" :rows="1" :cols="6" no-fallback/>
+            <ad-info-wrapper>
+                <template #default>
+                    <!-- web v2 index middle banner -->
+                    <ad-wrappper ad-slot="4431802313"/>
+                </template>
+            </ad-info-wrapper>
         </v-row>
         <!--        <dbg :data="skin"/>-->
         <InstructionsAndSimiliarRow v-if="skin" :skin="skin"/>
@@ -102,6 +110,7 @@ import type { SkinMeta } from "~/types/SkinMeta";
 import MultiplexAdWrapper from "~/components/ad/MultiplexAdWrapper.vue";
 import SimilarSkinsCard from "~/components/skin/SimilarSkinsCard.vue";
 import InstructionsAndSimiliarRow from "~/components/skin/InstructionsAndSimiliarRow.vue";
+import AdInfoWrapper from "~/components/ad/AdInfoWrapper.vue";
 
 const router = useRouter();
 
