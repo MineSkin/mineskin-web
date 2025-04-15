@@ -20,7 +20,7 @@
 
             <v-col v-if="lgAndUp" cols="12" xl="8"> <!-- Info on right -->
                 <v-sheet color="grey-darken-3" style="position:relative;">
-                    <a href="#" class="dismiss-button" @click.prevent="dismissed=true">
+                    <a href="#" class="dismiss-button" @click.prevent="dismiss">
                         <v-icon icon="mdi-close"></v-icon>
                     </a>
 
@@ -49,7 +49,7 @@
             </v-col>
             <v-col v-else cols="12"><!-- Info Below -->
                 <v-sheet color="grey-darken-3" style="position: relative">
-                    <a href="#" class="dismiss-button dismiss-button-bottom" @click.prevent="dismissed=true">
+                    <a href="#" class="dismiss-button dismiss-button-bottom" @click.prevent="dismiss">
                         <v-icon icon="mdi-close"></v-icon>
                     </a>
                     <v-row>
@@ -87,7 +87,7 @@ import { computed } from "vue";
 
 const {smAndUp, mdAndUp, lgAndUp} = useDisplay();
 
-const {$flags} = useNuxtApp();
+const {$flags, $gtag} = useNuxtApp();
 
 const authStore = useAuthStore();
 const {grants} = storeToRefs(authStore);
@@ -95,6 +95,14 @@ const {grants} = storeToRefs(authStore);
 const showMemberInfo = computed(() => $flags.hasFeature('web.show_ad_member_info'));
 
 const dismissed = ref(false);
+const dismiss = () => {
+    dismissed.value = true;
+    try {
+        $gtag('event', 'dismiss_ad')
+    } catch (e) {
+        console.error(e);
+    }
+}
 
 const ready = ref(false);
 onMounted(() => {
