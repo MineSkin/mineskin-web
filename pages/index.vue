@@ -20,8 +20,12 @@
             </v-col>
         </v-row>
         <v-row class="text-center">
-            <!-- web v2 index middle banner -->
-            <ad-wrappper ad-slot="3929622901"/>
+            <ad-info-wrapper>
+                <template #default>
+                    <!-- web v2 index middle banner -->
+                    <ad-wrappper ad-slot="3929622901"/>
+                </template>
+            </ad-info-wrapper>
         </v-row>
         <v-row class="mb-2">
             <v-col cols="12">
@@ -35,7 +39,7 @@
             <v-col cols="12" md="8">
                 <MainFAQ class="mb-2"/>
                 <!-- web v2 faq banner -->
-<!--                <ad-wrappper ad-slot="8238741844"/>-->
+                <!--                <ad-wrappper ad-slot="8238741844"/>-->
             </v-col>
             <v-col cols="12" md="4" xl="3">
                 <h4 class="text-h5 mb-4">Stats</h4>
@@ -55,6 +59,7 @@ import { useNuxtApp, useState } from "#app";
 import AdWrappper from "~/components/ad/AdWrappper.vue";
 import LatestSkinsPreviewList from "~/components/skin/LatestSkinsPreviewList.vue";
 import MainFAQ from "~/components/MainFAQ.vue";
+import AdInfoWrapper from "~/components/ad/AdInfoWrapper.vue";
 
 const {$notify, $flags} = useNuxtApp();
 
