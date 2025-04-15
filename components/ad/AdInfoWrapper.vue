@@ -12,6 +12,18 @@
     top: unset;
     bottom: 4px;
 }
+
+.ad-ribbon {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    background-color: rgba(80, 80, 80, 0.8);
+    color: white;
+    padding: 4px 8px;
+    font-size: 12px;
+    font-weight: bold;
+}
 </style>
 <template>
     <ClientOnly>
@@ -23,6 +35,7 @@
                     <a href="#" class="dismiss-button" @click.prevent="dismiss">
                         <v-icon icon="mdi-close"></v-icon>
                     </a>
+                    <div class="ad-ribbon">Ad</div>
 
                     <v-row>
                         <v-col cols="10" style="text-align: end" v-if="showMemberInfo">
@@ -52,6 +65,7 @@
                     <a href="#" class="dismiss-button dismiss-button-bottom" @click.prevent="dismiss">
                         <v-icon icon="mdi-close"></v-icon>
                     </a>
+                    <div class="ad-ribbon">Ad</div>
                     <v-row>
                         <v-col cols="12" style="text-align: end" v-if="showMemberInfo">
                             <slot></slot>
