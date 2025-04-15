@@ -38,6 +38,14 @@
             />
         </v-expand-x-transition>
     </v-row>
+    <v-row class="text-center">
+        <ad-info-wrapper>
+            <template #default>
+                <!-- web v2 index middle banner -->
+                <ad-wrappper ad-slot="7045370598"/>
+            </template>
+        </ad-info-wrapper>
+    </v-row>
     <v-infinite-scroll :items="skins" :onLoad="load" style="overflow: hidden">
         <v-row justify="center" dense>
             <template v-for="(item0, index) in skins" :key="item0">
@@ -122,6 +130,8 @@ import { computedAsync, useDebounceFn, useThrottleFn } from '@vueuse/core'
 import FluidAdWrapper from "~/components/ad/FluidAdWrapper.vue";
 import MultiplexAdWrapper from "~/components/ad/MultiplexAdWrapper.vue";
 import DisplayAdWrapper from "~/components/ad/DisplayAdWrapper.vue";
+import AdWrappper from "~/components/ad/AdWrappper.vue";
+import AdInfoWrapper from "~/components/ad/AdInfoWrapper.vue";
 
 useHead({
     title: 'Gallery',
