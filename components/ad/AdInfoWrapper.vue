@@ -1,12 +1,29 @@
 <style scoped>
+.dismiss-button {
+    position: absolute;
+    right: 4px;
+    top: 4px;
+    z-index: 1000;
+    text-decoration: none;
+    color: rgba(145, 145, 145, 0.5);
+}
+
+.dismiss-button-bottom {
+    top: unset;
+    bottom: 4px;
+}
 </style>
 <template>
     <ClientOnly>
-        <v-row v-if="ready && grants && !grants.ad_free"
+        <v-row v-if="ready && grants && !grants.ad_free" v-show="!dismissed"
                class="ad-info-wrapper my-2" justify="center">
 
             <v-col v-if="lgAndUp" cols="12" xl="8"> <!-- Info on right -->
-                <v-sheet color="grey-darken-3">
+                <v-sheet color="grey-darken-3" style="position:relative;">
+                    <a href="#" class="dismiss-button" @click.prevent="dismissed=true">
+                        <v-icon icon="mdi-close"></v-icon>
+                    </a>
+
                     <v-row>
                         <v-col cols="10" style="text-align: end" v-if="showMemberInfo">
                             <slot></slot>
@@ -31,7 +48,10 @@
                 </v-sheet>
             </v-col>
             <v-col v-else cols="12"><!-- Info Below -->
-                <v-sheet color="grey-darken-3">
+                <v-sheet color="grey-darken-3" style="position: relative">
+                    <a href="#" class="dismiss-button dismiss-button-bottom" @click.prevent="dismissed=true">
+                        <v-icon icon="mdi-close"></v-icon>
+                    </a>
                     <v-row>
                         <v-col cols="12" style="text-align: end" v-if="showMemberInfo">
                             <slot></slot>
@@ -73,6 +93,8 @@ const authStore = useAuthStore();
 const {grants} = storeToRefs(authStore);
 
 const showMemberInfo = computed(() => $flags.hasFeature('web.show_ad_member_info'));
+
+const dismissed = ref(false);
 
 const ready = ref(false);
 onMounted(() => {
