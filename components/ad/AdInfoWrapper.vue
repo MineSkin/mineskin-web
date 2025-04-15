@@ -72,8 +72,7 @@ const {$flags} = useNuxtApp();
 const authStore = useAuthStore();
 const {grants} = storeToRefs(authStore);
 
-const showMemberInfo = true;
-//const showMemberInfo = computed(() => $flags.hasFeature('web.show_ad_member_info'));
+const showMemberInfo = computed(() => $flags.hasFeature('web.show_ad_member_info'));
 
 const ready = ref(false);
 onMounted(() => {
