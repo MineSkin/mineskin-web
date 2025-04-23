@@ -25,7 +25,7 @@ import { onMounted } from "vue";
 import LoadingIndicator from "~/components/LoadingIndicator.vue";
 import MainAppBar from "~/components/MainAppBar.vue";
 
-const description = 'MineSkin.org allows you to generate skin texture data for Minecraft which is signed by Mojang.';
+const description = 'Automate Minecraft skin signing with MineSkin – Get signed textures in seconds.';
 
 useSeoMeta({
     titleTemplate: (titleChunk) => {
