@@ -141,7 +141,7 @@
                             </div>
                         </template>
                         <template v-slot:message>
-                            <span>Optional cape to apply <v-chip text="EXPERIMENTAL" size="x-small" color="warning"
+                            <span>Optional cape to apply <v-chip text="BETA" size="x-small" color="warning"
                                                                  variant="outlined"/></span>
                         </template>
                     </v-select>
