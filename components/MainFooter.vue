@@ -27,6 +27,24 @@
                     </v-row>
                 </v-col>
             </v-row>
+            <v-row no-gutters justify="center" class="text-center">
+                <v-col cols="12" md="6">
+                    <v-row class="my-1 text-medium-emphasis text-body-2" justify="center">
+                        <v-col cols="6" md="2">
+                            <v-img src="/img/cf-logo-v-rgb.png" style="margin-top:-8px;margin-bottom:2px"/>
+                            Protected by <a href="https://cloudflare.com" target="_blank">Cloudflare</a>
+                        </v-col>
+                        <v-col cols="6" md="2">
+                            <v-img src="/img/sentry-wordmark-light-400x119.svg"/>
+                            Monitored by <a href="https://sentry.io/" target="_blank">Sentry</a>
+                        </v-col>
+                        <v-col cols="6" md="2">
+                            <v-img src="/img/netcup_logo_RGB_white.svg"/>
+                            Partially hosted by <a href="https://www.netcup.de/?ref=83524" target="_blank">netcup</a>
+                        </v-col>
+                    </v-row>
+                </v-col>
+            </v-row>
             <v-divider class="my-2"/>
             <v-row no-gutters justify="center">
                 <v-col>
