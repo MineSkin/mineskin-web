@@ -1,6 +1,7 @@
 <template>
-    <div>
-        <h4 class="text-h5 mb-4">{{ $t("Frequently Asked Questions") }}</h4>
+    <v-row>
+        <v-col>
+            <h4 class="text-h5 mb-4">{{ $t("Frequently Asked Questions") }}</h4>
         <v-expansion-panels variant="accordion" multiple>
             <v-expansion-panel
                 text="MineSkin.org is a Minecraft skin generator that allows you to quickly get skin texture data with valid signatures by just uploading skin images."
@@ -54,7 +55,8 @@
                 </a>
             </v-expansion-panel>
         </v-expansion-panels>
-    </div>
+        </v-col>
+    </v-row>
 </template>
 <script setup lang="ts">
 </script>

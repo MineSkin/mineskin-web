@@ -1,16 +1,17 @@
 <template>
-    <div>
-        <v-card>
-            <v-card-text>
-                <v-skeleton-loader v-if="!isHydrated || !stats" type="list-item-two-line@4"></v-skeleton-loader>
-                <v-list v-else>
-                    <v-list-item>
-                        <v-list-item-title class="text-h5">
-                            <div class="d-inline"><strong>{{ formatNumber(totalTotal) }}</strong></div>
-                            <div class="d-inline float-end text-end"><span>{{ $t("skins generated") }}</span></div>
-                        </v-list-item-title>
-                        <v-list-item-subtitle>
-                            <div class="d-inline">
+    <v-row dense>
+        <v-col>
+            <v-card>
+                <v-card-text>
+                    <v-skeleton-loader v-if="!isHydrated || !stats" type="list-item-two-line@4"></v-skeleton-loader>
+                    <v-list v-else>
+                        <v-list-item>
+                            <v-list-item-title class="text-h5">
+                                <div class="d-inline"><strong>{{ formatNumber(totalTotal) }}</strong></div>
+                                <div class="d-inline float-end text-end"><span>{{ $t("skins generated") }}</span></div>
+                            </v-list-item-title>
+                            <v-list-item-subtitle>
+                                <div class="d-inline">
                                 <span>
                                     {{
                                         $t("{new} unique", {
@@ -18,18 +19,18 @@
                                         })
                                     }}
                                 </span>
-                            </div>
-                            <div class="d-inline float-end text-end">since July 2016</div>
-                        </v-list-item-subtitle>
-                    </v-list-item>
-                    <v-divider class="my-2"/>
-                    <v-list-item>
-                        <v-list-item-title>
-                            <div class="d-inline"><strong>{{ formatNumber(todayTotal) }}</strong></div>
-                            <div class="d-inline float-end text-end"><span>{{ $t("generated today") }}</span></div>
-                        </v-list-item-title>
-                        <v-list-item-subtitle>
-                            <div class="d-inline">
+                                </div>
+                                <div class="d-inline float-end text-end">since July 2016</div>
+                            </v-list-item-subtitle>
+                        </v-list-item>
+                        <v-divider class="my-2"/>
+                        <v-list-item>
+                            <v-list-item-title>
+                                <div class="d-inline"><strong>{{ formatNumber(todayTotal) }}</strong></div>
+                                <div class="d-inline float-end text-end"><span>{{ $t("generated today") }}</span></div>
+                            </v-list-item-title>
+                            <v-list-item-subtitle>
+                                <div class="d-inline">
                                 <span>
                                     {{
                                         $t("{new} unique", {
@@ -37,19 +38,20 @@
                                         })
                                     }}
                                 </span>
-                                <!--                                <span>{{ formatNumber(today.current.duplicate) }} duplicate</span>-->
-                            </div>
-                            <div class="d-inline float-end text-end">since 00:00UTC</div>
-                        </v-list-item-subtitle>
-                    </v-list-item>
-                    <v-divider/>
-                    <v-list-item>
-                        <v-list-item-title>
-                            <div class="d-inline"><strong>{{ formatNumber(monthTotal) }}</strong></div>
-                            <div class="d-inline float-end text-end"><span>{{ $t("generated this month") }}</span></div>
-                        </v-list-item-title>
-                        <v-list-item-subtitle>
-                            <div class="d-inline">
+                                    <!--                                <span>{{ formatNumber(today.current.duplicate) }} duplicate</span>-->
+                                </div>
+                                <div class="d-inline float-end text-end">since 00:00UTC</div>
+                            </v-list-item-subtitle>
+                        </v-list-item>
+                        <v-divider/>
+                        <v-list-item>
+                            <v-list-item-title>
+                                <div class="d-inline"><strong>{{ formatNumber(monthTotal) }}</strong></div>
+                                <div class="d-inline float-end text-end"><span>{{ $t("generated this month") }}</span>
+                                </div>
+                            </v-list-item-title>
+                            <v-list-item-subtitle>
+                                <div class="d-inline">
                                <span>
                                     {{
                                        $t("{new} unique", {
@@ -57,21 +59,22 @@
                                        })
                                    }}
                                 </span>
-                                <!--                                <span>{{ formatNumber(month.current.duplicate) }} duplicate</span>-->
-                            </div>
-                            <div class="d-inline float-end text-end">
-                                {{ date.getUTCMonth() + 1 }}/{{ date.getUTCFullYear() }}
-                            </div>
-                        </v-list-item-subtitle>
-                    </v-list-item>
-                    <v-divider/>
-                    <v-list-item>
-                        <v-list-item-title>
-                            <div class="d-inline"><strong>{{ formatNumber(yearTotal) }}</strong></div>
-                            <div class="d-inline float-end text-end"><span>{{ $t("generated this year") }}</span></div>
-                        </v-list-item-title>
-                        <v-list-item-subtitle>
-                            <div class="d-inline">
+                                    <!--                                <span>{{ formatNumber(month.current.duplicate) }} duplicate</span>-->
+                                </div>
+                                <div class="d-inline float-end text-end">
+                                    {{ date.getUTCMonth() + 1 }}/{{ date.getUTCFullYear() }}
+                                </div>
+                            </v-list-item-subtitle>
+                        </v-list-item>
+                        <v-divider/>
+                        <v-list-item>
+                            <v-list-item-title>
+                                <div class="d-inline"><strong>{{ formatNumber(yearTotal) }}</strong></div>
+                                <div class="d-inline float-end text-end"><span>{{ $t("generated this year") }}</span>
+                                </div>
+                            </v-list-item-title>
+                            <v-list-item-subtitle>
+                                <div class="d-inline">
                                <span>
                                     {{
                                        $t("{new} unique", {
@@ -79,35 +82,57 @@
                                        })
                                    }}
                                 </span>
-                                <!--                                <span>{{ formatNumber(year.current.duplicate) }} duplicate</span>-->
-                            </div>
-                            <div class="d-inline float-end text-end">{{ date.getUTCFullYear() }}</div>
-                        </v-list-item-subtitle>
-                    </v-list-item>
-                    <!--                <v-divider/>-->
-                </v-list>
-                <!--            <dbg :data="stats"/>-->
-                <!--                <div class="float-end text-end">-->
-                <!--                    <span>updated {{ updatedSecondsAgo }}s ago</span>-->
-                <!--                </div>-->
-            </v-card-text>
-        </v-card>
-        <v-card class="mt-2">
-            <v-card-text>
-                <v-skeleton-loader v-if="!isHydrated || !stats" type="list-item-two-line"></v-skeleton-loader>
-                <v-list v-else>
-                    <v-list-item>
-                        <v-list-item-title>
-                            <div class="text-h6">{{ generator?.capacity?.global || 0 }}</div>
-                        </v-list-item-title>
-                        <v-list-item-subtitle>
-                            {{ $t("Generator Capacity") }}
-                        </v-list-item-subtitle>
-                    </v-list-item>
-                </v-list>
-            </v-card-text>
-        </v-card>
-    </div>
+                                    <!--                                <span>{{ formatNumber(year.current.duplicate) }} duplicate</span>-->
+                                </div>
+                                <div class="d-inline float-end text-end">{{ date.getUTCFullYear() }}</div>
+                            </v-list-item-subtitle>
+                        </v-list-item>
+                        <!--                <v-divider/>-->
+                    </v-list>
+                    <!--            <dbg :data="stats"/>-->
+                    <!--                <div class="float-end text-end">-->
+                    <!--                    <span>updated {{ updatedSecondsAgo }}s ago</span>-->
+                    <!--                </div>-->
+                </v-card-text>
+            </v-card>
+        </v-col>
+    </v-row>
+    <v-row dense>
+        <v-col>
+            <v-card class="mt-2">
+                <v-card-text>
+                    <v-skeleton-loader v-if="!isHydrated || !stats" type="list-item-two-line"></v-skeleton-loader>
+                    <v-list v-else>
+                        <v-list-item>
+                            <v-list-item-title>
+                                <div class="text-h6">{{ generator?.capacity?.global || 0 }}</div>
+                            </v-list-item-title>
+                            <v-list-item-subtitle>
+                                {{ $t("Generator Capacity") }}
+                            </v-list-item-subtitle>
+                        </v-list-item>
+                    </v-list>
+                </v-card-text>
+            </v-card>
+        </v-col>
+        <v-col>
+            <v-card class="mt-2">
+                <v-card-text>
+                    <v-skeleton-loader v-if="!isHydrated || !stats" type="list-item-two-line"></v-skeleton-loader>
+                    <v-list v-else>
+                        <v-list-item>
+                            <v-list-item-title>
+                                <div class="text-h6">{{ formatNumber(daySuccessRate) }}%</div>
+                            </v-list-item-title>
+                            <v-list-item-subtitle>
+                                {{ $t("Success Rate") }}
+                            </v-list-item-subtitle>
+                        </v-list-item>
+                    </v-list>
+                </v-card-text>
+            </v-card>
+        </v-col>
+    </v-row>
 </template>
 <script setup lang="ts">
 import { useLazyAsyncData } from "#app";
@@ -151,6 +176,8 @@ const totalPerSecond = computed(() => (hourTotal.value || 1) / 60 / 60);
 
 const total = computed<NewDup>(() => stats.value?.generated?.total || FALLBACK);
 const totalTotal = computed(() => (total.value?.new + total.value?.duplicate) || 0);
+
+const daySuccessRate = computed(() => stats.value?.generated?.time?.day?.successRate || 0);
 
 const generator = computed(() => stats.value?.generator);
 
