@@ -105,10 +105,14 @@
                     <v-list v-else>
                         <v-list-item>
                             <v-list-item-title>
-                                <div class="text-h6">{{ generator?.capacity?.global || 0 }}</div>
+                                <div class="text-h6">{{ minuteCapacity }}</div>
                             </v-list-item-title>
                             <v-list-item-subtitle>
-                                {{ $t("Generator Capacity") }}
+                                <v-tooltip :text="$t('Number of Skins that can be generated in 1 minute (estimate)')" location="bottom">
+                                    <template v-slot:activator="{ props }">
+                                        <abbr v-bind="props">{{ $t("Generator Capacity") }}</abbr>
+                                    </template>
+                                </v-tooltip>
                             </v-list-item-subtitle>
                         </v-list-item>
                     </v-list>
@@ -180,6 +184,11 @@ const totalTotal = computed(() => (total.value?.new + total.value?.duplicate) ||
 const daySuccessRate = computed(() => stats.value?.generated?.time?.day?.successRate || 0);
 
 const generator = computed(() => stats.value?.generator);
+
+const CAPACITY_WINDOW = 15;
+const minuteCapacity = computed(() => {
+    return (generator.value?.capacity?.global || 0) * (60 / CAPACITY_WINDOW);
+})
 
 const tick = () => {
     if (stats.value) {
