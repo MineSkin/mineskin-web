@@ -134,6 +134,15 @@
                         clearable
                         placeholder="No Cape"
                     >
+                        <template v-slot:item="{item,props}">
+                            <v-list-item role="option" v-bind="props">
+                                <template v-slot:prepend v-if="props.preview">
+                                    <v-avatar>
+                                        <cape-view :texture="props.preview"/>
+                                    </v-avatar>
+                                </template>
+                            </v-list-item>
+                        </template>
                         <template v-slot:append v-if="capePreview">
                             <div>
                                 <cape-view :texture="capePreview"/>
@@ -389,11 +398,16 @@ const {
 const supportedCapes = computed<KnownCape[]>(() => {
     return knownCapesRes?.value?.capes?.filter(c => c.supported) || [];
 });
+const capePreviewFor = (cape: KnownCape) => {
+    if (!cape) return undefined;
+    const url = supportedCapes.value?.find(c => c.uuid === cape.uuid)?.url;
+    return url?.replace('http://', 'https://');
+}
 const capePreview = computed(() => {
     if (!cape.value) return undefined;
     const url = supportedCapes.value?.find(c => c.uuid === cape.value)?.url;
     return url?.replace('http://', 'https://');
-})
+});
 
 const nameRules = [
     (v: string) => v.length <= 24 || 'Max 24 characters',
@@ -539,6 +553,7 @@ function capeProps(item: KnownCape) {
         disabled: !canGenerateCapes.value,
         subtitle: canGenerateCapes.value ? '' : 'Requires Plus Subscription',
         appendIcon: !canUsePrivateSkins.value ? 'mdi-lock' : '',
+        preview: capePreviewFor(item)
     }
 }
 
