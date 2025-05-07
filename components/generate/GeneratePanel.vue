@@ -123,13 +123,12 @@
                         persistent-hint
                     />
                 </v-col>
-                <v-col cols="12" :md="optionsColSize" v-if="canGenerateCapes">
+                <v-col cols="12" :md="optionsColSize" v-if="showCapeSelect">
                     <v-select
                         label="Cape (optional)"
                         v-model="cape"
                         :items="supportedCapes"
-                        item-value="uuid"
-                        item-title="alias"
+                        :item-props="capeProps"
                         hint="Cape to apply"
                         persistent-hint
                         clearable
@@ -228,7 +227,8 @@
                             </div>
                             <div v-else-if="!authStore.authed">
                                 <span>
-                                    Please <action-link href="https://account.mineskin.org/login?redirect=https://mineskin.org/">sign in</action-link> to generate multiple skins at once and to keep track of your skins.
+                                    Please <action-link
+                                    href="https://account.mineskin.org/login?redirect=https://mineskin.org/">sign in</action-link> to generate multiple skins at once and to keep track of your skins.
                                 </span>
                             </div>
                         </ClientOnly>
@@ -532,6 +532,16 @@ function variantProps(item: SkinVariant) {
     }
 }
 
+function capeProps(item: KnownCape) {
+    return {
+        title: item.alias,
+        value: item.uuid,
+        disabled: !canGenerateCapes.value,
+        subtitle: canGenerateCapes.value ? '' : 'Requires Plus Subscription',
+        appendIcon: !canUsePrivateSkins.value ? 'mdi-lock' : '',
+    }
+}
+
 
 const canUsePrivateSkins = computed(() => {
     return authStore.authed && grants.value?.private_skins;
@@ -543,8 +553,11 @@ const canGenerateCapes = computed(() => {
     return authStore.authed && grants.value?.capes && generateType.value !== GenerateType.USER;
 });
 
+const showCapeSelect = computed(() => {
+    return authStore.authed && generateType.value !== GenerateType.USER;
+})
 const optionsColSize = computed(() => {
-    return canGenerateCapes.value ? 2 : 3;
+    return showCapeSelect.value ? 2 : 3;
 })
 
 function reset() {
