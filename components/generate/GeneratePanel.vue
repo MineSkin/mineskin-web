@@ -551,7 +551,7 @@ function capeProps(item: KnownCape) {
         title: item.alias,
         value: item.uuid,
         disabled: !canGenerateCapes.value,
-        subtitle: canGenerateCapes.value ? '' : 'Requires Plus Subscription',
+        subtitle: canGenerateCapes.value ? '' : 'Requires Basic Subscription',
         appendIcon: !canUsePrivateSkins.value ? 'mdi-lock' : '',
         preview: capePreviewFor(item)
     }
