@@ -407,13 +407,13 @@ const supportedCapes = computed<KnownCape[]>(() => {
 });
 const capePreviewFor = (cape: KnownCape) => {
     if (!cape) return undefined;
-    const url = supportedCapes.value?.find(c => c.uuid === cape.uuid)?.url;
-    return url?.replace('http://', 'https://');
+    const hash = supportedCapes.value?.find(c => c.uuid === cape.uuid)?.hash;
+    return 'https://mineskin.org/textures/' + hash;
 }
 const capePreview = computed(() => {
     if (!cape.value) return undefined;
-    const url = supportedCapes.value?.find(c => c.uuid === cape.value)?.url;
-    return url?.replace('http://', 'https://');
+    const hash = supportedCapes.value?.find(c => c.uuid === cape.value)?.hash;
+     return 'https://mineskin.org/textures/' + hash;
 });
 
 const nameRules = [

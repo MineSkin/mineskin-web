@@ -7,5 +7,6 @@ export type KnownCape = {
     uuid: string;
     alias: string;
     url: string;
+    hash: string;
     supported: boolean;
 }
