@@ -396,7 +396,14 @@ const {
 });
 
 const supportedCapes = computed<KnownCape[]>(() => {
-    return knownCapesRes?.value?.capes?.filter(c => c.supported) || [];
+    const supported: KnownCape[] = knownCapesRes?.value?.capes?.filter(c => c.supported) || [];
+    // sort by name
+    supported.sort((a, b) => {
+        if (a.alias < b.alias) return -1;
+        if (a.alias > b.alias) return 1;
+        return 0;
+    });
+    return supported;
 });
 const capePreviewFor = (cape: KnownCape) => {
     if (!cape) return undefined;
