@@ -9,6 +9,16 @@
     width: 100%;
     height: 100%;
 }
+
+.v-tab__slider {
+    background: linear-gradient(90deg, #FE0000 16.66%,
+    #FD8C00 16.66%, 33.32%,
+    #FFE500 33.32%, 49.98%,
+    #119F0B 49.98%, 66.64%,
+    #0644B3 66.64%, 83.3%,
+    #C22EDC 83.3%) !important;
+    height: 4px !important;
+}
 </style>
 <template>
     <v-app-bar density="comfortable" class="px-4" color="mskindigo">
