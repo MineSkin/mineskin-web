@@ -78,10 +78,18 @@
         </v-row>
         <v-row dense justify="center" v-if="imageCount>0">
             <action-link
+                class="mx-2"
                 @click.prevent="reset"
                 icon="mdi-reload"
                 tooltip="Reset Image Selection">
                 Clear Images
+            </action-link>
+            <action-link
+                class="mx-2"
+                @click.prevent="jobsDrawer = true"
+                icon="mdi-list-status"
+                tooltip="Show Jobs">
+                Show Completed Jobs
             </action-link>
         </v-row>
         <v-divider class="my-4"/>
