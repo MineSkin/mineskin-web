@@ -83,7 +83,7 @@ function canRemove(index: number) {
 }
 
 function getJob(index: number): WrappedJob | undefined {
-    return Object.values(wrappedJobMap.value).find(job => job.source.name === items.value[index].name)
+    return Object.values(wrappedJobMap.value).find(job => job.source.name === items.value[index] || job.source.name === items.value[index].name)
 }
 
 function isJobDone(index: number): boolean {
@@ -101,7 +101,7 @@ function listClick(index: number, inner: boolean = false) {
         }
     }
 
-    if (!inner&&canAdd(index)) {
+    if (!inner && canAdd(index)) {
         items.value.push('');
     } else if (canRemove(index)) {
         items.value.splice(index, 1);
