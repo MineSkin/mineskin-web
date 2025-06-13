@@ -12,7 +12,7 @@
                 :label="label"
                 :rules="rules"
                 :append-icon="isJobDone(index) ? 'mdi-open-in-new': canAdd(index) ? 'mdi-plus' :''"
-                :append-inner-icon="canRemove(index)? 'mdi-minus':''"
+                :append-inner-icon="canRemove(index)? 'mdi-minus':canClear(index) ? 'mdi-close-circle' : ''"
                 :prepend-icon="prependIcon"
                 :image-provider="imageProvider"
                 @click:append="listClick(index)"
@@ -82,6 +82,10 @@ function canRemove(index: number) {
     return (index !== 0 || items.value.length > 1) && items.value.length > 1;
 }
 
+function canClear(index: number) {
+    return index===0&& items.value[index] !== '';
+}
+
 function getJob(index: number): WrappedJob | undefined {
     return Object.values(wrappedJobMap.value).find(job => job.source.name === items.value[index] || job.source.name === items.value[index].name)
 }
@@ -105,6 +109,8 @@ function listClick(index: number, inner: boolean = false) {
         items.value.push('');
     } else if (canRemove(index)) {
         items.value.splice(index, 1);
+    }else if (inner && index === 0) {
+        items.value[0] = '';
     }
 }
 
