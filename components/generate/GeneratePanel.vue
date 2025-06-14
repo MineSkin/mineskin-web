@@ -508,7 +508,30 @@ function showFilePicker() {
 
 
 function collectUploadedFiles(files: File[]) {
-    const filtered = files.filter(f => f.type.startsWith('image/png'));
+    const filtered = files.filter(f => {
+        if (!f.type.startsWith('image/png')) {
+            $notify({
+                text: `Only PNG images are allowed, but got ${ f.type }`,
+                color: 'warning'
+            });
+            return false;
+        }
+        if (f.size <= 0) {
+            $notify({
+                text: `File is empty`,
+                color: 'warning'
+            });
+            return false;
+        }
+        if (f.size > 20000) {
+            $notify({
+                text: `File is too large. maximum size is 20KB, but got ${ (f.size / 1024).toFixed(2) }KB`,
+                color: 'warning'
+            });
+            return false;
+        }
+        return true;
+    });
     if (files.length <= 0) {
         $notify({
             text: 'No valid image files found',
