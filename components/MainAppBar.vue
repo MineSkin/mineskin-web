@@ -33,6 +33,7 @@
             <nuxt-link v-if="mdAndUp" class="app-bar-link" :to="localePath('/')">
                 MineSkin
                 <v-chip
+                    v-if="config.public.isDev "
                     density="compact"
                     :color="config.public.isDev ? 'warning' :'secondary'"
                     variant="flat"
