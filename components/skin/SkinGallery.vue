@@ -132,40 +132,8 @@ import MultiplexAdWrapper from "~/components/ad/MultiplexAdWrapper.vue";
 import DisplayAdWrapper from "~/components/ad/DisplayAdWrapper.vue";
 import AdWrappper from "~/components/ad/AdWrappper.vue";
 import AdInfoWrapper from "~/components/ad/AdInfoWrapper.vue";
-
-useHead({
-    title: 'Gallery',
-    link: [{
-        rel: 'canonical',
-        href: 'https://mineskin.org/skins'
-    }],
-    script: [
-        {
-            type: 'application/ld+json',
-            innerHTML: JSON.stringify({
-                "@context": "https://schema.org",
-                "@type": "WebPage",
-                "name": "Gallery",
-                "url": `https://mineskin.org/skins`
-            })
-        },
-        {
-            type: 'application/ld+json',
-            innerHTML: JSON.stringify({
-                "@context": "https://schema.org",
-                "@type": "BreadcrumbList",
-                "itemListElement": [
-                    {
-                        "@type": "ListItem",
-                        "position": 1,
-                        "name": "Gallery",
-                        "item": "https://mineskin.org/skins"
-                    }
-                ]
-            })
-        }
-    ]
-});
+import { computed } from "vue";
+import { capitalizeFirstLetter } from "~/util/misc";
 
 const router = useRouter();
 const {xl, lg, md, sm, xs, name: breakpoint, mdAndUp} = useDisplay();
@@ -232,6 +200,72 @@ const clearFilter = () => {
         }
     });
 }
+
+const pageTitle = computed(() => {
+    if (filter.value) {
+        return capitalizeFirstLetter(filter.value) + ' Minecraft Skins';
+    }
+    if (props.mode === 'latest') {
+        return 'Latest Minecraft Skins';
+    }
+    if (props.mode === 'popular') {
+        return 'Popular Minecraft Skins';
+    }
+    if (props.mode === 'random') {
+        return 'Random Minecraft Skins';
+    }
+    return 'Gallery';
+});
+const pageLink = computed(() => {
+    if (filter.value) {
+        return `https://mineskin.org/skins?search=${encodeURIComponent(filter.value)}`;
+    }
+    if (props.mode === 'latest') {
+        return 'https://mineskin.org/skins';
+    }
+    if (props.mode === 'popular') {
+        return 'https://mineskin.org/skins/popular';
+    }
+    if (props.mode === 'random') {
+        return 'https://mineskin.org/skins/random';
+    }
+    return 'https://mineskin.org/skins';
+});
+
+useHead({
+    title: pageTitle,
+    link: [{
+        rel: 'canonical',
+        href: pageLink
+    }],
+    script: [
+        {
+            type: 'application/ld+json',
+            innerHTML: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "WebPage",
+                "name": pageTitle.value,
+                "url": pageLink.value
+            })
+        },
+        {
+            type: 'application/ld+json',
+            innerHTML: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "BreadcrumbList",
+                "itemListElement": [
+                    {
+                        "@type": "ListItem",
+                        "position": 1,
+                        "name": pageTitle.value,
+                        "item": pageLink.value
+                    }
+                ]
+            })
+        }
+    ]
+});
+
 
 const adsOnPage = ref(0);
 
