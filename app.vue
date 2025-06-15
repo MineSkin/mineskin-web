@@ -92,7 +92,7 @@ useHead({
                     "@type": "SearchAction",
                     "target": {
                         "@type": "EntryPoint",
-                        "urlTemplate": "https://mineskin.org/skins?filter={search_term_string}"
+                        "urlTemplate": "https://mineskin.org/skins?search={search_term_string}"
                     },
                     "query-input": "required name=search_term_string"
                 }

@@ -170,7 +170,7 @@ const search = () => {
     router.push({
         path: '/skins',
         query: {
-            filter: filter.value
+            search: filter.value
         },
         force: true,
     });

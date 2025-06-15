@@ -195,7 +195,7 @@ const search = () => {
     router.push({
         path: '/skins',
         query: {
-            filter: searchFilter.value
+            search: searchFilter.value
         },
         force: true,
     });
@@ -209,8 +209,14 @@ const props = withDefaults(defineProps<{
 
 const adFree = computed(() => authStore.grants?.ad_free);
 
-const filter = ref<string>(router.currentRoute.value.query.filter as string || '');
+const filter = ref<string>(router.currentRoute.value.query.filter as string || router.currentRoute.value.query.search as string || '');
 watch(() => router.currentRoute.value.query.filter, (newVal) => {
+    filter.value = newVal as string;
+    reloadNuxtApp({
+        ttl: 100
+    });
+});
+watch(() => router.currentRoute.value.query.search, (newVal) => {
     filter.value = newVal as string;
     reloadNuxtApp({
         ttl: 100
@@ -221,7 +227,7 @@ const clearFilter = () => {
     filter.value = '';
     router.push({
         query: {
-            filter: undefined
+            search: undefined
         }
     });
 }
