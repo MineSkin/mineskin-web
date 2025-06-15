@@ -37,7 +37,7 @@
                     :color="config.public.isDev ? 'warning' :'secondary'"
                     variant="flat"
                 >
-                    {{ config.public.isDev ? 'Dev Mode' : 'V2 Beta' }}
+                    {{ config.public.isDev ? 'Dev Mode' : '' }}
                 </v-chip>
             </nuxt-link>
         </v-app-bar-title>
