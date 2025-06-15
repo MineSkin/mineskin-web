@@ -227,7 +227,8 @@ const clearFilter = () => {
     filter.value = '';
     router.push({
         query: {
-            search: undefined
+            search: undefined,
+            filter: undefined
         }
     });
 }
