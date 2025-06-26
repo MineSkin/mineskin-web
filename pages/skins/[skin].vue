@@ -111,6 +111,7 @@ import MultiplexAdWrapper from "~/components/ad/MultiplexAdWrapper.vue";
 import SimilarSkinsCard from "~/components/skin/SimilarSkinsCard.vue";
 import InstructionsAndSimiliarRow from "~/components/skin/InstructionsAndSimiliarRow.vue";
 import AdInfoWrapper from "~/components/ad/AdInfoWrapper.vue";
+import { capitalizeFirstLetter } from "~/util/misc";
 
 const router = useRouter();
 
@@ -230,24 +231,55 @@ const ldJsonContent = computed(() => {
     });
 });
 const ldBreadcrumbContent = computed(() => {
-    return JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-            {
-                "@type": "ListItem",
-                "position": 1,
-                "name": "Gallery",
-                "item": "https://mineskin.org/skins"
-            },
-            {
-                "@type": "ListItem",
-                "position": 2,
-                "name": skinNameDisplay.value,
-                "item": `https://mineskin.org/skins/${ skin.value?.uuid || skinId.value }`,
-            }
-        ]
-    })
+    const paths = [
+        {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+                {
+                    "@type": "ListItem",
+                    "position": 1,
+                    "name": "Gallery",
+                    "item": "https://mineskin.org/skins"
+                },
+                {
+                    "@type": "ListItem",
+                    "position": 2,
+                    "name": skinNameDisplay.value,
+                    "item": `https://mineskin.org/skins/${ skin.value?.uuid || skinId.value }`,
+                }
+            ]
+        }
+    ];
+    if (skin.value?.tags && skin.value?.tags?.length > 0) {
+        skin.value.tags.forEach((tag, index) => {
+            paths.push({
+                "@context": "https://schema.org",
+                "@type": "BreadcrumbList",
+                "itemListElement": [
+                    {
+                        "@type": "ListItem",
+                        "position": 1,
+                        "name": "Gallery",
+                        "item": "https://mineskin.org/skins"
+                    },
+                    {
+                        "@type": "ListItem",
+                        "position": 2,
+                        "name": capitalizeFirstLetter(tag.tag) + " Minecraft Skins",
+                        "item": "https://mineskin.org/skins?search=" + encodeURIComponent(tag.tag)
+                    },
+                    {
+                        "@type": "ListItem",
+                        "position": 3,
+                        "name": skinNameDisplay.value,
+                        "item": `https://mineskin.org/skins/${ skin.value?.uuid || skinId.value }`,
+                    }
+                ]
+            })
+        });
+    }
+    return JSON.stringify(paths);
 })
 
 useHead({
