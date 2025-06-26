@@ -218,7 +218,7 @@ const pageTitle = computed(() => {
 });
 const pageLink = computed(() => {
     if (filter.value) {
-        return `https://mineskin.org/skins?search=${encodeURIComponent(filter.value)}`;
+        return `https://mineskin.org/skins?search=${ encodeURIComponent(filter.value) }`;
     }
     if (props.mode === 'latest') {
         return 'https://mineskin.org/skins';
@@ -232,6 +232,42 @@ const pageLink = computed(() => {
     return 'https://mineskin.org/skins';
 });
 
+const ldJsonContent = computed(() => JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": pageTitle.value,
+    "url": pageLink.value
+}));
+const ldBreadcrumbContent = computed(() => {
+    const items = [];
+    if (filter.value || props.mode === 'popular' || props.mode === 'random') {
+        items.push({
+            "@type": "ListItem",
+            "position": 1,
+            "name": 'Gallery',
+            "item": 'https://mineskin.org/skins'
+        });
+        items.push({
+            "@type": "ListItem",
+            "position": 2,
+            "name": pageTitle.value,
+            "item": pageLink.value
+        });
+    } else {
+        items.push({
+            "@type": "ListItem",
+            "position": 2,
+            "name": pageTitle.value,
+            "item": pageLink.value
+        });
+    }
+
+    return JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": items
+    })
+})
 useHead({
     title: pageTitle,
     link: [{
@@ -241,27 +277,11 @@ useHead({
     script: [
         {
             type: 'application/ld+json',
-            innerHTML: JSON.stringify({
-                "@context": "https://schema.org",
-                "@type": "WebPage",
-                "name": pageTitle.value,
-                "url": pageLink.value
-            })
+            innerHTML: ldJsonContent
         },
         {
             type: 'application/ld+json',
-            innerHTML: JSON.stringify({
-                "@context": "https://schema.org",
-                "@type": "BreadcrumbList",
-                "itemListElement": [
-                    {
-                        "@type": "ListItem",
-                        "position": 1,
-                        "name": pageTitle.value,
-                        "item": pageLink.value
-                    }
-                ]
-            })
+            innerHTML: ldBreadcrumbContent
         }
     ]
 });
