@@ -563,8 +563,8 @@ function visibilityProps(item: SkinVisibility2) {
             return {
                 prependIcon: "mdi-eye-off",
                 appendIcon: !canUsePrivateSkins.value ? 'mdi-lock' : '',
-                title: "Private",
-                subtitle: canUsePrivateSkins.value ? "Visible to you only" : "Requires Basic subscription",
+                title: "Private" + (canUsePrivateSkins.value ? '' : " - Requires Subscription"),
+                subtitle: "Visible to you only",
                 disabled: !canUsePrivateSkins.value
             };
     }
