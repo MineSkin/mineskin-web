@@ -19,7 +19,7 @@
         <v-list v-else>
             <v-list-item v-if="authStore.authed">
                 <template v-slot:prepend>
-                    <v-avatar>
+                    <v-avatar class="user-avatar" :class="{'member':isMember}">
                         <v-img :src="authStore.user?.picture" alt="User Avatar"></v-img>
                     </v-avatar>
                 </template>
@@ -82,6 +82,7 @@
 import { useAuthStore } from "~/stores/auth";
 import { useQueueStore } from "~/stores/queue";
 import { storeToRefs } from "pinia";
+import { computed } from "vue";
 
 const {locale, locales, setLocale} = useI18n();
 const localePath = useLocalePath();
@@ -102,6 +103,10 @@ const loginRedirect = () => {
         window.location.href = 'https://account.mineskin.org/login?redirect=https://mineskin.org/';
     }, 100);
 }
+
+const isMember = computed(() => {
+    return authStore.authed && authStore.grants?.ad_free; //TODO: use a separate grant for this
+});
 
 onMounted(() => {
     isHydrated.value = true;

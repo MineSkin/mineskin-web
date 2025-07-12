@@ -1,3 +1,7 @@
 .clickable {
     cursor: pointer;
 }
+
+.user-avatar.member {
+    border: solid 2px #fdd835;
+}

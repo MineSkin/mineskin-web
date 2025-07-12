@@ -601,6 +601,9 @@ function capeProps(item: KnownCape) {
     }
 }
 
+const isMember = computed(() => {
+    return authStore.authed && authStore.grants?.ad_free; //TODO: use a separate grant for this
+});
 
 const canUsePrivateSkins = computed(() => {
     return authStore.authed && grants.value?.private_skins;

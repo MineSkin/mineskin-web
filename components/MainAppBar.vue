@@ -110,7 +110,8 @@
             </v-btn>
 
             <v-avatar
-                class="ml-2"
+                class="ml-2 user-avatar"
+                :class="{'member':isMember}"
                 color="info"
             >
                 <a v-if="authStore.authed" class="img-link" href="https://account.mineskin.org"
@@ -134,7 +135,7 @@
 import { useAuthStore } from "~/stores/auth";
 import { useQueueStore } from "~/stores/queue";
 import { storeToRefs } from "pinia";
-import { onMounted } from "vue";
+import { computed, onMounted } from "vue";
 import { PLACEHOLDER_HEAD } from "~/util/skin";
 
 const config = useRuntimeConfig();
@@ -176,6 +177,10 @@ const search = () => {
         force: true,
     });
 }
+
+const isMember = computed(() => {
+    return authStore.authed && authStore.grants?.ad_free; //TODO: use a separate grant for this
+});
 
 onMounted(() => {
     isHydrated.value = true;
