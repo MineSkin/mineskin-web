@@ -563,7 +563,7 @@ function visibilityProps(item: SkinVisibility2) {
             return {
                 prependIcon: "mdi-eye-off",
                 appendIcon: !canUsePrivateSkins.value ? 'mdi-lock' : '',
-                title: "Private" + (canUsePrivateSkins.value ? '' : " - Requires Subscription"),
+                title: canUsePrivateSkins.value ? "Private ✨" : "Private ✨ - Requires Subscription",
                 subtitle: "Visible to you only",
                 disabled: !canUsePrivateSkins.value
             };
@@ -592,7 +592,7 @@ function variantProps(item: SkinVariant) {
 
 function capeProps(item: KnownCape) {
     return {
-        title: item.alias,
+        title: item.alias + " ✨",
         value: item.uuid,
         disabled: !canGenerateCapes.value,
         subtitle: canGenerateCapes.value ? '' : 'Requires Basic Subscription',
