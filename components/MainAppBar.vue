@@ -151,6 +151,7 @@ const isHydrated = ref(false);
 
 const {smAndUp, mdAndUp} = useDisplay();
 
+const {authed, grants} = storeToRefs(authStore);
 const {jobsSorted, jobsDrawer, jobCount, pendingJobCount} = storeToRefs(queueStore);
 
 const searching = ref(false);
@@ -179,7 +180,7 @@ const search = () => {
 }
 
 const isMember = computed(() => {
-    return authStore.authed && authStore.grants?.ad_free; //TODO: use a separate grant for this
+    return authed.value && grants.value?.ad_free; //TODO: use a separate grant for this
 });
 
 onMounted(() => {
