@@ -48,12 +48,12 @@
 
         <v-divider/>
 
-        <v-list v-if="isHydrated">
-            <v-list-subheader v-if="authStore.authed">{{ $t("Credits") }}</v-list-subheader>
-            <v-list-item v-if="authStore.authed">
-                <CreditsInfo/>
-            </v-list-item>
-        </v-list>
+<!--        <v-list v-if="isHydrated">-->
+<!--            <v-list-subheader v-if="authStore.authed">{{ $t("Credits") }}</v-list-subheader>-->
+<!--            <v-list-item v-if="authStore.authed">-->
+<!--                <CreditsInfo/>-->
+<!--            </v-list-item>-->
+<!--        </v-list>-->
 
         <v-skeleton-loader type="list-item@4" v-if="!isHydrated"/>
         <JobList v-else class="my-2" style="max-height: 50vh; overflow-y: auto"/>
