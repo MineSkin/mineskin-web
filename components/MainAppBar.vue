@@ -58,7 +58,7 @@
                     ref="searchField"
                     density="compact"
                     v-model="filter"
-                    placeholder="Search"
+                    placeholder="Search Skins"
                     clearable
                     @keydown.enter="search()"
                     hide-details
