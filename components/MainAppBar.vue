@@ -29,8 +29,8 @@
             max-height="40"
             @click="router.push(localePath('/'))"
         ></v-img>
-        <v-app-bar-title class="flex-0-1">
-            <nuxt-link v-if="mdAndUp" class="app-bar-link" :to="localePath('/')">
+        <v-app-bar-title class="flex-0-1" v-if="mdAndUp">
+            <nuxt-link class="app-bar-link" :to="localePath('/')">
                 MineSkin
                 <v-chip
                     v-if="config.public.isDev "
@@ -43,26 +43,27 @@
             </nuxt-link>
         </v-app-bar-title>
 
+        <v-spacer v-if="mdAndUp"></v-spacer>
+
         <div class="d-flex flex-auto">
-            <v-btn icon
-                   v-if="mdAndUp"
-                   @click="searching ? search() : showSearch()"
-            >
-                <v-icon>mdi-magnify</v-icon>
-            </v-btn>
+            <!--            <v-btn icon-->
+            <!--                   v-if="mdAndUp"-->
+            <!--                   @click="searching ? search() : showSearch()"-->
+            <!--            >-->
+            <!--                <v-icon>mdi-magnify</v-icon>-->
+            <!--            </v-btn>-->
             <v-expand-x-transition>
-                <v-text-field v-show="searching"
-                              ref="searchField"
-                              density="compact"
-                              v-model="filter"
-                              placeholder="Search"
-                              append-inner-icon="mdi-close"
-                              @click:append-inner="filter = ''; searching = false"
-                              @keydown.enter="searching = false; search()"
-                              @keydown.esc="searching = false"
-                              hide-details
-                              single-line
-                              min-width="20vw"
+                <v-text-field
+                    v-if="mdAndUp"
+                    ref="searchField"
+                    density="compact"
+                    v-model="filter"
+                    placeholder="Search"
+                    clearable
+                    @keydown.enter="search()"
+                    hide-details
+                    single-line
+                    min-width="20vw"
                 />
             </v-expand-x-transition>
         </div>
@@ -143,6 +144,7 @@ const config = useRuntimeConfig();
 const localePath = useLocalePath();
 
 const router = useRouter();
+const route = useRoute();
 
 const authStore = useAuthStore();
 const queueStore = useQueueStore();
@@ -154,19 +156,9 @@ const {smAndUp, mdAndUp} = useDisplay();
 const {authed, grants} = storeToRefs(authStore);
 const {jobsSorted, jobsDrawer, jobCount, pendingJobCount} = storeToRefs(queueStore);
 
-const searching = ref(false);
-const filter = ref('');
-const searchField = useTemplateRef('searchField');
-
-const showSearch = () => {
-    searching.value = true;
-    setTimeout(() => {
-        searchField.value.focus();
-    }, 0);
-}
+const filter = ref(route.query?.search || '');
 
 const search = () => {
-    searching.value = false;
     if (filter.value === '') {
         return;
     }
