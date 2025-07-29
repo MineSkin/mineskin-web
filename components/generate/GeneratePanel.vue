@@ -108,19 +108,20 @@
                     <VisibilitySelect/>
                 </v-col>
                 <v-col cols="12" :md="optionsColSize">
-                    <v-text-field
-                        label="Name (optional)"
-                        v-model="name"
-                        :rules="nameRules"
-                        persistent-hint
-                    >
-                        <template v-slot:details>
-                            <span>Optional name for this skin, supports variables <a
-                                @click.prevent="variablesDialog=true"
-                                href="#">
-                                <v-icon icon="mdi-help-circle"/></a></span>
-                        </template>
-                    </v-text-field>
+                    <NameInput/>
+<!--                    <v-text-field-->
+<!--                        label="Name (optional)"-->
+<!--                        v-model="name"-->
+<!--                        :rules="nameRules"-->
+<!--                        persistent-hint-->
+<!--                    >-->
+<!--                        <template v-slot:details>-->
+<!--                            <span>Optional name for this skin, supports variables <a-->
+<!--                                @click.prevent="variablesDialog=true"-->
+<!--                                href="#">-->
+<!--                                <v-icon icon="mdi-help-circle"/></a></span>-->
+<!--                        </template>-->
+<!--                    </v-text-field>-->
                 </v-col>
                 <v-col cols="12" :md="optionsColSize">
                     <v-select
@@ -258,47 +259,47 @@
         <!--            <dbg :data="{users,uploadFiles,urls,generateType}"/>-->
         <!--        </v-row>-->
     </v-sheet>
-    <v-dialog
-        v-if="isHydrated"
-        v-model="variablesDialog"
-        width="auto"
-    >
-        <v-card
-            max-width="400"
-            prepend-icon="mdi-help-circle"
-            title="Variables / Placeholders"
-        >
-            <template v-slot:text>
-                <div>Names support variables that will get replaced with the matching values when you generate a skin.
-                    This is especially useful when generating multiple skins at once.
-                </div>
-                <br/>
-                <div>
-                    <b>Available variables:</b><br/>
-                    <ul>
-                        <li><b>{index}</b> - The index of the image in the list</li>
-                        <li><b>{user}</b> - The name/UUID of the user</li>
-                        <li><b>{file}</b> - The file name (also works for URLs)</li>
-                    </ul>
-                </div>
-                <br/>
-                <div>
-                    <b>Preview:</b><br/>
-                    <span v-if="replacedNamesPreview.length<=0">Enter a name first</span>
-                    <ul>
-                        <li v-for="name in replacedNamesPreview">{{ name }}</li>
-                    </ul>
-                </div>
-            </template>
-            <template v-slot:actions>
-                <v-btn
-                    class="ms-auto"
-                    text="Ok"
-                    @click="variablesDialog = false"
-                ></v-btn>
-            </template>
-        </v-card>
-    </v-dialog>
+<!--    <v-dialog-->
+<!--        v-if="isHydrated"-->
+<!--        v-model="variablesDialog"-->
+<!--        width="auto"-->
+<!--    >-->
+<!--        <v-card-->
+<!--            max-width="400"-->
+<!--            prepend-icon="mdi-help-circle"-->
+<!--            title="Variables / Placeholders"-->
+<!--        >-->
+<!--            <template v-slot:text>-->
+<!--                <div>Names support variables that will get replaced with the matching values when you generate a skin.-->
+<!--                    This is especially useful when generating multiple skins at once.-->
+<!--                </div>-->
+<!--                <br/>-->
+<!--                <div>-->
+<!--                    <b>Available variables:</b><br/>-->
+<!--                    <ul>-->
+<!--                        <li><b>{index}</b> - The index of the image in the list</li>-->
+<!--                        <li><b>{user}</b> - The name/UUID of the user</li>-->
+<!--                        <li><b>{file}</b> - The file name (also works for URLs)</li>-->
+<!--                    </ul>-->
+<!--                </div>-->
+<!--                <br/>-->
+<!--                <div>-->
+<!--                    <b>Preview:</b><br/>-->
+<!--                    <span v-if="replacedNamesPreview.length<=0">Enter a name first</span>-->
+<!--                    <ul>-->
+<!--                        <li v-for="name in replacedNamesPreview">{{ name }}</li>-->
+<!--                    </ul>-->
+<!--                </div>-->
+<!--            </template>-->
+<!--            <template v-slot:actions>-->
+<!--                <v-btn-->
+<!--                    class="ms-auto"-->
+<!--                    text="Ok"-->
+<!--                    @click="variablesDialog = false"-->
+<!--                ></v-btn>-->
+<!--            </template>-->
+<!--        </v-card>-->
+<!--    </v-dialog>-->
 </template>
 <script setup lang="ts">
 
@@ -323,6 +324,7 @@ import type { CapeListResponse, KnownCape } from "~/types/CapeListResponse";
 import type { GenerateOptions } from "~/types/GenerateOptions";
 import CapeView from "~/components/skin/CapeView.vue";
 import VisibilitySelect from "~/components/generate/options/VisibilitySelect.vue";
+import NameInput from "~/components/generate/options/NameInput.vue";
 
 const {$mineskin, $notify, $flags, $gtag} = useNuxtApp();
 
@@ -471,11 +473,11 @@ const processNameVariables = (index: number, url: string | null, file: File | Fi
     return replaced;
 }
 
-const replacedNamesPreview = computed(() => {
-    return Array.from({length: imageCount.value}, (_, i) => {
-        return processNameVariables(i, urls.value[i] || null, uploadFiles.value[i] || null, users.value[i] || null);
-    }).filter(name => name.length > 0);
-});
+// const replacedNamesPreview = computed(() => {
+//     return Array.from({length: imageCount.value}, (_, i) => {
+//         return processNameVariables(i, urls.value[i] || null, uploadFiles.value[i] || null, users.value[i] || null);
+//     }).filter(name => name.length > 0);
+// });
 
 const showCreditsInfo = computed(() => $flags.hasFeature('web.credits.show_info'));
 
