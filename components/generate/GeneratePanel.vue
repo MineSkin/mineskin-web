@@ -97,14 +97,15 @@
             <v-row v-show="generateType" class="my-2" justify="center">
                 <v-spacer></v-spacer>
                 <v-col cols="12" :md="optionsColSize">
-                    <v-select
-                        label="Visibility"
-                        v-model="visibility"
-                        :items="visibilities"
-                        :item-props="visibilityProps"
-                        hint="Visibility of the skin"
-                        persistent-hint
-                    />
+<!--                    <v-select-->
+<!--                        label="Visibility"-->
+<!--                        v-model="visibility"-->
+<!--                        :items="visibilities"-->
+<!--                        :item-props="visibilityProps"-->
+<!--                        hint="Visibility of the skin"-->
+<!--                        persistent-hint-->
+<!--                    />-->
+                    <VisibilitySelect/>
                 </v-col>
                 <v-col cols="12" :md="optionsColSize">
                     <v-text-field
@@ -321,6 +322,7 @@ import type { SkinListResponse } from "~/types/SkinListResponse";
 import type { CapeListResponse, KnownCape } from "~/types/CapeListResponse";
 import type { GenerateOptions } from "~/types/GenerateOptions";
 import CapeView from "~/components/skin/CapeView.vue";
+import VisibilitySelect from "~/components/generate/options/VisibilitySelect.vue";
 
 const {$mineskin, $notify, $flags, $gtag} = useNuxtApp();
 
@@ -382,9 +384,9 @@ const creditsEstimate = computed(() => {
     return imageCount.value + (cape.value ? 1 : 0);
 });
 
-watch(() => visibility.value, (value) => {
-    preferredVisibility.value = value;
-}, {immediate: true});
+// watch(() => visibility.value, (value) => {
+//     preferredVisibility.value = value;
+// }, {immediate: true});
 
 const generateType_ = computed(() => generateType.value);
 
