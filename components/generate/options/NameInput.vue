@@ -5,7 +5,7 @@
         :rules="nameRules"
         persistent-hint
     >
-        <template v-slot:details>
+        <template v-slot:details v-if="!hideVariables">
                             <span>Optional name for this skin, supports variables <a
                                 @click.prevent="variablesDialog=true"
                                 href="#">
@@ -60,17 +60,11 @@ import { storeToRefs } from "pinia";
 import { useQueueStore } from "~/stores/queue";
 import { useSettingsStore } from "~/stores/settings";
 import { computed, ref } from "vue";
-import type { FileJson } from "~/util/file";
 import { GenerateType } from "@mineskin/types";
 import { processNameVariables } from "~/util/misc";
 
-const authStore = useAuthStore();
-const queueStore = useQueueStore();
-const settingsStore = useSettingsStore();
-
 const generateStore = useGenerateStore();
 const {
-    name,
     uploadFiles,
     urls,
     users,
@@ -83,7 +77,8 @@ const nameRules = [
 
 const props = defineProps<{
     generateType: GenerateType,
-    imageCount: number
+    imageCount: number,
+    hideVariables?: boolean
 }>()
 
 
@@ -100,4 +95,6 @@ const replacedNamesPreview = computed(() => {
 onMounted(() => {
     isHydrated.value = true;
 });
+
+const name = defineModel<string>({required: true});
 </script>

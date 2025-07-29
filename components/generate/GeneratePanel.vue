@@ -105,10 +105,10 @@
                     <!--                        hint="Visibility of the skin"-->
                     <!--                        persistent-hint-->
                     <!--                    />-->
-                    <VisibilitySelect/>
+                    <VisibilitySelect v-model="visibility"/>
                 </v-col>
                 <v-col cols="12" :md="optionsColSize">
-                    <NameInput :generate-type="generateType!" :image-count="imageCount"/>
+                    <NameInput v-model="name" :generate-type="generateType!" :image-count="imageCount"/>
                     <!--                    <v-text-field-->
                     <!--                        label="Name (optional)"-->
                     <!--                        v-model="name"-->

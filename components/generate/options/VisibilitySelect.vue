@@ -23,14 +23,12 @@ const {grants} = storeToRefs(authStore);
 
 const settingsStore = useSettingsStore();
 
-const generateStore = useGenerateStore();
-const {visibility} = storeToRefs(generateStore);
+// const generateStore = useGenerateStore();
+// const {visibility} = storeToRefs(generateStore);
 
 const {visibility: preferredVisibility} = storeToRefs(settingsStore);
 
-watch(() => visibility.value, (value) => {
-    preferredVisibility.value = value;
-}, {immediate: true});
+
 
 const canUsePrivateSkins = computed(() => {
     return authStore.authed && grants.value?.private_skins;
@@ -71,5 +69,11 @@ function visibilityProps(item: SkinVisibility2) {
             };
     }
 }
+
+const visibility = defineModel<SkinVisibility2>({required: true});
+
+watch(() => visibility.value, (value) => {
+    preferredVisibility.value = value;
+}, {immediate: true});
 
 </script>
