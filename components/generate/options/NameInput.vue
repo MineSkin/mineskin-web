@@ -59,28 +59,43 @@ import { useGenerateStore } from "~/stores/generate";
 import { storeToRefs } from "pinia";
 import { useQueueStore } from "~/stores/queue";
 import { useSettingsStore } from "~/stores/settings";
-import { computed } from "vue";
+import { computed, ref } from "vue";
+import type { FileJson } from "~/util/file";
+import { GenerateType } from "@mineskin/types";
+import { processNameVariables } from "~/util/misc";
 
 const authStore = useAuthStore();
 const queueStore = useQueueStore();
 const settingsStore = useSettingsStore();
 
 const generateStore = useGenerateStore();
-const {name} = storeToRefs(generateStore);
+const {
+    name,
+    uploadFiles,
+    urls,
+    users,
+} = storeToRefs(generateStore);
 
 const nameRules = [
     (v: string) => v.length <= 24 || 'Max 24 characters',
     (v: string) => /^[a-zA-Z0-9_.\-{} ]*$/g.test(v) || 'Only a-z, 0-9, _-.{} allowed'
 ];
 
-const replacedNamesPreview = computed(() => {
-    return Array.from({length: imageCount.value}, (_, i) => {
-        return processNameVariables(i, urls.value[i] || null, uploadFiles.value[i] || null, users.value[i] || null);
-    }).filter(name => name.length > 0);
-});
+const props = defineProps<{
+    generateType: GenerateType,
+    imageCount: number
+}>()
+
 
 const isHydrated = ref(false);
+
 const variablesDialog = ref(false);
+
+const replacedNamesPreview = computed(() => {
+    return Array.from({length: props.imageCount}, (_, i) => {
+        return processNameVariables(name.value, props.generateType, i, urls.value[i] || null, uploadFiles.value[i] || null, users.value[i] || null);
+    }).filter(name => name.length > 0);
+});
 
 onMounted(() => {
     isHydrated.value = true;
