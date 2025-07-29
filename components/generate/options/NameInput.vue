@@ -76,19 +76,18 @@ const nameRules = [
 ];
 
 const props = defineProps<{
-    generateType: GenerateType,
-    imageCount: number,
+    generateType?: GenerateType,
+    imageCount?: number,
     hideVariables?: boolean
 }>()
-
 
 const isHydrated = ref(false);
 
 const variablesDialog = ref(false);
 
 const replacedNamesPreview = computed(() => {
-    return Array.from({length: props.imageCount}, (_, i) => {
-        return processNameVariables(name.value, props.generateType, i, urls.value[i] || null, uploadFiles.value[i] || null, users.value[i] || null);
+    return Array.from({length: props.imageCount || 0}, (_, i) => {
+        return processNameVariables(name.value, props.generateType!, i, urls.value[i] || null, uploadFiles.value[i] || null, users.value[i] || null);
     }).filter(name => name.length > 0);
 });
 

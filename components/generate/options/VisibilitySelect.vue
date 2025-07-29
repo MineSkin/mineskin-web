@@ -23,7 +23,7 @@ const {grants} = storeToRefs(authStore);
 
 const settingsStore = useSettingsStore();
 
-// const generateStore = useGenerateStore();
+const generateStore = useGenerateStore();
 // const {visibility} = storeToRefs(generateStore);
 
 const {visibility: preferredVisibility} = storeToRefs(settingsStore);

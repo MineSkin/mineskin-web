@@ -31,6 +31,7 @@
                     </span>
                 </template>
             </v-tooltip>
+            <SkinMetaEditDialog v-if="authed && skin" :skin="skin"/>
         </h2>
         <v-row class="mt-1">
             <v-col cols="12">
@@ -112,6 +113,7 @@ import SimilarSkinsCard from "~/components/skin/SimilarSkinsCard.vue";
 import InstructionsAndSimiliarRow from "~/components/skin/InstructionsAndSimiliarRow.vue";
 import AdInfoWrapper from "~/components/ad/AdInfoWrapper.vue";
 import { capitalizeFirstLetter } from "~/util/misc";
+import { storeToRefs } from "pinia";
 
 const router = useRouter();
 
@@ -124,6 +126,16 @@ const validSkinId = computed(() => {
 });
 
 const {$mineskin, $notify, $gtag} = useNuxtApp();
+
+const authStore = useAuthStore();
+const {authed, user} = storeToRefs(authStore);
+
+const canEditSkin = computed(() => {
+    if (!authed.value) return false;
+    if (!skin.value) return false;
+    if (!user.value) return false;
+    return false; //TODO
+});
 
 const {
     data: skin,
