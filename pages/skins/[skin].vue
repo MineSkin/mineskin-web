@@ -31,7 +31,7 @@
                     </span>
                 </template>
             </v-tooltip>
-            <SkinMetaEditDialog v-if="authed && skin" :skin="skin"/>
+            <SkinMetaEditDialog v-if="authed && skin && skinUser && skinUser.canEdit" :skin="skin"/>
         </h2>
         <v-row class="mt-1">
             <v-col cols="12">
