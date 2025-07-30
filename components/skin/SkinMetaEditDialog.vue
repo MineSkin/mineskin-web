@@ -5,6 +5,7 @@
                 v-bind="activatorProps"
                 color="surface-variant"
                 icon="mdi-pencil"
+                variant="text"
             ></v-btn>
         </template>
 
