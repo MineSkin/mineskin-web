@@ -198,7 +198,7 @@ export class MineSkinAPI {
         }
 
         public async getUser(uuid: string): Promise<GenerateResponse<'user', SkinUser> & {}> {
-            return this.api.request(`/v2/skins/${ uuid }/user`, INIT);
+            return this.api.request(`/v2/skins/${ uuid }/user`, INIT, {silent: true});
         }
 
         public async update(uuid: string, data: { name?: string; visibility?: SkinVisibility2; }) {
