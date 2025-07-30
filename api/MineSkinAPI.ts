@@ -198,7 +198,7 @@ export class MineSkinAPI {
         public async update(uuid: string, data: { name?: string; visibility?: SkinVisibility2; }) {
             return this.api.request(`/v2/skins/${ uuid }`, {
                 ...INIT,
-                method: 'PUT',
+                method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json'
                 },
