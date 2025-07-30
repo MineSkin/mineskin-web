@@ -114,6 +114,7 @@ import InstructionsAndSimiliarRow from "~/components/skin/InstructionsAndSimilia
 import AdInfoWrapper from "~/components/ad/AdInfoWrapper.vue";
 import { capitalizeFirstLetter } from "~/util/misc";
 import { storeToRefs } from "pinia";
+import type { SkinUser } from "~/types/SkinUser";
 
 const router = useRouter();
 
@@ -162,6 +163,15 @@ const {
     refresh: refreshSkinMeta
 } = useLazyAsyncData<SkinMeta>(`skin-meta-${ skin.value?.uuid || skinId.value }`, async () => {
     return (await $mineskin.skins.getMeta(skin.value?.uuid || skinId.value))?.meta;
+}, {
+    immediate: false
+});
+
+const {
+    data: skinUser,
+    refresh: refreshSkinUser
+} = useLazyAsyncData<SkinUser>(`skin-user-${ skin.value?.uuid || skinId.value }`, async () => {
+    return (await $mineskin.skins.getUser(skin.value?.uuid || skinId.value))?.user;
 }, {
     immediate: false
 });
@@ -329,6 +339,9 @@ watch(skin, (skin) => {
     }
     refreshRandomSkinName();
     refreshSkinMeta();
+    if (authed.value) {
+        refreshSkinUser();
+    }
 }, {
     immediate: true
 })
