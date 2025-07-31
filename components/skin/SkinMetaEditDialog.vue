@@ -92,7 +92,6 @@ const apply = async () => {
         const res = await $mineskin.skins.update(props.skin.uuid, {name: name.value});
         if (res.success) {
             prevName.value = name.value;
-            props.skin.name = name.value;
             emit('update:skin', {
                 ...props.skin,
                 name: name.value
@@ -103,7 +102,6 @@ const apply = async () => {
         const res = await $mineskin.skins.update(props.skin.uuid, {visibility: visibility.value});
         if (res.success) {
             prevVisibility.value = visibility.value;
-            props.skin.visibility = visibility.value;
             emit('update:skin', {
                 ...props.skin,
                 visibility: visibility.value
