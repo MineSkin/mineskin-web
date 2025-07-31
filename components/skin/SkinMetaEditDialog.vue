@@ -7,6 +7,8 @@
                 icon="mdi-pencil"
                 variant="text"
                 density="compact"
+                :disabled="!!editFail"
+                :v-tooltip="editFailClean"
             ></v-btn>
         </template>
 
@@ -33,16 +35,37 @@
 import type { SkinInfo2, SkinVisibility2 } from "@mineskin/types";
 import NameInput from "~/components/generate/options/NameInput.vue";
 import VisibilitySelect from "~/components/generate/options/VisibilitySelect.vue";
+import { storeToRefs } from "pinia";
 
 const {$mineskin} = useNuxtApp();
 
+const authStore = useAuthStore();
+const {user} = storeToRefs(authStore);
+
 const props = defineProps<{
-    skin: SkinInfo2
+    skin: SkinInfo2,
+    editFail?: string
 }>();
 
 const emit = defineEmits<{
     (event: 'update:skin', skin: SkinInfo2): void
 }>();
+
+const editFailClean = computed(() => {
+    if (!props.editFail) return null;
+    switch (props.editFail) {
+        case 'edit_duration_expired': {
+            if (user.value?.grants?.skin_edit_duration) {
+                return `You can only edit skins for ${ user.value.grants.skin_edit_duration } hours after upload`;
+            }
+            return 'You can no longer edit this skin';
+        }
+        case 'max_edits_reached': {
+            return 'You have reached the maximum number of edits for this skin';
+        }
+    }
+    return props.editFail;
+})
 
 const prevName = ref<string>(props.skin.name || '');
 const prevVisibility = ref<SkinVisibility2>(props.skin.visibility);

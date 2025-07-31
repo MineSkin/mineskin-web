@@ -31,7 +31,12 @@
                     </span>
                 </template>
             </v-tooltip>
-            <SkinMetaEditDialog v-if="canEditSkin" :skin="skin" @update:skin="handleSkinEditUpdate"/>
+            <SkinMetaEditDialog
+                v-if="canEditSkin||(couldEditSkin&&skinEditFail)"
+                :edit-fail="skinEditFail"
+                :skin="skin"
+                @update:skin="handleSkinEditUpdate"
+            />
         </h2>
         <v-row class="mt-1">
             <v-col cols="12">
@@ -139,6 +144,19 @@ const canEditSkin = computed(() => {
     if (!skinUser.value) return false;
     return skinUser.value.canEdit || false;
 });
+
+const couldEditSkin = computed(() => {
+    if (!skin.value) return false;
+    if (!authed.value) return false;
+    if (!user.value) return false;
+    if (!user.value.grants?.early_access) return false; //TODO: remove this
+    if (!skinUser.value) return false;
+    return skinUser.value.isOwner || false;
+});
+
+const skinEditFail = computed(() => {
+    return skinUser.value?.editReason || null;
+})
 
 const {
     data: skin,
