@@ -97,31 +97,10 @@
             <v-row v-show="generateType" class="my-2" justify="center">
                 <v-spacer></v-spacer>
                 <v-col cols="12" :md="optionsColSize">
-                    <!--                    <v-select-->
-                    <!--                        label="Visibility"-->
-                    <!--                        v-model="visibility"-->
-                    <!--                        :items="visibilities"-->
-                    <!--                        :item-props="visibilityProps"-->
-                    <!--                        hint="Visibility of the skin"-->
-                    <!--                        persistent-hint-->
-                    <!--                    />-->
                     <VisibilitySelect v-model="visibility"/>
                 </v-col>
                 <v-col cols="12" :md="optionsColSize">
                     <NameInput v-model="name" :generate-type="generateType!" :image-count="imageCount"/>
-                    <!--                    <v-text-field-->
-                    <!--                        label="Name (optional)"-->
-                    <!--                        v-model="name"-->
-                    <!--                        :rules="nameRules"-->
-                    <!--                        persistent-hint-->
-                    <!--                    >-->
-                    <!--                        <template v-slot:details>-->
-                    <!--                            <span>Optional name for this skin, supports variables <a-->
-                    <!--                                @click.prevent="variablesDialog=true"-->
-                    <!--                                href="#">-->
-                    <!--                                <v-icon icon="mdi-help-circle"/></a></span>-->
-                    <!--                        </template>-->
-                    <!--                    </v-text-field>-->
                 </v-col>
                 <v-col cols="12" :md="optionsColSize">
                     <v-select
@@ -165,48 +144,6 @@
                     </v-select>
                 </v-col>
                 <v-spacer></v-spacer>
-                <!--                <v-col>-->
-                <!--&lt;!&ndash;                    <SimplePreview :user="users[0]" :url="urls[0]" :file="uploadFiles[0]"/>&ndash;&gt;-->
-                <!--                </v-col>-->
-                <!--                <v-col class="text-center">-->
-                <!--                -->
-                <!--                </v-col>-->
-                <!--                <v-col>-->
-                <!--                    <v-row>-->
-                <!--                      <v-col>-->
-                <!--                          <v-text-field-->
-                <!--                              label="Name (optional)"-->
-                <!--                              v-model="name"-->
-                <!--                              hint="Optional name for this skin"-->
-                <!--                              persistent-hint-->
-                <!--                          />-->
-                <!--                      </v-col>-->
-                <!--                    </v-row>-->
-                <!--                    <v-row>-->
-                <!--                     <v-col>-->
-                <!--                         <v-select-->
-                <!--                             label="Visibility"-->
-                <!--                             v-model="visibility"-->
-                <!--                             :items="Object.values(SkinVisibility2)"-->
-                <!--                             :item-props="visibilityProps"-->
-                <!--                             hint="Visibility of the skin"-->
-                <!--                             persistent-hint-->
-                <!--                         />-->
-                <!--                     </v-col>-->
-                <!--                    </v-row>-->
-                <!--                    <v-row>-->
-                <!--                      <v-col>-->
-                <!--                          <v-select-->
-                <!--                              label="Variant"-->
-                <!--                              v-model="variant"-->
-                <!--                              :items="Object.values(SkinVariant)"-->
-                <!--                              :item-props="variantProps"-->
-                <!--                              hint="Variant of the skin. Use unknown for auto-detect"-->
-                <!--                              persistent-hint-->
-                <!--                          />-->
-                <!--                      </v-col>-->
-                <!--                    </v-row>-->
-                <!--                </v-col>-->
             </v-row>
         </v-expand-transition>
         <v-expand-transition v-if="isHydrated">
@@ -259,47 +196,6 @@
         <!--            <dbg :data="{users,uploadFiles,urls,generateType}"/>-->
         <!--        </v-row>-->
     </v-sheet>
-    <!--    <v-dialog-->
-    <!--        v-if="isHydrated"-->
-    <!--        v-model="variablesDialog"-->
-    <!--        width="auto"-->
-    <!--    >-->
-    <!--        <v-card-->
-    <!--            max-width="400"-->
-    <!--            prepend-icon="mdi-help-circle"-->
-    <!--            title="Variables / Placeholders"-->
-    <!--        >-->
-    <!--            <template v-slot:text>-->
-    <!--                <div>Names support variables that will get replaced with the matching values when you generate a skin.-->
-    <!--                    This is especially useful when generating multiple skins at once.-->
-    <!--                </div>-->
-    <!--                <br/>-->
-    <!--                <div>-->
-    <!--                    <b>Available variables:</b><br/>-->
-    <!--                    <ul>-->
-    <!--                        <li><b>{index}</b> - The index of the image in the list</li>-->
-    <!--                        <li><b>{user}</b> - The name/UUID of the user</li>-->
-    <!--                        <li><b>{file}</b> - The file name (also works for URLs)</li>-->
-    <!--                    </ul>-->
-    <!--                </div>-->
-    <!--                <br/>-->
-    <!--                <div>-->
-    <!--                    <b>Preview:</b><br/>-->
-    <!--                    <span v-if="replacedNamesPreview.length<=0">Enter a name first</span>-->
-    <!--                    <ul>-->
-    <!--                        <li v-for="name in replacedNamesPreview">{{ name }}</li>-->
-    <!--                    </ul>-->
-    <!--                </div>-->
-    <!--            </template>-->
-    <!--            <template v-slot:actions>-->
-    <!--                <v-btn-->
-    <!--                    class="ms-auto"-->
-    <!--                    text="Ok"-->
-    <!--                    @click="variablesDialog = false"-->
-    <!--                ></v-btn>-->
-    <!--            </template>-->
-    <!--        </v-card>-->
-    <!--    </v-dialog>-->
 </template>
 <script setup lang="ts">
 
@@ -384,10 +280,6 @@ const creditsEstimate = computed(() => {
     return imageCount.value + (cape.value ? 1 : 0);
 });
 
-// watch(() => visibility.value, (value) => {
-//     preferredVisibility.value = value;
-// }, {immediate: true});
-
 const generateType_ = computed(() => generateType.value);
 
 const waitTime = ref(0);
@@ -446,36 +338,6 @@ watch(() => imageCount.value, (value) => {
         return;
     }
 });
-
-// const variablesDialog = ref(false);
-// const processNameVariables = (index: number, url: string | null, file: File | FileJson | null, user: string | null) => {
-//     const original = name.value;
-//     let replaced = original;
-//
-//     replaced = replaced.replace(/{index}/g, index.toString());
-//
-//     if (generateType.value === GenerateType.USER && user) {
-//         replaced = replaced.replace(/{user}/g, user);
-//     }
-//     if (generateType.value === GenerateType.UPLOAD && file) {
-//         replaced = replaced.replace(/{file}/g, file.name.replace('.png', ''));
-//     }
-//     if (generateType.value === GenerateType.URL && url) {
-//         const parsed = new URL(url);
-//         const filename = parsed.pathname.split('/').pop();
-//         if (filename) {
-//             replaced = replaced.replace(/{file}/g, filename.replace('.png', ''));
-//         }
-//     }
-//
-//     return replaced;
-// }
-
-// const replacedNamesPreview = computed(() => {
-//     return Array.from({length: imageCount.value}, (_, i) => {
-//         return processNameVariables(i, urls.value[i] || null, uploadFiles.value[i] || null, users.value[i] || null);
-//     }).filter(name => name.length > 0);
-// });
 
 const showCreditsInfo = computed(() => $flags.hasFeature('web.credits.show_info'));
 
