@@ -18,7 +18,7 @@
                         <div>
                             {{ editFailClean }}
                         </div>
-                        <div v-if="editFail === 'edit_duration_expired' && user?.grants?.skin_edit_duration || 0 < 12">
+                        <div v-if="editFail === 'edit_duration_expired' && (user?.grants?.skin_edit_duration || 0) < 12">
                             <a class="text-decoration-none"
                                href="https://account.mineskin.org/store?utm_source=web&utm_medium=button&utm_campaign=skin_edit_duration"
                                target="_blank">
