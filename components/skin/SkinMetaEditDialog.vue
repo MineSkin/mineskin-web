@@ -4,10 +4,9 @@
             <v-btn
                 v-bind="activatorProps"
                 color="surface-variant"
-                icon="mdi-pencil"
+                :icon="!!editFail ? 'mdi-pencil-off' : 'mdi-pencil'"
                 variant="text"
                 density="compact"
-                :disabled="!!editFail"
                 v-tooltip:end="editFailClean"
             ></v-btn>
         </template>
@@ -15,8 +14,11 @@
         <template v-slot:default="{ isActive }">
             <v-card title="Dialog">
                 <v-card-text>
-                    <NameInput v-model="name" hide-variables/>
-                    <VisibilitySelect v-model="visibility"/>
+                    <div v-if="!!editFail">{{ editFailClean }}</div>
+                    <div v-else>
+                        <NameInput v-model="name" hide-variables/>
+                        <VisibilitySelect v-model="visibility"/>
+                    </div>
                 </v-card-text>
 
                 <v-card-actions>
@@ -25,6 +27,7 @@
                     <v-btn
                         text="Apply"
                         @click="apply"
+                        :disabled="!!editFail"
                     ></v-btn>
                 </v-card-actions>
             </v-card>
