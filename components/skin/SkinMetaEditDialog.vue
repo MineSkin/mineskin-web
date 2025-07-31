@@ -14,7 +14,18 @@
         <template v-slot:default="{ isActive }">
             <v-card title="Edit Skin">
                 <v-card-text>
-                    <div v-if="!!editFail">{{ editFailClean }}</div>
+                    <div v-if="!!editFail">
+                        <div>
+                            {{ editFailClean }}
+                        </div>
+                        <div v-if="editFail === 'edit_duration_expired' && user?.grants?.skin_edit_duration || 0 < 12">
+                            <a class="text-decoration-none"
+                               href="https://account.mineskin.org/store?utm_source=web&utm_medium=button&utm_campaign=skin_edit_duration"
+                               target="_blank">
+                                Upgrade to edit skins for longer
+                            </a>
+                        </div>
+                    </div>
                     <div v-else>
                         <NameInput v-model="name" hide-variables/>
                         <VisibilitySelect v-model="visibility"/>
