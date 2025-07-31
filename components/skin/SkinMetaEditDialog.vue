@@ -7,7 +7,7 @@
                 :icon="!!editFail ? 'mdi-pencil-off' : 'mdi-pencil'"
                 variant="text"
                 density="compact"
-                v-tooltip:end="editFailClean"
+                v-tooltip:end="editFailClean||false"
             ></v-btn>
         </template>
 
