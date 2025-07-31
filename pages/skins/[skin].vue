@@ -339,9 +339,11 @@ watch(skin, (skin) => {
     }
     refreshRandomSkinName();
     refreshSkinMeta();
-    if (authed.value) {
-        refreshSkinUser();
-    }
+    setTimeout(() => {
+        if (authed.value) {
+            refreshSkinUser();
+        }
+    }, 1000);
 }, {
     immediate: true
 })
