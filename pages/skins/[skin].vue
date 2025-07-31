@@ -132,10 +132,12 @@ const authStore = useAuthStore();
 const {authed, user} = storeToRefs(authStore);
 
 const canEditSkin = computed(() => {
-    if (!authed.value) return false;
     if (!skin.value) return false;
+    if (!authed.value) return false;
     if (!user.value) return false;
-    return skinUser.value?.canEdit || false;
+    if (!user.value.grants?.early_access) return false; //TODO: remove this
+    if (!skinUser.value) return false;
+    return skinUser.value.canEdit || false;
 });
 
 const {
