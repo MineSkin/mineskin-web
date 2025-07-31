@@ -6,6 +6,7 @@
                 color="surface-variant"
                 icon="mdi-pencil"
                 variant="text"
+                density="compact"
             ></v-btn>
         </template>
 
