@@ -37,7 +37,11 @@ const {$mineskin} = useNuxtApp();
 
 const props = defineProps<{
     skin: SkinInfo2
-}>()
+}>();
+
+const emit = defineEmits<{
+    (event: 'update:skin', skin: SkinInfo2): void
+}>();
 
 const prevName = ref<string>(props.skin.name || '');
 const prevVisibility = ref<SkinVisibility2>(props.skin.visibility);
@@ -47,10 +51,22 @@ const visibility = ref<SkinVisibility2>(props.skin.visibility);
 
 const apply = async () => {
     if (name.value !== prevName.value) {
-        await $mineskin.skins.update(props.skin.uuid, {name: name.value});
+        const res = await $mineskin.skins.update(props.skin.uuid, {name: name.value});
+        if (res.success) {
+            emit('update:skin', {
+                ...props.skin,
+                name: name.value
+            });
+        }
     }
     if (visibility.value !== prevVisibility.value) {
-        await $mineskin.skins.update(props.skin.uuid, {visibility: visibility.value});
+        const res = await $mineskin.skins.update(props.skin.uuid, {visibility: visibility.value});
+        if (res.success) {
+            emit('update:skin', {
+                ...props.skin,
+                visibility: visibility.value
+            });
+        }
     }
 }
 </script>

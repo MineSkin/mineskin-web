@@ -31,7 +31,7 @@
                     </span>
                 </template>
             </v-tooltip>
-            <SkinMetaEditDialog v-if="authed && skin && skinUser && skinUser.canEdit" :skin="skin"/>
+            <SkinMetaEditDialog v-if="canEditSkin" :skin="skin" @update:skin="handleSkinEditUpdate"/>
         </h2>
         <v-row class="mt-1">
             <v-col cols="12">
@@ -135,7 +135,7 @@ const canEditSkin = computed(() => {
     if (!authed.value) return false;
     if (!skin.value) return false;
     if (!user.value) return false;
-    return false; //TODO
+    return skinUser.value?.canEdit || false;
 });
 
 const {
@@ -347,6 +347,12 @@ watch(skin, (skin) => {
 }, {
     immediate: true
 })
+
+const handleSkinEditUpdate = async (newSkin: SkinInfo2) => {
+    if (!skin.value || !newSkin) return;
+    skin.value.name = newSkin.name || skin.value.name;
+    skin.value.visibility = newSkin.visibility || skin.value.visibility;
+};
 
 onMounted(async () => {
     await refreshSkin();
