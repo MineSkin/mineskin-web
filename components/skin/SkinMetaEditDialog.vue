@@ -12,7 +12,7 @@
         </template>
 
         <template v-slot:default="{ isActive }">
-            <v-card title="Dialog">
+            <v-card title="Edit Skin">
                 <v-card-text>
                     <div v-if="!!editFail">{{ editFailClean }}</div>
                     <div v-else>
