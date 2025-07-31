@@ -47,7 +47,8 @@
                             </div>
                             <div>
                                 <a class="text-decoration-none"
-                                   href="https://account.mineskin.org/store" target="_blank">
+                                   href="https://account.mineskin.org/store?utm_source=web&utm_medium=ad&utm_campaign=ad-free"
+                                   target="_blank">
                                     Store
                                     <v-icon size="small" icon="mdi-open-in-new"></v-icon>
                                 </a>
@@ -74,7 +75,8 @@
                             <div>
                                 Members don't see ads.
                                 <a class="text-decoration-none ml-2"
-                                   href="https://account.mineskin.org/store" target="_blank">
+                                   href="https://account.mineskin.org/store?utm_source=web&utm_medium=ad&utm_campaign=ad-free"
+                                   target="_blank">
                                     Store
                                     <v-icon size="small" icon="mdi-open-in-new"></v-icon>
                                 </a>

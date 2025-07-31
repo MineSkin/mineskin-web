@@ -5,10 +5,12 @@ import type { SkinListResponse } from "~/types/SkinListResponse";
 import type { GenerateJobResponse } from "~/types/GenerateJobResponse";
 import type { JobListResponse } from "~/types/JobListResponse";
 import type { UserValidation } from "~/types/UserValidation";
-import { TagVoteType } from "@mineskin/types";
+import { type SkinInfo2, type SkinVisibility2, TagVoteType } from "@mineskin/types";
 import type { BasicCreditInfo } from "~/types/BasicCreditInfo";
 import type { CapeListResponse } from "~/types/CapeListResponse";
 import type { GenerateOptions } from "~/types/GenerateOptions";
+import type { GenerateResponse } from "~/types/GenerateResponse";
+import type { SkinUser } from "~/types/SkinUser";
 
 const INIT: RequestInit = {
     headers: {
@@ -193,6 +195,21 @@ export class MineSkinAPI {
 
         public async get(uuid: string): Promise<SkinResponse> {
             return this.api.request(`/v2/skins/${ uuid }`, INIT);
+        }
+
+        public async getUser(uuid: string): Promise<GenerateResponse<'user', SkinUser>> {
+            return this.api.request(`/v2/skins/${ uuid }/user`, INIT, {silent: true});
+        }
+
+        public async update(uuid: string, data: { name?: string; visibility?: SkinVisibility2; }) {
+            return this.api.request(`/v2/skins/${ uuid }`, {
+                ...INIT,
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
         }
 
         public async trackView(uuid: string, turnstileToken: string) {

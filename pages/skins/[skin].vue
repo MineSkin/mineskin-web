@@ -31,6 +31,12 @@
                     </span>
                 </template>
             </v-tooltip>
+            <SkinMetaEditDialog
+                v-if="canEditSkin||(couldEditSkin&&skinEditFail)"
+                :edit-fail="skinEditFail"
+                :skin="skin"
+                @update:skin="handleSkinEditUpdate"
+            />
         </h2>
         <v-row class="mt-1">
             <v-col cols="12">
@@ -112,6 +118,8 @@ import SimilarSkinsCard from "~/components/skin/SimilarSkinsCard.vue";
 import InstructionsAndSimiliarRow from "~/components/skin/InstructionsAndSimiliarRow.vue";
 import AdInfoWrapper from "~/components/ad/AdInfoWrapper.vue";
 import { capitalizeFirstLetter } from "~/util/misc";
+import { storeToRefs } from "pinia";
+import type { SkinUser } from "~/types/SkinUser";
 
 const router = useRouter();
 
@@ -124,6 +132,31 @@ const validSkinId = computed(() => {
 });
 
 const {$mineskin, $notify, $gtag} = useNuxtApp();
+
+const authStore = useAuthStore();
+const {authed, user} = storeToRefs(authStore);
+
+const canEditSkin = computed(() => {
+    if (!skin.value) return false;
+    if (!authed.value) return false;
+    if (!user.value) return false;
+    if (!user.value.grants?.early_access) return false; //TODO: remove this
+    if (!skinUser.value) return false;
+    return skinUser.value.canEdit || false;
+});
+
+const couldEditSkin = computed(() => {
+    if (!skin.value) return false;
+    if (!authed.value) return false;
+    if (!user.value) return false;
+    if (!user.value.grants?.early_access) return false; //TODO: remove this
+    if (!skinUser.value) return false;
+    return skinUser.value.isOwner || false;
+});
+
+const skinEditFail = computed(() => {
+    return skinUser.value?.editReason || null;
+})
 
 const {
     data: skin,
@@ -150,6 +183,15 @@ const {
     refresh: refreshSkinMeta
 } = useLazyAsyncData<SkinMeta>(`skin-meta-${ skin.value?.uuid || skinId.value }`, async () => {
     return (await $mineskin.skins.getMeta(skin.value?.uuid || skinId.value))?.meta;
+}, {
+    immediate: false
+});
+
+const {
+    data: skinUser,
+    refresh: refreshSkinUser
+} = useLazyAsyncData<SkinUser>(`skin-user-${ skin.value?.uuid || skinId.value }`, async () => {
+    return (await $mineskin.skins.getUser(skin.value?.uuid || skinId.value))?.user;
 }, {
     immediate: false
 });
@@ -317,9 +359,20 @@ watch(skin, (skin) => {
     }
     refreshRandomSkinName();
     refreshSkinMeta();
+    setTimeout(() => {
+        if (authed.value) {
+            refreshSkinUser();
+        }
+    }, 1000);
 }, {
     immediate: true
 })
+
+const handleSkinEditUpdate = async (newSkin: SkinInfo2) => {
+    if (!skin.value || !newSkin) return;
+    skin.value.name = newSkin.name || skin.value.name;
+    skin.value.visibility = newSkin.visibility || skin.value.visibility;
+};
 
 onMounted(async () => {
     await refreshSkin();
