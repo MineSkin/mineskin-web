@@ -8,7 +8,7 @@
                 variant="text"
                 density="compact"
                 :disabled="!!editFail"
-                :v-tooltip="editFailClean"
+                v-tooltip:end="editFailClean"
             ></v-btn>
         </template>
 
