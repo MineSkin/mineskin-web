@@ -10,7 +10,7 @@
     height: 100%;
 }
 
-.v-tab__slider {
+.rainbow .v-tab__slider {
     background: linear-gradient(90deg, #FE0000 16.66%,
     #FD8C00 16.66%, 33.32%,
     #FFE500 33.32%, 49.98%,
@@ -72,6 +72,7 @@
 
         <v-tabs
             align-tabs="end"
+            :class="{'rainbow': rainbow }"
         >
             <v-tab :to="localePath('/')">
                 <span v-if="mdAndUp">{{ $t("Generate") }}</span>
@@ -173,6 +174,12 @@ const search = () => {
 
 const isMember = computed(() => {
     return authed.value && grants.value?.ad_free; //TODO: use a separate grant for this
+});
+
+const rainbow = computed(() => {
+    const date = new Date();
+    const month = date.getUTCMonth();
+    return month === 5 || month === 6;
 });
 
 onMounted(() => {
