@@ -34,7 +34,7 @@
                             </div>
                         </v-col>
                     </v-row>
-                    <v-divider/>
+                    <v-divider class="my-4"/>
                     <v-row>
                         <v-col>
                             <div v-if="!!deleteFail">
@@ -62,7 +62,7 @@
 
                 <v-card-actions>
                     <v-btn
-                        text="Apply"
+                        text="Update Skin"
                         @click="apply"
                         :disabled="!!editFail"
                     ></v-btn>
