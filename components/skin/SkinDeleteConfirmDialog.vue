@@ -37,6 +37,7 @@
                     <v-card-actions>
                         <v-btn
                             text="Confirm Deletion"
+                            color="error"
                             variant="text"
                             :disabled="!confirmed"
                             @click="actuallyDelete()"
@@ -86,6 +87,7 @@ const actuallyDelete = async () => {
     if (!user) return;
 
     const res = await $mineskin.skins.delete(props.skin.uuid);
+    confirmText.value = '';
     if (res.success) {
         dialog.value = false;
         router.push('/my-skins');
