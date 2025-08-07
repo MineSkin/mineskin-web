@@ -50,7 +50,7 @@
                                     </a>
                                 </div>
                                 <div>
-                                    <span class="text-small text-medium-emphasis">*You can always manually request deletion of your skin.</span>
+                                    <span class="text-body-2 text-medium-emphasis">*You can always manually request deletion of your skin.</span>
                                 </div>
                             </div>
                             <div>
