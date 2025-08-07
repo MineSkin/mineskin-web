@@ -19,12 +19,12 @@
                                 <div>
                                     {{ editFailClean }}
                                 </div>
-                                <div
+                                <div class="mt-2"
                                     v-if="editFail === 'edit_duration_expired' && (user?.grants?.skin_edit_duration || 0) < 12">
                                     <a class="text-decoration-none"
                                        href="https://account.mineskin.org/store?utm_source=web&utm_medium=button&utm_campaign=skin_edit_duration"
                                        target="_blank">
-                                        Upgrade to edit skins for longer
+                                        Upgrade to edit skins for longer ✨
                                     </a>
                                 </div>
                             </div>
@@ -48,12 +48,12 @@
                                 <div>
                                     {{ deleteFailClean }}*
                                 </div>
-                                <div
+                                <div class="mt-2"
                                     v-if="deleteFail === 'delete_duration_expired' && (user?.grants?.skin_delete_duration || 0) < 12">
                                     <a class="text-decoration-none"
                                        href="https://account.mineskin.org/store?utm_source=web&utm_medium=button&utm_campaign=skin_delete_duration"
                                        target="_blank">
-                                        Upgrade to delete skins for longer
+                                        Upgrade to delete skins for longer ✨
                                     </a>
                                 </div>
                                 <div>
