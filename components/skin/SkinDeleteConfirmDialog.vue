@@ -12,25 +12,24 @@
         <v-dialog v-model="dialog" max-width="600">
             <template v-slot:default="{ isActive }">
                 <v-card title="Delete Skin?">
-
                     <v-card-text>
                         <v-row>
                             <v-col>
-                                <div>
-                                    Are you sure you want to delete this skin? This action is irreversible and will
-                                    remove
-                                    the
-                                    skin from your account permanently.
-                                    <br/>
-                                    Alternatively, you can set the visibility to "Private" or "Unlisted" to hide the
-                                    skin
-                                    from
-                                    public view without deleting it.
-                                </div>
-                                <div>
-                                    Please type <strong>delete</strong> in the field below to confirm deletion.
-                                    <v-text-field v-model="confirmText" required></v-text-field>
-                                </div>
+                                Are you sure you want to delete this skin? This action is irreversible and will
+                                remove
+                                the
+                                skin from your account permanently.
+                                <br/>
+                                Alternatively, you can set the visibility to "Private" or "Unlisted" to hide the
+                                skin
+                                from
+                                public view without deleting it.
+                            </v-col>
+                        </v-row>
+                        <v-row>
+                            <v-col>
+                                Please type <strong>delete</strong> in the field below to confirm deletion.
+                                <v-text-field v-model="confirmText" density="compact" required></v-text-field>
                             </v-col>
                         </v-row>
                     </v-card-text>
