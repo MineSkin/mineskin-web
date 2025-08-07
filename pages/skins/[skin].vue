@@ -33,7 +33,10 @@
             </v-tooltip>
             <SkinMetaEditDialog
                 v-if="canEditSkin||(couldEditSkin&&skinEditFail)"
+                :can-edit="canEditSkin"
+                :can-delete="canDeleteSkin"
                 :edit-fail="skinEditFail"
+                :delete-fail="skinDeleteFail"
                 :skin="skin"
                 @update:skin="handleSkinEditUpdate"
             />
@@ -120,6 +123,7 @@ import AdInfoWrapper from "~/components/ad/AdInfoWrapper.vue";
 import { capitalizeFirstLetter } from "~/util/misc";
 import { storeToRefs } from "pinia";
 import type { SkinUser } from "~/types/SkinUser";
+import SkinMetaEditDialog from "~/components/skin/SkinMetaEditDialog.vue";
 
 const router = useRouter();
 
@@ -145,6 +149,15 @@ const canEditSkin = computed(() => {
     return skinUser.value.canEdit || false;
 });
 
+const canDeleteSkin = computed(() => {
+    if (!skin.value) return false;
+    if (!authed.value) return false;
+    if (!user.value) return false;
+    if (!user.value.grants?.early_access) return false; //TODO: remove this
+    if (!skinUser.value) return false;
+    return skinUser.value.canDelete || false;
+});
+
 const couldEditSkin = computed(() => {
     if (!skin.value) return false;
     if (!authed.value) return false;
@@ -156,7 +169,10 @@ const couldEditSkin = computed(() => {
 
 const skinEditFail = computed(() => {
     return skinUser.value?.editReason || null;
-})
+});
+const skinDeleteFail = computed(() => {
+    return skinUser.value?.deleteReason || null;
+});
 
 const {
     data: skin,

@@ -1,0 +1,97 @@
+<template>
+    <div>
+        <v-btn
+            color="error"
+            variant="text"
+            :disabled="!props.canDelete || !!deleteFail"
+            prepend-icon="mdi-delete"
+            @click="dialog = true"
+        >
+            Delete Skin
+        </v-btn>
+        <v-dialog v-model="dialog" max-width="600">
+            <template v-slot:default="{ isActive }">
+                <v-card title="Delete Skin?">
+                    <v-card-text>
+                        <v-row>
+                            <v-col>
+                                Are you sure you want to delete this skin? This action is irreversible and will
+                                remove
+                                the
+                                skin from your account permanently.
+                                <br/>
+                                Alternatively, you can set the visibility to "Private" or "Unlisted" to hide the
+                                skin
+                                from
+                                public view without deleting it.
+                            </v-col>
+                        </v-row>
+                        <v-row>
+                            <v-col>
+                                Please type <strong>delete</strong> in the field below to confirm deletion.
+                                <v-text-field v-model="confirmText" density="compact" required></v-text-field>
+                            </v-col>
+                        </v-row>
+                    </v-card-text>
+
+                    <v-card-actions>
+                        <v-btn
+                            text="Confirm Deletion"
+                            color="error"
+                            variant="text"
+                            :disabled="!confirmed"
+                            @click="actuallyDelete()"
+                        ></v-btn>
+
+                        <v-spacer></v-spacer>
+
+                        <v-btn
+                            text="Cancel"
+                            variant="text"
+                            @click="dialog = false"
+                        ></v-btn>
+                    </v-card-actions>
+                </v-card>
+            </template>
+        </v-dialog>
+    </div>
+</template>
+<script setup lang="ts">
+import type { SkinInfo2 } from "@mineskin/types";
+import { storeToRefs } from "pinia";
+
+const {$mineskin} = useNuxtApp();
+
+const authStore = useAuthStore();
+const {user} = storeToRefs(authStore);
+
+const router = useRouter();
+
+const props = defineProps<{
+    skin: SkinInfo2,
+    canDelete: boolean,
+    deleteFail?: string
+}>();
+
+const dialog = ref(false);
+
+const confirmText = ref('');
+const confirmed = computed(() => {
+    return confirmText.value.toLowerCase() === 'delete';
+});
+
+
+const actuallyDelete = async () => {
+    if (!confirmed.value) return;
+    if (!props.canDelete) return;
+    if (!user) return;
+
+    const res = await $mineskin.skins.delete(props.skin.uuid);
+    confirmText.value = '';
+    if (res.success) {
+        dialog.value = false;
+        router.push('/my-skins');
+    }
+}
+
+</script>

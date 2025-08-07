@@ -3,4 +3,6 @@ export interface SkinUser {
     hasGenerated: boolean;
     canEdit: boolean;
     editReason?: string;
+    canDelete: boolean;
+    deleteReason?: string;
 }
