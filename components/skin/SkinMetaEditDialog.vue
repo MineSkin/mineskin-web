@@ -33,6 +33,7 @@
                                 <VisibilitySelect v-model="visibility"/>
 
                                 <v-btn
+                                    color="primary"
                                     text="Update Skin"
                                     @click="apply"
                                     :disabled="!!editFail"
