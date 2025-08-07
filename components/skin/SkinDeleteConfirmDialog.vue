@@ -64,6 +64,8 @@ const {$mineskin} = useNuxtApp();
 const authStore = useAuthStore();
 const {user} = storeToRefs(authStore);
 
+const router = useRouter();
+
 const props = defineProps<{
     skin: SkinInfo2,
     canDelete: boolean,
@@ -86,6 +88,7 @@ const actuallyDelete = async () => {
     const res = await $mineskin.skins.delete(props.skin.uuid);
     if (res.success) {
         dialog.value = false;
+        router.push('/my-skins');
     }
 }
 
