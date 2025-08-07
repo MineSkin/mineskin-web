@@ -31,6 +31,12 @@
                             <div v-else>
                                 <NameInput v-model="name" hide-variables/>
                                 <VisibilitySelect v-model="visibility"/>
+
+                                <v-btn
+                                    text="Update Skin"
+                                    @click="apply"
+                                    :disabled="!!editFail"
+                                ></v-btn>
                             </div>
                         </v-col>
                     </v-row>
@@ -61,12 +67,6 @@
                 </v-card-text>
 
                 <v-card-actions>
-                    <v-btn
-                        text="Update Skin"
-                        @click="apply"
-                        :disabled="!!editFail"
-                    ></v-btn>
-
                     <v-spacer></v-spacer>
 
                     <v-btn
