@@ -60,7 +60,7 @@
                                     <span class="text-body-2 text-medium-emphasis">*You can always manually request deletion of your skin.</span>
                                 </div>
                             </div>
-                            <div>
+                            <div class="mt-2">
                                 <SkinDeleteConfirmDialog :skin="skin" :can-delete="canDelete"/>
                             </div>
                         </v-col>
