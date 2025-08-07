@@ -3,7 +3,6 @@
         <v-btn
             color="error"
             variant="text"
-            density="compact"
             :disabled="!props.canDelete || !!deleteFail"
             prepend-icon="mdi-delete"
             @click="dialog = true"
