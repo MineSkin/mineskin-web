@@ -66,6 +66,14 @@
                         @click="apply"
                         :disabled="!!editFail"
                     ></v-btn>
+
+                    <v-spacer></v-spacer>
+
+                    <v-btn
+                        text="Cancel"
+                        variant="text"
+                        @click="isActive.value = false"
+                    ></v-btn>
                 </v-card-actions>
             </v-card>
         </template>
