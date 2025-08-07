@@ -212,6 +212,16 @@ export class MineSkinAPI {
             });
         }
 
+        public async delete(uuid: string) {
+            return this.api.request(`/v2/skins/${ uuid }`, {
+                ...INIT,
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+        }
+
         public async trackView(uuid: string, turnstileToken: string) {
             return this.api.request(`/v2/skins/${ uuid }/interactions/views`, {
                 ...INIT,

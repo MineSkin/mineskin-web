@@ -13,27 +13,54 @@
         <template v-slot:default="{ isActive }">
             <v-card title="Edit Skin">
                 <v-card-text>
-                    <div v-if="!!editFail">
-                        <div>
-                            {{ editFailClean }}
-                        </div>
-                        <div v-if="editFail === 'edit_duration_expired' && (user?.grants?.skin_edit_duration || 0) < 12">
-                            <a class="text-decoration-none"
-                               href="https://account.mineskin.org/store?utm_source=web&utm_medium=button&utm_campaign=skin_edit_duration"
-                               target="_blank">
-                                Upgrade to edit skins for longer
-                            </a>
-                        </div>
-                    </div>
-                    <div v-else>
-                        <NameInput v-model="name" hide-variables/>
-                        <VisibilitySelect v-model="visibility"/>
-                    </div>
+                    <v-row>
+                        <v-col>
+                            <div v-if="!!editFail">
+                                <div>
+                                    {{ editFailClean }}
+                                </div>
+                                <div
+                                    v-if="editFail === 'edit_duration_expired' && (user?.grants?.skin_edit_duration || 0) < 12">
+                                    <a class="text-decoration-none"
+                                       href="https://account.mineskin.org/store?utm_source=web&utm_medium=button&utm_campaign=skin_edit_duration"
+                                       target="_blank">
+                                        Upgrade to edit skins for longer
+                                    </a>
+                                </div>
+                            </div>
+                            <div v-else>
+                                <NameInput v-model="name" hide-variables/>
+                                <VisibilitySelect v-model="visibility"/>
+                            </div>
+                        </v-col>
+                    </v-row>
+                    <v-divider/>
+                    <v-row>
+                        <v-col>
+                            <div v-if="!!deleteFail">
+                                <div>
+                                    {{ deleteFailClean }}*
+                                </div>
+                                <div
+                                    v-if="deleteFail === 'delete_duration_expired' && (user?.grants?.skin_delete_duration || 0) < 12">
+                                    <a class="text-decoration-none"
+                                       href="https://account.mineskin.org/store?utm_source=web&utm_medium=button&utm_campaign=skin_delete_duration"
+                                       target="_blank">
+                                        Upgrade to delete skins for longer
+                                    </a>
+                                </div>
+                                <div>
+                                    <span class="text-small text-medium-emphasis">*You can always manually request deletion of your skin.</span>
+                                </div>
+                            </div>
+                            <div>
+                                <SkinDeleteConfirmDialog :skin="skin" :can-delete="canDelete"/>
+                            </div>
+                        </v-col>
+                    </v-row>
                 </v-card-text>
 
                 <v-card-actions>
-                    <v-spacer></v-spacer>
-
                     <v-btn
                         text="Apply"
                         @click="apply"
@@ -49,6 +76,7 @@ import type { SkinInfo2, SkinVisibility2 } from "@mineskin/types";
 import NameInput from "~/components/generate/options/NameInput.vue";
 import VisibilitySelect from "~/components/generate/options/VisibilitySelect.vue";
 import { storeToRefs } from "pinia";
+import SkinDeleteConfirmDialog from "~/components/skin/SkinDeleteConfirmDialog.vue";
 
 const {$mineskin} = useNuxtApp();
 
@@ -57,7 +85,10 @@ const {user} = storeToRefs(authStore);
 
 const props = defineProps<{
     skin: SkinInfo2,
-    editFail?: string
+    canEdit: boolean,
+    canDelete: boolean,
+    editFail?: string,
+    deleteFail?: string
 }>();
 
 const emit = defineEmits<{
@@ -78,6 +109,18 @@ const editFailClean = computed(() => {
         }
     }
     return props.editFail;
+});
+const deleteFailClean = computed(() => {
+    if (!props.deleteFail) return null;
+    switch (props.deleteFail) {
+        case 'delete_duration_expired': {
+            if (user.value?.grants?.skin_delete_duration) {
+                return `You can only delete skins for ${ user.value.grants.skin_delete_duration } hours after upload`;
+            }
+            return 'You can no longer delete this skin';
+        }
+    }
+    return props.deleteFail;
 })
 
 const prevName = ref<string>(props.skin.name || '');
@@ -107,5 +150,9 @@ const apply = async () => {
             });
         }
     }
+}
+
+const tryDeleteSkin = ()=>{
+
 }
 </script>
