@@ -151,8 +151,4 @@ const apply = async () => {
         }
     }
 }
-
-const tryDeleteSkin = ()=>{
-
-}
 </script>
