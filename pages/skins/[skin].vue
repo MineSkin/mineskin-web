@@ -144,7 +144,6 @@ const canEditSkin = computed(() => {
     if (!skin.value) return false;
     if (!authed.value) return false;
     if (!user.value) return false;
-    if (!user.value.grants?.early_access) return false; //TODO: remove this
     if (!skinUser.value) return false;
     return skinUser.value.canEdit || false;
 });
@@ -153,7 +152,6 @@ const canDeleteSkin = computed(() => {
     if (!skin.value) return false;
     if (!authed.value) return false;
     if (!user.value) return false;
-    if (!user.value.grants?.early_access) return false; //TODO: remove this
     if (!skinUser.value) return false;
     return skinUser.value.canDelete || false;
 });
@@ -162,7 +160,6 @@ const couldEditSkin = computed(() => {
     if (!skin.value) return false;
     if (!authed.value) return false;
     if (!user.value) return false;
-    if (!user.value.grants?.early_access) return false; //TODO: remove this
     if (!skinUser.value) return false;
     return skinUser.value.isOwner || false;
 });
