@@ -59,10 +59,6 @@ useHead({
     ],
     script: [
         {
-            src: '//cdn.cookie-script.com/s/639a4b90a98c39ff998dc9c06ffa14b9.js',
-            tagPosition: 'head'
-        },
-        {
             src: 'https://www.googletagmanager.com/gtag/js?id=G-5GVV9RF5HZ',
             async: true,
             'data-cookie-consent': 'tracking',
@@ -78,6 +74,13 @@ useHead({
             `,
             'data-cookie-consent': 'tracking',
             tagPosition: 'head'
+        },
+        {
+            innerHTML: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+            })(window,document,'script','dataLayer','GTM-5KV5S2GC');`
         },
         {
             type: 'application/ld+json',
