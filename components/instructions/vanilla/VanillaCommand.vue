@@ -26,10 +26,11 @@ import VanillaFormat16 from "./VanillaFormat16.vue";
 import CopyTextArea from "~/components/skin/CopyTextArea.vue";
 import CopyTextField from "~/components/skin/CopyTextField.vue";
 import VanillaFormat21 from "~/components/instructions/vanilla/VanillaFormat21.vue";
+import VanillaFormat215 from "~/components/instructions/vanilla/VanillaFormat215.vue";
 
 const props = defineProps<{
     skin: SkinInfo2;
-    version: 12 | 13 | 16 | 21;
+    version: 12 | 13 | 16 | 21 | 215;
 }>();
 const format = computed(() => {
     switch (props.version) {
@@ -41,6 +42,8 @@ const format = computed(() => {
             return VanillaFormat16;
         case 21:
             return VanillaFormat21;
+        case 215:
+            return VanillaFormat215;
     }
 });
 
