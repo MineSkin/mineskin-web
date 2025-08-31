@@ -6,7 +6,8 @@
             direction="vertical"
             class="mr-2"
         >
-            <v-tab text="1.16+" :value="16"></v-tab>
+            <v-tab text="1.21+" :value="21"></v-tab>
+            <v-tab text="1.16" :value="16"></v-tab>
             <v-tab text="1.13" :value="13"></v-tab>
             <v-tab text="1.12" :value="12"></v-tab>
         </v-tabs>
@@ -27,6 +28,6 @@ import VanillaCommand from "./vanilla/VanillaCommand.vue";
 const props = defineProps<{
     skin: SkinInfo2;
 }>();
-const versions = [12, 13, 16];
-const version = ref(16);
+const versions = [12, 13, 16, 21];
+const version = ref(21);
 </script>
