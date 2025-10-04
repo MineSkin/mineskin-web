@@ -105,15 +105,19 @@
                     <v-list v-else>
                         <v-list-item>
                             <v-list-item-title>
-                                <div class="text-h6">More than <strong>{{ timeSavedYears }} years</strong></div>
+                                <div class="text-h6">
+                                    <span class="d-none d-xl-inline">More than </span>
+                                    <strong>{{ timeSavedYears }} years</strong>
+                                </div>
                             </v-list-item-title>
                             <v-list-item-subtitle>
                                 <v-tooltip :text="$t('For all MineSkin users, compared to manually changing skins')"
                                            location="bottom"
                                            open-on-click>
                                     <template v-slot:activator="{ props }">
-                                        <abbr v-bind="props">{{ $t("Time Saved") }}
-                                            <v-icon icon="mdi-information-outline" size="xs"></v-icon>
+                                        <abbr v-bind="props">
+                                            <span>{{ $t("Time Saved") }}</span>
+                                            <v-icon icon="mdi-information-outline" size="xs" class="ml-1"></v-icon>
                                         </abbr>
                                     </template>
                                 </v-tooltip>
@@ -150,7 +154,8 @@
                                 <div class="text-h6">{{ usableAccounts }}</div>
                             </v-list-item-title>
                             <v-list-item-subtitle>
-                                {{ $t("Available Minecraft Accounts") }}
+                                <span class="d-none d-lg-block">{{ $t("Minecraft Accounts") }}</span>
+                                <span class="d-block d-lg-none">{{ $t("MC Accounts") }}</span>
                             </v-list-item-subtitle>
                         </v-list-item>
                     </v-list>
@@ -193,8 +198,10 @@
                                            location="bottom"
                                            open-on-click>
                                     <template v-slot:activator="{ props }">
-                                        <abbr v-bind="props">{{ $t("Generator Capacity") }}
-                                            <v-icon icon="mdi-information-outline" size="xs"></v-icon>
+                                        <abbr v-bind="props">
+                                            <span class="d-none d-md-inline">{{ $t("Generator Capacity") }}</span>
+                                            <span class="d-inline d-md-none">{{ $t("Capacity") }}</span>
+                                            <v-icon icon="mdi-information-outline" size="xs" class="ml-1"></v-icon>
                                         </abbr>
                                     </template>
                                 </v-tooltip>

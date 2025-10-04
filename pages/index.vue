@@ -36,11 +36,11 @@
         <v-divider class="my-4"/>
 
         <v-row justify="center" class="my-4">
-            <v-col cols="12" md="4" xl="3" order-md="last">
+            <v-col cols="12" lg="5" order-md="last">
                 <h4 class="text-h5 mb-4">Stats</h4>
                 <StatsPanel/>
             </v-col>
-            <v-col cols="12" md="8">
+            <v-col cols="12" lg="7" xl="6">
                 <MainFAQ class="mb-2"/>
                 <!-- web v2 faq banner -->
                 <!--                <ad-wrappper ad-slot="8238741844"/>-->
