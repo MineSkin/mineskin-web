@@ -109,9 +109,12 @@
                             </v-list-item-title>
                             <v-list-item-subtitle>
                                 <v-tooltip :text="$t('For all MineSkin users, compared to manually changing skins')"
-                                           location="bottom">
+                                           location="bottom"
+                                           open-on-click>
                                     <template v-slot:activator="{ props }">
-                                        <abbr v-bind="props">{{ $t("Time Saved") }} <v-icon icon="mdi-information-outline" size="xs"></v-icon></abbr>
+                                        <abbr v-bind="props">{{ $t("Time Saved") }}
+                                            <v-icon icon="mdi-information-outline" size="xs"></v-icon>
+                                        </abbr>
                                     </template>
                                 </v-tooltip>
                             </v-list-item-subtitle>
@@ -187,9 +190,12 @@
                             </v-list-item-title>
                             <v-list-item-subtitle>
                                 <v-tooltip :text="$t('Number of Skins that can be generated in 1 minute (estimate)')"
-                                           location="bottom">
+                                           location="bottom"
+                                           open-on-click>
                                     <template v-slot:activator="{ props }">
-                                        <abbr v-bind="props">{{ $t("Generator Capacity") }} <v-icon icon="mdi-information-outline" size="xs"></v-icon></abbr>
+                                        <abbr v-bind="props">{{ $t("Generator Capacity") }}
+                                            <v-icon icon="mdi-information-outline" size="xs"></v-icon>
+                                        </abbr>
                                     </template>
                                 </v-tooltip>
                             </v-list-item-subtitle>
