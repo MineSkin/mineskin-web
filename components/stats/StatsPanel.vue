@@ -104,11 +104,36 @@
                     <v-skeleton-loader v-if="!isHydrated || !stats" type="list-item-two-line"></v-skeleton-loader>
                     <v-list v-else>
                         <v-list-item>
+                            <v-list-item-title class="text-h5">
+                                <div class="d-inline"><span>More than <strong>{{ timeSavedHours }} hours</strong></span></div>
+                                <div class="d-inline float-end text-end"><span>{{ $t("time saved") }}</span>
+                                </div>
+                            </v-list-item-title>
+                            <v-list-item-subtitle>
+<!--                                <div class="d-inline">for all MineSkin users</div>-->
+                                <div class="d-inline float-end text-end">
+                                    compared to manually changing skins
+                                </div>
+                            </v-list-item-subtitle>
+                        </v-list-item>
+                    </v-list>
+                </v-card-text>
+            </v-card>
+        </v-col>
+    </v-row>
+    <v-row dense>
+        <v-col>
+            <v-card class="mt-2">
+                <v-card-text>
+                    <v-skeleton-loader v-if="!isHydrated || !stats" type="list-item-two-line"></v-skeleton-loader>
+                    <v-list v-else>
+                        <v-list-item>
                             <v-list-item-title>
                                 <div class="text-h6">{{ minuteCapacity }}</div>
                             </v-list-item-title>
                             <v-list-item-subtitle>
-                                <v-tooltip :text="$t('Number of Skins that can be generated in 1 minute (estimate)')" location="bottom">
+                                <v-tooltip :text="$t('Number of Skins that can be generated in 1 minute (estimate)')"
+                                           location="bottom">
                                     <template v-slot:activator="{ props }">
                                         <abbr v-bind="props">{{ $t("Generator Capacity") }}</abbr>
                                     </template>
@@ -189,6 +214,15 @@ const CAPACITY_WINDOW = 15;
 const minuteCapacity = computed(() => {
     return (generator.value?.capacity?.global || 0) * (60 / CAPACITY_WINDOW);
 })
+
+const timeSavedHours = computed(() => {
+    const manualDurationSeconds = 15;
+    const mineskinDurationSeconds = 2;
+    const totalGenerated = today.value.new;
+    const totalTimeSavedSeconds = totalGenerated * (manualDurationSeconds - mineskinDurationSeconds);
+    const totalTimeSavedHours = Math.floor(totalTimeSavedSeconds / 60 / 60);
+    return formatNumber(totalTimeSavedHours);
+});
 
 const tick = () => {
     if (stats.value) {
