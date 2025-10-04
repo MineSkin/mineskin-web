@@ -36,7 +36,7 @@
         <v-divider class="my-4"/>
 
         <v-row justify="center" class="my-4">
-            <v-col cols="12" lg="5" order-md="last">
+            <v-col cols="12" lg="5" xl="3" order-md="last">
                 <h4 class="text-h5 mb-4">Stats</h4>
                 <StatsPanel/>
             </v-col>
