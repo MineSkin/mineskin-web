@@ -106,7 +106,6 @@
                         <v-list-item>
                             <v-list-item-title>
                                 <div class="text-h6">
-                                    <span class="d-none d-xl-inline">More than </span>
                                     <strong>{{ timeSavedYears }} years</strong>
                                 </div>
                             </v-list-item-title>
