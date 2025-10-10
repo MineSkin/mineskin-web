@@ -12,7 +12,7 @@
         >
             <SkinHeadImg :skin="skin"/>
             <v-divider v-if="!noTitle" class="my-2"/>
-            <div class="skin-name" v-if="!noTitle">{{ skin?.name || skin?.uuid?.substring(0, 8) }}</div>
+            <div class="skin-name" v-if="!noTitle">{{ skin?.name || skin?.shortId || skin?.uuid?.substring(0, 8) }}</div>
         </v-sheet>
     </nuxt-link>
 </template>
