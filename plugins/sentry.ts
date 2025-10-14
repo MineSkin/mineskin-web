@@ -13,10 +13,10 @@ export default defineNuxtPlugin(nuxtApp => {
                     integrations: [
                         Sentry.browserTracingIntegration(),
                         Sentry.replayIntegration(),
-                        Sentry.feedbackIntegration({
-                            // Additional SDK configuration goes in here, for example:
-                            colorScheme: "system",
-                        }),
+                        // Sentry.feedbackIntegration({
+                        //     // Additional SDK configuration goes in here, for example:
+                        //     colorScheme: "system",
+                        // }),
                     ],
                     // Tracing
                     tracesSampleRate: config.public.isDev ? 1.0 : 0.2,
