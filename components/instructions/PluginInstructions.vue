@@ -8,6 +8,7 @@
         >
             <v-tab text="Citizens" value="citizens"></v-tab>
             <v-tab text="Taterzens" value="taterzens"></v-tab>
+            <v-tab text="SkinsRestorer" value="skinsrestorer"></v-tab>
         </v-tabs>
 
         <v-tabs-window v-model="type"  direction="vertical"  class="w-100" >
@@ -27,6 +28,6 @@ import { ref } from "vue";
 const props = defineProps<{
     skin: SkinInfo2;
 }>();
-const types = ['citizens', 'taterzens'];
+const types = ['citizens', 'taterzens', 'skinsrestorer'];
 const type = ref('citizens');
 </script>
