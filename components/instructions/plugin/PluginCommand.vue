@@ -15,12 +15,13 @@ import type { SkinInfo2 } from "@mineskin/types";
 import { computed } from "vue";
 import CitizensFormat from "./CitizensFormat.vue";
 import TaterzensFormat from "./TaterzensFormat.vue";
+import SkinsRestorerFormat from "./SkinsRestorerFormat.vue";
 import CopyTextArea from "~/components/skin/CopyTextArea.vue";
 import CopyTextField from "~/components/skin/CopyTextField.vue";
 
 const props = defineProps<{
     skin: SkinInfo2;
-    type: 'citizens' | 'taterzens'
+    type: 'citizens' | 'taterzens' | 'skinsrestorer'
 }>();
 const format = computed(() => {
     switch (props.type) {
@@ -28,6 +29,8 @@ const format = computed(() => {
             return CitizensFormat;
         case 'taterzens':
             return TaterzensFormat;
+        case 'skinsrestorer':
+            return SkinsRestorerFormat;
     }
 });
 
