@@ -307,20 +307,22 @@ async function api() {
     const response = await $mineskin.skins.list(after.value, toLoad, filter.value, props.mode);
     console.debug(response);
     const skins = response?.skins || [];
-    hasNext.value = skins.length > 0;
-    if (skins.length > 0) {
-        after.value = skins[skins.length - 1].uuid!;
+    hasNext.value = skins.length >= toLoad;
+    if (hasNext.value) {
+        let nextAfter = skins[skins.length - 1].uuid!;
+        // hacky "fix" for a weird edge-case where the gallery infinitely shows the same set of skins
+        if (nextAfter === after.value) {
+            console.warn("nextAfter == after", nextAfter, after.value);
+            nextAfter = skins[skins.length - 2].uuid!
+        }
+        after.value = nextAfter;
+
         pageIndex.value++;
         galleryAnchor.value = after.value;
         // preload next
         $mineskin.skins.list(after.value, toLoad, filter.value, props.mode);
     }
     return skins;
-    // return new Promise(resolve => {
-    //     setTimeout(() => {
-    //         resolve(Array.from({ length: 10 }, (k, v) => v + items.value.at(-1) + 1))
-    //     }, 1000)
-    // })
 }
 
 async function load({done}) {

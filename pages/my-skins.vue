@@ -9,7 +9,8 @@
                 <v-btn v-if="legacySkins || mySkins" @click="showLocal=!showLocal" color="secondary" class="mx-2">
                     Toggle Local Skins
                 </v-btn>
-                <v-btn v-if="authStore.authed" :to="localePath('/export')" color="primary" class="mx-2">Export Skins</v-btn>
+                <v-btn v-if="authStore.authed" :to="localePath('/export')" color="primary" class="mx-2">Export Skins
+                </v-btn>
             </v-col>
         </v-row>
         <v-row v-if="!authStore.authed" justify="center">
@@ -104,7 +105,7 @@ const showLocal = ref(false);
 // });
 
 const skins = ref([]);
-const after = ref(null);
+const after = ref<string | null>(null);
 const hasNext = ref(true);
 
 async function api() {
@@ -112,16 +113,17 @@ async function api() {
     const response = await $mineskin.me.skins(after.value);
     console.debug(response);
     const skins = response?.skins || [];
-    hasNext.value = skins.length > 0;
-    if (skins.length > 0) {
-        after.value = skins[skins.length - 1].uuid;
+    hasNext.value = skins.length >= 16;
+    if (hasNext.value) {
+        let nextAfter = skins[skins.length - 1].uuid!;
+        // hacky "fix" for a weird edge-case where the gallery infinitely shows the same set of skins
+        if (nextAfter === after.value) {
+            console.warn("nextAfter == after", nextAfter, after.value);
+            nextAfter = skins[skins.length - 2].uuid!
+        }
+        after.value = nextAfter;
     }
     return skins;
-    // return new Promise(resolve => {
-    //     setTimeout(() => {
-    //         resolve(Array.from({ length: 10 }, (k, v) => v + items.value.at(-1) + 1))
-    //     }, 1000)
-    // })
 }
 
 async function load({done}) {
