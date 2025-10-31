@@ -122,6 +122,9 @@ async function api() {
             nextAfter = skins[skins.length - 2].uuid!
         }
         after.value = nextAfter;
+
+        // preload next
+        $mineskin.me.skins(after.value);
     }
     return skins;
 }
