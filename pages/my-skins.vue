@@ -36,6 +36,16 @@
                     <!--                    </v-col>-->
                 </template>
             </v-row>
+            <template v-slot:empty>
+                <span v-if="unlimitedHistory">No more results</span>
+                <span v-else>
+                     <a class="text-decoration-none"
+                        href="https://account.mineskin.org/store?utm_source=web&utm_medium=button&utm_campaign=skin_history_unlimited"
+                        target="_blank">
+                            Upgrade to view older skins ✨
+                    </a>
+                </span>
+            </template>
         </v-infinite-scroll>
         <v-row v-if="showLocal && (legacySkins || mySkins)" class="mt-4">
             <v-divider class="my-2"/>
@@ -78,7 +88,7 @@
 <script setup lang="ts">
 import { useNuxtApp } from "#app";
 import { useSkinStore } from "#imports";
-import { onMounted } from "vue";
+import { computed, onMounted } from "vue";
 
 useHead({
     title: 'My Skins'
@@ -96,6 +106,8 @@ const skinStore = useSkinStore();
 const {mySkins, legacySkins} = storeToRefs(skinStore);
 
 const showLocal = ref(false);
+
+const unlimitedHistory = computed(() => authStore.grants?.skin_history_unlimited);
 
 // const {
 //     data: skins,
