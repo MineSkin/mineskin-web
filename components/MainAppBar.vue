@@ -82,7 +82,7 @@
                 <span v-if="mdAndUp">{{ $t("Gallery") }}</span>
                 <v-icon v-else icon="mdi-image-search"></v-icon>
             </v-tab>
-            <v-tab v-if="authStore.authed" :to="localePath('/my-skins')">
+            <v-tab v-if="isHydrated" :to="localePath('/my-skins')">
                 <span v-if="mdAndUp">{{ $t("My Skins") }}</span>
                 <v-icon v-else icon="mdi-view-grid"></v-icon>
             </v-tab>
