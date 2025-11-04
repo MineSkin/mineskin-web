@@ -15,7 +15,11 @@
         </v-row>
         <v-row v-if="!authStore.authed" justify="center">
             <v-col cols="auto">
-                <v-alert type="warning" text="Sign in to view your skins"></v-alert>
+                <v-alert type="warning" @click.prevent="loginRedirect">
+                    <template #text>
+                        <a href="https://account.mineskin.org" class="text-blue-lighten-4">Sign in</a> to view your skins
+                    </template>
+                </v-alert>
             </v-col>
         </v-row>
         <v-infinite-scroll v-else-if="!showLocal" :items="skins" :onLoad="load" style="overflow: hidden">
@@ -106,6 +110,13 @@ const skinStore = useSkinStore();
 const {mySkins, legacySkins} = storeToRefs(skinStore);
 
 const showLocal = ref(false);
+
+const loginRedirect = () => {
+    authStore.reset();
+    setTimeout(() => {
+        window.location.href = 'https://account.mineskin.org/login?redirect=https://mineskin.org/my-skins';
+    }, 100);
+}
 
 const unlimitedHistory = computed(() => authStore.grants?.skin_history_unlimited);
 
