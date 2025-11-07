@@ -1,10 +1,10 @@
 <template>
     <div>
         hi
-    </div>
-    <component is="script" async
+        <component is="script" async
                :src="'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=' + clientId"
                crossorigin="anonymous"></component>
+    </div>
 </template>
 <script setup lang="ts">
 import { useAuthStore } from "~/stores/auth";
