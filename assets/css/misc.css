@@ -5,3 +5,11 @@
 .user-avatar.member {
     border: solid 2px #fdd835;
 }
+
+.text-member {
+    color: #fdd835;
+}
+
+.text-shadow-member {
+    text-shadow: 0 0 5px #fdd835;
+}

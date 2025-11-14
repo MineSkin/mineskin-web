@@ -37,3 +37,7 @@ export interface NewDup {
     new: number;
     duplicate: number;
 }
+
+export interface AccountStats {
+    members: number;
+}

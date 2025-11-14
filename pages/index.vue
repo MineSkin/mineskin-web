@@ -42,6 +42,7 @@
             </v-col>
             <v-col cols="12" lg="7" xl="6">
                 <MainFAQ class="mb-2"/>
+                <MemberStatsPanel/>
                 <!-- web v2 faq banner -->
                 <!--                <ad-wrappper ad-slot="8238741844"/>-->
             </v-col>
@@ -60,6 +61,9 @@ import AdWrappper from "~/components/ad/AdWrappper.vue";
 import LatestSkinsPreviewList from "~/components/skin/LatestSkinsPreviewList.vue";
 import MainFAQ from "~/components/MainFAQ.vue";
 import AdInfoWrapper from "~/components/ad/AdInfoWrapper.vue";
+import MemberStatsPanel from "~/components/stats/MemberStatsPanel.vue";
+
+import '~/assets/css/font.css'
 
 const {$notify, $flags} = useNuxtApp();
 
