@@ -34,7 +34,7 @@ const isHydrated = ref(false);
 const {
     data: stats,
     refresh: refreshStats
-} = useLazyAsyncData<Stats>(`stats`, async () => {
+} = useLazyAsyncData<Stats>(`stats1`, async () => {
     return (await $mineskin.stats.get())?.stats;
 }, {
     immediate: false
