@@ -52,6 +52,9 @@
             color: white;
             }
         </component>
+        <component is="script" async
+                   :src="'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=' + clientId"
+                   crossorigin="anonymous"></component>
         <div>
             <h1 id="status"></h1>
             <div id="modal" class="modal">
@@ -66,17 +69,13 @@
                       <input type="button" id="watchAdButton" value="Yes"/>
                       <input id="noRewardButton" type="button" value="No"/>
                     </span>
-
-                    <component is="script" async
-                               :src="'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=' + clientId"
-                               crossorigin="anonymous"></component>
                 </div>
             </div>
         </div>
     </div>
 </template>
 <script>
-window.googletag = window.googletag || {cmd: []};
+let googletag = window.googletag = window.googletag || { cmd: [] };
 
 let rewardedSlot;
 let rewardPayload;
