@@ -74,89 +74,94 @@
         </div>
     </div>
 </template>
-<script>
-let googletag = window.googletag = window.googletag || { cmd: [] };
+<script setup lang="ts">
+import { onMounted } from "vue";
 
-let rewardedSlot;
-let rewardPayload;
+onMounted(() => {
+    let googletag = window.googletag = (window.googletag || {cmd: []}) as any;
+    console.debug('googletag', googletag);
 
-googletag.cmd.push(() => {
-    rewardedSlot = googletag.defineOutOfPageSlot(
-        "/22639388115/rewarded_web_example",
-        googletag.enums.OutOfPageFormat.REWARDED,
-    );
+    let rewardedSlot;
+    let rewardPayload;
 
-    /* Slot returns null if the page or device does not support rewarded ads. */
-    if (rewardedSlot) {
-        rewardedSlot.addService(googletag.pubads());
-
-        googletag.pubads().addEventListener("rewardedSlotReady", (event) => {
-            updateStatus("Rewarded ad slot is ready.");
-
-            document.getElementById("watchAdButton").onclick = () => {
-                event.makeRewardedVisible();
-                displayModal();
-                updateStatus("Rewarded ad is active.");
-            };
-
-            displayModal("reward", "Watch an ad to receive a special reward?");
-        });
-
-        googletag.pubads().addEventListener("rewardedSlotVideoCompleted", (event) => {
-            updateStatus("Video ad has finished playing.");
-        });
-
-        googletag.pubads().addEventListener("rewardedSlotClosed", dismissRewardedAd);
-
-        googletag.pubads().addEventListener("rewardedSlotGranted", (event) => {
-            rewardPayload = event.payload;
-            updateStatus("Reward granted.");
-        });
-
-        googletag.pubads().addEventListener("slotRenderEnded", (event) => {
-            if (event.slot === rewardedSlot && event.isEmpty) {
-                updateStatus("No ad returned for rewarded ad slot.");
-            }
-        });
-
-        googletag.enableServices();
-        googletag.display(rewardedSlot);
-    } else {
-        updateStatus("Rewarded ads are not supported on this page.");
-    }
-});
-
-function dismissRewardedAd() {
-    if (rewardPayload) {
-        /* User was granted a reward and closed the ad.*/
-        displayModal(
-            "grant",
-            `You have been rewarded ${ rewardPayload.amount } ${ rewardPayload.type }!`,
+    googletag.cmd.push(() => {
+        rewardedSlot = googletag.defineOutOfPageSlot(
+            "/22639388115/rewarded_web_example",
+            googletag.enums.OutOfPageFormat.REWARDED,
         );
-        rewardPayload = null;
-    } else {
-        /* User closed the ad without getting a reward.*/
-        displayModal();
+
+        /* Slot returns null if the page or device does not support rewarded ads. */
+        if (rewardedSlot) {
+            rewardedSlot.addService(googletag.pubads());
+
+            googletag.pubads().addEventListener("rewardedSlotReady", (event) => {
+                updateStatus("Rewarded ad slot is ready.");
+
+                document.getElementById("watchAdButton").onclick = () => {
+                    event.makeRewardedVisible();
+                    displayModal();
+                    updateStatus("Rewarded ad is active.");
+                };
+
+                displayModal("reward", "Watch an ad to receive a special reward?");
+            });
+
+            googletag.pubads().addEventListener("rewardedSlotVideoCompleted", (event) => {
+                updateStatus("Video ad has finished playing.");
+            });
+
+            googletag.pubads().addEventListener("rewardedSlotClosed", dismissRewardedAd);
+
+            googletag.pubads().addEventListener("rewardedSlotGranted", (event) => {
+                rewardPayload = event.payload;
+                updateStatus("Reward granted.");
+            });
+
+            googletag.pubads().addEventListener("slotRenderEnded", (event) => {
+                if (event.slot === rewardedSlot && event.isEmpty) {
+                    updateStatus("No ad returned for rewarded ad slot.");
+                }
+            });
+
+            googletag.enableServices();
+            googletag.display(rewardedSlot);
+        } else {
+            updateStatus("Rewarded ads are not supported on this page.");
+        }
+    });
+
+    function dismissRewardedAd() {
+        if (rewardPayload) {
+            /* User was granted a reward and closed the ad.*/
+            displayModal(
+                "grant",
+                `You have been rewarded ${ rewardPayload.amount } ${ rewardPayload.type }!`,
+            );
+            rewardPayload = null;
+        } else {
+            /* User closed the ad without getting a reward.*/
+            displayModal();
+        }
+
+        updateStatus("Rewarded ad has been closed.");
+
+        if (rewardedSlot) {
+            googletag.destroySlots([rewardedSlot]);
+        }
     }
 
-    updateStatus("Rewarded ad has been closed.");
+    function displayModal(type = "", message = "") {
+        const modal = document.getElementById("modal");
+        modal.removeAttribute("data-type");
 
-    if (rewardedSlot) {
-        googletag.destroySlots([rewardedSlot]);
+        if (type) {
+            document.getElementById("modalMessage").textContent = message;
+            modal.setAttribute("data-type", type);
+        }
     }
-}
 
-function displayModal(type = "", message = "") {
-    const modal = document.getElementById("modal");
-    modal.removeAttribute("data-type");
-
-    if (type) {
-        document.getElementById("modalMessage").textContent = message;
-        modal.setAttribute("data-type", type);
+    function updateStatus(message) {
+        document.getElementById("status").textContent = message;
     }
-}
-
-function updateStatus(message) {
-    document.getElementById("status").textContent = message;
-}
+})
 </script>
