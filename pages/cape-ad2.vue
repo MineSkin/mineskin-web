@@ -17,7 +17,7 @@
             googletag.enums.OutOfPageFormat.REWARDED,
             );
 
-            // Slot returns null if the page or device does not support rewarded ads.
+            /* Slot returns null if the page or device does not support rewarded ads. */
             if (rewardedSlot) {
             rewardedSlot.addService(googletag.pubads());
 
@@ -59,14 +59,14 @@
 
             function dismissRewardedAd() {
             if (rewardPayload) {
-            // User was granted a reward and closed the ad.
+            /* User was granted a reward and closed the ad.*/
             displayModal(
             "grant",
             `You have been rewarded ${rewardPayload.amount} ${rewardPayload.type}!`,
             );
             rewardPayload = null;
             } else {
-            // User closed the ad without getting a reward.
+            /* User closed the ad without getting a reward.*/
             displayModal();
             }
 
