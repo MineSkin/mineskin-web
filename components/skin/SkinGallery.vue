@@ -340,15 +340,27 @@ async function load({done}) {
         return;
     }
 
-    // push skins, grouping by 2
-    const grouped = res.reduce((acc, item, index) => {
-        if (index % 2 === 0) {
-            acc.push([item]);
-        } else {
-            acc[acc.length - 1].push(item);
-        }
-        return acc;
-    }, [] as ListedSkin[][]);
+
+    const grouped = res
+        // make sure we're not adding the same skins
+        .filter((item) => {
+            const existingIndex = skins.value.findIndex(group => {
+                if (Array.isArray(group)) {
+                    return group.findIndex(skin => skin.uuid === item.uuid) !== -1;
+                }
+                return false;
+            });
+            return existingIndex === -1;
+        })
+        // push skins, grouping by 2
+        .reduce((acc, item, index) => {
+            if (index % 2 === 0) {
+                acc.push([item]);
+            } else {
+                acc[acc.length - 1].push(item);
+            }
+            return acc;
+        }, [] as ListedSkin[][]);
     if (!adFree.value && inlineAdRate.value != 0) {
         if (adsOnPage.value === 0) {
             grouped.splice(Math.floor(Math.random() * (mdAndUp.value ? 4 : 2)) + 2, 0, {
