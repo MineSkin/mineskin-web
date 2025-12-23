@@ -6,8 +6,8 @@
                 <p>{{ $t("Automate Minecraft Skin Signature Generation") }}</p>
             </v-col>
         </v-row>
-        <v-row v-if="notificationBanner">
-            <v-col>
+        <v-row justify="center" v-if="notificationBanner">
+            <v-col cols="12" md="8">
                 <v-card :color="notificationBanner.color||'warning'" :href="notificationBanner.link||false" target="_blank">
                     <v-card-title>{{ notificationBanner.title }}</v-card-title>
                     <v-card-text>{{ notificationBanner.text }}</v-card-text>
