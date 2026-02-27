@@ -13,26 +13,18 @@
 <template>
     <ClientOnly>
         <div class="ad-wrapper" v-if="ready && grants && !grants.ad_free">
-            <!--            <div class="ad-fallback text-red pa-6 text-center w-100" v-show="!noFallback">-->
-            <!--                Please disable your ad blocker-->
-            <!--            </div>-->
-            <component is="script" async
-                       src="https://securepubads.g.doubleclick.net/tag/js/gpt.js" crossorigin="anonymous"/>
-            <component is="script">
-                {{ isDev ? 'google_adtest = "on";' : '' }}
-                window.googletag = window.googletag || {cmd: []};
-                "{{ ready }} {{ grants.ad_free }}";
-                googletag.cmd.push(function() {
-                googletag.defineSlot('{{ adSlot }}', ['fluid'], '{{ adId }}').addService(googletag.pubads());
-                googletag.pubads().enableSingleRequest();
-                googletag.enableServices();
-                });
-            </component>
             <slot name="ad">
                 <!-- {{ adSlot }} -->
                 <div :id='adId'>
                     <component is="script">
+                        {{ isDev ? 'google_adtest = "on";' : '' }}
+                        "{{ ready }} {{ grants.ad_free }}";
+                        googletag.cmd.push(function() {
+                        googletag.defineSlot('{{ adSlot }}', ['fluid'], '{{ adId }}').addService(googletag.pubads());
+                        googletag.pubads().enableSingleRequest();
+                        googletag.enableServices();
                         googletag.cmd.push(function() { googletag.display('{{ adId }}'); });
+                        });
                     </component>
                 </div>
             </slot>
@@ -61,6 +53,20 @@ const {grants} = storeToRefs(authStore);
 
 const ready = ref(false);
 onMounted(() => {
+    if (grants.value && !grants.value.ad_free) {
+        const adScript = document.createElement('script');
+
+        adScript.type = 'text/javascript';
+        adScript.src = 'https://securepubads.g.doubleclick.net/tag/js/gpt.js';
+        adScript.async = true;
+        adScript.crossOrigin = 'anonymous';
+        document.head.appendChild(adScript);
+
+        const w = window as any;
+        if (w.googletag) w.googletag.pubads().refresh();
+        w.googletag = w.googletag || {cmd: []};
+    }
+
     ready.value = true;
 });
 </script>
