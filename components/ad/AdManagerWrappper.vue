@@ -15,7 +15,7 @@
         <div class="ad-wrapper" v-if="ready && grants && !grants.ad_free">
             <slot name="ad">
                 <!-- {{ adSlot }} -->
-                <div :id='adId'>
+                <div :id='adId' v-if="gtag">
                     <component is="script">
                         {{ isDev ? 'google_adtest = "on";' : '' }}
                         "{{ ready }} {{ grants.ad_free }}";
@@ -52,6 +52,7 @@ const authStore = useAuthStore();
 const {grants} = storeToRefs(authStore);
 
 const ready = ref(false);
+const gtag = ref(null);
 onMounted(() => {
     ready.value = true;
 });
@@ -60,6 +61,7 @@ watch(() => grants.value, newGrants => {
     if (newGrants && !newGrants.ad_free) {
         const w = window as any;
         if (w.googletag) {
+            gtag.value = w.googletag;
             w.googletag.pubads().refresh();
             return;
         }
@@ -73,6 +75,7 @@ watch(() => grants.value, newGrants => {
         document.head.appendChild(adScript);
 
         w.googletag = w.googletag || {cmd: []};
+        gtag.value = w.googletag;
     }
 })
 
