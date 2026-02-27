@@ -53,7 +53,17 @@ const {grants} = storeToRefs(authStore);
 
 const ready = ref(false);
 onMounted(() => {
-    if (grants.value && !grants.value.ad_free) {
+    ready.value = true;
+});
+
+watch(() => grants.value, newGrants => {
+    if (newGrants && !newGrants.ad_free) {
+        const w = window as any;
+        if (w.googletag) {
+            w.googletag.pubads().refresh();
+            return;
+        }
+
         const adScript = document.createElement('script');
 
         adScript.type = 'text/javascript';
@@ -62,11 +72,15 @@ onMounted(() => {
         adScript.crossOrigin = 'anonymous';
         document.head.appendChild(adScript);
 
-        const w = window as any;
-        if (w.googletag) w.googletag.pubads().refresh();
         w.googletag = w.googletag || {cmd: []};
     }
+})
 
-    ready.value = true;
-});
+onBeforeUnmount(() => {
+    const googletag = (window as any).googletag;
+    if (googletag) {
+        googletag.destroySlots();
+    }
+
+})
 </script>
