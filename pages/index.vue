@@ -23,12 +23,12 @@
         <v-row class="text-center">
             <ad-info-wrapper>
                 <template #default>
-                    <!--                    &lt;!&ndash; web v2 index middle banner &ndash;&gt;-->
-                    <!--                    <ad-wrappper ad-slot="3929622901"/>-->
-                    <ad-manager-wrappper
-                        ad-slot="/23325865428/msg_am_index_middle_banner"
-                        ad-id="div-gpt-ad-1772184349712-0"
-                    />
+                    <!-- web v2 index middle banner -->
+                    <ad-wrappper ad-slot="3929622901"/>
+                    <!--                    <ad-manager-wrappper-->
+                    <!--                        ad-slot="/23325865428/msg_am_index_middle_banner"-->
+                    <!--                        ad-id="div-gpt-ad-1772184349712-0"-->
+                    <!--                    />-->
                 </template>
             </ad-info-wrapper>
         </v-row>
