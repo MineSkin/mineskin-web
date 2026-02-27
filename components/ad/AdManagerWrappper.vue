@@ -20,10 +20,13 @@
                         {{ isDev ? 'google_adtest = "on";' : '' }}
                         "{{ ready }} {{ grants.ad_free }}";
                         googletag.cmd.push(function() {
-                        googletag.defineSlot('{{ adSlot }}', ['fluid'], '{{ adId }}').addService(googletag.pubads());
-                        googletag.pubads().enableSingleRequest();
-                        googletag.enableServices();
-                        googletag.cmd.push(function() { googletag.display('{{ adId }}'); });
+                            console.debug('Defining ad slot {{ adSlot }} with id {{ adId }}');
+                            try{googletag.defineSlot('{{ adSlot }}', ['fluid'], '{{ adId }}').addService(googletag.pubads());}catch(e){console.error('Error defining ad slot:', e);}
+                            googletag.pubads().enableSingleRequest();
+                            googletag.enableServices();
+
+                            console.debug('Displaying ad slot {{ adSlot }} with id {{ adId }}');
+                            googletag.cmd.push(function() { googletag.display('{{ adId }}'); });
                         });
                     </component>
                 </div>
@@ -61,11 +64,13 @@ watch(() => grants.value, newGrants => {
     if (newGrants && !newGrants.ad_free) {
         const w = window as any;
         if (w.googletag) {
-            gtag.value = w.googletag;
+            console.debug('googletag already exists, refreshing ads');
             w.googletag.pubads().refresh();
+            gtag.value = w.googletag;
             return;
         }
 
+        console.debug('Loading googletag script');
         const adScript = document.createElement('script');
 
         adScript.type = 'text/javascript';
@@ -74,6 +79,7 @@ watch(() => grants.value, newGrants => {
         adScript.crossOrigin = 'anonymous';
         document.head.appendChild(adScript);
 
+        console.debug('Initializing googletag');
         w.googletag = w.googletag || {cmd: []};
         gtag.value = w.googletag;
     }
@@ -82,6 +88,7 @@ watch(() => grants.value, newGrants => {
 onBeforeUnmount(() => {
     const googletag = (window as any).googletag;
     if (googletag) {
+        console.debug('Destroying googletag slots');
         googletag.destroySlots();
     }
 
