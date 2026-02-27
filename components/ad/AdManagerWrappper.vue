@@ -24,9 +24,10 @@
                             try{googletag.defineSlot('{{ adSlot }}', ['fluid'], '{{ adId }}').addService(googletag.pubads());}catch(e){console.error('Error defining ad slot:', e);}
                             googletag.pubads().enableSingleRequest();
                             googletag.enableServices();
-
+                        });
+                        googletag.cmd.push(function() {
                             console.debug('Displaying ad slot {{ adSlot }} with id {{ adId }}');
-                            googletag.cmd.push(function() { googletag.display('{{ adId }}'); });
+                            googletag.display('{{ adId }}');
                         });
                     </component>
                 </div>
