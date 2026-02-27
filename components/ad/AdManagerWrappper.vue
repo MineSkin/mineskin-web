@@ -77,7 +77,7 @@ watch(() => grants.value, newGrants => {
         w.googletag = w.googletag || {cmd: []};
         gtag.value = w.googletag;
     }
-})
+},{immediate: true})
 
 onBeforeUnmount(() => {
     const googletag = (window as any).googletag;
