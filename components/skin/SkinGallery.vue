@@ -41,8 +41,11 @@
     <v-row class="text-center">
         <ad-info-wrapper>
             <template #default>
-                <!-- web v2 index middle banner -->
-                <ad-wrappper ad-slot="7045370598"/>
+<!--                <ad-wrappper ad-slot="7045370598"/>-->
+                <ad-manager-wrappper
+                    ad-slot="/23325865428/msk_am_gallery_top_banner"
+                    ad-id="div-gpt-ad-1772183672799-0"
+                    />
             </template>
         </ad-info-wrapper>
     </v-row>
@@ -134,6 +137,7 @@ import AdWrappper from "~/components/ad/AdWrappper.vue";
 import AdInfoWrapper from "~/components/ad/AdInfoWrapper.vue";
 import { computed } from "vue";
 import { capitalizeFirstLetter } from "~/util/misc";
+import AdManagerWrappper from "~/components/ad/AdManagerWrappper.vue";
 
 const router = useRouter();
 const {xl, lg, md, sm, xs, name: breakpoint, mdAndUp} = useDisplay();

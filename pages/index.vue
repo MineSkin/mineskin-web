@@ -8,7 +8,8 @@
         </v-row>
         <v-row justify="center" v-if="notificationBanner">
             <v-col cols="12" md="8">
-                <v-card :color="notificationBanner.color||'warning'" :href="notificationBanner.link||false" target="_blank">
+                <v-card :color="notificationBanner.color||'warning'" :href="notificationBanner.link||false"
+                        target="_blank">
                     <v-card-title>{{ notificationBanner.title }}</v-card-title>
                     <v-card-text>{{ notificationBanner.text }}</v-card-text>
                 </v-card>
@@ -22,8 +23,12 @@
         <v-row class="text-center">
             <ad-info-wrapper>
                 <template #default>
-                    <!-- web v2 index middle banner -->
-                    <ad-wrappper ad-slot="3929622901"/>
+                    <!--                    &lt;!&ndash; web v2 index middle banner &ndash;&gt;-->
+                    <!--                    <ad-wrappper ad-slot="3929622901"/>-->
+                    <ad-manager-wrappper
+                        ad-slot="/23325865428/msg_am_index_middle_banner"
+                        ad-id="div-gpt-ad-1772184349712-0"
+                    />
                 </template>
             </ad-info-wrapper>
         </v-row>
