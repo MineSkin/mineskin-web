@@ -20,14 +20,16 @@
                         {{ isDev ? 'google_adtest = "on";' : '' }}
                         "{{ ready }} {{ grants.ad_free }}";
                         googletag.cmd.push(function() {
-                            console.debug('Defining ad slot {{ adSlot }} with id {{ adId }}');
-                            try{googletag.defineSlot('{{ adSlot }}', ['fluid'], '{{ adId }}').addService(googletag.pubads());}catch(e){console.error('Error defining ad slot:', e);}
-                            googletag.pubads().enableSingleRequest();
-                            googletag.enableServices();
+                        console.debug('Defining ad slot {{ adSlot }} with id {{ adId }}');
+                        try{googletag.defineSlot('{{ adSlot }}', ['fluid'], '{{
+                            adId
+                        }}').addService(googletag.pubads());}catch(e){console.error('Error defining ad slot:', e);}
+                        googletag.pubads().enableSingleRequest();
+                        googletag.enableServices();
                         });
                         googletag.cmd.push(function() {
-                            console.debug('Displaying ad slot {{ adSlot }} with id {{ adId }}');
-                            googletag.display('{{ adId }}');
+                        console.debug('Displaying ad slot {{ adSlot }} with id {{ adId }}');
+                        googletag.display('{{ adId }}');
                         });
                     </component>
                 </div>
@@ -66,8 +68,12 @@ watch(() => grants.value, newGrants => {
         const w = window as any;
         if (w.googletag) {
             console.debug('googletag already exists, refreshing ads');
-            w.googletag.pubads().refresh();
-            gtag.value = w.googletag;
+            try {
+                w.googletag.pubads().refresh();
+                gtag.value = w.googletag;
+            } catch (e) {
+                console.error('Error refreshing ads:', e);
+            }
             return;
         }
 
@@ -84,7 +90,7 @@ watch(() => grants.value, newGrants => {
         w.googletag = w.googletag || {cmd: []};
         gtag.value = w.googletag;
     }
-},{immediate: true})
+}, {immediate: true})
 
 onBeforeUnmount(() => {
     const googletag = (window as any).googletag;
