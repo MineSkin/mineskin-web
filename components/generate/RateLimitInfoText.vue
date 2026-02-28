@@ -12,7 +12,7 @@
             (resets in {{ hourReset }})
             </span>
         </div>
-        <div v-if="(showMinute||showHour)&&(minuteRemaining<5||hourRemaining||30)">
+        <div v-if="(showMinute||showHour)&&(minuteRemaining<5||(hourRemaining<30))">
             <action-link
                 href="https://account.mineskin.org/store?utm_source=web&utm_medium=link&utm_campaign=generate_limit_upgrade"
                 target="_blank"
@@ -53,7 +53,7 @@ const minuteRemaining = computed(() => {
 })
 // not force-limited by the backend atm, just show some limit for anonymous users
 const hourRemaining = computed(() => {
-    if (!queueStore.rateLimitHour) return;
+    if (!queueStore.rateLimitHour) return 0;
     if (queueStore.rateLimitHour.limit === 0) {
         if (!authStore.authed) {
             return hourLimit.value - (queueStore.rateLimitHour.used || 0);
