@@ -147,75 +147,100 @@
             </v-row>
         </v-expand-transition>
         <v-expand-transition v-if="isHydrated">
-            <v-row v-show="generateType" class="my-4" justify="center">
-                <v-col>
-                    <dbg :data="wrappedJobMap"></dbg>
-                    <v-row justify="center" class="mb-2 text-center">
-                        <v-btn
-                            color="primary"
-                            :text="$t('Generate') + (waitTime>0?' ('+waitTime+')':'')"
-                            size="x-large"
-                            @click="generate"
-                            :disabled="!canGenerate"
-                            :loading="generating"
-                        ></v-btn>
-                    </v-row>
-                    <v-row justify="center" class="mt-2 text-center">
-                        <ClientOnly>
-                            <CreditsStatus :generating="generating" :estimate="creditsEstimate"/>
-                            <div v-if="generating">
-                                <div>
-                                    Your {{ imageCount > 1 ? 'skins are' : 'skin is' }} being generated...
+            <v-row v-show="generateType" class="mt-4">
+                <v-col cols="12" md="4" class="text-start d-flex flex-column-reverse">
+                    <ClientOnly>
+                        <v-row class="flex-0-0">
+                            <v-col cols="auto">
+                                <div v-if="!authStore.authed">
+                                    <v-alert color="warning" variant="tonal" icon="mdi-alert-circle" class="mt-1">
+                                        <template #text>
+                                            Please
+                                            <action-link
+                                                href="https://account.mineskin.org/login?redirect=https://mineskin.org/&utm_source=web&utm_medium=link&utm_campaign=generate_banner_signin"
+                                            >
+                                                sign in
+                                            </action-link>
+                                            <span v-if="imageCount > 1">to generate multiple skins at once and to keep track of your skins.</span>
+                                            <span
+                                                v-else>to keep track of your skins and to get access to higher limits.</span>
+                                        </template>
+                                    </v-alert>
                                 </div>
-                                <div>
-                                    Check the
-                                    <action-link @click.prevent="jobsDrawer = true" icon="mdi-list-status"
-                                                 tooltip="Show Jobs">Job List
-                                    </action-link>
-                                    for progress,
-                                    or
-                                    <action-link @click.prevent="reset" icon="mdi-reload"
-                                                 tooltip="Reset Image Selection">
-                                        generate more skins
-                                    </action-link>
-                                    .
+                                <div v-else-if="imageCount > 3 && !authStore?.grants?.ad_free">
+                                    <v-alert color="primary" variant="tonal" icon="mdi-information" class="mt-1">
+                                        <template #title>
+                                            Need to generate a lot of skins?
+                                        </template>
+                                        <template #text>
+                                            Check out the
+                                            <action-link
+                                                href="https://account.mineskin.org/store?utm_source=web&utm_medium=link&utm_campaign=generate_banner_upgrade"
+                                                target="_blank"
+                                                class="upgrade-text-gradient"
+                                            >
+                                                ✨ upgrade options
+                                            </action-link>
+                                            for higher limits and faster generation times!
+                                        </template>
+                                    </v-alert>
                                 </div>
-                            </div>
-                            <div v-else-if="!authStore.authed">
-                                <v-alert color="warning" variant="tonal" icon="mdi-alert-circle" class="mt-1">
-                                    <template #text>
-                                        Please
-                                        <action-link
-                                            href="https://account.mineskin.org/login?redirect=https://mineskin.org/&utm_source=web&utm_medium=link&utm_campaign=generate_banner_signin"
-                                        >
-                                            sign in
-                                        </action-link>
-                                        <span v-if="imageCount > 1">to generate multiple skins at once and to keep track of your skins.</span>
-                                        <span
-                                            v-else>to keep track of your skins and to get access to higher limits.</span>
-                                    </template>
-                                </v-alert>
-                            </div>
-                            <div v-else-if="imageCount > 3 && !authStore?.grants?.ad_free">
-                                <v-alert color="primary" variant="tonal" icon="mdi-information" class="mt-1">
-                                    <template #title>
-                                        Need to generate a lot of skins?
-                                    </template>
-                                    <template #text>
-                                        Check out the
-                                        <action-link
-                                            href="https://account.mineskin.org/store?utm_source=web&utm_medium=link&utm_campaign=generate_banner_upgrade"
-                                            target="_blank"
-                                            class="upgrade-text-gradient"
-                                        >
-                                            ✨ upgrade options
-                                        </action-link>
-                                        for higher limits and faster generation times!
-                                    </template>
-                                </v-alert>
-                            </div>
-                        </ClientOnly>
+                            </v-col>
+                        </v-row>
+                    </ClientOnly>
+                </v-col>
+                <v-col cols="12" md="4">
+                    <!--                    <dbg :data="wrappedJobMap"></dbg>-->
+                    <v-row justify="center" class="text-center" dense no-gutters>
+                        <v-col>
+                            <v-btn
+                                color="primary"
+                                :text="$t('Generate') + (waitTime>0?' ('+waitTime+')':'')"
+                                size="x-large"
+                                @click="generate"
+                                :disabled="!canGenerate"
+                                :loading="generating"
+                            ></v-btn>
+                        </v-col>
                     </v-row>
+                    <v-row justify="center">
+                        <v-col cols="auto" class="text-start">
+                            <ClientOnly>
+                                <v-expand-transition v-if="isHydrated">
+                                    <!--                                <CreditsStatus :generating="generating" :estimate="creditsEstimate"/>-->
+                                    <div v-show="generating">
+                                        <v-alert variant="tonal" icon="mdi-loading mdi-spin">
+                                            <template #title>
+                                                <div>
+                                                    Generating your {{ imageCount > 1 ? 'skins' : 'skin' }}...
+                                                </div>
+                                            </template>
+                                            <template #text>
+                                                <div>
+                                                    Check the
+                                                    <action-link @click.prevent="jobsDrawer = true"
+                                                                 icon="mdi-list-status"
+                                                                 tooltip="Show Jobs">Job List
+                                                    </action-link>
+                                                    for progress,
+                                                    or
+                                                    <action-link @click.prevent="reset" icon="mdi-reload"
+                                                                 tooltip="Reset Image Selection">
+                                                        generate more skins
+                                                    </action-link>
+                                                </div>
+                                            </template>
+                                        </v-alert>
+                                    </div>
+                                </v-expand-transition>
+                            </ClientOnly>
+                        </v-col>
+                    </v-row>
+                </v-col>
+                <v-col cols="12" md="4" class="text-end d-flex flex-column-reverse">
+                    <ClientOnly>
+                        <RateLimitInfoText/>
+                    </ClientOnly>
                 </v-col>
             </v-row>
         </v-expand-transition>
@@ -248,6 +273,7 @@ import VisibilitySelect from "~/components/generate/options/VisibilitySelect.vue
 import NameInput from "~/components/generate/options/NameInput.vue";
 import { refDebounced } from "@vueuse/core";
 import type { RateLimitInfo } from "~/types/misc";
+import RateLimitInfoText from "~/components/generate/RateLimitInfoText.vue";
 
 const {$mineskin, $notify, $flags, $gtag} = useNuxtApp();
 
