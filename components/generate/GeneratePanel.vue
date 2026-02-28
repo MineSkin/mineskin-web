@@ -16,11 +16,11 @@
         rounded
         elevation="1"
         class="mx-auto px-4 pt-0 pb-4 drop-area"
+        :class="draggingDebounced ? 'border-md border-secondary border-opacity-100' : 'bg-surface border-md border-surface'"
         @dragover.prevent="onDragStart"
         @dragstart.prevent="onDragStart"
         @dragleave.prevent="onDragEnd"
         @drop.prevent="onDrop"
-        :color="dragging ? 'secondary' : ''"
     >
         <h3 class="text-h6 mb-2 pt-1">
             <span class="d-inline-block pt-2">{{ $t("Generate New Skin Data") }}</span>
@@ -246,6 +246,7 @@ import type { GenerateOptions } from "~/types/GenerateOptions";
 import CapeView from "~/components/skin/CapeView.vue";
 import VisibilitySelect from "~/components/generate/options/VisibilitySelect.vue";
 import NameInput from "~/components/generate/options/NameInput.vue";
+import { refDebounced } from "@vueuse/core";
 
 const {$mineskin, $notify, $flags, $gtag} = useNuxtApp();
 
@@ -369,6 +370,7 @@ watch(() => imageCount.value, (value) => {
 const showCreditsInfo = computed(() => $flags.hasFeature('web.credits.show_info'));
 
 const dragging = ref(false);
+const draggingDebounced = refDebounced(dragging, 20);
 
 const onDragStart = (e: DragEvent) => {
     dragging.value = true;
