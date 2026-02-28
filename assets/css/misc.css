@@ -13,3 +13,11 @@
 .text-shadow-member {
     text-shadow: 0 0 5px #fdd835;
 }
+
+.upgrade-text-gradient {
+    background: linear-gradient(45deg, #ff956a, #ffcb5f);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent !important;
+    -webkit-text-fill-color: transparent;
+}

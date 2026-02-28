@@ -5,6 +5,7 @@ import * as Sentry from "@sentry/browser"
 const TOKEN_TIMEOUT = 1000 * 60 * 45;
 
 export const useAuthStore = defineStore('auth', () => {
+    const config = useRuntimeConfig();
     const {$mineskin, $account} = useNuxtApp();
 
     const router = useRouter();
@@ -81,7 +82,11 @@ export const useAuthStore = defineStore('auth', () => {
         }
 
         const success = !!response && response.ok;
-        authed.value = success;
+        if (config.public.isDev) {
+            authed.value = localStorage.getItem('devAuthed') === 'true' || success;
+        } else {
+            authed.value = success;
+        }
         wasAuthed.value = success;
         $mineskin.setAuthed(success);
 

@@ -5,7 +5,7 @@ a {
 }
 </style>
 <template>
-    <a class="text-primary ma-1 font-weight-bold">
+    <a class="ma-1 font-weight-bold" :class="`text-${color||'primary'}`">
         <slot name="icon">
             <v-icon v-if="icon" :icon="icon" class="mx-1"></v-icon>
         </slot>
@@ -23,5 +23,6 @@ a {
 const props = defineProps<{
     icon?: string;
     tooltip?: string;
+    color?: string;
 }>();
 </script>

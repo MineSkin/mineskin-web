@@ -182,17 +182,38 @@
                                 </div>
                             </div>
                             <div v-else-if="!authStore.authed">
-                            <v-alert color="warning" variant="tonal" icon="mdi-alert-circle" class="mt-1">
-                                <template #text>
-                                    Please
-                                    <action-link
-                                        href="https://account.mineskin.org/login?redirect=https://mineskin.org/">sign in
-                                    </action-link>
-                                    <span v-if="imageCount > 1">to generate multiple skins at once and to keep track of your skins.</span>
-                                    <span v-else>to keep track of your skins and to get access to higher limits.</span>
-                                </template>
-                            </v-alert>
-                        </div>
+                                <v-alert color="warning" variant="tonal" icon="mdi-alert-circle" class="mt-1">
+                                    <template #text>
+                                        Please
+                                        <action-link
+                                            href="https://account.mineskin.org/login?redirect=https://mineskin.org/"
+                                        >
+                                            sign in
+                                        </action-link>
+                                        <span v-if="imageCount > 1">to generate multiple skins at once and to keep track of your skins.</span>
+                                        <span
+                                            v-else>to keep track of your skins and to get access to higher limits.</span>
+                                    </template>
+                                </v-alert>
+                            </div>
+                            <div v-else-if="imageCount > 3">
+                                <v-alert color="primary" variant="tonal" icon="mdi-information" class="mt-1">
+                                    <template #title>
+                                        Need to generate a lot of skins?
+                                    </template>
+                                    <template #text>
+                                        Check out the
+                                        <action-link
+                                            href="https://account.mineskin.org/store?utm_source=web&utm_medium=ad&utm_campaign=generate_banner_upgrade"
+                                            target="_blank"
+                                            class="upgrade-text-gradient"
+                                        >
+                                            ✨ upgrade options
+                                        </action-link>
+                                        for higher limits and faster generation times!
+                                    </template>
+                                </v-alert>
+                            </div>
                         </ClientOnly>
                     </v-row>
                 </v-col>
