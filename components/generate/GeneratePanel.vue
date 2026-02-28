@@ -186,7 +186,7 @@
                                     <template #text>
                                         Please
                                         <action-link
-                                            href="https://account.mineskin.org/login?redirect=https://mineskin.org/"
+                                            href="https://account.mineskin.org/login?redirect=https://mineskin.org/&utm_source=web&utm_medium=link&utm_campaign=generate_banner_signin"
                                         >
                                             sign in
                                         </action-link>
@@ -204,7 +204,7 @@
                                     <template #text>
                                         Check out the
                                         <action-link
-                                            href="https://account.mineskin.org/store?utm_source=web&utm_medium=ad&utm_campaign=generate_banner_upgrade"
+                                            href="https://account.mineskin.org/store?utm_source=web&utm_medium=link&utm_campaign=generate_banner_upgrade"
                                             target="_blank"
                                             class="upgrade-text-gradient"
                                         >

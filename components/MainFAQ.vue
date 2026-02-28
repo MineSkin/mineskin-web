@@ -30,7 +30,7 @@
                     If you have a Minecraft account you don't regularly use, you can help speed up the skin generation
                     process by providing it to MineSkin.
                     This allows MineSkin to use the account to generate skin signatures more quickly and efficiently.
-                    Head over to the <a href="https://account.mineskin.org" target="_blank">Account Manager</a> to
+                    Head over to the <a href="https://account.mineskin.org?utm_source=web&utm_medium=link&utm_campaign=faq_acc_man" target="_blank">Account Manager</a> to
                     provide
                     your account.
                 </template>
