@@ -196,7 +196,7 @@
                                     </template>
                                 </v-alert>
                             </div>
-                            <div v-else-if="imageCount > 3">
+                            <div v-else-if="imageCount > 3 && !authStore?.grants?.ad_free">
                                 <v-alert color="primary" variant="tonal" icon="mdi-information" class="mt-1">
                                     <template #title>
                                         Need to generate a lot of skins?
