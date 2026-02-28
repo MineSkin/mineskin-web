@@ -247,6 +247,7 @@ import CapeView from "~/components/skin/CapeView.vue";
 import VisibilitySelect from "~/components/generate/options/VisibilitySelect.vue";
 import NameInput from "~/components/generate/options/NameInput.vue";
 import { refDebounced } from "@vueuse/core";
+import type { RateLimitInfo } from "~/types/misc";
 
 const {$mineskin, $notify, $flags, $gtag} = useNuxtApp();
 
@@ -561,6 +562,15 @@ async function handleQueueResponse(response: GenerateJobResponse, source: JobSou
                 await sleep(interval * 0.5);
             } else {
                 await sleep(interval * 0.8);
+            }
+        }
+        if ('rateLimit' in response) {
+            const limitInfo = response.rateLimit?.limit as { minute: RateLimitInfo, hour: RateLimitInfo } | undefined;
+            if (limitInfo?.minute) {
+                Object.assign(queueStore.rateLimitMinute, limitInfo.minute);
+            }
+            if (limitInfo?.hour) {
+                Object.assign(queueStore.rateLimitHour, limitInfo.hour);
             }
         }
     }

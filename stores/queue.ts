@@ -12,11 +12,25 @@ import type { JobResponse } from "~/types/JobResponse";
 import { isCompletedJobRes } from "~/types/CompletedJob";
 import { useGenerateStore } from "~/stores/generate";
 import type { FileJson } from "~/util/file";
+import type { RateLimitInfo } from "~/types/misc";
 
 export const useQueueStore = defineStore('queue', () => {
     /**@deprecated**/
     const jobMap = ref<Record<string, JobWithMeta>>({});
     const wrappedJobMap = ref<Record<string, WrappedJob>>({});
+
+    const rateLimitMinute = reactive<RateLimitInfo>({
+        limit: 0,
+        remaining: 0,
+        used: 0,
+        reset: 0,
+    });
+    const rateLimitHour = reactive<RateLimitInfo>({
+        limit: 0,
+        remaining: 0,
+        used: 0,
+        reset: 0,
+    });
 
     const jobsDrawer = ref(false);
 
@@ -266,6 +280,8 @@ export const useQueueStore = defineStore('queue', () => {
         jobMap,
         wrappedJobMap,
         jobsSorted,
+        rateLimitMinute,
+        rateLimitHour,
         addJob,
         updateJob,
         removeJobId,
@@ -282,6 +298,6 @@ export const useQueueStore = defineStore('queue', () => {
 }, {
     persist: {
         storage: piniaPluginPersistedstate.localStorage(),
-        pick: ['jobMap', 'wrappedJobMap']
+        pick: ['jobMap', 'wrappedJobMap', 'rateLimitMinute', 'rateLimitHour']
     }
 })
