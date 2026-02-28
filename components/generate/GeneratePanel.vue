@@ -182,11 +182,17 @@
                                 </div>
                             </div>
                             <div v-else-if="!authStore.authed">
-                                <span>
-                                    Please <action-link
-                                    href="https://account.mineskin.org/login?redirect=https://mineskin.org/">sign in</action-link> to generate multiple skins at once and to keep track of your skins.
-                                </span>
-                            </div>
+                            <v-alert color="warning" variant="tonal" icon="mdi-alert-circle" class="mt-1">
+                                <template #text>
+                                    Please
+                                    <action-link
+                                        href="https://account.mineskin.org/login?redirect=https://mineskin.org/">sign in
+                                    </action-link>
+                                    <span v-if="imageCount > 1">to generate multiple skins at once and to keep track of your skins.</span>
+                                    <span v-else>to keep track of your skins and to get access to higher limits.</span>
+                                </template>
+                            </v-alert>
+                        </div>
                         </ClientOnly>
                     </v-row>
                 </v-col>
