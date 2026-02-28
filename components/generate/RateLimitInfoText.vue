@@ -12,7 +12,7 @@
             (resets in {{ hourReset }})
             </span>
         </div>
-        <div v-if="(showMinute||showHour)&&(minuteRemaining<5||(hourRemaining<30))">
+        <div v-if="(showMinute||showHour)&&(minuteRemaining<5||(hourLimit!==0 && hourRemaining<30))">
             <action-link
                 href="https://account.mineskin.org/store?utm_source=web&utm_medium=link&utm_campaign=generate_limit_upgrade"
                 target="_blank"
