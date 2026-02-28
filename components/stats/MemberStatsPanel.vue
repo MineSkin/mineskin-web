@@ -7,8 +7,8 @@
                         <v-col class="text-h6 font-weight-regular">
                             Powered by
                             <span class="font-weight-bold">{{ members }} awesome
-                                <a class="text-decoration-none text-white"
-                                   href="https://account.mineskin.org/store?utm_source=web&utm_medium=button&utm_campaign=powered-by">Members</a></span>
+                                <a class="text-decoration-none text-white upgrade-text-gradient"
+                                   href="https://account.mineskin.org/store?utm_source=web&utm_medium=button&utm_campaign=powered-by">✨Members</a></span>
                             and <span class="font-weight-bold">{{ accounts }} Minecraft Accounts</span>
                             provided by the <span>MineSkin Community</span>!
                         </v-col>

@@ -43,7 +43,11 @@
                         </v-col>
                         <v-col cols="2" class="align-content-center" v-if="showMemberInfo">
                             <div>
-                                Members don't see ads.
+                                <a
+                                    class="text-decoration-none upgrade-text-gradient"
+                                    href="https://account.mineskin.org/store?utm_source=web&utm_medium=ad&utm_campaign=ad-free"
+                                    target="_blank"
+                                >✨Members</a> don't see ads.
                             </div>
                             <div>
                                 <a class="text-decoration-none"
@@ -73,7 +77,11 @@
                         </v-col>
                         <v-col cols="12" class="align-content-center text-center" v-if="showMemberInfo">
                             <div>
-                                Members don't see ads.
+                                 <a
+                                    class="text-decoration-none upgrade-text-gradient"
+                                    href="https://account.mineskin.org/store?utm_source=web&utm_medium=ad&utm_campaign=ad-free"
+                                    target="_blank"
+                                >✨Members</a> don't see ads.
                                 <a class="text-decoration-none ml-2"
                                    href="https://account.mineskin.org/store?utm_source=web&utm_medium=ad&utm_campaign=ad-free"
                                    target="_blank">

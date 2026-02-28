@@ -20,12 +20,15 @@
                                     {{ editFailClean }}
                                 </div>
                                 <div class="mt-2"
-                                    v-if="editFail === 'edit_duration_expired' && (user?.grants?.skin_edit_duration || 0) < 12">
-                                    <a class="text-decoration-none"
-                                       href="https://account.mineskin.org/store?utm_source=web&utm_medium=button&utm_campaign=skin_edit_duration"
-                                       target="_blank">
-                                        Upgrade to edit skins for longer ✨
-                                    </a>
+                                     v-if="editFail === 'edit_duration_expired' && (user?.grants?.skin_edit_duration || 0) < 12">
+                                    <action-link
+                                        href="https://account.mineskin.org/store?utm_source=web&utm_medium=button&utm_campaign=skin_edit_duration"
+                                        target="_blank"
+                                        class="upgrade-text-gradient"
+                                    >
+                                        ✨ Upgrade
+                                    </action-link>
+                                    to edit skins for longer
                                 </div>
                             </div>
                             <div v-else>
@@ -49,12 +52,15 @@
                                     {{ deleteFailClean }}*
                                 </div>
                                 <div class="mt-2"
-                                    v-if="deleteFail === 'delete_duration_expired' && (user?.grants?.skin_delete_duration || 0) < 12">
-                                    <a class="text-decoration-none"
-                                       href="https://account.mineskin.org/store?utm_source=web&utm_medium=button&utm_campaign=skin_delete_duration"
-                                       target="_blank">
-                                        Upgrade to delete skins for longer ✨
-                                    </a>
+                                     v-if="deleteFail === 'delete_duration_expired' && (user?.grants?.skin_delete_duration || 0) < 12">
+                                    <action-link
+                                        href="https://account.mineskin.org/store?utm_source=web&utm_medium=button&utm_campaign=skin_delete_duration"
+                                        target="_blank"
+                                        class="upgrade-text-gradient"
+                                    >
+                                        ✨ Upgrade
+                                    </action-link>
+                                    to delete skins for longer
                                 </div>
                                 <div>
                                     <span class="text-body-2 text-medium-emphasis">*You can always manually request deletion of your skin.</span>
@@ -86,6 +92,7 @@ import NameInput from "~/components/generate/options/NameInput.vue";
 import VisibilitySelect from "~/components/generate/options/VisibilitySelect.vue";
 import { storeToRefs } from "pinia";
 import SkinDeleteConfirmDialog from "~/components/skin/SkinDeleteConfirmDialog.vue";
+import ActionLink from "~/components/ActionLink.vue";
 
 const {$mineskin} = useNuxtApp();
 

@@ -17,7 +17,8 @@
             <v-col cols="auto">
                 <v-alert type="warning" @click.prevent="loginRedirect">
                     <template #text>
-                        <a href="https://account.mineskin.org" class="text-blue-lighten-4">Sign in</a> to view your skins
+                        <a href="https://account.mineskin.org" class="text-blue-lighten-4">Sign in</a> to view your
+                        skins
                     </template>
                 </v-alert>
             </v-col>
@@ -41,14 +42,23 @@
                 </template>
             </v-row>
             <template v-slot:empty>
-                <span v-if="unlimitedHistory">No more results</span>
-                <span v-else>
-                     <a class="text-decoration-none"
-                        href="https://account.mineskin.org/store?utm_source=web&utm_medium=button&utm_campaign=skin_history_unlimited"
-                        target="_blank">
-                            Upgrade to view older skins ✨
-                    </a>
-                </span>
+                <div class="text-center">
+                    <div>No more results</div>
+                    <div v-if="!unlimitedHistory" class="mt-4">
+                        <v-alert color="primary" variant="tonal" icon="mdi-information" class="mt-1">
+                            <template #text>
+                                <action-link
+                                    href="https://account.mineskin.org/store?utm_source=web&utm_medium=button&utm_campaign=skin_history_unlimited"
+                                    target="_blank"
+                                    class="upgrade-text-gradient"
+                                >
+                                    ✨ Upgrade
+                                </action-link>
+                                to view older skins
+                            </template>
+                        </v-alert>
+                    </div>
+                </div>
             </template>
         </v-infinite-scroll>
         <v-row v-if="showLocal && (legacySkins || mySkins)" class="mt-4">
@@ -93,6 +103,7 @@
 import { useNuxtApp } from "#app";
 import { useSkinStore } from "#imports";
 import { computed, onMounted } from "vue";
+import ActionLink from "~/components/ActionLink.vue";
 
 useHead({
     title: 'My Skins'
