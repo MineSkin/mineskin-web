@@ -41,11 +41,11 @@
     <v-row class="text-center">
         <ad-info-wrapper>
             <template #default>
-<!--                <ad-wrappper ad-slot="7045370598"/>-->
-                <ad-manager-wrappper
-                    ad-slot="/23325865428/msk_am_gallery_top_banner"
-                    ad-id="div-gpt-ad-1772183672799-0"
-                    />
+                <ad-wrappper ad-slot="7045370598"/>
+<!--                <ad-manager-wrappper-->
+<!--                    ad-slot="/23325865428/msk_am_gallery_top_banner"-->
+<!--                    ad-id="div-gpt-ad-1772183672799-0"-->
+<!--                    />-->
             </template>
         </ad-info-wrapper>
     </v-row>
