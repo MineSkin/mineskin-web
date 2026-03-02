@@ -166,6 +166,13 @@ export const useAuthStore = defineStore('auth', () => {
         lastWebTokenRefresh.value = 0;
     }
 
+    watch(grants, (newGrants) => {
+        const win = window as any;
+        if ('grantAdFreePromiseResolve' in win) {
+            win.grantAdFreePromiseResolve(newGrants?.ad_free || false);
+        }
+    })
+
     return {
         authed,
         _user,

@@ -5,7 +5,7 @@
         </ClientOnly>
         <v-app>
             <Snackbars/>
-<!--            <NewWebsiteBanner/>-->
+            <!--            <NewWebsiteBanner/>-->
             <MainAppBar/>
             <v-main style="--v-layout-top: 56px">
                 <LoadingIndicator style="margin-top: var(--v-layout-top)"/>
@@ -58,6 +58,12 @@ useHead({
         ...(i18nHead.value.meta || [])
     ],
     script: [
+        {
+            src: '/google-offerwall-check.js',
+            async: true,
+            'data-cookie-consent': 'functional',
+            tagPosition: 'head'
+        },
         {
             src: 'https://www.googletagmanager.com/gtag/js?id=G-5GVV9RF5HZ',
             async: true,
