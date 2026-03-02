@@ -168,7 +168,7 @@ export const useAuthStore = defineStore('auth', () => {
 
     watch(grants, (newGrants) => {
         const win = window as any;
-        if ('grantAdFreePromiseResolve' in win) {
+        if ('grantAdFreePromiseResolve' in win && typeof win.grantAdFreePromiseResolve === 'function') {
             win.grantAdFreePromiseResolve(newGrants?.ad_free || false);
         }
     })
