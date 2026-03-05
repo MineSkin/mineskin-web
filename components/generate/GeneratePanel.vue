@@ -207,7 +207,6 @@
                         <v-col cols="auto" class="text-start">
                             <ClientOnly>
                                 <v-expand-transition v-if="isHydrated">
-                                    <!--                                <CreditsStatus :generating="generating" :estimate="creditsEstimate"/>-->
                                     <div v-show="generating">
                                         <v-alert variant="tonal" icon="mdi-loading mdi-spin">
                                             <template #title>
@@ -331,11 +330,6 @@ const imageCount = computed(() => {
     return 0;
 });
 
-const creditsEstimate = computed(() => {
-    return imageCount.value + (cape.value ? 1 : 0);
-});
-
-const generateType_ = computed(() => generateType.value);
 
 const waitTime = ref(0);
 
@@ -393,8 +387,6 @@ watch(() => imageCount.value, (value) => {
         return;
     }
 });
-
-const showCreditsInfo = computed(() => $flags.hasFeature('web.credits.show_info'));
 
 const dragging = ref(false);
 const draggingDebounced = refDebounced(dragging, 20);

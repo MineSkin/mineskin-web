@@ -359,12 +359,6 @@ export class MineSkinAPI {
             }, {silent: true});
         }
 
-        public async credits(): Promise<MineSkinResponse<"credit", BasicCreditInfo>> {
-            return this.api.request(`/v2/me/credits`, {
-                credentials: 'include'
-            }, {silent: true});
-        }
-
         public async apikey() {
             return this.api.request(`/v2/me/apikey`, {
                 credentials: 'include'

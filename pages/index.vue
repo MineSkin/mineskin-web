@@ -52,10 +52,6 @@
                 <!--                <ad-wrappper ad-slot="8238741844"/>-->
             </v-col>
         </v-row>
-        <!--        <v-btn @click="testNotify()">Notify Test</v-btn>-->
-        <!--        <JobList/> &lt;!&ndash;TODO: move&ndash;&gt;-->
-        <!--        <dbg :data="authStore.user"/>-->
-        <!--        <CreditsInfo/> &lt;!&ndash;TODO: move&ndash;&gt;-->
         <v-row class="my-10">
         </v-row>
     </v-container>
