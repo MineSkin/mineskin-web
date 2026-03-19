@@ -56,7 +56,7 @@ const hourRemaining = computed(() => {
     if (!queueStore.rateLimitHour) return 0;
     if (queueStore.rateLimitHour.limit === 0) {
         if (!authStore.authed) {
-            return hourLimit.value - (queueStore.rateLimitHour.used || 0);
+            return Math.max(hourLimit.value - (queueStore.rateLimitHour.used || 0), 0);
         }
     }
     return queueStore.rateLimitHour.remaining;
