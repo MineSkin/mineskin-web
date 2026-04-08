@@ -91,15 +91,15 @@
             stacked
             :class="{'rainbow': rainbow }"
         >
-            <v-tab :to="localePath('/')" max-width="50">
+            <v-tab :to="localePath('/')">
                 <span v-if="mdAndUp">{{ $t("Generate") }}</span>
                 <v-icon v-else icon="mdi-home"></v-icon>
             </v-tab>
-            <v-tab :to="localePath('/skins')" max-width="50">
+            <v-tab :to="localePath('/skins')">
                 <span v-if="mdAndUp">{{ $t("Gallery") }}</span>
                 <v-icon v-else icon="mdi-image-search"></v-icon>
             </v-tab>
-            <v-tab v-if="isHydrated" :to="localePath('/my-skins')" max-width="50">
+            <v-tab v-if="isHydrated" :to="localePath('/my-skins')">
                 <span v-if="mdAndUp">{{ $t("My Skins") }}</span>
                 <v-icon v-else icon="mdi-view-grid"></v-icon>
             </v-tab>
