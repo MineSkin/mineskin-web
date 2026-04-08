@@ -19,6 +19,20 @@
     #C22EDC 83.3%) !important;
     height: 4px !important;
 }
+
+.v-tab.v-tab.v-btn {
+    min-width: 70px !important;
+}
+
+@media (max-width: 960px) {
+    .v-toolbar__content > .v-toolbar-title {
+        margin-inline-start: 8px !important;
+    }
+
+    .v-toolbar-title {
+        font-size: 1rem !important;
+    }
+}
 </style>
 <template>
     <v-app-bar density="comfortable" class="px-4" color="mskindigo">
@@ -29,14 +43,16 @@
             max-height="40"
             @click="router.push(localePath('/'))"
         ></v-img>
-        <v-app-bar-title class="flex-0-1" v-if="mdAndUp">
+        <v-app-bar-title :class="{'flex-0-1': mdAndUp}">
             <nuxt-link class="app-bar-link" :to="localePath('/')">
-                MineSkin
+                <span v-if="mdAndUp" class="mr-1">MineSkin</span>
+                <span v-if="plan" class="font-weight-light text-member text-capitalize">{{ plan }}</span>
                 <v-chip
-                    v-if="config.public.isDev "
+                    v-if="mdAndUp &&  config.public.isDev "
                     density="compact"
                     :color="config.public.isDev ? 'warning' :'secondary'"
                     variant="flat"
+                    class="ml-2"
                 >
                     {{ config.public.isDev ? 'Dev Mode' : '' }}
                 </v-chip>
@@ -45,7 +61,7 @@
 
         <v-spacer v-if="mdAndUp"></v-spacer>
 
-        <div class="d-flex flex-auto">
+        <div class="d-flex flex-auto" v-if="mdAndUp">
             <!--            <v-btn icon-->
             <!--                   v-if="mdAndUp"-->
             <!--                   @click="searching ? search() : showSearch()"-->
@@ -68,27 +84,28 @@
             </v-expand-x-transition>
         </div>
 
-        <v-spacer></v-spacer>
+        <v-spacer v-if="mdAndUp"></v-spacer>
 
         <v-tabs
             align-tabs="end"
+            stacked
             :class="{'rainbow': rainbow }"
         >
-            <v-tab :to="localePath('/')">
+            <v-tab :to="localePath('/')" max-width="50">
                 <span v-if="mdAndUp">{{ $t("Generate") }}</span>
                 <v-icon v-else icon="mdi-home"></v-icon>
             </v-tab>
-            <v-tab :to="localePath('/skins')">
+            <v-tab :to="localePath('/skins')" max-width="50">
                 <span v-if="mdAndUp">{{ $t("Gallery") }}</span>
                 <v-icon v-else icon="mdi-image-search"></v-icon>
             </v-tab>
-            <v-tab v-if="isHydrated" :to="localePath('/my-skins')">
+            <v-tab v-if="isHydrated" :to="localePath('/my-skins')" max-width="50">
                 <span v-if="mdAndUp">{{ $t("My Skins") }}</span>
                 <v-icon v-else icon="mdi-view-grid"></v-icon>
             </v-tab>
         </v-tabs>
 
-        <v-divider vertical class="mx-4 my-2"/>
+        <v-divider v-if="mdAndUp" vertical class="mx-4 my-2"/>
 
         <template v-slot:append>
             <NotificationModalButton v-if="mdAndUp"/>
@@ -175,6 +192,13 @@ const search = () => {
 const isMember = computed(() => {
     return authed.value && grants.value?.ad_free; //TODO: use a separate grant for this
 });
+
+const plan = computed(() => {
+    if (!authed.value) return null;
+    if (!grants.value.plan) return null;
+    if (grants.value.plan === 'free') return null;
+    return grants.value.plan;
+})
 
 const rainbow = computed(() => {
     const date = new Date();
