@@ -12,7 +12,7 @@ export default defineNuxtPlugin(nuxtApp => {
                     release: config.public.cfPagesBranch + '-' + config.public.cfPagesCommitSha?.substring(0, 7),
                     integrations: [
                         Sentry.browserTracingIntegration(),
-                        Sentry.replayIntegration(),
+                        // Sentry.replayIntegration(),
                         // Sentry.feedbackIntegration({
                         //     // Additional SDK configuration goes in here, for example:
                         //     colorScheme: "system",
