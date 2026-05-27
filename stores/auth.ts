@@ -7,7 +7,7 @@ const TOKEN_TIMEOUT = 1000 * 60 * 45;
 
 export const useAuthStore = defineStore('auth', () => {
     const config = useRuntimeConfig();
-    const {$mineskin, $account} = useNuxtApp();
+    const {$mineskin, $account, $flags} = useNuxtApp();
 
     const router = useRouter();
 
@@ -144,6 +144,7 @@ export const useAuthStore = defineStore('auth', () => {
     }
 
     const linkAnonymousSkins = () => {
+        if (!$flags.hasFeature('web.anon_link.enabled')) return;
         const skinStore = useSkinStore();
         const anonId = skinStore.anonId;
         if (!anonId) return;
