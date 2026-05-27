@@ -5,6 +5,7 @@ export const useSkinStore = defineStore('skins', () => {
 
     const mySkins = ref<string[]>([]);
     const legacySkins = ref<string[]>([]);
+    const anonId = ref<string | null>(null);
 
     const addSkin = (skinId: string) => {
         if (!mySkins.value.includes(skinId)) {
@@ -24,11 +25,25 @@ export const useSkinStore = defineStore('skins', () => {
         }
     }
 
+    const ensureAnonId = (): string => {
+        if (!anonId.value) {
+            anonId.value = crypto.randomUUID().replace(/-/g, '');
+        }
+        return anonId.value;
+    }
+
+    const clearAnonId = () => {
+        anonId.value = null;
+    }
+
     return {
         mySkins,
         legacySkins,
+        anonId,
         addSkin,
-        addLegacySkin
+        addLegacySkin,
+        ensureAnonId,
+        clearAnonId
     }
 
 }, {
