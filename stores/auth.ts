@@ -150,7 +150,7 @@ export const useAuthStore = defineStore('auth', () => {
         if (!anonId) return;
         $mineskin.me.linkAnonymous(anonId)
             .then(res => {
-                if (res && !(res as any)?.errors?.length) {
+                if ((res as any)?.linked > 0) {
                     skinStore.clearAnonId();
                 }
             })
