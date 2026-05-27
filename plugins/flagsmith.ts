@@ -1,12 +1,14 @@
 import { defineNuxtPlugin } from "#app";
 import flagsmith from 'flagsmith'
 import type { GetValueOptions, HasFeatureOptions, IFlagsmith } from "flagsmith/types";
+import { useAuthStore } from "~/stores/auth";
 
 interface ClientFlagEntry {
     key: string;
     type: 'boolean' | 'number' | 'string';
     value: boolean | number | string;
     enabled: boolean;
+    userOverrides?: Record<string, boolean | number | string>;
 }
 
 interface ClientFlagsBundle {
@@ -43,21 +45,39 @@ function buildMergedFlags(bundle: ClientFlagsBundle | null): Map<string, ClientF
     return map;
 }
 
-function wrapFlagsmith(target: IFlagsmith, overrides: Map<string, ClientFlagEntry>): IFlagsmith {
+function resolveEntry(entry: ClientFlagEntry, userId?: string): { enabled: boolean; value: boolean | number | string } {
+    const override = userId && entry.userOverrides ? entry.userOverrides[userId] : undefined;
+    return {
+        enabled: entry.enabled,
+        value: override !== undefined ? override : entry.value
+    };
+}
+
+function wrapFlagsmith(
+    target: IFlagsmith,
+    overrides: Map<string, ClientFlagEntry>,
+    getUserId: () => string | undefined
+): IFlagsmith {
     if (overrides.size === 0) return target;
     return new Proxy(target, {
         get(t, prop, receiver) {
             if (prop === 'hasFeature') {
                 return function (key: string, options?: HasFeatureOptions): boolean {
-                    if (overrides.has(key)) return overrides.get(key)!.enabled;
+                    const entry = overrides.get(key);
+                    if (entry) {
+                        const { enabled, value } = resolveEntry(entry, getUserId());
+                        if (entry.type === 'boolean') return enabled && Boolean(value);
+                        return enabled;
+                    }
                     return t.hasFeature(key, options);
                 };
             }
             if (prop === 'getValue') {
                 return function <T = any> (key: string, options?: GetValueOptions<T>, skipAnalytics?: boolean): any {
-                    if (overrides.has(key)) {
-                        const entry = overrides.get(key)!;
-                        return entry.type === 'boolean' ? null : entry.value;
+                    const entry = overrides.get(key);
+                    if (entry) {
+                        if (entry.type === 'boolean') return null;
+                        return resolveEntry(entry, getUserId()).value;
                     }
                     return t.getValue(key, options, skipAnalytics);
                 };
@@ -88,10 +108,19 @@ export default defineNuxtPlugin({
                 state: state
             });
 
-            const overrides = buildMergedFlags(bundle);
+            const getUserId = (): string | undefined => {
+                try {
+                    return useAuthStore().userId ?? undefined;
+                } catch {
+                    return undefined;
+                }
+            };
+
+            const merged = wrapFlagsmith(flagsmith as IFlagsmith, buildMergedFlags(bundle), getUserId);
+
             return {
                 provide: {
-                    flags: wrapFlagsmith(flagsmith as IFlagsmith, overrides)
+                    flags: merged
                 }
             };
         }
