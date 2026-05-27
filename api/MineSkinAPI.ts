@@ -11,6 +11,7 @@ import type { CapeListResponse } from "~/types/CapeListResponse";
 import type { GenerateOptions } from "~/types/GenerateOptions";
 import type { GenerateResponse } from "~/types/GenerateResponse";
 import type { SkinUser } from "~/types/SkinUser";
+import { useSkinStore } from "~/stores/skins";
 
 const INIT: RequestInit = {
     headers: {
@@ -382,6 +383,15 @@ export class MineSkinAPI {
             });
         }
 
+        public async linkAnonymous(anonId: string): Promise<MineSkinResponse<'misc', { linked: number }>> {
+            return this.api.request(`/v2/me/link-anonymous`, {
+                ...INIT,
+                method: 'POST',
+                credentials: 'include',
+                body: JSON.stringify({ anonId })
+            });
+        }
+
     }(this);
 
     public stats = new class {
@@ -402,10 +412,24 @@ export class MineSkinAPI {
         if (this.authed) {
             baseInit.credentials = init?.credentials ?? 'include';
         }
-        return fetch(`${ this.BASE }${ path }`, {
+
+        const merged: RequestInit = {
             ...baseInit,
             ...init
-        })
+        };
+        if (!this.authed && (path.startsWith('/v2/generate') || path.startsWith('/v2/queue'))) {
+            try {
+                const skinStore = useSkinStore();
+                merged.headers = {
+                    ...(merged.headers as Record<string, string> | undefined),
+                    'MineSkin-Anon-Id': skinStore.ensureAnonId()
+                };
+            } catch (e) {
+                console.warn('Failed to attach anon id', e);
+            }
+        }
+
+        return fetch(`${ this.BASE }${ path }`, merged)
             .then(res => this.handleResponse(res, options));
     }
 

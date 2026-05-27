@@ -1,6 +1,7 @@
 import type { Ref } from "vue";
 import type { AuthStatus } from "~/types/auth";
 import * as Sentry from "@sentry/browser"
+import { useSkinStore } from "~/stores/skins";
 
 const TOKEN_TIMEOUT = 1000 * 60 * 45;
 
@@ -105,6 +106,7 @@ export const useAuthStore = defineStore('auth', () => {
             } catch (e) {
                 console.error(e);
             }
+            linkAnonymousSkins();
             return _user.value;
         }
 
@@ -139,6 +141,24 @@ export const useAuthStore = defineStore('auth', () => {
         }
         lastApiTokenRefresh.value = Date.now() - TOKEN_TIMEOUT + 5000;
         return false;
+    }
+
+    const linkAnonymousSkins = () => {
+        const skinStore = useSkinStore();
+        const anonId = skinStore.anonId;
+        if (!anonId) return;
+        $mineskin.me.linkAnonymous(anonId)
+            .then(res => {
+                if (res && !(res as any)?.errors?.length) {
+                    skinStore.clearAnonId();
+                }
+            })
+            .catch(e => {
+                console.error('Failed to link anonymous skins', e);
+                try {
+                    Sentry.captureException(e);
+                } catch {}
+            });
     }
 
     const getWebTokenCookie = (): string | undefined => {
