@@ -45,11 +45,13 @@ function buildMergedFlags(bundle: ClientFlagsBundle | null): Map<string, ClientF
     return map;
 }
 
-function resolveEntry(entry: ClientFlagEntry, userId?: string): { enabled: boolean; value: boolean | number | string } {
+function resolveEntry(entry: ClientFlagEntry, userId?: string): { enabled: boolean; value: boolean | number | string; overridden: boolean } {
     const override = userId && entry.userOverrides ? entry.userOverrides[userId] : undefined;
+    const overridden = override !== undefined;
     return {
         enabled: entry.enabled,
-        value: override !== undefined ? override : entry.value
+        value: overridden ? override : entry.value,
+        overridden
     };
 }
 
@@ -65,8 +67,14 @@ function wrapFlagsmith(
                 return function (key: string, options?: HasFeatureOptions): boolean {
                     const entry = overrides.get(key);
                     if (entry) {
-                        const { enabled, value } = resolveEntry(entry, getUserId());
-                        if (entry.type === 'boolean') return enabled && Boolean(value);
+                        const { enabled, value, overridden } = resolveEntry(entry, getUserId());
+                        if (entry.type === 'boolean') {
+                            // A per-user override fully determines the flag for that
+                            // user, bypassing the global enabled gate — so a flag kept
+                            // off globally can still be turned on for specific testers.
+                            if (overridden) return Boolean(value);
+                            return enabled && Boolean(value);
+                        }
                         return enabled;
                     }
                     return t.hasFeature(key, options);
