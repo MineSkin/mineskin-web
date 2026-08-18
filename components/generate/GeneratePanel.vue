@@ -201,6 +201,15 @@
                                 :disabled="!canGenerate"
                                 :loading="generating"
                             ></v-btn>
+                            <div v-show="waitTime > 0" class="text-caption text-medium-emphasis mt-2">
+                                {{ $t("Please wait a few seconds between generations") }}
+                                <span v-if="!authStore.authed">
+                                    &mdash;
+                                    <action-link
+                                        href="https://account.mineskin.org/login?redirect=https://mineskin.org/&utm_source=web&utm_medium=link&utm_campaign=generate_wait_signin"
+                                    >{{ $t("Sign in to skip the wait") }}</action-link>
+                                </span>
+                            </div>
                         </v-col>
                     </v-row>
                     <v-row justify="center">
@@ -421,9 +430,11 @@ function showFilePicker() {
 
 function collectUploadedFiles(files: File[]) {
     const filtered = files.filter(f => {
-        if (!f.type.startsWith('image/png')) {
+        // dragged files sometimes come without a MIME type, fall back to the extension
+        const isPng = f.type.startsWith('image/png') || (!f.type && f.name.toLowerCase().endsWith('.png'));
+        if (!isPng) {
             $notify({
-                text: `Only PNG images are allowed, but got ${ f.type }`,
+                text: `Only PNG images are allowed, but got ${ f.type || f.name }`,
                 color: 'warning'
             });
             return false;
@@ -444,16 +455,45 @@ function collectUploadedFiles(files: File[]) {
         }
         return true;
     });
-    if (files.length <= 0) {
-        $notify({
-            text: 'No valid image files found',
-            color: 'warning'
-        })
+    if (filtered.length <= 0) {
+        if (files.length <= 0) {
+            $notify({
+                text: 'No valid image files found',
+                color: 'warning'
+            })
+        }
         return;
     }
     Promise.all(filtered.map(f => fileToJson(f))).then(mapped => {
         uploadFiles.value.push(...mapped);
     });
+}
+
+function onPaste(e: ClipboardEvent) {
+    if (!e.clipboardData) return;
+    const files = Array.from(e.clipboardData.files);
+    if (files.length > 0) {
+        // don't mix pasted files into a pending URL/user generation
+        if (generateType.value && generateType.value !== GenerateType.UPLOAD) return;
+        e.preventDefault();
+        collectUploadedFiles(files);
+        return;
+    }
+    const active = document.activeElement;
+    if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || (active as HTMLElement).isContentEditable)) {
+        // let the browser paste into the focused field
+        return;
+    }
+    if (generateType.value && generateType.value !== GenerateType.URL) return;
+    const text = e.clipboardData.getData('text')?.trim();
+    if (text && /^https?:\/\/\S+$/i.test(text)) {
+        const emptyIndex = urls.value.findIndex(url => url.length === 0);
+        if (emptyIndex >= 0) {
+            urls.value[emptyIndex] = text;
+        } else {
+            urls.value.push(text);
+        }
+    }
 }
 
 
@@ -596,6 +636,9 @@ async function handleQueueResponse(response: GenerateJobResponse, source: JobSou
 
 async function generate() {
     console.log('generate');
+    if (!canGenerate.value) {
+        return;
+    }
     if (imageCount.value > 1 && !canGenerateMultiple.value) {
         $notify({
             text: 'Please sign in to generate multiple skins at once',
@@ -781,7 +824,12 @@ onMounted(async () => {
     } catch (e) {
         console.error(e);
     }
+    window.addEventListener('paste', onPaste);
     refreshWaitTime();
+})
+
+onUnmounted(() => {
+    window.removeEventListener('paste', onPaste);
 })
 
 </script>

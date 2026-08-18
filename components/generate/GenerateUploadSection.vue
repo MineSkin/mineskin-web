@@ -50,7 +50,8 @@
         />
         <v-row class="flex-1-1-100" align="end">
             <v-col>
-                {{ $t("Drag skin image files here to generate signatures for them") }}
+                <div>{{ $t("Drag skin image files here to generate signatures for them") }}</div>
+                <div class="text-caption text-medium-emphasis">{{ $t("You can also paste images or image URLs from your clipboard") }}</div>
             </v-col>
         </v-row>
         <!--        <v-row justify="center" align="center" class="my-2">-->

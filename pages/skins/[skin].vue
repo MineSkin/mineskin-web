@@ -69,7 +69,7 @@
             </v-col>
         </v-row>
 
-        <v-row class="my-4">
+        <v-row class="my-4" v-if="skin">
             <v-col cols="12" md="6">
                 <div class="text-grey-darken-2">Generated on {{ new Date(skin?.generator?.timestamp).toUTCString() }} in
                     {{ skin?.generator?.duration / 1000 }}s

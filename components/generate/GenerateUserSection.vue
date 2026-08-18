@@ -11,6 +11,7 @@
             prepend-icon="mdi-account"
             :image-provider="user=>userToImage(user)"
             :waiting="generating"
+            @enter="cont()"
         />
         <v-row align="end">
             <v-col>
