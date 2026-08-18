@@ -6,8 +6,8 @@
             </v-col>
             <v-spacer/>
             <v-col cols="auto">
-                <v-btn v-if="legacySkins || mySkins" @click="showLocal=!showLocal" color="secondary" class="mx-2">
-                    Toggle Local Skins
+                <v-btn v-if="hasLocalSkins" @click="showLocal=!showLocal" color="secondary" class="mx-2">
+                    {{ showLocal ? 'Hide' : 'Show' }} Local Skins
                 </v-btn>
                 <v-btn v-if="authStore.authed" :to="localePath('/export')" color="primary" class="mx-2">Export Skins
                 </v-btn>
@@ -61,7 +61,7 @@
                 </div>
             </template>
         </v-infinite-scroll>
-        <v-row v-if="showLocal && (legacySkins || mySkins)" class="mt-4">
+        <v-row v-if="showLocal && hasLocalSkins" class="mt-4">
             <v-divider class="my-2"/>
             <v-col cols="12" md="6" v-if="legacySkins && legacySkins.length > 0">
                 <h3>Legacy Skins</h3>
@@ -121,6 +121,8 @@ const skinStore = useSkinStore();
 const {mySkins, legacySkins} = storeToRefs(skinStore);
 
 const showLocal = ref(false);
+
+const hasLocalSkins = computed(() => (legacySkins.value?.length || 0) + (mySkins.value?.length || 0) > 0);
 
 const loginRedirect = () => {
     authStore.reset();

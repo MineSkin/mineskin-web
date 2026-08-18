@@ -117,7 +117,8 @@ const tryJobRefresh = async () => {
                     $notify({
                         text: error.message,
                         color: 'error',
-                        timeout: 2000
+                        timeout: 8000,
+                        closable: true
                     });
                 }
             }

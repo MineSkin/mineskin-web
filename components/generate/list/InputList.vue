@@ -17,6 +17,7 @@
                 :image-provider="imageProvider"
                 @click:append="listClick(index)"
                 @click:append-inner="listClick(index, true)"
+                @keydown.enter="emit('enter')"
             >
             </input-list-row>
             <inline-job-progress :original-name="items[index]" :waiting="waiting"/>
@@ -41,6 +42,7 @@ const props = defineProps<{
     imageProvider?: (item: string) => string | Promise<string>;
     waiting?: boolean;
 }>();
+const emit = defineEmits(['enter']);
 
 const {$mineskin} = useNuxtApp();
 
