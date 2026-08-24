@@ -69,8 +69,12 @@ import '~/assets/css/font.css'
 const {$notify, $flags} = useNuxtApp();
 
 const notificationBanner = computed(() => {
-    if ($flags.hasFeature('web.notification_banner')) {
-        return JSON.parse($flags.getValue('web.notification_banner'));
+    try {
+        if ($flags.hasFeature('web.notification_banner')) {
+            return JSON.parse($flags.getValue('web.notification_banner'));
+        }
+    } catch (e) {
+        console.error('Failed to parse notification banner flag', e);
     }
     return undefined;
 })
