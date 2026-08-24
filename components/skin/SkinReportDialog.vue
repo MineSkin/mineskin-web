@@ -53,6 +53,7 @@
                         text="Submit Report"
                         variant="tonal"
                         :disabled="!authed||!reason||reporting"
+                        :loading="reporting"
                         @click="submitReport"
                     ></v-btn>
                 </v-card-actions>
@@ -72,7 +73,7 @@ const props = defineProps<{
 }>();
 const dialog = ref(false);
 
-const {$mineskin} = useNuxtApp();
+const {$mineskin, $notify} = useNuxtApp();
 
 const authStore = useAuthStore();
 const {authed} = storeToRefs(authStore);
@@ -91,12 +92,23 @@ const reporting = ref(false);
 const submitReport = async () => {
     if (!reason.value) return;
     if (reporting.value) return;
-    console.log(`Reporting skin ${ props.skin.uuid } for ${ reason.value }`);
-    const token = await until(reportTurnstileToken).not.toBeNull({timeout: 5000});
-    reportTurnstile.value = false;
-    await $mineskin.skins.reportSkin(props.skin.uuid, reason.value, token);
-    reportTurnstileToken.value = null;
-    reportTurnstile.value = true;
-    dialog.value = false;
+    reporting.value = true;
+    try {
+        console.log(`Reporting skin ${ props.skin.uuid } for ${ reason.value }`);
+        const token = await until(reportTurnstileToken).not.toBeNull({timeout: 5000});
+        reportTurnstile.value = false;
+        await $mineskin.skins.reportSkin(props.skin.uuid, reason.value, token);
+        dialog.value = false;
+    } catch (e) {
+        console.error(e);
+        $notify({
+            text: 'Failed to submit report. Please try again.',
+            color: 'error'
+        });
+    } finally {
+        reportTurnstileToken.value = null;
+        reportTurnstile.value = true;
+        reporting.value = false;
+    }
 }
 </script>

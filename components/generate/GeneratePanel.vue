@@ -635,6 +635,23 @@ async function generate() {
 
     const baseOptions: GenerateOptions = getOptions();
 
+    try {
+        await submitGenerateJobs(baseOptions);
+        queueStore.updateSortedJobs();
+        await sleep(2000);
+    } catch (e) {
+        console.error(e);
+        $notify({
+            text: 'Something went wrong while generating. Please try again.',
+            color: 'error'
+        });
+    } finally {
+        generating.value = false;
+        refreshWaitTime();
+    }
+}
+
+async function submitGenerateJobs(baseOptions: GenerateOptions) {
     // let responses: [GenerateJobResponse, JobSource][] = [];
     switch (generateType.value) {
         case GenerateType.UPLOAD: {
@@ -729,30 +746,9 @@ async function generate() {
                 text: 'No valid input found',
                 color: 'warning'
             });
-            generating.value = false;
             return;
         }
     }
-    // for (const [response, source] of responses) {
-    //     if (response.success) {
-    //         if ('job' in response) {
-    //             const wrapped: WrappedJob = {
-    //                 source: source,
-    //                 job: (response as GenerateJobResponse).job,
-    //                 check: {
-    //                     last: Date.now(),
-    //                     count: 0
-    //                 }
-    //             };
-    //             queueStore.addJob(wrapped);
-    //         }
-    //     }
-    // }
-    queueStore.updateSortedJobs();
-
-    await sleep(2000);
-    generating.value = false;
-    refreshWaitTime();
 }
 
 const refreshWaitTime = () => {

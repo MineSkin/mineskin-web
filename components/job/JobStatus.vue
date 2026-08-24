@@ -83,7 +83,7 @@ const jobTexture = computed<string | null>(() => {
 });
 
 const tryJobRefresh = async () => {
-    if (refreshCounter.value > 5) return;
+    if (refreshCounter.value > 40) return;
     if (wrappedJob.value) {
         if (wrappedJob.value?.job?.status !== 'waiting' && wrappedJob.value?.job?.status !== 'processing' && skin.value) {
             return;
@@ -97,34 +97,39 @@ const tryJobRefresh = async () => {
 
     await sleep(500 + Math.random() * 800);
 
-    //await refreshJob();
-    const jobRes: JobResponse = await $mineskin.queue.get(props.id, {silent: true});
+    try {
+        //await refreshJob();
+        const jobRes: JobResponse = await $mineskin.queue.get(props.id, {silent: true});
 
-    refreshCounter.value++;
+        if (jobRes) {
+            const job = jobRes.job;
 
-    if (jobRes) {
-        const job = jobRes.job;
+            const wrapped = queueStore.updateJob(job, jobRes);
+            if (wrapped) {
+                wrappedJob.value = wrapped;
+            }
 
-        const wrapped = queueStore.updateJob(job, jobRes);
-        if (wrapped) {
-            wrappedJob.value = wrapped;
-        }
-
-        if (oldStatus && oldStatus !== job?.status) {
-            console.log('status changed', oldStatus, job?.status)
-            if (job.status === 'failed' && jobRes?.errors) {
-                for (let error of jobRes.errors) {
-                    $notify({
-                        text: error.message,
-                        color: 'error',
-                        timeout: 2000
-                    });
+            if (oldStatus && oldStatus !== job?.status) {
+                console.log('status changed', oldStatus, job?.status)
+                if (job.status === 'failed' && jobRes?.errors) {
+                    for (let error of jobRes.errors) {
+                        $notify({
+                            text: error.message,
+                            color: 'error',
+                            timeout: 2000
+                        });
+                    }
                 }
             }
         }
+    } catch (e) {
+        // transient network/API error - keep polling instead of giving up on this job silently
+        console.error('job refresh failed', e);
     }
 
-    setTimeout(() => tryJobRefresh(), 600 + Math.random() * 600 + refreshCounter.value * 200);
+    refreshCounter.value++;
+
+    setTimeout(() => tryJobRefresh(), Math.min(600 + Math.random() * 600 + refreshCounter.value * 200, 6000));
 }
 
 onMounted(async () => {

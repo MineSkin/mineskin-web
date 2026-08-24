@@ -1,7 +1,7 @@
 <template>
     <div v-show="isHydrated&& showNotifications && notifications?.length>0">
         <slot name="button">
-            <v-btn @click="dialog = true" icon="mdi-bell">
+            <v-btn @click="dialog = true" icon="mdi-bell" :aria-label="$t('Notifications')">
                 <v-badge dot
                          v-if="isHydrated && notifications?.length>0"
                          color="primary"
