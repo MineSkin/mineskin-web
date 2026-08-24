@@ -39,7 +39,8 @@
                                     color="primary"
                                     text="Update Skin"
                                     @click="apply"
-                                    :disabled="!!editFail"
+                                    :disabled="!!editFail||saving"
+                                    :loading="saving"
                                 ></v-btn>
                             </div>
                         </v-col>
@@ -94,7 +95,7 @@ import { storeToRefs } from "pinia";
 import SkinDeleteConfirmDialog from "~/components/skin/SkinDeleteConfirmDialog.vue";
 import ActionLink from "~/components/ActionLink.vue";
 
-const {$mineskin} = useNuxtApp();
+const {$mineskin, $notify} = useNuxtApp();
 
 const authStore = useAuthStore();
 const {user} = storeToRefs(authStore);
@@ -145,26 +146,51 @@ const prevVisibility = ref<SkinVisibility2>(props.skin.visibility);
 const name = ref<string>(props.skin.name || '');
 const visibility = ref<SkinVisibility2>(props.skin.visibility);
 
+const saving = ref(false);
 const apply = async () => {
-    if (name.value !== prevName.value) {
-        const res = await $mineskin.skins.update(props.skin.uuid, {name: name.value});
-        if (res.success) {
-            prevName.value = name.value;
-            emit('update:skin', {
-                ...props.skin,
-                name: name.value
+    if (saving.value) return;
+    if (name.value === prevName.value && visibility.value === prevVisibility.value) return;
+    saving.value = true;
+    try {
+        let allSucceeded = true;
+        if (name.value !== prevName.value) {
+            const res = await $mineskin.skins.update(props.skin.uuid, {name: name.value});
+            if (res.success) {
+                prevName.value = name.value;
+                emit('update:skin', {
+                    ...props.skin,
+                    name: name.value
+                });
+            } else {
+                allSucceeded = false;
+            }
+        }
+        if (visibility.value !== prevVisibility.value) {
+            const res = await $mineskin.skins.update(props.skin.uuid, {visibility: visibility.value});
+            if (res.success) {
+                prevVisibility.value = visibility.value;
+                emit('update:skin', {
+                    ...props.skin,
+                    visibility: visibility.value
+                });
+            } else {
+                allSucceeded = false;
+            }
+        }
+        if (allSucceeded) {
+            $notify({
+                text: 'Skin updated',
+                color: 'success'
             });
         }
-    }
-    if (visibility.value !== prevVisibility.value) {
-        const res = await $mineskin.skins.update(props.skin.uuid, {visibility: visibility.value});
-        if (res.success) {
-            prevVisibility.value = visibility.value;
-            emit('update:skin', {
-                ...props.skin,
-                visibility: visibility.value
-            });
-        }
+    } catch (e) {
+        console.error(e);
+        $notify({
+            text: 'Failed to update skin. Please try again.',
+            color: 'error'
+        });
+    } finally {
+        saving.value = false;
     }
 }
 </script>

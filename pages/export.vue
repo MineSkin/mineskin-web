@@ -123,6 +123,9 @@ const sourceItems = [
     {text: 'Latest Skins', value: 'latest'}
 ]
 const skinSource = ref('mine');
+watch(skinSource, () => {
+    selected.value = [];
+});
 
 const formats = [
     {text: 'JSON', value: 'json'},
@@ -166,23 +169,31 @@ const doExport = async () => {
         timeout: 3000
     });
 
-    const str = await makeExportString();
+    try {
+        const str = await makeExportString();
 
-    let blob: Blob;
-    if (exportFormat.value === 'json') {
-        blob = new Blob([str], {type: 'application/json'});
-    } else if (exportFormat.value === 'csv') {
-        blob = new Blob([str], {type: 'text/csv'});
+        let blob: Blob;
+        if (exportFormat.value === 'json') {
+            blob = new Blob([str], {type: 'application/json'});
+        } else if (exportFormat.value === 'csv') {
+            blob = new Blob([str], {type: 'text/csv'});
+        }
+
+        const url = URL.createObjectURL(blob!);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `mineskin-export.${ exportFormat.value }`;
+        a.click();
+        URL.revokeObjectURL(url);
+    } catch (e) {
+        console.error(e);
+        $notify({
+            text: 'Export failed. Please try again.',
+            color: 'error'
+        });
+    } finally {
+        exporting.value = false;
     }
-
-    const url = URL.createObjectURL(blob!);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `mineskin-export.${ exportFormat.value }`;
-    a.click();
-    URL.revokeObjectURL(url);
-    exporting.value = false;
-
 }
 
 const makeExportString = async (limit: number = -1) => {

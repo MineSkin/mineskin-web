@@ -106,7 +106,7 @@
                                 location="append"
                                 :label="$t('Skin Signature')"
                                 readonly
-                                content_key="skin_signature"
+                                content-key="skin_signature"
                                 :value="skinSignature"
                             ></copy-text-field>
                         </v-col>

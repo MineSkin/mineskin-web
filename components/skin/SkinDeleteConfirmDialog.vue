@@ -39,7 +39,8 @@
                             text="Confirm Deletion"
                             color="error"
                             variant="text"
-                            :disabled="!confirmed"
+                            :disabled="!confirmed||deleting"
+                            :loading="deleting"
                             @click="actuallyDelete()"
                         ></v-btn>
 
@@ -60,7 +61,7 @@
 import type { SkinInfo2 } from "@mineskin/types";
 import { storeToRefs } from "pinia";
 
-const {$mineskin} = useNuxtApp();
+const {$mineskin, $notify} = useNuxtApp();
 
 const authStore = useAuthStore();
 const {user} = storeToRefs(authStore);
@@ -81,16 +82,34 @@ const confirmed = computed(() => {
 });
 
 
+const deleting = ref(false);
 const actuallyDelete = async () => {
     if (!confirmed.value) return;
     if (!props.canDelete) return;
     if (!user) return;
+    if (deleting.value) return;
 
-    const res = await $mineskin.skins.delete(props.skin.uuid);
-    confirmText.value = '';
-    if (res.success) {
-        dialog.value = false;
-        router.push('/my-skins');
+    deleting.value = true;
+    try {
+        const res = await $mineskin.skins.delete(props.skin.uuid);
+        if (res.success) {
+            confirmText.value = '';
+            dialog.value = false;
+            router.push('/my-skins');
+        } else {
+            $notify({
+                text: 'Failed to delete skin. Please try again.',
+                color: 'error'
+            });
+        }
+    } catch (e) {
+        console.error(e);
+        $notify({
+            text: 'Failed to delete skin. Please try again.',
+            color: 'error'
+        });
+    } finally {
+        deleting.value = false;
     }
 }
 

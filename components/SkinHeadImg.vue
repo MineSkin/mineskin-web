@@ -13,6 +13,7 @@
         class="skin-head-img"
         :lazy-src="PLACEHOLDER_HEAD"
         :src="renderSkinHead(texture||skin?.texture)"
+        :alt="skin?.name || 'Minecraft skin head'"
         aspect-ratio="1"
         :style="{'--skin-head-hue': color + 'deg', '--skin-head-sat': sat + '%'}"
     />

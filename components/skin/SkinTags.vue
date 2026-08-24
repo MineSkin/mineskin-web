@@ -121,19 +121,28 @@ const doVote = async (tag: TagInfo, vote: TagVoteType) => {
         console.error(e);
     }
     submittingVote.value = true;
-    const token = await until(tagTurnstileToken).not.toBeNull({timeout: 5000});
-    tagTurnstile.value = false;
-    const res = await $mineskin.skins.voteTag(props.skin.uuid, tag.tag, vote, token);
-    tagTurnstileToken.value = null;
-    tagTurnstile.value = true;
-    submittingVote.value = false;
-    if (res?.success && tags.value) {
-        const tagIndex = tags.value?.findIndex(t => t.tag === tag.tag);
-        if (tagIndex !== -1) {
-            const theTag = tags.value[tagIndex];
-            theTag.vote = vote;
-            theTag.suggested = false;
+    try {
+        const token = await until(tagTurnstileToken).not.toBeNull({timeout: 5000});
+        tagTurnstile.value = false;
+        const res = await $mineskin.skins.voteTag(props.skin.uuid, tag.tag, vote, token);
+        if (res?.success && tags.value) {
+            const tagIndex = tags.value?.findIndex(t => t.tag === tag.tag);
+            if (tagIndex !== -1) {
+                const theTag = tags.value[tagIndex];
+                theTag.vote = vote;
+                theTag.suggested = false;
+            }
         }
+    } catch (e) {
+        console.error(e);
+        $notify({
+            text: 'Failed to submit vote. Please try again.',
+            color: 'error'
+        });
+    } finally {
+        tagTurnstileToken.value = null;
+        tagTurnstile.value = true;
+        submittingVote.value = false;
     }
 };
 
@@ -158,18 +167,27 @@ const submitTag = async () => {
     } catch (e) {
         console.error(e);
     }
-    const token = await until(tagTurnstileToken).not.toBeNull({timeout: 5000});
-    tagTurnstile.value = false;
     addingTag.value = false;
-    tags.value?.push({
-        tag: tag,
-        vote: TagVoteType.UP
-    });
-    const res = await $mineskin.skins.voteTag(props.skin.uuid, tag, TagVoteType.UP, token);
-    tagTurnstileToken.value = null;
-    tagTurnstile.value = true;
-    if (res?.success) {
-        newTag.value = "";
+    try {
+        const token = await until(tagTurnstileToken).not.toBeNull({timeout: 5000});
+        tagTurnstile.value = false;
+        tags.value?.push({
+            tag: tag,
+            vote: TagVoteType.UP
+        });
+        const res = await $mineskin.skins.voteTag(props.skin.uuid, tag, TagVoteType.UP, token);
+        if (res?.success) {
+            newTag.value = "";
+        }
+    } catch (e) {
+        console.error(e);
+        $notify({
+            text: 'Failed to add tag. Please try again.',
+            color: 'error'
+        });
+    } finally {
+        tagTurnstileToken.value = null;
+        tagTurnstile.value = true;
     }
 };
 </script>
