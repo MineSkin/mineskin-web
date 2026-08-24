@@ -33,6 +33,9 @@ export const useGenerateStore = defineStore('generate', () => {
 }, {
     persist: {
         storage: piniaPluginPersistedstate.localStorage(),
+        // `generating` is transient UI state - persisting it can leave the Generate
+        // button permanently stuck disabled/loading after a reload mid-request
+        pick: ['name', 'visibility', 'variant', 'cape', 'uploadFiles', 'urls', 'users'],
         serializer: {
             serialize: value => {
                 const copy = {...value};
