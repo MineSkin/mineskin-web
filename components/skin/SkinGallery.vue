@@ -16,6 +16,7 @@
                        v-if="!mdAndUp && !filter"
                        @click="searching ? search() : showSearch()"
                        variant="text"
+                       :aria-label="$t('Search')"
                 >
                     <v-icon>mdi-magnify</v-icon>
                 </v-btn>
@@ -332,7 +333,18 @@ async function api() {
 async function load({done}) {
     console.debug('load')
     // Perform API call
-    const res = await api();
+    let res;
+    try {
+        res = await api();
+    } catch (e) {
+        console.error('Failed to load skins', e);
+        $notify({
+            text: $t("Failed to load skins. Please try again."),
+            color: "error"
+        });
+        done('error');
+        return;
+    }
     if (res.length === 0) {
         done('empty');
         if (pageIndex.value === 0) {

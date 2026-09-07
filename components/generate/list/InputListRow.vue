@@ -1,5 +1,5 @@
 <template>
-    <v-text-field hide-details>
+    <v-text-field hide-details="auto">
         <template v-slot:prepend>
             <div>
                 <v-img v-if="imageProvider && image" class="pixelated input-prepend-image" :src="image"
