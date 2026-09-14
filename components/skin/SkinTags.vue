@@ -49,6 +49,8 @@ a {
                           @click:prepend-inner="toggleNewTagInput"
                           append-inner-icon="mdi-check-circle"
                           @click:append-inner="submitTag"
+                          @keydown.enter="submitTag"
+                          @keydown.esc="toggleNewTagInput"
             ></v-text-field>
         </v-slide-group-item>
         <InvisibleTurnstile v-if="skin && tagTurnstile" v-model:token="tagTurnstileToken" action="vote-tag"/>
@@ -168,19 +170,27 @@ const submitTag = async () => {
         console.error(e);
     }
     addingTag.value = false;
+    const optimisticTag: TagInfo = {
+        tag: tag,
+        vote: TagVoteType.UP
+    };
+    tags.value?.push(optimisticTag);
     try {
         const token = await until(tagTurnstileToken).not.toBeNull({timeout: 5000});
         tagTurnstile.value = false;
-        tags.value?.push({
-            tag: tag,
-            vote: TagVoteType.UP
-        });
         const res = await $mineskin.skins.voteTag(props.skin.uuid, tag, TagVoteType.UP, token);
         if (res?.success) {
             newTag.value = "";
+        } else {
+            removeOptimisticTag(optimisticTag);
+            $notify({
+                text: 'Failed to add tag. Please try again.',
+                color: 'error'
+            });
         }
     } catch (e) {
         console.error(e);
+        removeOptimisticTag(optimisticTag);
         $notify({
             text: 'Failed to add tag. Please try again.',
             color: 'error'
@@ -190,4 +200,11 @@ const submitTag = async () => {
         tagTurnstile.value = true;
     }
 };
+
+function removeOptimisticTag(tag: TagInfo) {
+    const index = tags.value?.indexOf(tag);
+    if (index !== undefined && index !== -1) {
+        tags.value?.splice(index, 1);
+    }
+}
 </script>

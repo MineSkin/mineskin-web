@@ -373,11 +373,6 @@ const capePreview = computed(() => {
     return match?.url?.replace('http://', 'https://');
 });
 
-const nameRules = [
-    (v: string) => v.length <= 24 || 'Max 24 characters',
-    (v: string) => /^[a-zA-Z0-9_.\-{} ]*$/g.test(v) || 'Only a-z, 0-9, _-.{} allowed'
-];
-
 watch(() => imageCount.value, (value) => {
     if (value > 1 && !canGenerateMultiple.value) {
         $notify({
