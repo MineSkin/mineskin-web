@@ -110,7 +110,7 @@
         <template v-slot:append>
             <NotificationModalButton v-if="mdAndUp"/>
 
-            <v-btn icon @click="jobsDrawer = !jobsDrawer" v-show="mdAndUp">
+            <v-btn icon :aria-label="$t('Show Jobs')" @click="jobsDrawer = !jobsDrawer" v-show="mdAndUp">
                 <v-badge dot
                          v-if="isHydrated && jobCount>0"
                          :color="pendingJobCount>0 ? 'warning':'success'"

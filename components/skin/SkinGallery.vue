@@ -14,6 +14,7 @@
                 </v-chip>
                 <v-btn icon
                        v-if="!mdAndUp && !filter"
+                       :aria-label="$t('Search Skins')"
                        @click="searching ? search() : showSearch()"
                        variant="text"
                 >
@@ -332,7 +333,18 @@ async function api() {
 async function load({done}) {
     console.debug('load')
     // Perform API call
-    const res = await api();
+    let res;
+    try {
+        res = await api();
+    } catch (e) {
+        console.error('failed to load skins', e);
+        done('error');
+        $notify({
+            text: $t("Failed to load skins. Please try again."),
+            color: "error"
+        });
+        return;
+    }
     if (res.length === 0) {
         done('empty');
         if (pageIndex.value === 0) {

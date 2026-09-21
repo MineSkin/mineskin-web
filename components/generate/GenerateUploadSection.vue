@@ -32,8 +32,13 @@
             <v-sheet
                 rounded
                 border
+                role="button"
+                tabindex="0"
+                :aria-label="$t('Click to select skin image files to upload')"
                 class="pa-2 ma-2 clickable generate-gradient-border"
                 @click="showFilePicker()"
+                @keydown.enter="showFilePicker()"
+                @keydown.space.prevent="showFilePicker()"
             >
                 <v-icon size="64">
                     mdi-upload

@@ -113,7 +113,7 @@ const localePath = useLocalePath();
 
 const router = useRouter()
 
-const {$mineskin} = useNuxtApp();
+const {$mineskin, $notify} = useNuxtApp();
 
 const authStore = useAuthStore();
 
@@ -164,10 +164,24 @@ async function api() {
 }
 
 async function load({done}) {
-    if (!authStore.authed) return;
+    if (!authStore.authed) {
+        done('empty');
+        return;
+    }
     console.debug('load')
     // Perform API call
-    const res = await api();
+    let res;
+    try {
+        res = await api();
+    } catch (e) {
+        console.error('failed to load skins', e);
+        done('error');
+        $notify({
+            text: $t("Failed to load skins. Please try again."),
+            color: "error"
+        });
+        return;
+    }
     if (res.length === 0) {
         done('empty');
         return;
