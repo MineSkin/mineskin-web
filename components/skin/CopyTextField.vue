@@ -5,7 +5,12 @@
                 <template v-slot:activator="{ props }">
                     <v-icon
                         v-bind="props"
+                        role="button"
+                        tabindex="0"
+                        :aria-label="tooltipText"
                         @click="copyToClipboard"
+                        @keydown.enter="copyToClipboard"
+                        @keydown.space.prevent="copyToClipboard"
                     >mdi-content-copy
                     </v-icon>
                 </template>
@@ -22,7 +27,7 @@ const props = defineProps<{
     location: 'append' | 'prepend'
 }>();
 
-const {$gtag} = useNuxtApp();
+const {$gtag, $notify} = useNuxtApp();
 
 const justCopied = ref(false);
 const tooltipText = computed(() => {
@@ -30,20 +35,28 @@ const tooltipText = computed(() => {
 });
 
 function copyToClipboard() {
-    navigator.clipboard.writeText(props.value);
-    justCopied.value = true;
-    setTimeout(() => {
-        justCopied.value = false;
-    }, 2000);
-    try {
-        if (props.contentKey) {
-            $gtag('event', 'copy_text', {
-                content_key: props.contentKey,
-                element: 'textfield'
-            })
+    if (!props.value) return;
+    navigator.clipboard.writeText(props.value).then(() => {
+        justCopied.value = true;
+        setTimeout(() => {
+            justCopied.value = false;
+        }, 2000);
+        try {
+            if (props.contentKey) {
+                $gtag('event', 'copy_text', {
+                    content_key: props.contentKey,
+                    element: 'textfield'
+                })
+            }
+        } catch (e) {
+            console.error(e);
         }
-    } catch (e) {
-        console.error(e);
-    }
+    }).catch((e) => {
+        console.error('failed to copy to clipboard', e);
+        $notify({
+            text: 'Failed to copy to clipboard',
+            color: 'error'
+        });
+    });
 }
 </script>
