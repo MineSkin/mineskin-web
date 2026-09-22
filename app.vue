@@ -21,7 +21,7 @@ import { useAuthStore } from "~/stores/auth";
 import RightNavDrawer from "~/components/RightNavDrawer.vue";
 import MainFooter from "~/components/MainFooter.vue";
 import SentryInit from "~/components/SentryInit.vue";
-import { onMounted } from "vue";
+import { onMounted, onUnmounted } from "vue";
 import LoadingIndicator from "~/components/LoadingIndicator.vue";
 import MainAppBar from "~/components/MainAppBar.vue";
 
@@ -126,8 +126,21 @@ onBeforeMount(() => {
     }
 });
 
+// prevent the browser from navigating away to display the raw file when a
+// dragged image is dropped just outside the upload drop zone
+function preventDefaultDrag(e: DragEvent) {
+    e.preventDefault();
+}
+
 onMounted(() => {
     isHydrated.value = true;
+    window.addEventListener('dragover', preventDefaultDrag);
+    window.addEventListener('drop', preventDefaultDrag);
+})
+
+onUnmounted(() => {
+    window.removeEventListener('dragover', preventDefaultDrag);
+    window.removeEventListener('drop', preventDefaultDrag);
 })
 
 </script>

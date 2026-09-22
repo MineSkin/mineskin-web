@@ -164,7 +164,10 @@ async function api() {
 }
 
 async function load({done}) {
-    if (!authStore.authed) return;
+    if (!authStore.authed) {
+        done('empty');
+        return;
+    }
     console.debug('load')
     // Perform API call
     let res;

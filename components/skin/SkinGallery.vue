@@ -14,9 +14,9 @@
                 </v-chip>
                 <v-btn icon
                        v-if="!mdAndUp && !filter"
+                       :aria-label="$t('Search Skins')"
                        @click="searching ? search() : showSearch()"
                        variant="text"
-                       :aria-label="$t('Search Skins')"
                 >
                     <v-icon>mdi-magnify</v-icon>
                 </v-btn>
