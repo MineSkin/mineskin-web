@@ -11,6 +11,7 @@
   "Generate New Skin Data": "Generovat nová skinová data",
   "View all skins": "View all skins",
   "Notifications": "Notifications",
+  "Choose skin image files to upload": "Choose skin image files to upload",
   "Enter the Name or UUID of a user you want to generate data for": "Zadejte jméno nebo UUID uživatele, pro kterého chcete generovat data",
   "Enter the URL of a skin image you want to generate data for": "Zadejte URL obrázku skinu, pro který chcete generovat data",
   "Drag a skin image file here to generate data for it": "Přetáhněte soubor skinu pro generování dat pro něj",
@@ -66,5 +67,10 @@
   "Popular Skins": "Populární vzhledy",
   "Automate Minecraft Skin Signature Generation": "Automatizovat generování vzhledu Minecraftu",
   "Tags": "Štítky",
-  "Sign in to add tags": "Přihlaste se pro přidání značek"
+  "Sign in to add tags": "Přihlaste se pro přidání značek",
+  "Failed to load skins. Please try again.": "Failed to load skins. Please try again.",
+  "Copied!": "Copied!",
+  "Copy to Clipboard": "Copy to Clipboard",
+  "Failed to copy to clipboard": "Failed to copy to clipboard",
+  "Search Skins": "Search Skins"
 }
