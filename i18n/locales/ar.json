@@ -11,6 +11,7 @@
   "Generate New Skin Data": "توليد بيانات مظهر جديد",
   "View all skins": "View all skins",
   "Notifications": "Notifications",
+  "Choose skin image files to upload": "Choose skin image files to upload",
   "Enter the Name or UUID of a user you want to generate data for": "أدخل اسم المستخدم أو UID للمستخدم الذي تريد إنشاء البيانات لـ",
   "Enter the URL of a skin image you want to generate data for": "أدخل عنوان URL لصورة الجلد التي تريد إنشاء البيانات لـ",
   "Drag a skin image file here to generate data for it": "اسحب ملف صورة الجلد هنا لإنشاء بيانات له",
@@ -66,5 +67,10 @@
   "Popular Skins": "جلد مشهور",
   "Automate Minecraft Skin Signature Generation": "التشغيل الآلي لتوليد توقيع الجلد ماين كرافت",
   "Tags": "الوسوم",
-  "Sign in to add tags": "تسجيل الدخول لإضافة العلامات"
+  "Sign in to add tags": "تسجيل الدخول لإضافة العلامات",
+  "Failed to load skins. Please try again.": "Failed to load skins. Please try again.",
+  "Copied!": "Copied!",
+  "Copy to Clipboard": "Copy to Clipboard",
+  "Failed to copy to clipboard": "Failed to copy to clipboard",
+  "Search Skins": "Search Skins"
 }
