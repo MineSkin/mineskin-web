@@ -144,6 +144,7 @@ const router = useRouter();
 const {xl, lg, md, sm, xs, name: breakpoint, mdAndUp} = useDisplay();
 
 const {$mineskin, $flags, $notify} = useNuxtApp();
+const {t: $t} = useI18n();
 
 const authStore = useAuthStore();
 const galleryStore = useGalleryStore();

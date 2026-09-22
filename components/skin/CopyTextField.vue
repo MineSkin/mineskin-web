@@ -28,6 +28,7 @@ const props = defineProps<{
 }>();
 
 const {$gtag, $notify} = useNuxtApp();
+const {t: $t} = useI18n();
 
 const justCopied = ref(false);
 const tooltipText = computed(() => {
