@@ -1,3 +1,12 @@
+<style>
+.pageref a {
+    text-decoration: none;
+}
+
+.pageref-link {
+    margin-left: 2px;
+}
+</style>
 <template>
     <v-footer>
         <v-container :class="mdAndUp?'px-16':''">
@@ -57,6 +66,7 @@
                     <div class="my-1">Copyright &copy; {{ new Date().getFullYear() }} <a
                         href="https://inventivetalent.org"
                         target="_blank">inventivetalent</a></div>
+                    <span style="font-size: small">More projects: <span class="pageref">...</span></span>
                 </v-col>
                 <v-col class="text-right">
                     Not affiliated with Minecraft / Mojang AB / Microsoft.
@@ -76,4 +86,10 @@ const randomBoolean = () => Math.random() > 0.5;
 const isGallery = computed(() => router.currentRoute.value.name === 'gallery' || router.currentRoute.value.name === 'skins');
 
 const showFooterAds = computed(() => randomBoolean() && !isGallery.value);
+
+useHead({
+    script: [
+        {src: 'https://pageref.inventive.workers.dev/script.js?max=5', async: true}
+    ]
+})
 </script>
