@@ -72,7 +72,9 @@ const {
 
 const nameRules = [
     (v: string) => v.length <= 24 || 'Max 24 characters',
-    (v: string) => /^[a-zA-Z0-9_.\-{} ]*$/g.test(v) || 'Only a-z, 0-9, _-.{} allowed'
+    // no `g` flag: a global regex's `.test()` keeps `lastIndex` between calls,
+    // which made this rule reject/accept valid input on alternating keystrokes
+    (v: string) => /^[a-zA-Z0-9_.\-{} ]*$/.test(v) || 'Only a-z, 0-9, _-.{} allowed'
 ];
 
 const props = defineProps<{
