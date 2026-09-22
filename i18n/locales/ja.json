@@ -6,7 +6,12 @@
   "Private": "非公開",
   "Unlisted": "リストにありません",
   "Public": "公開",
+  "This skin could not be found. It may have been deleted, or the link may be incorrect.": "This skin could not be found. It may have been deleted, or the link may be incorrect.",
+  "Back to Gallery": "Back to Gallery",
   "Generate New Skin Data": "新しいスキンデータを生成",
+  "View all skins": "View all skins",
+  "Notifications": "Notifications",
+  "Choose skin image files to upload": "Choose skin image files to upload",
   "Enter the Name or UUID of a user you want to generate data for": "データを生成したいユーザーの名前またはUUIDを入力します。",
   "Enter the URL of a skin image you want to generate data for": "データを生成するスキン画像の URL を入力します。",
   "Drag a skin image file here to generate data for it": "スキンの画像ファイルをここにドラッグしてデータを生成します",
@@ -62,5 +67,10 @@
   "Popular Skins": "人気のスキン",
   "Automate Minecraft Skin Signature Generation": "マインクラフトのスキン署名生成を自動化",
   "Tags": "タグ",
-  "Sign in to add tags": "ログインしてタグを追加"
+  "Sign in to add tags": "ログインしてタグを追加",
+  "Failed to load skins. Please try again.": "Failed to load skins. Please try again.",
+  "Copied!": "Copied!",
+  "Copy to Clipboard": "Copy to Clipboard",
+  "Failed to copy to clipboard": "Failed to copy to clipboard",
+  "Search Skins": "Search Skins"
 }

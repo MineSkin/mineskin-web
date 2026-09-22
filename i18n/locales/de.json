@@ -6,7 +6,12 @@
   "Private": "Privat",
   "Unlisted": "Nicht gelistet",
   "Public": "Öffentlich",
+  "This skin could not be found. It may have been deleted, or the link may be incorrect.": "This skin could not be found. It may have been deleted, or the link may be incorrect.",
+  "Back to Gallery": "Back to Gallery",
   "Generate New Skin Data": "Neue Skin-Daten generieren",
+  "View all skins": "View all skins",
+  "Notifications": "Notifications",
+  "Choose skin image files to upload": "Choose skin image files to upload",
   "Enter the Name or UUID of a user you want to generate data for": "Gib den Namen oder die UUID eines Benutzers ein, für den du Daten generieren möchtest",
   "Enter the URL of a skin image you want to generate data for": "Gib die URL eines Skins ein, für das Daten generiert werden sollen",
   "Drag a skin image file here to generate data for it": "Ziehe ein Skin-Bild hierher, um Daten dafür zu generieren",
@@ -62,5 +67,10 @@
   "Popular Skins": "Beliebte Skins",
   "Automate Minecraft Skin Signature Generation": "Minecraft Skin-Signatur-Generierung automatisieren",
   "Tags": "Tags",
-  "Sign in to add tags": "Anmelden, um Tags hinzuzufügen"
+  "Sign in to add tags": "Anmelden, um Tags hinzuzufügen",
+  "Failed to load skins. Please try again.": "Failed to load skins. Please try again.",
+  "Copied!": "Copied!",
+  "Copy to Clipboard": "Copy to Clipboard",
+  "Failed to copy to clipboard": "Failed to copy to clipboard",
+  "Search Skins": "Search Skins"
 }
