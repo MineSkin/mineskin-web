@@ -5,12 +5,12 @@
                 <template v-slot:activator="{ props }">
                     <v-icon
                         v-bind="props"
-                        role="button"
-                        tabindex="0"
-                        :aria-label="tooltipText"
                         @click="copyToClipboard"
                         @keydown.enter="copyToClipboard"
                         @keydown.space.prevent="copyToClipboard"
+                        role="button"
+                        tabindex="0"
+                        :aria-label="tooltipText"
                     >mdi-content-copy
                     </v-icon>
                 </template>
@@ -31,32 +31,33 @@ const {$gtag, $notify} = useNuxtApp();
 
 const justCopied = ref(false);
 const tooltipText = computed(() => {
-    return justCopied.value ? 'Copied!' : 'Copy to Clipboard';
+    return justCopied.value ? $t('Copied!') : $t('Copy to Clipboard');
 });
 
-function copyToClipboard() {
-    if (!props.value) return;
-    navigator.clipboard.writeText(props.value).then(() => {
-        justCopied.value = true;
-        setTimeout(() => {
-            justCopied.value = false;
-        }, 2000);
-        try {
-            if (props.contentKey) {
-                $gtag('event', 'copy_text', {
-                    content_key: props.contentKey,
-                    element: 'textfield'
-                })
-            }
-        } catch (e) {
-            console.error(e);
-        }
-    }).catch((e) => {
-        console.error('failed to copy to clipboard', e);
+async function copyToClipboard() {
+    try {
+        await navigator.clipboard.writeText(props.value);
+    } catch (e) {
+        console.error('copy to clipboard failed', e);
         $notify({
-            text: 'Failed to copy to clipboard',
+            text: $t('Failed to copy to clipboard'),
             color: 'error'
         });
-    });
+        return;
+    }
+    justCopied.value = true;
+    setTimeout(() => {
+        justCopied.value = false;
+    }, 2000);
+    try {
+        if (props.contentKey) {
+            $gtag('event', 'copy_text', {
+                content_key: props.contentKey,
+                element: 'textfield'
+            })
+        }
+    } catch (e) {
+        console.error(e);
+    }
 }
 </script>

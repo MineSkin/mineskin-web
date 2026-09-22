@@ -174,12 +174,12 @@ async function load({done}) {
     try {
         res = await api();
     } catch (e) {
-        console.error('failed to load skins', e);
-        done('error');
+        console.error('Failed to load skins', e);
         $notify({
             text: $t("Failed to load skins. Please try again."),
             color: "error"
         });
+        done('error');
         return;
     }
     if (res.length === 0) {

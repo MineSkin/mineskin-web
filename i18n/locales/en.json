@@ -11,6 +11,7 @@
   "Generate New Skin Data": "Generate New Skin Data",
   "View all skins": "View all skins",
   "Notifications": "Notifications",
+  "Choose skin image files to upload": "Choose skin image files to upload",
   "Enter the Name or UUID of a user you want to generate data for": "Enter the Name or UUID of a user you want to generate data for",
   "Enter the URL of a skin image you want to generate data for": "Enter the URL of a skin image you want to generate data for",
   "Drag a skin image file here to generate data for it": "Drag a skin image file here to generate data for it",
@@ -67,7 +68,9 @@
   "Automate Minecraft Skin Signature Generation": "Automate Minecraft Skin Signature Generation",
   "Tags": "Tags",
   "Sign in to add tags": "Sign in to add tags",
-  "Click to select skin image files to upload": "Click to select skin image files to upload",
-  "Search Skins": "Search Skins",
-  "Failed to load skins. Please try again.": "Failed to load skins. Please try again."
+  "Failed to load skins. Please try again.": "Failed to load skins. Please try again.",
+  "Copied!": "Copied!",
+  "Copy to Clipboard": "Copy to Clipboard",
+  "Failed to copy to clipboard": "Failed to copy to clipboard",
+  "Search Skins": "Search Skins"
 }

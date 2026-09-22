@@ -34,7 +34,7 @@
                 border
                 role="button"
                 tabindex="0"
-                :aria-label="$t('Click to select skin image files to upload')"
+                :aria-label="$t('Choose skin image files to upload')"
                 class="pa-2 ma-2 clickable generate-gradient-border"
                 @click="showFilePicker()"
                 @keydown.enter="showFilePicker()"
