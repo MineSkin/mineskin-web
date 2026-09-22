@@ -6,6 +6,11 @@
                     <v-icon
                         v-bind="props"
                         @click="copyToClipboard"
+                        @keydown.enter="copyToClipboard"
+                        @keydown.space.prevent="copyToClipboard"
+                        role="button"
+                        tabindex="0"
+                        :aria-label="tooltipText"
                     >mdi-content-copy
                     </v-icon>
                 </template>
@@ -22,15 +27,24 @@ const props = defineProps<{
     location: 'append' | 'prepend'
 }>();
 
-const {$gtag} = useNuxtApp();
+const {$gtag, $notify} = useNuxtApp();
 
 const justCopied = ref(false);
 const tooltipText = computed(() => {
-    return justCopied.value ? 'Copied!' : 'Copy to Clipboard';
+    return justCopied.value ? $t('Copied!') : $t('Copy to Clipboard');
 });
 
-function copyToClipboard() {
-    navigator.clipboard.writeText(props.value);
+async function copyToClipboard() {
+    try {
+        await navigator.clipboard.writeText(props.value);
+    } catch (e) {
+        console.error('copy to clipboard failed', e);
+        $notify({
+            text: $t('Failed to copy to clipboard'),
+            color: 'error'
+        });
+        return;
+    }
     justCopied.value = true;
     setTimeout(() => {
         justCopied.value = false;

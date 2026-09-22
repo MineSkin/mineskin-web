@@ -16,6 +16,7 @@
                        v-if="!mdAndUp && !filter"
                        @click="searching ? search() : showSearch()"
                        variant="text"
+                       :aria-label="$t('Search Skins')"
                 >
                     <v-icon>mdi-magnify</v-icon>
                 </v-btn>
