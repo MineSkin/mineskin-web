@@ -114,6 +114,7 @@ const localePath = useLocalePath();
 const router = useRouter()
 
 const {$mineskin, $notify} = useNuxtApp();
+const {t: $t} = useI18n();
 
 const authStore = useAuthStore();
 
