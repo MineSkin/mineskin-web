@@ -17,6 +17,7 @@
                 :image-provider="imageProvider"
                 @click:append="listClick(index)"
                 @click:append-inner="listClick(index, true)"
+                @continue="emit('continue')"
             >
             </input-list-row>
             <inline-job-progress :original-name="items[index]" :waiting="waiting"/>
@@ -40,6 +41,9 @@ const props = defineProps<{
     rule?: string;
     imageProvider?: (item: string) => string | Promise<string>;
     waiting?: boolean;
+}>();
+const emit = defineEmits<{
+    (e: 'continue'): void;
 }>();
 
 const {$mineskin} = useNuxtApp();

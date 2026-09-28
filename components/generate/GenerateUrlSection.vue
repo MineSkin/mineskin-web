@@ -11,6 +11,7 @@
             prepend-icon="mdi-link"
             :image-provider="item=>item"
             :waiting="generating"
+            @continue="cont"
         />
         <v-row align="end">
             <v-col>
