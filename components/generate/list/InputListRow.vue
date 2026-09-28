@@ -1,5 +1,5 @@
 <template>
-    <v-text-field hide-details="auto">
+    <v-text-field hide-details="auto" @keydown.enter="emit('continue')">
         <template v-slot:prepend>
             <div>
                 <v-img v-if="imageProvider && image" class="pixelated input-prepend-image" :src="image"
@@ -16,6 +16,10 @@ const props = defineProps<{
     item: string;
     imageProvider?: (item: string) => string | Promise<string>;
     prependIcon?: string;
+}>();
+
+const emit = defineEmits<{
+    (e: 'continue'): void;
 }>();
 
 const image = computedAsync(async () => {

@@ -39,7 +39,7 @@
                     :class="{'d-flex':!generateType || generateType === GenerateType.URL}"
                     v-show="!generateType || generateType === GenerateType.URL"
                     v-model="urls"
-                    @continue="generate"
+                    @continue="onEnterContinue"
                     :generating="generating"
                 />
             </v-col>
@@ -71,7 +71,7 @@
                     :class="{'d-flex':!generateType || generateType === GenerateType.USER}"
                     v-show="!generateType || generateType === GenerateType.USER"
                     v-model="users"
-                    @continue="generate"
+                    @continue="onEnterContinue"
                     :generating="generating"
                 />
             </v-col>
@@ -552,6 +552,13 @@ function getOptions(): GenerateOptions {
 const canGenerate = computed(() => {
     return imageCount.value > 0 && !generating.value && waitTime.value <= 0;
 });
+
+function onEnterContinue() {
+    // mirrors the Generate button's :disabled state - pressing Enter shouldn't
+    // bypass the wait-time / in-flight guard that the button enforces visually
+    if (!canGenerate.value) return;
+    generate();
+}
 
 async function handleQueueResponse(response: GenerateJobResponse, source: JobSource, index: number) {
     if (response.success) {

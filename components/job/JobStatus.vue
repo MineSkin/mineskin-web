@@ -116,7 +116,8 @@ const tryJobRefresh = async () => {
                         $notify({
                             text: error.message,
                             color: 'error',
-                            timeout: 2000
+                            // give users enough time to actually read why generation failed
+                            timeout: 8000
                         });
                     }
                 }
