@@ -7,7 +7,7 @@ import type { JobListResponse } from "~/types/JobListResponse";
 import type { UserValidation } from "~/types/UserValidation";
 import { type SkinInfo2, type SkinVisibility2, TagVoteType } from "@mineskin/types";
 import type { BasicCreditInfo } from "~/types/BasicCreditInfo";
-import type { CapeListResponse } from "~/types/CapeListResponse";
+import type { CapeListResponse, UserCapeListResponse } from "~/types/CapeListResponse";
 import type { GenerateOptions } from "~/types/GenerateOptions";
 import type { GenerateResponse } from "~/types/GenerateResponse";
 import type { SkinUser } from "~/types/SkinUser";
@@ -362,6 +362,12 @@ export class MineSkinAPI {
 
         public async apikey() {
             return this.api.request(`/v2/me/apikey`, {
+                credentials: 'include'
+            }, {silent: true});
+        }
+
+        public async capes(): Promise<UserCapeListResponse> {
+            return this.api.request(`/v2/me/capes`, {
                 credentials: 'include'
             }, {silent: true});
         }
