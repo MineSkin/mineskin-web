@@ -528,7 +528,15 @@ function capeIcon(item: KnownCape | UserCape) {
     return '';
 }
 
-function capeProps(item: KnownCape | UserCape) {
+function capeProps(item: KnownCape | UserCape | string) {
+    // vuetify passes the raw model value (cape uuid) when the selected cape isn't in the item list (yet)
+    if (typeof item === 'string') {
+        const known = knownCapesRes?.value?.capes?.find(c => c.uuid === item);
+        return {
+            title: known ? known.alias + " ✨" : item,
+            value: item
+        };
+    }
     return {
         title: item.alias + " ✨",
         value: item.uuid,
