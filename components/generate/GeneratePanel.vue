@@ -265,7 +265,7 @@ import { storeToRefs } from "pinia";
 import { useGenerateStore } from "~/stores/generate";
 import { fileFromJson, fileToJson } from "~/util/file";
 import type { JobSource, WrappedJob } from "~/types/WrappedJob";
-import type { CapeListResponse, KnownCape } from "~/types/CapeListResponse";
+import type { CapeListResponse, KnownCape, UserCape, UserCapeListResponse } from "~/types/CapeListResponse";
 import type { GenerateOptions } from "~/types/GenerateOptions";
 import CapeView from "~/components/skin/CapeView.vue";
 import VisibilitySelect from "~/components/generate/options/VisibilitySelect.vue";
@@ -346,8 +346,22 @@ const {
     return (await $mineskin.capes.list());
 });
 
-const supportedCapes = computed<KnownCape[]>(() => {
-    const supported: KnownCape[] = knownCapesRes?.value?.capes?.filter(c => c.supported) || [];
+// user-scoped list, tells us which capes this user owns / can actually generate with
+const {
+    data: userCapesRes
+} = useLazyAsyncData<UserCapeListResponse | null>(`user-capes`, async () => {
+    if (!authStore.authed) return null;
+    return (await $mineskin.me.capes());
+}, {
+    server: false,
+    watch: [() => authStore.authed, grants]
+});
+
+const supportedCapes = computed<(KnownCape | UserCape)[]>(() => {
+    const userCapes = userCapesRes?.value?.capes;
+    const supported: (KnownCape | UserCape)[] = userCapes
+        ? userCapes.filter(c => c.supported || c.usable || (c.support === 'owner' && c.owned))
+        : knownCapesRes?.value?.capes?.filter(c => c.supported) || [];
     // sort by name
     supported.sort((a, b) => {
         if (a.alias < b.alias) return -1;
@@ -497,13 +511,30 @@ function variantProps(item: SkinVariant) {
     }
 }
 
-function capeProps(item: KnownCape) {
+function capeSubtitle(item: KnownCape | UserCape) {
+    if (!canGenerateCapes.value) return 'Requires Basic Subscription';
+    if (item.support === 'owner' && 'usable' in item) {
+        if (item.usable) return 'Owned by your linked account';
+        return grants.value?.owned_capes ? 'Not available' : 'Requires Plus Subscription';
+    }
+    return '';
+}
+
+function capeIcon(item: KnownCape | UserCape) {
+    if (!canUsePrivateSkins.value) return 'mdi-lock';
+    if (item.support === 'owner' && 'usable' in item) {
+        return item.usable ? 'mdi-account-check' : 'mdi-lock';
+    }
+    return '';
+}
+
+function capeProps(item: KnownCape | UserCape) {
     return {
         title: item.alias + " ✨",
         value: item.uuid,
-        disabled: !canGenerateCapes.value,
-        subtitle: canGenerateCapes.value ? '' : 'Requires Basic Subscription',
-        appendIcon: !canUsePrivateSkins.value ? 'mdi-lock' : '',
+        disabled: !canGenerateCapes.value || ('usable' in item && !item.usable),
+        subtitle: capeSubtitle(item),
+        appendIcon: capeIcon(item),
         preview: capePreviewFor(item)
     }
 }
