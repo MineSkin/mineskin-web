@@ -1,6 +1,6 @@
 <template>
     <v-text-field
-        label="Name (optional)"
+        :label="$t('Name (optional)')"
         v-model="name"
         :rules="nameRules"
         persistent-hint
