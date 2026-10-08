@@ -82,14 +82,14 @@
                 @click.prevent="reset"
                 icon="mdi-reload"
                 tooltip="Reset Image Selection">
-                Clear Images
+                {{ $t("Clear Images") }}
             </action-link>
             <action-link
                 class="mx-2"
                 @click.prevent="jobsDrawer = true"
                 icon="mdi-list-status"
                 tooltip="Show Jobs">
-                Show Completed Jobs
+                {{ $t("Show Completed Jobs") }}
             </action-link>
         </v-row>
         <v-divider class="my-4"/>
@@ -104,7 +104,7 @@
                 </v-col>
                 <v-col cols="12" :md="optionsColSize">
                     <v-select
-                        label="Variant"
+                        :label="$t('Variant')"
                         v-model="variant"
                         :items="Object.values(SkinVariant)"
                         :item-props="variantProps"
@@ -114,7 +114,7 @@
                 </v-col>
                 <v-col cols="12" :md="optionsColSize" v-if="showCapeSelect">
                     <v-select
-                        label="Cape (optional)"
+                        :label="$t('Cape (optional)')"
                         v-model="cape"
                         :items="supportedCapes"
                         :item-props="capeProps"
@@ -275,6 +275,7 @@ import type { RateLimitInfo } from "~/types/misc";
 import RateLimitInfoText from "~/components/generate/RateLimitInfoText.vue";
 
 const {$mineskin, $notify, $flags, $gtag} = useNuxtApp();
+const {t: $t} = useI18n();
 
 const isHydrated = ref(false);
 
@@ -455,13 +456,23 @@ function collectUploadedFiles(files: File[]) {
     });
     if (files.length <= 0) {
         $notify({
-            text: 'No valid image files found',
+            text: $t('No valid image files found'),
             color: 'warning'
         })
         return;
     }
+    // every rejected file already got its own warning above
+    if (filtered.length <= 0) return;
     Promise.all(filtered.map(f => fileToJson(f))).then(mapped => {
-        uploadFiles.value.push(...mapped);
+        // skip files that are already in the list (same name and size), e.g. when dropped twice
+        const fresh = mapped.filter(m => !uploadFiles.value.some(u => u.name === m.name && u.size === m.size));
+        if (fresh.length < mapped.length) {
+            $notify({
+                text: $t('Some files were skipped because they are already in the list'),
+                color: 'info'
+            });
+        }
+        uploadFiles.value.push(...fresh);
     });
 }
 
