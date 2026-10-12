@@ -1,10 +1,10 @@
 <template>
     <v-select
-        label="Visibility"
+        :label="$t('Visibility')"
         v-model="visibility"
         :items="visibilities"
         :item-props="visibilityProps"
-        hint="Visibility of the skin"
+        :hint="$t('Visibility of the skin')"
         persistent-hint
     />
 </template>

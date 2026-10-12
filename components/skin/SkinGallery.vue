@@ -28,7 +28,7 @@
                 ref="searchField"
                 density="compact"
                 v-model="searchFilter"
-                placeholder="Search"
+                :placeholder="$t('Search')"
                 append-inner-icon="mdi-close"
                 @click:append-inner="searchFilter = ''; searching = false"
                 @keydown.enter="searching = false; search()"

@@ -26,7 +26,6 @@
     </v-row>
 </template>
 <script setup lang="ts">
-import { computedAsync, useDebounceFn } from '@vueuse/core'
 import InputListRow from "./InputListRow.vue";
 import InlineJobProgress from "~/components/generate/InlineJobProgress.vue";
 import { useQueueStore } from "~/stores/queue";
@@ -46,7 +45,7 @@ const emit = defineEmits<{
     (e: 'continue'): void;
 }>();
 
-const {$mineskin} = useNuxtApp();
+const {t} = useI18n();
 
 const router = useRouter();
 const localePath = useLocalePath();
@@ -54,13 +53,9 @@ const queueStore = useQueueStore();
 const {wrappedJobMap} = storeToRefs(queueStore);
 
 const allRules = {
-    required: (value: string) => !!value || 'Required.',
-    url: (value: string) => !value || value.startsWith('http') || 'Invalid URL',
-    uuidOrName: (value: string) => !value || (value.length > 1 && (value.length < 17 || value.length >= 32) && /^[a-z0-9_]+$/i.test(value)) || 'Invalid UUID or Name',
-    validNameOrUuid: (value: string) => {
-        validateUser(value);
-        return true;
-    }
+    required: (value: string) => !!value || t('Required.'),
+    url: (value: string) => !value || value.startsWith('http') || t('Invalid URL'),
+    uuidOrName: (value: string) => !value || (value.length > 1 && (value.length < 17 || value.length >= 32) && /^[a-z0-9_]+$/i.test(value)) || t('Invalid UUID or Name'),
 };
 
 const rules = computed(() => {
@@ -68,7 +63,7 @@ const rules = computed(() => {
         case 'url':
             return [allRules.url];
         case 'user':
-            return [allRules.uuidOrName, allRules.validNameOrUuid];
+            return [allRules.uuidOrName];
         default:
             return [];
     }
@@ -115,16 +110,6 @@ function listClick(index: number, inner: boolean = false) {
         items.value.splice(index, 1);
     }else if (inner && index === 0) {
         items.value[0] = '';
-    }
-}
-
-const validateUser = useDebounceFn(validateUser0, 500);
-
-async function validateUser0(user: string) {
-    if (user.length < 32) {
-        return await $mineskin.validate.name(user);
-    } else {
-        return await $mineskin.validate.uuid(user);
     }
 }
 
