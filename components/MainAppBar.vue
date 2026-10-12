@@ -74,7 +74,7 @@
                     ref="searchField"
                     density="compact"
                     v-model="filter"
-                    placeholder="Search Skins"
+                    :placeholder="$t('Search Skins')"
                     clearable
                     @keydown.enter="search()"
                     hide-details

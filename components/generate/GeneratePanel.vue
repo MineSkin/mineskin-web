@@ -81,14 +81,14 @@
                 class="mx-2"
                 @click.prevent="reset"
                 icon="mdi-reload"
-                tooltip="Reset Image Selection">
+                :tooltip="$t('Reset Image Selection')">
                 {{ $t("Clear Images") }}
             </action-link>
             <action-link
                 class="mx-2"
                 @click.prevent="jobsDrawer = true"
                 icon="mdi-list-status"
-                tooltip="Show Jobs">
+                :tooltip="$t('Show Jobs')">
                 {{ $t("Show Completed Jobs") }}
             </action-link>
         </v-row>
@@ -108,7 +108,7 @@
                         v-model="variant"
                         :items="Object.values(SkinVariant)"
                         :item-props="variantProps"
-                        hint="Variant of the skin"
+                        :hint="$t('Variant of the skin')"
                         persistent-hint
                     />
                 </v-col>
@@ -118,10 +118,10 @@
                         v-model="cape"
                         :items="supportedCapes"
                         :item-props="capeProps"
-                        hint="Cape to apply"
+                        :hint="$t('Cape to apply')"
                         persistent-hint
                         clearable
-                        placeholder="No Cape"
+                        :placeholder="$t('No Cape')"
                     >
                         <template v-slot:item="{item,props}">
                             <v-list-item role="option" v-bind="props">
@@ -219,12 +219,12 @@
                                                     Check the
                                                     <action-link @click.prevent="jobsDrawer = true"
                                                                  icon="mdi-list-status"
-                                                                 tooltip="Show Jobs">Job List
+                                                                 :tooltip="$t('Show Jobs')">Job List
                                                     </action-link>
                                                     for progress,
                                                     or
                                                     <action-link @click.prevent="reset" icon="mdi-reload"
-                                                                 tooltip="Reset Image Selection">
+                                                                 :tooltip="$t('Reset Image Selection')">
                                                         generate more skins
                                                     </action-link>
                                                 </div>

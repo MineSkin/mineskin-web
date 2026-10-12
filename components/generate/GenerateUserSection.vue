@@ -61,16 +61,19 @@ const userToImage = useDebounceFn(userToImage0, 500);
 
 async function userToImage0(user: string) {
     console.debug('userToImage', user)
-    let validation;
-    if (user.length < 32) {
-        validation = await $mineskin.validate.name(user);
-    } else {
-        validation = await $mineskin.validate.uuid(user);
-    }
-    if (!validation.valid) {
+    try {
+        const validation = user.length < 32
+            ? await $mineskin.validate.name(user)
+            : await $mineskin.validate.uuid(user);
+        if (!validation.valid) {
+            return null;
+        }
+        return textureUrlForUuid(validation.uuid!);
+    } catch (e) {
+        // preview is optional, don't let a failed lookup surface as an unhandled rejection
+        console.warn('Failed to resolve user preview', e);
         return null;
     }
-    return textureUrlForUuid(validation.uuid!);
 }
 
 </script>

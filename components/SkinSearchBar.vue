@@ -7,7 +7,7 @@
     <v-text-field v-else
                   density="compact"
                   v-model="filter"
-                  placeholder="Search"
+                  :placeholder="$t('Search')"
                   prepend-inner-icon="mdi-magnify"
                   clearable
                   @keydown.enter="searching = false"

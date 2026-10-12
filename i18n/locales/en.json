@@ -79,5 +79,15 @@
   "Cape (optional)": "Cape (optional)",
   "Clear Images": "Clear Images",
   "Show Completed Jobs": "Show Completed Jobs",
-  "Name (optional)": "Name (optional)"
+  "Name (optional)": "Name (optional)",
+  "Reset Image Selection": "Reset Image Selection",
+  "Variant of the skin": "Variant of the skin",
+  "Cape to apply": "Cape to apply",
+  "No Cape": "No Cape",
+  "Visibility": "Visibility",
+  "Visibility of the skin": "Visibility of the skin",
+  "Search": "Search",
+  "Required.": "Required.",
+  "Invalid URL": "Invalid URL",
+  "Invalid UUID or Name": "Invalid UUID or Name"
 }
