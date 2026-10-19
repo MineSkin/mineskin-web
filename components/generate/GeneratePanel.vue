@@ -81,14 +81,14 @@
                 class="mx-2"
                 @click.prevent="reset"
                 icon="mdi-reload"
-                tooltip="Reset Image Selection">
+                :tooltip="$t('Reset Image Selection')">
                 {{ $t("Clear Images") }}
             </action-link>
             <action-link
                 class="mx-2"
                 @click.prevent="jobsDrawer = true"
                 icon="mdi-list-status"
-                tooltip="Show Jobs">
+                :tooltip="$t('Show Jobs')">
                 {{ $t("Show Completed Jobs") }}
             </action-link>
         </v-row>
@@ -108,7 +108,7 @@
                         v-model="variant"
                         :items="Object.values(SkinVariant)"
                         :item-props="variantProps"
-                        hint="Variant of the skin"
+                        :hint="$t('Variant of the skin')"
                         persistent-hint
                     />
                 </v-col>
@@ -118,10 +118,10 @@
                         v-model="cape"
                         :items="supportedCapes"
                         :item-props="capeProps"
-                        hint="Cape to apply"
+                        :hint="$t('Cape to apply')"
                         persistent-hint
                         clearable
-                        placeholder="No Cape"
+                        :placeholder="$t('No Cape')"
                     >
                         <template v-slot:item="{item,props}">
                             <v-list-item role="option" v-bind="props">
@@ -138,7 +138,7 @@
                             </div>
                         </template>
                         <template v-slot:message>
-                            <span>Optional cape to apply <v-chip text="BETA" size="x-small" color="warning"
+                            <span>{{ $t("Optional cape to apply") }} <v-chip text="BETA" size="x-small" color="warning"
                                                                  variant="outlined"/></span>
                         </template>
                     </v-select>
@@ -219,12 +219,12 @@
                                                     Check the
                                                     <action-link @click.prevent="jobsDrawer = true"
                                                                  icon="mdi-list-status"
-                                                                 tooltip="Show Jobs">Job List
+                                                                 :tooltip="$t('Show Jobs')">Job List
                                                     </action-link>
                                                     for progress,
                                                     or
                                                     <action-link @click.prevent="reset" icon="mdi-reload"
-                                                                 tooltip="Reset Image Selection">
+                                                                 :tooltip="$t('Reset Image Selection')">
                                                         generate more skins
                                                     </action-link>
                                                 </div>
@@ -391,7 +391,7 @@ const capePreview = computed(() => {
 watch(() => imageCount.value, (value) => {
     if (value > 1 && !canGenerateMultiple.value) {
         $notify({
-            text: 'Please sign in to generate multiple skins at once',
+            text: $t('Please sign in to generate multiple skins at once'),
             color: 'warning'
         });
         return;
@@ -433,21 +433,21 @@ function collectUploadedFiles(files: File[]) {
     const filtered = files.filter(f => {
         if (!f.type.startsWith('image/png')) {
             $notify({
-                text: `Only PNG images are allowed, but got ${ f.type }`,
+                text: $t('Only PNG images are allowed, but got {type}', {type: f.type || f.name}),
                 color: 'warning'
             });
             return false;
         }
         if (f.size <= 0) {
             $notify({
-                text: `File is empty`,
+                text: $t('File is empty'),
                 color: 'warning'
             });
             return false;
         }
         if (f.size > 20000) {
             $notify({
-                text: `File is too large. maximum size is 20KB, but got ${ (f.size / 1024).toFixed(2) }KB`,
+                text: $t('File is too large. Maximum size is 20KB, but got {size}KB', {size: (f.size / 1024).toFixed(2)}),
                 color: 'warning'
             });
             return false;
@@ -650,7 +650,7 @@ async function generate() {
     console.log('generate');
     if (imageCount.value > 1 && !canGenerateMultiple.value) {
         $notify({
-            text: 'Please sign in to generate multiple skins at once',
+            text: $t('Please sign in to generate multiple skins at once'),
             color: 'warning'
         });
         return;
@@ -694,7 +694,7 @@ async function generate() {
     } catch (e) {
         console.error(e);
         $notify({
-            text: 'Something went wrong while generating. Please try again.',
+            text: $t('Something went wrong while generating. Please try again.'),
             color: 'error'
         });
     } finally {
@@ -735,7 +735,7 @@ async function submitGenerateJobs(baseOptions: GenerateOptions) {
                 urls.value = [urls.value[0]];
             }
             let index = 0;
-            for (const url of urls.value) {
+            for (const url of urls.value.filter(u => u.length > 0)) {
                 let options = {...baseOptions};
                 options.name = processNameVariables(name.value, generateType.value, index++, url, null, null);
                 await sleep(100);
@@ -759,18 +759,26 @@ async function submitGenerateJobs(baseOptions: GenerateOptions) {
                 users.value = [users.value[0]];
             }
             let validated: string[][] = [];
-            for (let user of users.value) {
-                if (user.length < 32) {
-                    const {valid, uuid} = await $mineskin.validate.name(user);
-                    if (!valid) {
-                        $notify({
-                            text: `Invalid user: ${ user }`,
-                            color: 'warning'
-                        });
-                        continue;
-                    }
-                    validated.push([user, uuid!]);
+            for (let user of users.value.map(u => u.trim()).filter(u => u.length > 0)) {
+                // names are validated by name, 32+ character input is a UUID
+                const {valid, uuid} = user.length < 32
+                    ? await $mineskin.validate.name(user)
+                    : await $mineskin.validate.uuid(user);
+                if (!valid) {
+                    $notify({
+                        text: $t('Invalid user: {user}', {user}),
+                        color: 'warning'
+                    });
+                    continue;
                 }
+                validated.push([user, uuid!]);
+            }
+            if (validated.length === 0) {
+                // every entry was rejected above, tell the user why nothing happened
+                $notify({
+                    text: $t('No valid users found'),
+                    color: 'warning'
+                });
             }
             //users.value = validated;
             let index = 0;
@@ -795,7 +803,7 @@ async function submitGenerateJobs(baseOptions: GenerateOptions) {
         }
         default: {
             $notify({
-                text: 'No valid input found',
+                text: $t('No valid input found'),
                 color: 'warning'
             });
             return;

@@ -7,9 +7,9 @@
             <v-spacer/>
             <v-col cols="auto">
                 <v-btn v-if="legacySkins || mySkins" @click="showLocal=!showLocal" color="secondary" class="mx-2">
-                    Toggle Local Skins
+                    {{ $t("Toggle Local Skins") }}
                 </v-btn>
-                <v-btn v-if="authStore.authed" :to="localePath('/export')" color="primary" class="mx-2">Export Skins
+                <v-btn v-if="authStore.authed" :to="localePath('/export')" color="primary" class="mx-2">{{ $t("Export Skins") }}
                 </v-btn>
             </v-col>
         </v-row>
@@ -43,7 +43,11 @@
             </v-row>
             <template v-slot:empty>
                 <div class="text-center">
-                    <div>No more results</div>
+                    <div v-if="skins.length === 0">
+                        <div class="text-medium-emphasis">{{ $t("You haven't generated any skins yet") }}</div>
+                        <v-btn :to="localePath('/')" color="primary" class="mt-2">{{ $t("Generate your first skin") }}</v-btn>
+                    </div>
+                    <div v-else>{{ $t("No more results") }}</div>
                     <div v-if="!unlimitedHistory" class="mt-4">
                         <v-alert color="primary" variant="tonal" icon="mdi-information" class="mt-1">
                             <template #text>
