@@ -72,5 +72,12 @@
   "Copied!": "Copied!",
   "Copy to Clipboard": "Copy to Clipboard",
   "Failed to copy to clipboard": "Failed to copy to clipboard",
-  "Search Skins": "Search Skins"
+  "Search Skins": "Search Skins",
+  "No valid image files found": "No valid image files found",
+  "Some files were skipped because they are already in the list": "Some files were skipped because they are already in the list",
+  "Variant": "Variant",
+  "Cape (optional)": "Cape (optional)",
+  "Clear Images": "Clear Images",
+  "Show Completed Jobs": "Show Completed Jobs",
+  "Name (optional)": "Name (optional)"
 }
