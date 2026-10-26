@@ -97,5 +97,16 @@
   "Export Skins": "Export Skins",
   "No more results": "No more results",
   "You haven't generated any skins yet": "You haven't generated any skins yet",
-  "Generate your first skin": "Generate your first skin"
+  "Generate your first skin": "Generate your first skin",
+  "sign in": "sign in",
+  "generate.signin.multiple": "Please {link} to generate multiple skins at once and to keep track of your skins.",
+  "generate.signin.single": "Please {link} to keep track of your skins and to get access to higher limits.",
+  "Need to generate a lot of skins?": "Need to generate a lot of skins?",
+  "✨ upgrade options": "✨ upgrade options",
+  "generate.upgrade.text": "Check out the {link} for higher limits and faster generation times!",
+  "Generating your skin...": "Generating your skin...",
+  "Generating your skins...": "Generating your skins...",
+  "generate.progress.text": "Check the {jobs} for progress, or {more}",
+  "Job List": "Job List",
+  "generate more skins": "generate more skins"
 }
