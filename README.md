@@ -38,6 +38,18 @@ yarn dev
 bun run dev
 ```
 
+### Dev overrides
+
+In `yarn dev`, a **Dev overrides** button sits in the bottom-right corner (the "Dev Mode" chip in the app bar opens it too).
+It lets you fake, without a backend:
+
+- signed in / signed out, plus the user id, email and avatar
+- grants (`ad_free`, `plan`, `private_skins`, ...), with presets for free, Plus and Pro
+- feature flags, on/off and their values
+
+Overrides are saved in localStorage and only apply when `runtimeConfig.public.isDev` is set.
+Fake sign-in only changes the UI. API requests still use your real session, so pages that load account data (My Skins, collections, export) stay empty.
+
 ## Production
 
 Build the application for production:
