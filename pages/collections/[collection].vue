@@ -26,7 +26,7 @@
                     </template>
                 </v-tooltip>
                 <span class="text-body-1">{{ $t('n_skins', collection.size) }}</span>
-                <CopyBtn :text="'https://mineskin.org/collections/' + collection.uuid" size="small" content-key="collection_url"/>
+                <CopyBtn :text="'https://mineskin.org/collections/' + collection.uuid" size="24" color="surface-variant" content-key="collection_url"/>
                 <template v-if="collection.owned">
                     <CollectionEditDialog :collection="collection" :limits="limits" @saved="collection = $event">
                         <template #default="{ props }">
@@ -41,7 +41,7 @@
                         </template>
                     </CollectionEditDialog>
                     <v-btn
-                        color="error"
+                        color="surface-variant"
                         icon="mdi-delete"
                         variant="text"
                         density="compact"
