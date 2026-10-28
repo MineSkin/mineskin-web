@@ -13,12 +13,12 @@
             </v-col>
         </v-row>
         <template v-else-if="collection">
-            <div class="collection-header mb-4">
-                <back-link :to="collection.owned ? '/my-skins' : '/skins'" class="collection-back text-white" :aria-label="collection.owned ? $t('My Skins') : $t('Back to Gallery')">
-                    <v-icon icon="mdi-arrow-left" class="mx-2"/>
-                </back-link>
-                <h2 class="collection-title">{{ collection.name }}</h2>
-                <div class="collection-actions d-flex align-center ga-1">
+            <div class="mb-4">
+                <div class="d-flex align-center ga-1">
+                    <back-link :to="collection.owned ? '/my-skins' : '/skins'" class="text-white" :aria-label="collection.owned ? $t('My Skins') : $t('Back to Gallery')">
+                        <v-icon icon="mdi-arrow-left" class="mx-2"/>
+                    </back-link>
+                    <h2 class="flex-grow-1 text-truncate">{{ collection.name }}</h2>
                     <CopyBtn :text="'https://mineskin.org/collections/' + collection.uuid" size="24" color="surface-variant" content-key="collection_url"/>
                     <template v-if="collection.owned">
                         <CollectionEditDialog :collection="collection" :limits="limits" @saved="collection = $event">
@@ -52,7 +52,7 @@
                         </v-tooltip>
                     </template>
                 </div>
-                <div class="collection-meta d-flex align-center flex-wrap ga-2 text-body-2 text-medium-emphasis">
+                <div class="d-flex align-center flex-wrap ga-2 ps-11 text-body-2 text-medium-emphasis">
                     <span class="d-flex align-center ga-1">
                         <v-icon :icon="visibility.icon" size="small"/>
                         {{ visibility.label }}
@@ -259,42 +259,3 @@ async function deleteCollection() {
     }
 }
 </script>
-<style scoped>
-.collection-header {
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr) auto;
-    align-items: start;
-    column-gap: 4px;
-    row-gap: 2px;
-}
-
-/* Keep the back arrow and actions level with the title's first line when a long name wraps */
-.collection-back,
-.collection-actions {
-    min-height: 36px;
-}
-
-.collection-back {
-    grid-column: 1;
-    grid-row: 1;
-    display: flex;
-    align-items: center;
-    text-decoration: none;
-}
-
-.collection-title {
-    grid-column: 2;
-    grid-row: 1;
-    overflow-wrap: anywhere;
-}
-
-.collection-actions {
-    grid-column: 3;
-    grid-row: 1;
-}
-
-.collection-meta {
-    grid-column: 2;
-    grid-row: 2;
-}
-</style>
