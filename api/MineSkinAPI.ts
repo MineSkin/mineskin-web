@@ -9,6 +9,7 @@ import { type SkinInfo2, type SkinVisibility2, TagVoteType } from "@mineskin/typ
 import type { BasicCreditInfo } from "~/types/BasicCreditInfo";
 import type { CapeListResponse, UserCapeListResponse } from "~/types/CapeListResponse";
 import type { GenerateOptions } from "~/types/GenerateOptions";
+import type { CollectionResponse, CollectionListResponse, CollectionSkinListResponse } from "~/types/Collection";
 import type { GenerateResponse } from "~/types/GenerateResponse";
 import type { SkinUser } from "~/types/SkinUser";
 import { useSkinStore } from "~/stores/skins";
@@ -57,6 +58,9 @@ export class MineSkinAPI {
             if (options.cape) {
                 formData.append('cape', options.cape);
             }
+            if (options.collection) {
+                formData.append('collection', options.collection);
+            }
             return this.api.request(`/v2/generate`, {
                 headers: {},
                 method: 'POST',
@@ -79,6 +83,9 @@ export class MineSkinAPI {
             }
             if (options.cape) {
                 body['cape'] = options.cape;
+            }
+            if (options.collection) {
+                body['collection'] = options.collection;
             }
             return this.api.request(`/v2/generate`, {
                 ...INIT,
@@ -109,6 +116,9 @@ export class MineSkinAPI {
             if (options.cape) {
                 formData.append('cape', options.cape);
             }
+            if (options.collection) {
+                formData.append('collection', options.collection);
+            }
             return this.api.request(`/v2/queue`, {
                 headers: {},
                 method: 'POST',
@@ -132,6 +142,9 @@ export class MineSkinAPI {
             if (options.cape) {
                 body['cape'] = options.cape;
             }
+            if (options.collection) {
+                body['collection'] = options.collection;
+            }
             return this.api.request(`/v2/queue`, {
                 ...INIT,
                 method: 'POST',
@@ -151,6 +164,9 @@ export class MineSkinAPI {
             }
             if (options.name) {
                 body['name'] = options.name;
+            }
+            if (options.collection) {
+                body['collection'] = options.collection;
             }
             return this.api.request(`/v2/queue`, {
                 ...INIT,
@@ -288,6 +304,92 @@ export class MineSkinAPI {
 
     }(this);
 
+    public collections = new class {
+
+        constructor(readonly api: MineSkinAPI) {
+        }
+
+        public async get(uuid: string): Promise<CollectionResponse> {
+            return this.api.request(`/v2/collections/${ uuid }`, {
+                ...INIT,
+                credentials: 'include'
+            }, {silent: true});
+        }
+
+        public async create(data: { name: string; visibility?: SkinVisibility2; }): Promise<CollectionResponse> {
+            return this.api.request(`/v2/collections`, {
+                ...INIT,
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+        }
+
+        public async update(uuid: string, data: { name?: string; visibility?: SkinVisibility2; }): Promise<CollectionResponse> {
+            return this.api.request(`/v2/collections/${ uuid }`, {
+                ...INIT,
+                method: 'PATCH',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+        }
+
+        public async delete(uuid: string) {
+            return this.api.request(`/v2/collections/${ uuid }`, {
+                ...INIT,
+                method: 'DELETE',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+        }
+
+        public async skins(uuid: string, after?: string, size?: number): Promise<CollectionSkinListResponse> {
+            const params = new URLSearchParams();
+            if (after) {
+                params.set('after', after);
+            }
+            if (size) {
+                params.set('size', size.toString());
+            }
+            return this.api.request(`/v2/collections/${ uuid }/skins?${ params.toString() }`, {
+                ...INIT,
+                credentials: 'include'
+            });
+        }
+
+        public async addSkin(uuid: string, skin: string): Promise<MineSkinResponse<'added', boolean>> {
+            return this.api.request(`/v2/collections/${ uuid }/skins`, {
+                ...INIT,
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({skin})
+            });
+        }
+
+        public async removeSkin(uuid: string, skin: string): Promise<MineSkinResponse<'removed', boolean>> {
+            return this.api.request(`/v2/collections/${ uuid }/skins/${ skin }`, {
+                ...INIT,
+                method: 'DELETE',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+        }
+
+    }(this);
+
     public capes = new class {
 
         constructor(readonly api: MineSkinAPI) {
@@ -368,6 +470,13 @@ export class MineSkinAPI {
 
         public async capes(): Promise<UserCapeListResponse> {
             return this.api.request(`/v2/me/capes`, {
+                credentials: 'include'
+            }, {silent: true});
+        }
+
+        public async collections(): Promise<CollectionListResponse> {
+            return this.api.request(`/v2/me/collections`, {
+                ...INIT,
                 credentials: 'include'
             }, {silent: true});
         }

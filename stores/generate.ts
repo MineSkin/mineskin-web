@@ -10,6 +10,7 @@ export const useGenerateStore = defineStore('generate', () => {
     const visibility = ref<SkinVisibility2>(SkinVisibility2.PUBLIC);
     const variant = ref<SkinVariant>(SkinVariant.UNKNOWN);
     const cape = ref<string>();
+    const collection = ref<string>();
 
     const uploadFiles = ref<FileJson[]>([]);
     const urls = ref<string[]>([]);
@@ -22,6 +23,7 @@ export const useGenerateStore = defineStore('generate', () => {
         visibility,
         variant,
         cape,
+        collection,
 
         uploadFiles,
         urls,
@@ -35,7 +37,7 @@ export const useGenerateStore = defineStore('generate', () => {
         storage: piniaPluginPersistedstate.localStorage(),
         // `generating` is transient UI state - persisting it can leave the Generate
         // button permanently stuck disabled/loading after a reload mid-request
-        pick: ['name', 'visibility', 'variant', 'cape', 'uploadFiles', 'urls', 'users'],
+        pick: ['name', 'visibility', 'variant', 'cape', 'collection', 'uploadFiles', 'urls', 'users'],
         serializer: {
             serialize: value => {
                 const copy = {...value};
