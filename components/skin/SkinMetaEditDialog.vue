@@ -1,13 +1,18 @@
 <template>
     <v-dialog max-width="500">
         <template v-slot:activator="{ props: activatorProps }">
-            <v-btn
-                v-bind="activatorProps"
-                color="surface-variant"
-                :icon="!!editFail ? 'mdi-pencil-off' : 'mdi-pencil'"
-                variant="text"
-                density="compact"
-            ></v-btn>
+            <v-tooltip text="Edit Skin" location="bottom">
+                <template v-slot:activator="{ props: tooltipProps }">
+                    <v-btn
+                        v-bind="mergeProps(activatorProps, tooltipProps)"
+                        color="surface-variant"
+                        :icon="!!editFail ? 'mdi-pencil-off' : 'mdi-pencil'"
+                        variant="text"
+                        density="compact"
+                        aria-label="Edit Skin"
+                    ></v-btn>
+                </template>
+            </v-tooltip>
         </template>
 
         <template v-slot:default="{ isActive }">
@@ -88,6 +93,7 @@
     </v-dialog>
 </template>
 <script setup lang="ts">
+import { mergeProps } from "vue";
 import type { SkinInfo2, SkinVisibility2 } from "@mineskin/types";
 import NameInput from "~/components/generate/options/NameInput.vue";
 import VisibilitySelect from "~/components/generate/options/VisibilitySelect.vue";
