@@ -4,7 +4,7 @@
             <v-btn
                 v-bind="activatorProps"
                 color="surface-variant"
-                icon="mdi-folder-plus-outline"
+                icon="mdi-folder-plus"
                 variant="text"
                 density="compact"
                 :aria-label="$t('Add to collection')"
@@ -62,7 +62,9 @@ async function add(collection: ListedCollection) {
         if (res?.success) {
             $notify({
                 text: res.added ? $t('Added to {name}', {name: collection.name}) : $t('Already in {name}', {name: collection.name}),
-                color: 'success'
+                color: 'success',
+                actionLabel: $t('View'),
+                actionLink: '/collections/' + collection.uuid
             });
         }
     } finally {
