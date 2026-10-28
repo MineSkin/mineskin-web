@@ -53,6 +53,7 @@
                     :color="config.public.isDev ? 'warning' :'secondary'"
                     variant="flat"
                     class="ml-2"
+                    @click.prevent.stop="openDevOverrides"
                 >
                     {{ config.public.isDev ? 'Dev Mode' : '' }}
                 </v-chip>
@@ -156,6 +157,7 @@ import { useQueueStore } from "~/stores/queue";
 import { storeToRefs } from "pinia";
 import { computed, onMounted } from "vue";
 import { PLACEHOLDER_HEAD } from "~/util/skin";
+import { useDevOverridesStore } from "~/stores/devOverrides";
 
 const config = useRuntimeConfig();
 
@@ -199,6 +201,10 @@ const plan = computed(() => {
     if (grants.value.plan === 'free') return null;
     return grants.value.plan;
 })
+
+const openDevOverrides = () => {
+    useDevOverridesStore().panelOpen = true;
+}
 
 const rainbow = computed(() => {
     const date = new Date();

@@ -2,6 +2,7 @@ import { defineNuxtPlugin } from "#app";
 import flagsmith from 'flagsmith'
 import type { GetValueOptions, HasFeatureOptions, IFlagsmith } from "flagsmith/types";
 import { useAuthStore } from "~/stores/auth";
+import { useDevOverridesStore } from "~/stores/devOverrides";
 
 interface ClientFlagEntry {
     key: string;
@@ -96,12 +97,39 @@ function wrapFlagsmith(
     }) as IFlagsmith;
 }
 
+// local dev overrides (see DevOverridesDialog), applied on top of everything else
+function wrapDevOverrides(target: IFlagsmith, devOverrides: ReturnType<typeof useDevOverridesStore>): IFlagsmith {
+    return new Proxy(target, {
+        get(t, prop, receiver) {
+            if (prop === 'hasFeature') {
+                return function (key: string, options?: HasFeatureOptions): boolean {
+                    devOverrides.markFlagSeen(key);
+                    const override = devOverrides.active ? devOverrides.flags[key] : undefined;
+                    if (override) return override.enabled;
+                    return t.hasFeature(key, options);
+                };
+            }
+            if (prop === 'getValue') {
+                return function <T = any> (key: string, options?: GetValueOptions<T>, skipAnalytics?: boolean): any {
+                    devOverrides.markFlagSeen(key);
+                    const override = devOverrides.active ? devOverrides.flags[key] : undefined;
+                    if (override?.value) return override.value;
+                    return t.getValue(key, options, skipAnalytics);
+                };
+            }
+            const value = Reflect.get(t, prop, receiver);
+            return typeof value === 'function' ? value.bind(t) : value;
+        }
+    }) as IFlagsmith;
+}
+
 export default defineNuxtPlugin({
     name: 'flags',
     async setup(nuxtApp) {
         if (process.client) {
             const runtimeConfig = useRuntimeConfig();
             const environmentID = runtimeConfig.public.flagsmithEnvironment as string;
+            const devOverrides = runtimeConfig.public.isDev ? useDevOverridesStore() : null;
 
             const [bundle, state] = await Promise.all([
                 fetchMineskinBundle(),
@@ -126,9 +154,16 @@ export default defineNuxtPlugin({
 
             const merged = wrapFlagsmith(flagsmith as IFlagsmith, buildMergedFlags(bundle), getUserId);
 
+            if (devOverrides) {
+                devOverrides.setRealFlags(merged, [
+                    ...Object.keys(flagsmith.getAllFlags()),
+                    ...(bundle?.flags.map(f => f.key) || [])
+                ]);
+            }
+
             return {
                 provide: {
-                    flags: merged
+                    flags: devOverrides ? wrapDevOverrides(merged, devOverrides) : merged
                 }
             };
         }

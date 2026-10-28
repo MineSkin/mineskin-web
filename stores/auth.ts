@@ -2,6 +2,8 @@ import type { Ref } from "vue";
 import type { AuthStatus } from "~/types/auth";
 import * as Sentry from "@sentry/browser"
 import { useSkinStore } from "~/stores/skins";
+import { DEV_USER, useDevOverridesStore } from "~/stores/devOverrides";
+import destr from "destr";
 
 const TOKEN_TIMEOUT = 1000 * 60 * 45;
 
@@ -11,11 +13,27 @@ export const useAuthStore = defineStore('auth', () => {
 
     const router = useRouter();
 
-    const authed: Ref<boolean> = ref(false);
+    // real state from the backend; read through the computed authed/grants/user below
+    const _authed: Ref<boolean> = ref(false);
     const wasAuthed = ref(false);
     const _user: Ref<AuthStatus | null> = ref(null);
 
-    const grants = ref<Record<string, string | number | boolean>>({});
+    const _grants = ref<Record<string, string | number | boolean>>({});
+
+    const devOverrides = config.public.isDev ? useDevOverridesStore() : null;
+
+    const authed = computed(() => {
+        if (devOverrides?.active && devOverrides.authed !== null) return devOverrides.authed;
+        return _authed.value;
+    });
+
+    const grants = computed(() => {
+        if (!devOverrides?.active) return _grants.value;
+        return {
+            ..._grants.value || {},
+            ...devOverrides.grants
+        };
+    });
 
     const lastWebTokenRefresh = ref(0);
     const lastApiTokenRefresh = ref(0);
@@ -49,7 +67,7 @@ export const useAuthStore = defineStore('auth', () => {
             const payload = parseWebAccessToken(cookie);
             if (payload) {
                 console.debug(payload);
-                grants.value = payload.grants;
+                _grants.value = payload.grants;
                 _user.value = {
                     user: payload.user,
                     email: payload.email,
@@ -83,22 +101,18 @@ export const useAuthStore = defineStore('auth', () => {
         }
 
         const success = !!response && response.ok;
-        if (config.public.isDev) {
-            authed.value = localStorage.getItem('devAuthed') === 'true' || success;
-        } else {
-            authed.value = success;
-        }
+        _authed.value = success;
         wasAuthed.value = success;
         $mineskin.setAuthed(success);
 
         if (success) {
             const body = await response.json();
             _user.value = {
-                ...user.value || {},
+                ..._user.value || {},
                 ...body,
                 authenticated: success
             };
-            grants.value = body.grants;
+            _grants.value = body.grants;
             try {
                 Sentry.setUser({
                     id: _user.value?.user
@@ -107,7 +121,7 @@ export const useAuthStore = defineStore('auth', () => {
                 console.error(e);
             }
             linkAnonymousSkins();
-            return _user.value;
+            return user.value;
         }
 
         try {
@@ -176,13 +190,23 @@ export const useAuthStore = defineStore('auth', () => {
         return JSON.parse(jsonPayload);
     }
 
-    const user = computed(() => _user.value);
-    const userId = computed(() => _user.value?.user);
+    const user = computed((): AuthStatus | null => {
+        if (!devOverrides?.active) return _user.value;
+        if (!authed.value) return devOverrides.authed === false ? null : _user.value;
+        const overrides = Object.fromEntries(Object.entries(devOverrides.user).filter(([, v]) => !!v));
+        return {
+            ...(_user.value?.user ? _user.value : DEV_USER),
+            ...overrides,
+            grants: grants.value,
+            authenticated: true
+        } as AuthStatus;
+    });
+    const userId = computed(() => user.value?.user);
 
     const reset = () => {
-        authed.value = false;
+        _authed.value = false;
         _user.value = null;
-        grants.value = {};
+        _grants.value = {};
         lastApiTokenRefresh.value = 0;
         lastWebTokenRefresh.value = 0;
     }
@@ -196,6 +220,7 @@ export const useAuthStore = defineStore('auth', () => {
     }, {immediate: true})
 
     return {
+        _authed,
         authed,
         _user,
         lastWebTokenRefresh,
@@ -204,11 +229,25 @@ export const useAuthStore = defineStore('auth', () => {
         checkAuth,
         userId,
         user,
+        _grants,
         grants,
         reset
     }
 }, {
     persist: {
-        storage: piniaPluginPersistedstate.localStorage()
+        storage: piniaPluginPersistedstate.localStorage(),
+        pick: ['_authed', '_user', '_grants', 'lastWebTokenRefresh', 'lastApiTokenRefresh'],
+        serializer: {
+            serialize: JSON.stringify,
+            deserialize: value => {
+                const state = destr<Record<string, any>>(value);
+                // migrate state persisted before authed/grants were renamed to _authed/_grants
+                if (state && 'authed' in state && !('_authed' in state)) {
+                    state._authed = state.authed;
+                    state._grants = state.grants;
+                }
+                return state;
+            }
+        }
     }
 });

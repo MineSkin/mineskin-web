@@ -13,6 +13,7 @@
             </v-main>
             <MainFooter/>
             <RightNavDrawer/>
+            <LazyDevOverridesDialog v-if="config.public.isDev"/>
         </v-app>
     </NuxtLayout>
 </template>
@@ -24,6 +25,8 @@ import SentryInit from "~/components/SentryInit.vue";
 import { onMounted, onUnmounted } from "vue";
 import LoadingIndicator from "~/components/LoadingIndicator.vue";
 import MainAppBar from "~/components/MainAppBar.vue";
+
+const config = useRuntimeConfig();
 
 const description = 'Automate Minecraft skin signing with MineSkin – Get signed textures in seconds.';
 
