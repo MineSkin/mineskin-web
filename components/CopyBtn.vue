@@ -8,6 +8,7 @@
                 @keydown.space.prevent="copyToClipboard"
                 :disabled="!text"
                 :size="size"
+                :color="color"
                 role="button"
                 :tabindex="text ? 0 : undefined"
                 :aria-label="tooltipText"
@@ -24,6 +25,7 @@ const props = defineProps<{
     text?: string,
     contentKey?: string,
     size?: string,
+    color?: string,
     tooltipLocation?: string
 }>();
 

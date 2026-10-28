@@ -1,15 +1,19 @@
 <template>
     <v-menu v-model="menu" v-if="authStore.authed && $flags.hasFeature('web.collections')">
-        <template v-slot:activator="{ props: activatorProps }">
-            <v-btn
-                v-bind="activatorProps"
-                color="surface-variant"
-                icon="mdi-folder-plus"
-                variant="text"
-                density="compact"
-                :aria-label="$t('Add to collection')"
-                :loading="loading || adding"
-            />
+        <template v-slot:activator="{ props: menuProps }">
+            <v-tooltip :text="$t('Add to collection')" location="bottom" :disabled="menu">
+                <template v-slot:activator="{ props: tooltipProps }">
+                    <v-btn
+                        v-bind="mergeProps(menuProps, tooltipProps)"
+                        color="surface-variant"
+                        icon="mdi-folder-plus"
+                        variant="text"
+                        density="compact"
+                        :aria-label="$t('Add to collection')"
+                        :loading="loading || adding"
+                    />
+                </template>
+            </v-tooltip>
         </template>
         <v-list v-if="collectionsRes?.success && !loading" density="compact">
             <v-list-item
@@ -28,6 +32,7 @@
     </v-menu>
 </template>
 <script setup lang="ts">
+import { mergeProps } from "vue";
 import type { CollectionListResponse, ListedCollection } from "~/types/Collection";
 
 const props = defineProps<{
