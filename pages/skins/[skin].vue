@@ -2,46 +2,40 @@
 .line-break-anywhere {
     line-break: anywhere;
 }
-
-.skin-title {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
 </style>
 <template>
     <v-container class="mb-4">
-        <h2 class="skin-title">
-            <back-link to="/skins" class="text-white">
-                <v-icon icon="mdi-arrow-left" class="mx-2"/>
-            </back-link>
-            {{ skinNameDisplay }}
-            <v-tooltip v-if="useRandomName" text="Random Name">
-                <template v-slot:activator="{ props }">
-                    <span v-bind="props">*</span>
-                </template>
-            </v-tooltip>
-            <v-tooltip
-                :text="skin?.visibility===SkinVisibility2.PRIVATE ? $t('Private') : skin?.visibility===SkinVisibility2.UNLISTED? $t('Unlisted') : $t('Public')">
-                <template v-slot:activator="{ props }">
-                    <span v-bind="props">
-                        <v-icon class="mx-2">{{
-                                skin?.visibility === SkinVisibility2.PRIVATE ? 'mdi-eye-off' : skin?.visibility === SkinVisibility2.UNLISTED ? 'mdi-link' : 'mdi-earth'
-                            }}</v-icon>
-                    </span>
-                </template>
-            </v-tooltip>
-            <AddToCollectionButton :skin="skin.uuid" v-if="skin"/>
-            <SkinMetaEditDialog
-                v-if="canEditSkin||(couldEditSkin&&skinEditFail)"
-                :can-edit="canEditSkin"
-                :can-delete="canDeleteSkin"
-                :edit-fail="skinEditFail"
-                :delete-fail="skinDeleteFail"
-                :skin="skin"
-                @update:skin="handleSkinEditUpdate"
-            />
-        </h2>
+        <div class="mb-4">
+            <div class="d-flex align-center ga-1">
+                <back-link to="/skins" class="text-white" :aria-label="$t('Back to Gallery')">
+                    <v-icon icon="mdi-arrow-left" class="mx-2"/>
+                </back-link>
+                <h2 class="flex-grow-1 text-truncate">
+                    {{ skinNameDisplay }}
+                    <v-tooltip v-if="useRandomName" text="Random Name">
+                        <template v-slot:activator="{ props }">
+                            <span v-bind="props">*</span>
+                        </template>
+                    </v-tooltip>
+                </h2>
+                <AddToCollectionButton :skin="skin.uuid" v-if="skin"/>
+                <SkinMetaEditDialog
+                    v-if="canEditSkin||(couldEditSkin&&skinEditFail)"
+                    :can-edit="canEditSkin"
+                    :can-delete="canDeleteSkin"
+                    :edit-fail="skinEditFail"
+                    :delete-fail="skinDeleteFail"
+                    :skin="skin"
+                    @update:skin="handleSkinEditUpdate"
+                />
+            </div>
+            <div v-if="skin" class="d-flex align-center flex-wrap ga-2 ps-11 text-body-2 text-medium-emphasis">
+                <span class="d-flex align-center ga-1">
+                    <v-icon :icon="visibility.icon" size="small"/>
+                    {{ visibility.label }}
+                </span>
+            </div>
+        </div>
         <v-row v-if="skinNotFound" justify="center" class="my-8">
             <v-col cols="12" md="6" class="text-center">
                 <v-alert type="warning" variant="tonal">
@@ -160,6 +154,7 @@ const validSkinId = computed(() => {
 });
 
 const {$mineskin, $notify, $gtag} = useNuxtApp();
+const {t: $t} = useI18n();
 
 const authStore = useAuthStore();
 const {authed, user} = storeToRefs(authStore);
@@ -248,6 +243,17 @@ const skinNameDisplay = computed(() => {
         return randomSkinName.value;
     }
     return skinName(skin.value, randomSkinName.value || 'Skin');
+});
+
+const visibility = computed(() => {
+    switch (skin.value?.visibility) {
+        case SkinVisibility2.PRIVATE:
+            return {icon: 'mdi-eye-off', label: $t('Private')};
+        case SkinVisibility2.UNLISTED:
+            return {icon: 'mdi-link', label: $t('Unlisted')};
+        default:
+            return {icon: 'mdi-earth', label: $t('Public')};
+    }
 });
 
 const skinHeadImage = computed(() => {
