@@ -72,7 +72,7 @@
                             md="2"
                             lg="2"
                             xl="1"
-                            class="gallery-item-group ma-2"
+                            class="gallery-item-group ma-2 position-relative"
                         >
                             <skin-link-card :skin="item"/>
                             <v-btn
@@ -80,6 +80,9 @@
                                 icon="mdi-close"
                                 variant="text"
                                 size="small"
+                                density="compact"
+                                class="position-absolute"
+                                style="top: 4px; right: 4px; z-index: 1"
                                 :aria-label="$t('Remove from collection')"
                                 :disabled="!!removing"
                                 :loading="removing === item.uuid"
