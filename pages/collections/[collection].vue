@@ -178,7 +178,14 @@ async function load({done}: { done: (status: 'ok' | 'empty' | 'error') => void }
         done('empty');
         return;
     }
-    const res = await $mineskin.collections.skins(collectionId, after.value, 16);
+    let res;
+    try {
+        res = await $mineskin.collections.skins(collectionId, after.value, 16);
+    } catch (e) {
+        console.error('Failed to load skins', e);
+        done('error');
+        return;
+    }
     if (!res?.success) {
         done('error');
         return;
