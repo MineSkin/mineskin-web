@@ -13,43 +13,54 @@
             </v-col>
         </v-row>
         <template v-else-if="collection">
-            <h2 class="d-flex align-center flex-wrap ga-2">
-                <back-link :to="collection.owned ? '/my-skins' : '/skins'" class="text-white" :aria-label="collection.owned ? $t('My Skins') : $t('Back to Gallery')">
+            <div class="collection-header mb-4">
+                <back-link :to="collection.owned ? '/my-skins' : '/skins'" class="collection-back text-white" :aria-label="collection.owned ? $t('My Skins') : $t('Back to Gallery')">
                     <v-icon icon="mdi-arrow-left" class="mx-2"/>
                 </back-link>
-                <span class="text-break">{{ collection.name }}</span>
-                <v-tooltip :text="collection.visibility === SkinVisibility2.PRIVATE ? $t('Private') : collection.visibility === SkinVisibility2.UNLISTED ? $t('Unlisted') : $t('Public')">
-                    <template v-slot:activator="{ props }">
-                        <span v-bind="props">
-                            <v-icon>{{ collection.visibility === SkinVisibility2.PRIVATE ? 'mdi-eye-off' : collection.visibility === SkinVisibility2.UNLISTED ? 'mdi-link' : 'mdi-earth' }}</v-icon>
-                        </span>
+                <h2 class="collection-title">{{ collection.name }}</h2>
+                <div class="collection-actions d-flex align-center ga-1">
+                    <CopyBtn :text="'https://mineskin.org/collections/' + collection.uuid" size="24" color="surface-variant" content-key="collection_url"/>
+                    <template v-if="collection.owned">
+                        <CollectionEditDialog :collection="collection" :limits="limits" @saved="collection = $event">
+                            <template #default="{ props: dialogProps }">
+                                <v-tooltip :text="$t('Edit collection')" location="bottom">
+                                    <template v-slot:activator="{ props: tooltipProps }">
+                                        <v-btn
+                                            v-bind="mergeProps(dialogProps, tooltipProps)"
+                                            color="surface-variant"
+                                            icon="mdi-pencil"
+                                            variant="text"
+                                            density="compact"
+                                            :aria-label="$t('Edit collection')"
+                                        />
+                                    </template>
+                                </v-tooltip>
+                            </template>
+                        </CollectionEditDialog>
+                        <v-tooltip :text="$t('Delete collection')" location="bottom">
+                            <template v-slot:activator="{ props: tooltipProps }">
+                                <v-btn
+                                    v-bind="tooltipProps"
+                                    color="surface-variant"
+                                    icon="mdi-delete"
+                                    variant="text"
+                                    density="compact"
+                                    :aria-label="$t('Delete collection')"
+                                    @click="confirmText = ''; deleteDialog = true"
+                                />
+                            </template>
+                        </v-tooltip>
                     </template>
-                </v-tooltip>
-                <span class="text-body-1">{{ $t('n_skins', collection.size) }}</span>
-                <CopyBtn :text="'https://mineskin.org/collections/' + collection.uuid" size="24" color="surface-variant" content-key="collection_url"/>
-                <template v-if="collection.owned">
-                    <CollectionEditDialog :collection="collection" :limits="limits" @saved="collection = $event">
-                        <template #default="{ props }">
-                            <v-btn
-                                v-bind="props"
-                                color="surface-variant"
-                                icon="mdi-pencil"
-                                variant="text"
-                                density="compact"
-                                :aria-label="$t('Edit collection')"
-                            />
-                        </template>
-                    </CollectionEditDialog>
-                    <v-btn
-                        color="surface-variant"
-                        icon="mdi-delete"
-                        variant="text"
-                        density="compact"
-                        :aria-label="$t('Delete collection')"
-                        @click="confirmText = ''; deleteDialog = true"
-                    />
-                </template>
-            </h2>
+                </div>
+                <div class="collection-meta d-flex align-center flex-wrap ga-2 text-body-2 text-medium-emphasis">
+                    <span class="d-flex align-center ga-1">
+                        <v-icon :icon="visibility.icon" size="small"/>
+                        {{ visibility.label }}
+                    </span>
+                    <span aria-hidden="true">·</span>
+                    <span>{{ $t('n_skins', collection.size) }}</span>
+                </div>
+            </div>
             <v-alert v-if="collection.owned && limits && collection.size >= limits.skins" color="primary" variant="tonal" icon="mdi-information" class="mt-4">
                 <template #text>
                     <action-link
@@ -132,6 +143,7 @@
     </v-container>
 </template>
 <script setup lang="ts">
+import { mergeProps } from "vue";
 import { SkinVisibility2 } from "@mineskin/types";
 import type { CollectionListResponse, ListedCollection } from "~/types/Collection";
 import type { ListedSkin } from "~/types/SkinListResponse";
@@ -144,6 +156,7 @@ definePageMeta({
 });
 
 const {$mineskin, $flags} = useNuxtApp();
+const {t: $t} = useI18n();
 const route = useRoute();
 const router = useRouter();
 const localePath = useLocalePath();
@@ -171,6 +184,17 @@ const {data: collectionsRes} = useLazyAsyncData<CollectionListResponse | null>(`
 const limits = computed(() => collectionsRes.value?.success ? collectionsRes.value.limits : undefined);
 
 useHead({title: computed(() => collection.value?.name)});
+
+const visibility = computed(() => {
+    switch (collection.value?.visibility) {
+        case SkinVisibility2.PRIVATE:
+            return {icon: 'mdi-eye-off', label: $t('Private')};
+        case SkinVisibility2.UNLISTED:
+            return {icon: 'mdi-link', label: $t('Unlisted')};
+        default:
+            return {icon: 'mdi-earth', label: $t('Public')};
+    }
+});
 
 const skins = ref<ListedSkin[]>([]);
 const after = ref<string>();
@@ -235,3 +259,42 @@ async function deleteCollection() {
     }
 }
 </script>
+<style scoped>
+.collection-header {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: start;
+    column-gap: 4px;
+    row-gap: 2px;
+}
+
+/* Keep the back arrow and actions level with the title's first line when a long name wraps */
+.collection-back,
+.collection-actions {
+    min-height: 36px;
+}
+
+.collection-back {
+    grid-column: 1;
+    grid-row: 1;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.collection-title {
+    grid-column: 2;
+    grid-row: 1;
+    overflow-wrap: anywhere;
+}
+
+.collection-actions {
+    grid-column: 3;
+    grid-row: 1;
+}
+
+.collection-meta {
+    grid-column: 2;
+    grid-row: 2;
+}
+</style>
