@@ -5,7 +5,7 @@
 </style>
 <template>
     <v-container class="mb-4">
-        <div class="mb-4">
+        <div>
             <div class="d-flex align-center ga-1">
                 <back-link to="/skins" class="text-white" :aria-label="$t('Back to Gallery')">
                     <v-icon icon="mdi-arrow-left" class="mx-2"/>
