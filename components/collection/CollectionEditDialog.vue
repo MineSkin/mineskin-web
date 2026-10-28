@@ -51,7 +51,7 @@ const emit = defineEmits<{
     (event: 'saved', collection: ListedCollection): void
 }>();
 
-const dialog = ref(false);
+const dialog = defineModel<boolean>({default: false});
 const name = ref('');
 const visibility = ref<SkinVisibility2>(SkinVisibility2.PUBLIC);
 const saving = ref(false);

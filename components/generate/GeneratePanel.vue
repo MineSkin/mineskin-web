@@ -101,14 +101,32 @@
                 </v-col>
                 <v-col cols="12" :md="optionsColSize" v-if="showCollectionSelect">
                     <v-select
-                        :label="$t('Collection')"
                         v-model="collection"
+                        v-model:menu="collectionMenu"
+                        :label="$t('Collection (optional)')"
                         :items="userCollectionsRes?.success ? userCollectionsRes.collections : []"
                         item-title="name"
                         item-value="uuid"
+                        :item-props="collectionProps"
+                        :no-data-text="$t('No collections yet')"
                         :hint="$t('Add generated skins to a collection')"
                         persistent-hint
                         clearable
+                    >
+                        <template v-slot:append-item v-if="canCreateCollection">
+                            <v-divider class="mb-1"/>
+                            <v-list-item
+                                prepend-icon="mdi-plus"
+                                :title="$t('New collection')"
+                                @click="collectionMenu = false; createCollectionDialog = true"
+                            />
+                        </template>
+                    </v-select>
+                    <CollectionEditDialog
+                        v-if="userCollectionsRes?.success"
+                        v-model="createCollectionDialog"
+                        :limits="userCollectionsRes.limits"
+                        @saved="collectionCreated"
                     />
                 </v-col>
                 <v-col cols="12" :md="optionsColSize">
@@ -279,7 +297,8 @@ import { fileFromJson, fileToJson } from "~/util/file";
 import type { JobSource, WrappedJob } from "~/types/WrappedJob";
 import type { CapeListResponse, KnownCape, UserCape, UserCapeListResponse } from "~/types/CapeListResponse";
 import type { GenerateOptions } from "~/types/GenerateOptions";
-import type { CollectionListResponse } from "~/types/Collection";
+import type { CollectionListResponse, ListedCollection } from "~/types/Collection";
+import CollectionEditDialog from "~/components/collection/CollectionEditDialog.vue";
 import CapeView from "~/components/skin/CapeView.vue";
 import VisibilitySelect from "~/components/generate/options/VisibilitySelect.vue";
 import NameInput from "~/components/generate/options/NameInput.vue";
@@ -388,6 +407,28 @@ watch(userCollectionsRes, (res) => {
         collection.value = undefined;
     }
 }, {immediate: true});
+
+const collectionMenu = ref(false);
+const createCollectionDialog = ref(false);
+const canCreateCollection = computed(() => {
+    return !!userCollectionsRes.value?.success && userCollectionsRes.value.collections.length < userCollectionsRes.value.limits.collections;
+});
+
+function collectionProps(item: ListedCollection) {
+    const full = !!userCollectionsRes.value?.success && item.size >= userCollectionsRes.value.limits.skins;
+    return {
+        prependIcon: item.visibility === SkinVisibility2.PRIVATE ? 'mdi-eye-off' : item.visibility === SkinVisibility2.UNLISTED ? 'mdi-link' : 'mdi-earth',
+        subtitle: full ? $t('Full') : $t('n_skins', item.size),
+        disabled: full
+    };
+}
+
+function collectionCreated(created: ListedCollection) {
+    if (userCollectionsRes.value?.success) {
+        userCollectionsRes.value.collections.push(created);
+    }
+    collection.value = created.uuid;
+}
 
 const supportedCapes = computed<(KnownCape | UserCape)[]>(() => {
     const userCapes = userCapesRes?.value?.capes;
