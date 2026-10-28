@@ -13,6 +13,37 @@
                 </v-btn>
             </v-col>
         </v-row>
+        <v-row v-if="authStore.authed && $flags.hasFeature('web.collections') && collectionsRes?.success">
+            <v-col cols="12">
+                <h3 class="mb-2">{{ $t('Collections') }}</h3>
+                <v-chip
+                    v-for="c in collectionsRes.collections"
+                    :key="c.uuid"
+                    :to="localePath('/collections/' + c.uuid)"
+                    :prepend-icon="c.visibility === SkinVisibility2.PRIVATE ? 'mdi-eye-off' : undefined"
+                    class="ma-1"
+                >
+                    {{ c.name }} ({{ c.size }})
+                </v-chip>
+                <template v-if="collectionsRes.collections.length >= collectionsRes.limits.collections">
+                    <action-link
+                        href="https://account.mineskin.org/store?utm_source=web&utm_medium=button&utm_campaign=collections"
+                        target="_blank"
+                        class="upgrade-text-gradient"
+                    >
+                        {{ $t('✨ Upgrade') }}
+                    </action-link>
+                    {{ $t('for more collections') }}
+                </template>
+                <CollectionEditDialog v-else :limits="collectionsRes.limits" @saved="collectionCreated">
+                    <template #default="{ props }">
+                        <v-chip v-bind="props" prepend-icon="mdi-plus" class="ma-1">
+                            {{ $t('New collection') }}
+                        </v-chip>
+                    </template>
+                </CollectionEditDialog>
+            </v-col>
+        </v-row>
         <v-row v-if="!authStore.authed" justify="center">
             <v-col cols="auto">
                 <v-alert type="warning" @click.prevent="loginRedirect">
@@ -108,6 +139,9 @@ import { useNuxtApp } from "#app";
 import { useSkinStore } from "#imports";
 import { computed, onMounted } from "vue";
 import ActionLink from "~/components/ActionLink.vue";
+import CollectionEditDialog from "~/components/collection/CollectionEditDialog.vue";
+import type { CollectionListResponse, ListedCollection } from "~/types/Collection";
+import { SkinVisibility2 } from "@mineskin/types";
 
 useHead({
     title: 'My Skins'
@@ -117,7 +151,7 @@ const localePath = useLocalePath();
 
 const router = useRouter()
 
-const {$mineskin, $notify} = useNuxtApp();
+const {$mineskin, $notify, $flags} = useNuxtApp();
 const {t: $t} = useI18n();
 
 const authStore = useAuthStore();
@@ -126,6 +160,11 @@ const skinStore = useSkinStore();
 const {mySkins, legacySkins} = storeToRefs(skinStore);
 
 const showLocal = ref(false);
+const collectionsRes = ref<CollectionListResponse>();
+
+function collectionCreated(collection: ListedCollection) {
+    router.push(localePath('/collections/' + collection.uuid));
+}
 
 const loginRedirect = () => {
     authStore.reset();
@@ -216,6 +255,9 @@ onMounted(async () => {
     }
 
     if (!(await authStore.checkAuth())?.authenticated) return;
+    if ($flags.hasFeature('web.collections')) {
+        collectionsRes.value = await $mineskin.me.collections();
+    }
 })
 
 

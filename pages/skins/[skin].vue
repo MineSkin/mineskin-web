@@ -31,6 +31,7 @@
                     </span>
                 </template>
             </v-tooltip>
+            <AddToCollectionButton :skin="skin.uuid" v-if="skin"/>
             <SkinMetaEditDialog
                 v-if="canEditSkin||(couldEditSkin&&skinEditFail)"
                 :can-edit="canEditSkin"
@@ -146,6 +147,7 @@ import { capitalizeFirstLetter } from "~/util/misc";
 import { storeToRefs } from "pinia";
 import type { SkinUser } from "~/types/SkinUser";
 import SkinMetaEditDialog from "~/components/skin/SkinMetaEditDialog.vue";
+import AddToCollectionButton from "~/components/collection/AddToCollectionButton.vue";
 
 const router = useRouter();
 

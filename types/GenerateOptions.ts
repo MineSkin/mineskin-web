@@ -5,4 +5,5 @@ export interface GenerateOptions {
     variant?: SkinVariant;
     name?: string;
     cape?: string;
+    collection?: string;
 }

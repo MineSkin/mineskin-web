@@ -99,6 +99,18 @@
                 <v-col cols="12" :md="optionsColSize">
                     <VisibilitySelect v-model="visibility"/>
                 </v-col>
+                <v-col cols="12" :md="optionsColSize" v-if="showCollectionSelect">
+                    <v-select
+                        :label="$t('Collection')"
+                        v-model="collection"
+                        :items="userCollectionsRes?.success ? userCollectionsRes.collections : []"
+                        item-title="name"
+                        item-value="uuid"
+                        :hint="$t('Add generated skins to a collection')"
+                        persistent-hint
+                        clearable
+                    />
+                </v-col>
                 <v-col cols="12" :md="optionsColSize">
                     <NameInput v-model="name" :generate-type="generateType!" :image-count="imageCount"/>
                 </v-col>
@@ -267,6 +279,7 @@ import { fileFromJson, fileToJson } from "~/util/file";
 import type { JobSource, WrappedJob } from "~/types/WrappedJob";
 import type { CapeListResponse, KnownCape, UserCape, UserCapeListResponse } from "~/types/CapeListResponse";
 import type { GenerateOptions } from "~/types/GenerateOptions";
+import type { CollectionListResponse } from "~/types/Collection";
 import CapeView from "~/components/skin/CapeView.vue";
 import VisibilitySelect from "~/components/generate/options/VisibilitySelect.vue";
 import NameInput from "~/components/generate/options/NameInput.vue";
@@ -296,6 +309,7 @@ const {
     visibility,
     variant,
     cape,
+    collection,
 
     uploadFiles,
     urls,
@@ -357,6 +371,23 @@ const {
     server: false,
     watch: [() => authStore.authed, grants]
 });
+
+const showCollectionSelect = computed(() => authStore.authed && $flags.hasFeature('web.collections'));
+const {
+    data: userCollectionsRes
+} = useLazyAsyncData<CollectionListResponse | null>(`generate-collections`, async () => {
+    if (!showCollectionSelect.value) return null;
+    return await $mineskin.me.collections();
+}, {
+    server: false,
+    watch: [showCollectionSelect]
+});
+
+watch(userCollectionsRes, (res) => {
+    if (showCollectionSelect.value && res?.success && collection.value && !res.collections.some(c => c.uuid === collection.value)) {
+        collection.value = undefined;
+    }
+}, {immediate: true});
 
 const supportedCapes = computed<(KnownCape | UserCape)[]>(() => {
     const userCapes = userCapesRes?.value?.capes;
@@ -576,7 +607,7 @@ const showCapeSelect = computed(() => {
     return authStore.authed && generateType.value !== GenerateType.USER;
 })
 const optionsColSize = computed(() => {
-    return showCapeSelect.value ? 2 : 3;
+    return showCapeSelect.value || showCollectionSelect.value ? 2 : 3;
 })
 
 function reset() {
@@ -595,7 +626,8 @@ function getOptions(): GenerateOptions {
         visibility: visibility.value,
         variant: variant.value || undefined,
         name: name.value,
-        cape: cape.value
+        cape: cape.value,
+        collection: showCollectionSelect.value ? collection.value : undefined
     }
 }
 
