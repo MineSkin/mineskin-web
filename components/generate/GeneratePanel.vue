@@ -99,6 +99,36 @@
                 <v-col cols="12" :md="optionsColSize">
                     <VisibilitySelect v-model="visibility"/>
                 </v-col>
+                <v-col cols="12" :md="optionsColSize" v-if="showCollectionSelect">
+                    <v-select
+                        v-model="collection"
+                        v-model:menu="collectionMenu"
+                        :label="$t('Collection (optional)')"
+                        :items="userCollectionsRes?.success ? userCollectionsRes.collections : []"
+                        item-title="name"
+                        item-value="uuid"
+                        :item-props="collectionProps"
+                        :no-data-text="$t('No collections yet')"
+                        :hint="$t('Add generated skins to a collection')"
+                        persistent-hint
+                        clearable
+                    >
+                        <template v-slot:append-item v-if="canCreateCollection">
+                            <v-divider class="mb-1"/>
+                            <v-list-item
+                                prepend-icon="mdi-plus"
+                                :title="$t('New collection')"
+                                @click="collectionMenu = false; createCollectionDialog = true"
+                            />
+                        </template>
+                    </v-select>
+                    <CollectionEditDialog
+                        v-if="userCollectionsRes?.success"
+                        v-model="createCollectionDialog"
+                        :limits="userCollectionsRes.limits"
+                        @saved="collectionCreated"
+                    />
+                </v-col>
                 <v-col cols="12" :md="optionsColSize">
                     <NameInput v-model="name" :generate-type="generateType!" :image-count="imageCount"/>
                 </v-col>
@@ -142,36 +172,6 @@
                                                                  variant="outlined"/></span>
                         </template>
                     </v-select>
-                </v-col>
-                <v-col cols="12" :md="optionsColSize" v-if="showCollectionSelect">
-                    <v-select
-                        v-model="collection"
-                        v-model:menu="collectionMenu"
-                        :label="$t('Collection (optional)')"
-                        :items="userCollectionsRes?.success ? userCollectionsRes.collections : []"
-                        item-title="name"
-                        item-value="uuid"
-                        :item-props="collectionProps"
-                        :no-data-text="$t('No collections yet')"
-                        :hint="$t('Add generated skins to a collection')"
-                        persistent-hint
-                        clearable
-                    >
-                        <template v-slot:append-item v-if="canCreateCollection">
-                            <v-divider class="mb-1"/>
-                            <v-list-item
-                                prepend-icon="mdi-plus"
-                                :title="$t('New collection')"
-                                @click="collectionMenu = false; createCollectionDialog = true"
-                            />
-                        </template>
-                    </v-select>
-                    <CollectionEditDialog
-                        v-if="userCollectionsRes?.success"
-                        v-model="createCollectionDialog"
-                        :limits="userCollectionsRes.limits"
-                        @saved="collectionCreated"
-                    />
                 </v-col>
                 <v-spacer></v-spacer>
             </v-row>
