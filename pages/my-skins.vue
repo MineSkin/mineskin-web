@@ -1,11 +1,20 @@
 <template>
     <v-container>
-        <v-row>
-            <v-col cols="6">
+        <v-row v-if="!selecting">
+            <v-col>
                 <h2>{{ $t("My Skins") }}</h2>
             </v-col>
             <v-spacer/>
             <v-col cols="auto">
+                <v-btn
+                    v-if="canSelect"
+                    variant="tonal"
+                    prepend-icon="mdi-checkbox-multiple-marked-outline"
+                    class="mx-2"
+                    @click="selecting = true"
+                >
+                    {{ $t("Select") }}
+                </v-btn>
                 <v-btn v-if="legacySkins || mySkins" @click="showLocal=!showLocal" color="secondary" class="mx-2">
                     {{ $t("Toggle Local Skins") }}
                 </v-btn>
@@ -13,6 +22,50 @@
                 </v-btn>
             </v-col>
         </v-row>
+        <v-toolbar
+            v-else-if="collectionsRes?.success"
+            color="surface-light"
+            rounded="lg"
+            elevation="4"
+            class="position-sticky mb-4"
+            style="top: calc(var(--v-layout-top) + 8px); z-index: 5"
+        >
+            <v-btn icon="mdi-close" :aria-label="$t('Cancel')" :disabled="adding" @click="stopSelecting"/>
+            <v-toolbar-title>
+                {{ selected.length ? $t('n_skins_selected', selected.length) : $t('Select skins to add') }}
+            </v-toolbar-title>
+            <v-menu>
+                <template v-slot:activator="{ props: menuProps }">
+                    <v-btn
+                        v-bind="menuProps"
+                        color="primary"
+                        variant="flat"
+                        prepend-icon="mdi-folder-plus"
+                        append-icon="mdi-menu-down"
+                        class="me-2"
+                        :aria-label="$t('Add to collection')"
+                        :disabled="selected.length === 0"
+                        :loading="adding"
+                    >
+                        <span class="d-none d-sm-inline">{{ $t('Add to collection') }}</span>
+                    </v-btn>
+                </template>
+                <v-list density="compact">
+                    <v-list-item
+                        v-for="c in collectionsRes.collections"
+                        :key="c.uuid"
+                        v-bind="collectionProps(c)"
+                        :title="c.name"
+                        @click="addSelected(c)"
+                    />
+                    <template v-if="canCreateCollection">
+                        <v-divider v-if="collectionsRes.collections.length > 0" class="my-1"/>
+                        <v-list-item prepend-icon="mdi-plus" :title="$t('New collection')" :disabled="adding" @click="createDialog = true"/>
+                    </template>
+                </v-list>
+            </v-menu>
+            <CollectionEditDialog v-model="createDialog" :limits="collectionsRes.limits" @saved="createdForSelection"/>
+        </v-toolbar>
         <v-row v-if="authStore.authed && $flags.hasFeature('web.collections') && collectionsRes?.success">
             <v-col cols="12">
                 <h3 class="mb-2">{{ $t('Collections') }}</h3>
@@ -55,23 +108,45 @@
             </v-col>
         </v-row>
         <v-infinite-scroll v-else-if="!showLocal" :items="skins" :onLoad="load" style="overflow: hidden">
-            <v-row justify="center" dense>
-                <template v-for="(item, index) in skins" :key="item">
-                    <!--                    <v-col cols="4" sm="3" md="2">-->
-                    <v-col
-                        cols="5"
-                        xs="5"
-                        sm="3"
-                        md="2"
-                        lg="2"
-                        xl="1"
-                        class="gallery-item-group ma-2"
-                    >
-                        <skin-link-card :skin="item"/>
-                    </v-col>
-                    <!--                    </v-col>-->
-                </template>
-            </v-row>
+            <v-item-group v-model="selected" multiple>
+                <v-row justify="center" dense>
+                    <template v-for="(item, index) in skins" :key="item">
+                        <!--                    <v-col cols="4" sm="3" md="2">-->
+                        <v-col
+                            cols="5"
+                            xs="5"
+                            sm="3"
+                            md="2"
+                            lg="2"
+                            xl="1"
+                            class="gallery-item-group ma-2 position-relative"
+                        >
+                            <skin-link-card :skin="item" :tabindex="selecting ? -1 : undefined"/>
+                            <v-item v-if="selecting" v-slot="{ isSelected, toggle }" :value="item.uuid">
+                                <button
+                                    type="button"
+                                    role="checkbox"
+                                    :aria-checked="isSelected"
+                                    :aria-label="item.name || item.shortId || item.uuid"
+                                    class="position-absolute rounded border-md cursor-pointer"
+                                    :class="isSelected ? 'border-primary border-opacity-100' : 'border-opacity-0'"
+                                    style="inset: 4px; z-index: 1"
+                                    :disabled="adding"
+                                    @click="toggle"
+                                >
+                                    <v-icon
+                                        :icon="isSelected ? 'mdi-checkbox-marked' : 'mdi-checkbox-blank-outline'"
+                                        :color="isSelected ? 'primary' : undefined"
+                                        class="position-absolute"
+                                        style="top: 8px; left: 8px"
+                                    />
+                                </button>
+                            </v-item>
+                        </v-col>
+                        <!--                    </v-col>-->
+                    </template>
+                </v-row>
+            </v-item-group>
             <template v-slot:empty>
                 <div class="text-center">
                     <div v-if="skins.length === 0">
@@ -141,6 +216,7 @@ import { computed, onMounted } from "vue";
 import ActionLink from "~/components/ActionLink.vue";
 import CollectionEditDialog from "~/components/collection/CollectionEditDialog.vue";
 import type { CollectionListResponse, ListedCollection } from "~/types/Collection";
+import type { ListedSkin } from "~/types/SkinListResponse";
 import { SkinVisibility2 } from "@mineskin/types";
 
 useHead({
@@ -162,8 +238,73 @@ const {mySkins, legacySkins} = storeToRefs(skinStore);
 const showLocal = ref(false);
 const collectionsRes = ref<CollectionListResponse>();
 
+const selecting = ref(false);
+const selected = ref<string[]>([]);
+const adding = ref(false);
+const createDialog = ref(false);
+
+const canSelect = computed(() => !!collectionsRes.value?.success && !showLocal.value && skins.value.length > 0);
+const canCreateCollection = computed(() => {
+    return !!collectionsRes.value?.success && collectionsRes.value.collections.length < collectionsRes.value.limits.collections;
+});
+
 function collectionCreated(collection: ListedCollection) {
     router.push(localePath('/collections/' + collection.uuid));
+}
+
+function collectionProps(item: ListedCollection) {
+    const full = !!collectionsRes.value?.success && item.size >= collectionsRes.value.limits.skins;
+    return {
+        prependIcon: item.visibility === SkinVisibility2.PRIVATE ? 'mdi-eye-off' : item.visibility === SkinVisibility2.UNLISTED ? 'mdi-link' : 'mdi-earth',
+        subtitle: full ? $t('Full') : $t('n_skins', item.size),
+        disabled: full || adding.value
+    };
+}
+
+function stopSelecting() {
+    selecting.value = false;
+    selected.value = [];
+}
+
+function createdForSelection(created: ListedCollection) {
+    const collections = collectionsRes.value?.collections;
+    if (!collections) return;
+    collections.push(created);
+    // add through the reactive copy, so the new chip's size updates
+    addSelected(collections[collections.length - 1]);
+}
+
+async function addSelected(collection: ListedCollection) {
+    if (adding.value || selected.value.length === 0) return;
+    adding.value = true;
+    const toAdd = [...selected.value];
+    let done = 0;
+    let added = 0;
+    try {
+        for (const skin of toAdd) {
+            const res = await $mineskin.collections.addSkin(collection.uuid, skin);
+            // the API client already shows the error, e.g. when the collection is full
+            if (!res?.success) break;
+            done++;
+            if (res.added) added++;
+        }
+    } finally {
+        adding.value = false;
+        collection.size += added;
+        // keep the skins that weren't added selected, so they can go into another collection
+        selected.value = toAdd.slice(done);
+        if (selected.value.length === 0) {
+            selecting.value = false;
+        }
+    }
+    if (done > 0) {
+        $notify({
+            text: added > 0 ? $t('n_skins_added', {n: added, name: collection.name}, added) : $t('Already in {name}', {name: collection.name}),
+            color: 'success',
+            actionLabel: $t('View'),
+            actionLink: '/collections/' + collection.uuid
+        });
+    }
 }
 
 const loginRedirect = () => {
@@ -182,7 +323,7 @@ const unlimitedHistory = computed(() => authStore.grants?.skin_history_unlimited
 //     return $mineskin.skins.list();
 // });
 
-const skins = ref([]);
+const skins = ref<ListedSkin[]>([]);
 const after = ref<string | null>(null);
 const hasNext = ref(true);
 
