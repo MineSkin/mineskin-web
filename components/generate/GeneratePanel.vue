@@ -185,33 +185,37 @@
                                 <div v-if="!authStore.authed">
                                     <v-alert color="warning" variant="tonal" icon="mdi-alert-circle" class="mt-1">
                                         <template #text>
-                                            Please
-                                            <action-link
-                                                href="https://account.mineskin.org/login?redirect=https://mineskin.org/&utm_source=web&utm_medium=link&utm_campaign=generate_banner_signin"
-                                            >
-                                                sign in
-                                            </action-link>
-                                            <span v-if="imageCount > 1">to generate multiple skins at once and to keep track of your skins.</span>
-                                            <span
-                                                v-else>to keep track of your skins and to get access to higher limits.</span>
+                                            <i18n-t
+                                                :keypath="imageCount > 1 ? 'signin_banner_multiple' : 'signin_banner_single'"
+                                                tag="span">
+                                                <template #link>
+                                                    <action-link
+                                                        href="https://account.mineskin.org/login?redirect=https://mineskin.org/&utm_source=web&utm_medium=link&utm_campaign=generate_banner_signin"
+                                                    >
+                                                        {{ $t("sign in") }}
+                                                    </action-link>
+                                                </template>
+                                            </i18n-t>
                                         </template>
                                     </v-alert>
                                 </div>
                                 <div v-else-if="imageCount > 3 && !authStore?.grants?.ad_free">
                                     <v-alert color="primary" variant="tonal" icon="mdi-information" class="mt-1">
                                         <template #title>
-                                            Need to generate a lot of skins?
+                                            {{ $t("Need to generate a lot of skins?") }}
                                         </template>
                                         <template #text>
-                                            Check out the
-                                            <action-link
-                                                href="https://account.mineskin.org/store?utm_source=web&utm_medium=link&utm_campaign=generate_banner_upgrade"
-                                                target="_blank"
-                                                class="upgrade-text-gradient"
-                                            >
-                                                ✨ upgrade options
-                                            </action-link>
-                                            for higher limits and faster generation times!
+                                            <i18n-t keypath="upgrade_banner" tag="span">
+                                                <template #link>
+                                                    <action-link
+                                                        href="https://account.mineskin.org/store?utm_source=web&utm_medium=link&utm_campaign=generate_banner_upgrade"
+                                                        target="_blank"
+                                                        class="upgrade-text-gradient"
+                                                    >
+                                                        ✨ {{ $t("upgrade options") }}
+                                                    </action-link>
+                                                </template>
+                                            </i18n-t>
                                         </template>
                                     </v-alert>
                                 </div>
@@ -233,6 +237,11 @@
                             ></v-btn>
                         </v-col>
                     </v-row>
+                    <v-row justify="center" v-if="waitTime > 0 && !generating" dense>
+                        <v-col cols="auto" class="text-caption text-medium-emphasis" role="status">
+                            {{ $t("Please wait {seconds}s before generating again", {seconds: waitTime}) }}
+                        </v-col>
+                    </v-row>
                     <v-row justify="center">
                         <v-col cols="auto" class="text-start">
                             <ClientOnly>
@@ -241,23 +250,24 @@
                                         <v-alert variant="tonal" icon="mdi-loading mdi-spin">
                                             <template #title>
                                                 <div>
-                                                    Generating your {{ imageCount > 1 ? 'skins' : 'skin' }}...
+                                                    {{ imageCount > 1 ? $t("Generating your skins...") : $t("Generating your skin...") }}
                                                 </div>
                                             </template>
                                             <template #text>
-                                                <div>
-                                                    Check the
-                                                    <action-link @click.prevent="jobsDrawer = true"
-                                                                 icon="mdi-list-status"
-                                                                 :tooltip="$t('Show Jobs')">Job List
-                                                    </action-link>
-                                                    for progress,
-                                                    or
-                                                    <action-link @click.prevent="reset" icon="mdi-reload"
-                                                                 :tooltip="$t('Reset Image Selection')">
-                                                        generate more skins
-                                                    </action-link>
-                                                </div>
+                                                <i18n-t keypath="generating_hint" tag="div">
+                                                    <template #jobs>
+                                                        <action-link @click.prevent="jobsDrawer = true"
+                                                                     icon="mdi-list-status"
+                                                                     :tooltip="$t('Show Jobs')">{{ $t("Job List") }}
+                                                        </action-link>
+                                                    </template>
+                                                    <template #more>
+                                                        <action-link @click.prevent="reset" icon="mdi-reload"
+                                                                     :tooltip="$t('Reset Image Selection')">
+                                                            {{ $t("generate more skins") }}
+                                                        </action-link>
+                                                    </template>
+                                                </i18n-t>
                                             </template>
                                         </v-alert>
                                     </div>
@@ -578,27 +588,27 @@ function variantProps(item: SkinVariant) {
     switch (item) {
         case SkinVariant.CLASSIC:
             return {
-                title: "Classic",
-                subtitle: "Classic skin"
+                title: $t('Classic'),
+                subtitle: $t('Classic skin')
             };
         case SkinVariant.SLIM:
             return {
-                title: "Slim",
-                subtitle: "Slim skin"
+                title: $t('Slim'),
+                subtitle: $t('Slim skin')
             };
         case SkinVariant.UNKNOWN:
             return {
-                title: "Auto",
-                subtitle: "Auto-detect"
+                title: $t('Auto'),
+                subtitle: $t('Auto-detect')
             };
     }
 }
 
 function capeSubtitle(item: KnownCape | UserCape) {
-    if (!canGenerateCapes.value) return 'Requires Basic Subscription';
+    if (!canGenerateCapes.value) return $t('Requires Basic Subscription');
     if (item.support === 'owner' && 'usable' in item) {
-        if (item.usable) return 'Owned by your linked account';
-        return grants.value?.owned_capes ? 'Not available' : 'Requires Plus Subscription';
+        if (item.usable) return $t('Owned by your linked account');
+        return grants.value?.owned_capes ? $t('Not available') : $t('Requires Plus Subscription');
     }
     return '';
 }
