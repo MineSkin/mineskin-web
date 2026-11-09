@@ -185,33 +185,33 @@
                                 <div v-if="!authStore.authed">
                                     <v-alert color="warning" variant="tonal" icon="mdi-alert-circle" class="mt-1">
                                         <template #text>
-                                            Please
+                                            {{ $t("Please") }}
                                             <action-link
                                                 href="https://account.mineskin.org/login?redirect=https://mineskin.org/&utm_source=web&utm_medium=link&utm_campaign=generate_banner_signin"
                                             >
-                                                sign in
+                                                {{ $t("sign in") }}
                                             </action-link>
-                                            <span v-if="imageCount > 1">to generate multiple skins at once and to keep track of your skins.</span>
+                                            <span v-if="imageCount > 1">{{ $t("to generate multiple skins at once and to keep track of your skins.") }}</span>
                                             <span
-                                                v-else>to keep track of your skins and to get access to higher limits.</span>
+                                                v-else>{{ $t("to keep track of your skins and to get access to higher limits.") }}</span>
                                         </template>
                                     </v-alert>
                                 </div>
                                 <div v-else-if="imageCount > 3 && !authStore?.grants?.ad_free">
                                     <v-alert color="primary" variant="tonal" icon="mdi-information" class="mt-1">
                                         <template #title>
-                                            Need to generate a lot of skins?
+                                            {{ $t("Need to generate a lot of skins?") }}
                                         </template>
                                         <template #text>
-                                            Check out the
+                                            {{ $t("Check out the") }}
                                             <action-link
                                                 href="https://account.mineskin.org/store?utm_source=web&utm_medium=link&utm_campaign=generate_banner_upgrade"
                                                 target="_blank"
                                                 class="upgrade-text-gradient"
                                             >
-                                                ✨ upgrade options
+                                                {{ $t("✨ upgrade options") }}
                                             </action-link>
-                                            for higher limits and faster generation times!
+                                            {{ $t("for higher limits and faster generation times!") }}
                                         </template>
                                     </v-alert>
                                 </div>
@@ -238,24 +238,23 @@
                             <ClientOnly>
                                 <v-expand-transition v-if="isHydrated">
                                     <div v-show="generating">
-                                        <v-alert variant="tonal" icon="mdi-loading mdi-spin">
+                                        <v-alert variant="tonal" icon="mdi-loading mdi-spin" role="status">
                                             <template #title>
                                                 <div>
-                                                    Generating your {{ imageCount > 1 ? 'skins' : 'skin' }}...
+                                                    {{ $t('generating_skins', imageCount) }}
                                                 </div>
                                             </template>
                                             <template #text>
                                                 <div>
-                                                    Check the
+                                                    {{ $t("Check the") }}
                                                     <action-link @click.prevent="jobsDrawer = true"
                                                                  icon="mdi-list-status"
-                                                                 :tooltip="$t('Show Jobs')">Job List
+                                                                 :tooltip="$t('Show Jobs')">{{ $t("Job List") }}
                                                     </action-link>
-                                                    for progress,
-                                                    or
+                                                    {{ $t("for progress, or") }}
                                                     <action-link @click.prevent="reset" icon="mdi-reload"
                                                                  :tooltip="$t('Reset Image Selection')">
-                                                        generate more skins
+                                                        {{ $t("generate more skins") }}
                                                     </action-link>
                                                 </div>
                                             </template>
@@ -683,8 +682,21 @@ function onEnterContinue() {
     generate();
 }
 
-async function handleQueueResponse(response: GenerateJobResponse, source: JobSource, index: number) {
-    if (response.success) {
+// Called when the API rejected a submission (the API client already toasted the reason).
+// Continuing would just fire the same failing request for every remaining entry, so the loops stop here.
+function notifyBatchAborted(total: number, index: number) {
+    const remaining = total - index + 1;
+    if (total > 1) {
+        $notify({
+            text: $t('n_skins_not_submitted', remaining),
+            color: 'warning'
+        });
+    }
+}
+
+/** @returns false if the API rejected the request */
+async function handleQueueResponse(response: GenerateJobResponse, source: JobSource, index: number): Promise<boolean> {
+    if (response?.success) {
         if ('job' in response) {
             const wrapped: WrappedJob = {
                 source: source,
@@ -716,7 +728,9 @@ async function handleQueueResponse(response: GenerateJobResponse, source: JobSou
                 Object.assign(queueStore.rateLimitHour, limitInfo.hour);
             }
         }
+        return true;
     }
+    return false;
 }
 
 async function generate() {
@@ -795,11 +809,14 @@ async function submitGenerateJobs(baseOptions: GenerateOptions) {
                     name: file.name
                 };
                 //responses.push([await $mineskin.queue.upload(await fileFromJson(file), options), source]);
-                await handleQueueResponse(
+                if (!await handleQueueResponse(
                     await $mineskin.queue.upload(await fileFromJson(file), options),
                     source,
                     index
-                )
+                )) {
+                    notifyBatchAborted(uploadFiles.value.length, index);
+                    break;
+                }
             }
             break;
         }
@@ -808,7 +825,8 @@ async function submitGenerateJobs(baseOptions: GenerateOptions) {
                 urls.value = [urls.value[0]];
             }
             let index = 0;
-            for (const url of urls.value.filter(u => u.length > 0)) {
+            const urlList = urls.value.filter(u => u.length > 0);
+            for (const url of urlList) {
                 let options = {...baseOptions};
                 options.name = processNameVariables(name.value, generateType.value, index++, url, null, null);
                 await sleep(100);
@@ -819,11 +837,14 @@ async function submitGenerateJobs(baseOptions: GenerateOptions) {
                     name: url
                 }
                 // responses.push([await $mineskin.queue.url(url, options), source])
-                await handleQueueResponse(
+                if (!await handleQueueResponse(
                     await $mineskin.queue.url(url, options),
                     source,
                     index
-                )
+                )) {
+                    notifyBatchAborted(urlList.length, index);
+                    break;
+                }
             }
             break;
         }
@@ -866,11 +887,14 @@ async function submitGenerateJobs(baseOptions: GenerateOptions) {
                     name: user
                 }
                 //responses.push([await $mineskin.queue.user(uuid, options), source])
-                await handleQueueResponse(
+                if (!await handleQueueResponse(
                     await $mineskin.queue.user(uuid, options),
                     source,
                     index
-                )
+                )) {
+                    notifyBatchAborted(validated.length, index);
+                    break;
+                }
             }
             break;
         }
