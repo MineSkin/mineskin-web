@@ -135,5 +135,19 @@
   "Remove from collection": "Remove from collection",
   "Are you sure you want to delete this collection? This action is irreversible.": "Are you sure you want to delete this collection? This action is irreversible.",
   "Type delete to confirm deletion": "Type delete to confirm deletion",
-  "Confirm Deletion": "Confirm Deletion"
+  "Confirm Deletion": "Confirm Deletion",
+  "generating_skins": "Generating your skin... | Generating your skins...",
+  "Check the": "Check the",
+  "Job List": "Job List",
+  "for progress, or": "for progress, or",
+  "generate more skins": "generate more skins",
+  "Please": "Please",
+  "sign in": "sign in",
+  "to generate multiple skins at once and to keep track of your skins.": "to generate multiple skins at once and to keep track of your skins.",
+  "to keep track of your skins and to get access to higher limits.": "to keep track of your skins and to get access to higher limits.",
+  "Need to generate a lot of skins?": "Need to generate a lot of skins?",
+  "Check out the": "Check out the",
+  "✨ upgrade options": "✨ upgrade options",
+  "for higher limits and faster generation times!": "for higher limits and faster generation times!",
+  "n_skins_not_submitted": "Stopped after an error. 1 skin was not submitted | Stopped after an error. {n} skins were not submitted"
 }
