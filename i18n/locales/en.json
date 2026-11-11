@@ -135,5 +135,6 @@
   "Remove from collection": "Remove from collection",
   "Are you sure you want to delete this collection? This action is irreversible.": "Are you sure you want to delete this collection? This action is irreversible.",
   "Type delete to confirm deletion": "Type delete to confirm deletion",
-  "Confirm Deletion": "Confirm Deletion"
+  "Confirm Deletion": "Confirm Deletion",
+  "This search term isn't allowed.": "This search term isn't allowed."
 }

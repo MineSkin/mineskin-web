@@ -4,16 +4,16 @@
             <h2 v-if="mode==='popular'">Popular Skins</h2>
             <h2 v-else>{{ $t("Skin Gallery") }}
                 <v-chip
-                    v-if="filter"
+                    v-if="displayFilter"
                     class="ma-2"
                     size="large"
                     closable
                     @click:close="clearFilter()"
                 >
-                    {{ filter }}
+                    {{ displayFilter }}
                 </v-chip>
                 <v-btn icon
-                       v-if="!mdAndUp && !filter"
+                       v-if="!mdAndUp && !displayFilter"
                        :aria-label="$t('Search Skins')"
                        @click="searching ? search() : showSearch()"
                        variant="text"
@@ -21,6 +21,9 @@
                     <v-icon>mdi-magnify</v-icon>
                 </v-btn>
             </h2>
+        </v-col>
+        <v-col cols="12" v-if="searchBlocked">
+            <v-alert variant="tonal">{{ $t("This search term isn't allowed.") }}</v-alert>
         </v-col>
         <v-expand-x-transition v-if="!mdAndUp">
             <v-text-field
@@ -39,7 +42,7 @@
             />
         </v-expand-x-transition>
     </v-row>
-    <v-row class="text-center">
+    <v-row class="text-center" v-if="adsAllowed">
         <ad-info-wrapper>
             <template #default>
                 <ad-wrappper ad-slot="7045370598"/>
@@ -50,7 +53,7 @@
             </template>
         </ad-info-wrapper>
     </v-row>
-    <v-infinite-scroll :items="skins" :onLoad="load" style="overflow: hidden">
+    <v-infinite-scroll v-if="!searchBlocked" :items="skins" :onLoad="load" style="overflow: hidden">
         <v-row justify="center" dense>
             <template v-for="(item0, index) in skins" :key="item0">
                 <!--                    <v-col cols="4" sm="3" md="2">-->
@@ -67,28 +70,30 @@
                     <div v-if="item0.ad"
                          style="width:100%"
                     >
-                        <dbg :data="{t:item0.adType}"/>
-                        <fluid-ad-wrapper
-                            v-if="item0.adType===1"
-                            ad-layout-key="+1i+s2-10-1k+6v"
-                            ad-slot="3361952161"
-                            no-fallback
-                        />
-                        <multiplex-ad-wrapper
-                            v-else-if="item0.adType===2"
-                            ad-slot="8545261932"
-                            ui-type="image_stacked"
-                            no-fallback
-                            :rows="1"
-                            :cols="1"
-                        />
-                        <display-ad-wrapper
-                            v-else-if="item0.adType===3"
-                            ad-slot="2426312811"
-                            no-fallback
-                            :height="400"
-                            :width="380"
-                        />
+                        <template v-if="adsAllowed">
+                            <dbg :data="{t:item0.adType}"/>
+                            <fluid-ad-wrapper
+                                v-if="item0.adType===1"
+                                ad-layout-key="+1i+s2-10-1k+6v"
+                                ad-slot="3361952161"
+                                no-fallback
+                            />
+                            <multiplex-ad-wrapper
+                                v-else-if="item0.adType===2"
+                                ad-slot="8545261932"
+                                ui-type="image_stacked"
+                                no-fallback
+                                :rows="1"
+                                :cols="1"
+                            />
+                            <display-ad-wrapper
+                                v-else-if="item0.adType===3"
+                                ad-slot="2426312811"
+                                no-fallback
+                                :height="400"
+                                :width="380"
+                            />
+                        </template>
                     </div>
                     <div v-else class="gallery-item mb-1 mb-sm-2 mb-md-4" v-for="item in item0" :key="item">
                         <skin-link-card no-title :skin="item"/>
@@ -100,7 +105,7 @@
         <template v-slot:loading>
         </template>
     </v-infinite-scroll>
-    <v-row justify="center" dense v-if="hasNext">
+    <v-row justify="center" dense v-if="hasNext && !searchBlocked">
         <v-col v-for="n in 20" :key="n"
                cols="5"
                xs="5"
@@ -124,9 +129,9 @@
     <!--            </v-col>-->
 </template>
 <script setup lang="ts">
-import { onBeforeRouteUpdate, useNuxtApp } from "#app";
+import { onBeforeRouteUpdate, useAsyncData, useNuxtApp } from "#app";
 import type { Maybe } from "@mineskin/types";
-import type { ListedSkin } from "~/types/SkinListResponse";
+import type { ListedSkin, SkinListResponse } from "~/types/SkinListResponse";
 import { useAuthStore } from "~/stores/auth";
 import { useGalleryStore } from "~/stores/gallery";
 import { onMounted } from "#imports";
@@ -148,7 +153,7 @@ const {t: $t} = useI18n();
 
 const authStore = useAuthStore();
 const galleryStore = useGalleryStore();
-const {galleryItems, galleryAnchor, galleryScroll} = storeToRefs(galleryStore);
+const {galleryItems, galleryAnchor, galleryScroll, galleryKey} = storeToRefs(galleryStore);
 
 const searching = ref(false);
 const searchFilter = ref('');
@@ -207,9 +212,49 @@ const clearFilter = () => {
     });
 }
 
+const isSearchBlocked = (response: Maybe<SkinListResponse>) => !!response?.warnings?.some(warning => warning.code === 'search_blocked');
+
+// For searches, ask the MineSkin API during SSR whether the term is blocked, so the server-rendered head and heading
+// never echo a blocked term. Only the flag ends up in the (cached) HTML; the browser still loads the skins itself.
+const {data: blockedOnServer} = useAsyncData<boolean>(`skin-gallery-blocked-${ props.mode }-${ filter.value }`, async () => {
+    if (!filter.value) return false;
+    const checked = await $mineskin.skins.checkSearch(filter.value);
+    if (checked !== null) return checked;
+    // no answer from the check endpoint (e.g. older API): run the search itself, which is slow for uncached terms
+    // silent: API errors here would otherwise end up as snackbars in the cached HTML; the browser's own request reports them
+    return isSearchBlocked(await $mineskin.skins.list(undefined, 80, filter.value, props.mode, {silent: true}));
+}, {immediate: import.meta.server});
+// the browser's own answer from the check endpoint; null while pending or when the endpoint gave no answer
+const checkedOnClient = ref<boolean | null>(null);
+if (import.meta.client && filter.value && !blockedOnServer.value) {
+    $mineskin.skins.checkSearch(filter.value).then(blocked => {
+        checkedOnClient.value = blocked;
+    });
+}
+// set by the browser's own first list response
+const blockedOnClient = ref(false);
+const firstPageLoaded = ref(false);
+// identifies this gallery's items in the gallery store
+const storeKey = `${ props.mode }:${ filter.value }`;
+
+const searchBlocked = computed(() => !!filter.value && (!!blockedOnServer.value || checkedOnClient.value === true || blockedOnClient.value));
+// the search term as shown on the page; a blocked term is never echoed back
+const displayFilter = computed(() => searchBlocked.value ? '' : filter.value);
+// Searches get ads only once the browser knows the term isn't blocked: from its own check request, or else (check
+// failed, older API) from its own first page. The AdSense crawler must not find a single ad unit on the page of a
+// blocked term. A list response that still reports the term as blocked later removes the ads again.
+const adsAllowed = computed(() => !filter.value || (!searchBlocked.value && (checkedOnClient.value === false || firstPageLoaded.value)));
+// After a client-side navigation from a page with ads, adsbygoogle.js is already loaded and AdSense Auto ads could
+// still place ads on the blocked search. A full reload renders it without loading adsbygoogle.js at all.
+watch(searchBlocked, blocked => {
+    if (blocked && import.meta.client && (window as any).adsbygoogle?.loaded) {
+        reloadNuxtApp();
+    }
+}, {immediate: true});
+
 const pageTitle = computed(() => {
-    if (filter.value) {
-        return capitalizeFirstLetter(filter.value) + ' Minecraft Skins';
+    if (displayFilter.value) {
+        return capitalizeFirstLetter(displayFilter.value) + ' Minecraft Skins';
     }
     if (props.mode === 'latest') {
         return 'Latest Minecraft Skins';
@@ -223,8 +268,8 @@ const pageTitle = computed(() => {
     return 'Gallery';
 });
 const pageLink = computed(() => {
-    if (filter.value) {
-        return `https://mineskin.org/skins?search=${ encodeURIComponent(filter.value) }`;
+    if (displayFilter.value) {
+        return `https://mineskin.org/skins?search=${ encodeURIComponent(displayFilter.value) }`;
     }
     if (props.mode === 'latest') {
         return 'https://mineskin.org/skins';
@@ -246,7 +291,7 @@ const ldJsonContent = computed(() => JSON.stringify({
 }));
 const ldBreadcrumbContent = computed(() => {
     const items = [];
-    if (filter.value || props.mode === 'popular' || props.mode === 'random') {
+    if (displayFilter.value || props.mode === 'popular' || props.mode === 'random') {
         items.push({
             "@type": "ListItem",
             "position": 1,
@@ -280,16 +325,17 @@ useHead({
         rel: 'canonical',
         href: pageLink
     }],
-    script: [
+    meta: computed(() => searchBlocked.value ? [{name: 'robots', content: 'noindex'}] : []),
+    script: computed(() => searchBlocked.value ? [] : [
         {
             type: 'application/ld+json',
-            innerHTML: ldJsonContent
+            innerHTML: ldJsonContent.value
         },
         {
             type: 'application/ld+json',
-            innerHTML: ldBreadcrumbContent
+            innerHTML: ldBreadcrumbContent.value
         }
-    ]
+    ])
 });
 
 
@@ -312,6 +358,14 @@ async function api() {
     const toLoad = 80 - (adsOnPage.value * 4);
     const response = await $mineskin.skins.list(after.value, toLoad, filter.value, props.mode);
     console.debug(response);
+    if (isSearchBlocked(response)) {
+        blockedOnClient.value = true;
+        hasNext.value = false;
+        return [];
+    }
+    if (Array.isArray(response?.skins)) {
+        firstPageLoaded.value = true;
+    }
     const skins = response?.skins || [];
     hasNext.value = skins.length >= toLoad;
     if (hasNext.value) {
@@ -348,7 +402,8 @@ async function load({done}) {
     }
     if (res.length === 0) {
         done('empty');
-        if (pageIndex.value === 0) {
+        // a blocked search shows its own message instead
+        if (pageIndex.value === 0 && !searchBlocked.value) {
             $notify({
                 text: $t("No more skins found"),
                 color: "info"
@@ -395,6 +450,7 @@ async function load({done}) {
     }
     skins.value.push(...grouped);
     galleryItems.value = skins.value;
+    galleryKey.value = storeKey;
 
     done('ok')
 }
@@ -413,8 +469,20 @@ const handleScroll = useThrottleFn((e: Event) => {
 }, 200, true, false);
 
 onMounted(async () => {
-    skins.value = galleryItems.value;
-    after.value = galleryAnchor.value;
+    if (galleryKey.value === storeKey) {
+        // back on the same gallery/search: restore its skins, which also count as its first page
+        skins.value = galleryItems.value;
+        after.value = galleryAnchor.value;
+        if (galleryItems.value.length > 0) {
+            firstPageLoaded.value = true;
+        }
+    } else {
+        // the stored skins belong to another mode or search
+        galleryItems.value = [];
+        galleryAnchor.value = null;
+        galleryScroll.value = 0;
+        galleryKey.value = storeKey;
+    }
     window.addEventListener('scroll', handleScroll, {passive: true});
     window.scrollTo(0, galleryScroll.value);
 });
