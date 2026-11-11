@@ -153,7 +153,7 @@ const {t: $t} = useI18n();
 
 const authStore = useAuthStore();
 const galleryStore = useGalleryStore();
-const {galleryItems, galleryAnchor, galleryScroll} = storeToRefs(galleryStore);
+const {galleryItems, galleryAnchor, galleryScroll, galleryKey} = storeToRefs(galleryStore);
 
 const searching = ref(false);
 const searchFilter = ref('');
@@ -224,6 +224,8 @@ const {data: blockedOnServer} = useAsyncData<boolean>(`skin-gallery-blocked-${ p
 // set by the browser's own first list response
 const blockedOnClient = ref(false);
 const firstPageLoaded = ref(false);
+// identifies this gallery's items in the gallery store
+const storeKey = `${ props.mode }:${ filter.value }`;
 
 const searchBlocked = computed(() => !!filter.value && (!!blockedOnServer.value || blockedOnClient.value));
 // the search term as shown on the page; a blocked term is never echoed back
@@ -437,6 +439,7 @@ async function load({done}) {
     }
     skins.value.push(...grouped);
     galleryItems.value = skins.value;
+    galleryKey.value = storeKey;
 
     done('ok')
 }
@@ -455,8 +458,20 @@ const handleScroll = useThrottleFn((e: Event) => {
 }, 200, true, false);
 
 onMounted(async () => {
-    skins.value = galleryItems.value;
-    after.value = galleryAnchor.value;
+    if (galleryKey.value === storeKey) {
+        // back on the same gallery/search: restore its skins, which also count as its first page
+        skins.value = galleryItems.value;
+        after.value = galleryAnchor.value;
+        if (galleryItems.value.length > 0) {
+            firstPageLoaded.value = true;
+        }
+    } else {
+        // the stored skins belong to another mode or search
+        galleryItems.value = [];
+        galleryAnchor.value = null;
+        galleryScroll.value = 0;
+        galleryKey.value = storeKey;
+    }
     window.addEventListener('scroll', handleScroll, {passive: true});
     window.scrollTo(0, galleryScroll.value);
 });
