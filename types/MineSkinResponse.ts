@@ -5,7 +5,8 @@ export type MineSkinResponse<K extends string, T> = {
 } & {
     success: boolean;
     errors: CodeAndMessage[];
-    warnings: CodeAndMessage[];
+    // older MineSkin API versions may omit this
+    warnings?: CodeAndMessage[];
     messages: CodeAndMessage[];
     links: {
         [key: string]: string;

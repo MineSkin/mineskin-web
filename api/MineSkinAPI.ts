@@ -193,7 +193,7 @@ export class MineSkinAPI {
         constructor(readonly api: MineSkinAPI) {
         }
 
-        public async list(after?: string, size?: number, filter?: string, mode: '' | 'latest' | 'popular' | 'random' = ''): Promise<SkinListResponse> {
+        public async list(after?: string, size?: number, filter?: string, mode: '' | 'latest' | 'popular' | 'random' = '', options?: Partial<RequestOptions>): Promise<SkinListResponse> {
             const params = new URLSearchParams();
             if (after) {
                 params.set('after', after);
@@ -207,7 +207,7 @@ export class MineSkinAPI {
             if (mode === 'latest') {
                 mode = '';
             }
-            return this.api.request(`/v2/skins/${ mode }?${ params.toString() }`, INIT);
+            return this.api.request(`/v2/skins/${ mode }?${ params.toString() }`, INIT, options);
         }
 
         public async get(uuid: string): Promise<SkinResponse> {
