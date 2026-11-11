@@ -218,21 +218,32 @@ const isSearchBlocked = (response: Maybe<SkinListResponse>) => !!response?.warni
 // never echo a blocked term. Only the flag ends up in the (cached) HTML; the browser still loads the skins itself.
 const {data: blockedOnServer} = useAsyncData<boolean>(`skin-gallery-blocked-${ props.mode }-${ filter.value }`, async () => {
     if (!filter.value) return false;
+    const checked = await $mineskin.skins.checkSearch(filter.value);
+    if (checked !== null) return checked;
+    // no answer from the check endpoint (e.g. older API): run the search itself, which is slow for uncached terms
     // silent: API errors here would otherwise end up as snackbars in the cached HTML; the browser's own request reports them
     return isSearchBlocked(await $mineskin.skins.list(undefined, 80, filter.value, props.mode, {silent: true}));
 }, {immediate: import.meta.server});
+// the browser's own answer from the check endpoint; null while pending or when the endpoint gave no answer
+const checkedOnClient = ref<boolean | null>(null);
+if (import.meta.client && filter.value && !blockedOnServer.value) {
+    $mineskin.skins.checkSearch(filter.value).then(blocked => {
+        checkedOnClient.value = blocked;
+    });
+}
 // set by the browser's own first list response
 const blockedOnClient = ref(false);
 const firstPageLoaded = ref(false);
 // identifies this gallery's items in the gallery store
 const storeKey = `${ props.mode }:${ filter.value }`;
 
-const searchBlocked = computed(() => !!filter.value && (!!blockedOnServer.value || blockedOnClient.value));
+const searchBlocked = computed(() => !!filter.value && (!!blockedOnServer.value || checkedOnClient.value === true || blockedOnClient.value));
 // the search term as shown on the page; a blocked term is never echoed back
 const displayFilter = computed(() => searchBlocked.value ? '' : filter.value);
-// Searches get ads only once the browser's own first page has arrived and the term isn't blocked:
-// the AdSense crawler must not find a single ad unit on the page of a blocked term.
-const adsAllowed = computed(() => !filter.value || (firstPageLoaded.value && !searchBlocked.value));
+// Searches get ads only once the browser knows the term isn't blocked: from its own check request, or else (check
+// failed, older API) from its own first page. The AdSense crawler must not find a single ad unit on the page of a
+// blocked term. A list response that still reports the term as blocked later removes the ads again.
+const adsAllowed = computed(() => !filter.value || (!searchBlocked.value && (checkedOnClient.value === false || firstPageLoaded.value)));
 // After a client-side navigation from a page with ads, adsbygoogle.js is already loaded and AdSense Auto ads could
 // still place ads on the blocked search. A full reload renders it without loading adsbygoogle.js at all.
 watch(searchBlocked, blocked => {

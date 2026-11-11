@@ -210,6 +210,21 @@ export class MineSkinAPI {
             return this.api.request(`/v2/skins/${ mode }?${ params.toString() }`, INIT, options);
         }
 
+        /**
+         * Asks whether a search term is blocked, without running the search.
+         * Returns null when the answer is unknown: request failed, invalid filter (400), or an older API without
+         * the endpoint.
+         */
+        public async checkSearch(filter: string): Promise<boolean | null> {
+            try {
+                const response = await this.api.request<'blocked', boolean, MineSkinResponse<'blocked', boolean>>(`/v2/skins/search/check?filter=${ encodeURIComponent(filter) }`, INIT, {silent: true});
+                return typeof response?.blocked === 'boolean' ? response.blocked : null;
+            } catch (e) {
+                console.warn('Search check failed', e);
+                return null;
+            }
+        }
+
         public async get(uuid: string): Promise<SkinResponse> {
             return this.api.request(`/v2/skins/${ uuid }`, INIT);
         }
