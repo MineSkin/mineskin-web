@@ -28,11 +28,18 @@ const targetingCookies: CookieInfo[] = [
     {name: '__eoi', provider: 'Google', duration: '6 months', description: 'Used by Google ads to prevent fraud.'},
 ];
 
-// en and de are built into the library; these are merged over en.
+// en and de are built into the library; their entries here only replace the banner text.
+// es, fr, hi and id are full translations, merged over en.
 const translations = {
+    en: {
+        description: 'We use cookies to make this site work, to measure how it is used and, with your permission, to show you relevant content. Your choice applies to all mineskin.org sites. You can change it at any time.'
+    },
+    de: {
+        description: 'Wir verwenden Cookies, damit diese Website funktioniert, um die Nutzung zu messen und, mit Ihrer Erlaubnis, um Ihnen relevante Inhalte anzuzeigen. Ihre Auswahl gilt für alle mineskin.org-Websites. Sie können sie jederzeit ändern.'
+    },
     es: {
         title: 'Usamos cookies',
-        description: 'Usamos cookies para que este sitio funcione, para medir cómo se usa y, con tu permiso, para mostrarte contenido relevante. Puedes cambiar tu elección en cualquier momento.',
+        description: 'Usamos cookies para que este sitio funcione, para medir cómo se usa y, con tu permiso, para mostrarte contenido relevante. Tu elección se aplica a todos los sitios de mineskin.org. Puedes cambiarla en cualquier momento.',
         acceptAll: 'Aceptar todo',
         rejectAll: 'Rechazar todo',
         settings: 'Configuración',
@@ -75,7 +82,7 @@ const translations = {
     },
     fr: {
         title: 'Nous utilisons des cookies',
-        description: 'Nous utilisons des cookies pour faire fonctionner ce site, mesurer son utilisation et, avec votre accord, vous montrer des contenus pertinents. Vous pouvez modifier votre choix à tout moment.',
+        description: 'Nous utilisons des cookies pour faire fonctionner ce site, mesurer son utilisation et, avec votre accord, vous montrer des contenus pertinents. Votre choix s’applique à tous les sites mineskin.org. Vous pouvez le modifier à tout moment.',
         acceptAll: 'Tout accepter',
         rejectAll: 'Tout refuser',
         settings: 'Paramètres',
@@ -118,7 +125,7 @@ const translations = {
     },
     hi: {
         title: 'हम कुकीज़ का उपयोग करते हैं',
-        description: 'हम इस साइट को चलाने, इसके उपयोग को मापने और आपकी अनुमति से आपको प्रासंगिक सामग्री दिखाने के लिए कुकीज़ का उपयोग करते हैं। आप अपनी पसंद कभी भी बदल सकते हैं।',
+        description: 'हम इस साइट को चलाने, इसके उपयोग को मापने और आपकी अनुमति से आपको प्रासंगिक सामग्री दिखाने के लिए कुकीज़ का उपयोग करते हैं। आपकी पसंद सभी mineskin.org साइटों पर लागू होती है। आप इसे कभी भी बदल सकते हैं।',
         acceptAll: 'सभी स्वीकार करें',
         rejectAll: 'सभी अस्वीकार करें',
         settings: 'सेटिंग्स',
@@ -161,7 +168,7 @@ const translations = {
     },
     id: {
         title: 'Kami menggunakan cookie',
-        description: 'Kami menggunakan cookie agar situs ini berfungsi, untuk mengukur cara situs digunakan, dan dengan izin Anda, untuk menampilkan konten yang relevan. Anda dapat mengubah pilihan Anda kapan saja.',
+        description: 'Kami menggunakan cookie agar situs ini berfungsi, untuk mengukur cara situs digunakan, dan dengan izin Anda, untuk menampilkan konten yang relevan. Pilihan Anda berlaku untuk semua situs mineskin.org. Anda dapat mengubahnya kapan saja.',
         acceptAll: 'Terima semua',
         rejectAll: 'Tolak semua',
         settings: 'Pengaturan',
@@ -220,7 +227,7 @@ export const cookieConsentConfig = {
 };
 
 // Banner languages besides en. Other site locales (ru, pl, pt) get the English banner.
-const bannerLocales = ['de', ...Object.keys(translations)];
+const bannerLocales = Object.keys(translations).filter(l => l !== 'en');
 
 // The banner follows the site locale from the URL prefix (i18n strategy prefix_and_default; no prefix = en).
 // On mineskin.org the consent cookie goes on .mineskin.org, where CookieScript kept it; elsewhere (localhost,
