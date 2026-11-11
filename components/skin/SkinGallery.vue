@@ -231,6 +231,13 @@ const displayFilter = computed(() => searchBlocked.value ? '' : filter.value);
 // Searches get ads only once the browser's own first page has arrived and the term isn't blocked:
 // the AdSense crawler must not find a single ad unit on the page of a blocked term.
 const adsAllowed = computed(() => !filter.value || (firstPageLoaded.value && !searchBlocked.value));
+// After a client-side navigation from a page with ads, adsbygoogle.js is already loaded and AdSense Auto ads could
+// still place ads on the blocked search. A full reload renders it without loading adsbygoogle.js at all.
+watch(searchBlocked, blocked => {
+    if (blocked && import.meta.client && (window as any).adsbygoogle?.loaded) {
+        reloadNuxtApp();
+    }
+}, {immediate: true});
 
 const pageTitle = computed(() => {
     if (displayFilter.value) {
