@@ -60,7 +60,7 @@
                     <v-btn variant="text" href="https://legal.inventivetalent.org/imprint">Imprint</v-btn>
                     <v-btn variant="text" href="https://legal.inventivetalent.org/privacy/mineskin">Privacy</v-btn>
                     <v-btn variant="text" href="https://legal.inventivetalent.org/terms/mineskin">Terms</v-btn>
-                    <a href="#" id="open_preferences_center">Cookie preferences</a>
+                    <v-btn variant="text" href="#" class="csconsentlink" @click.prevent>Cookie settings</v-btn>
                 </v-col>
                 <v-col class="text-center">
                     <div class="my-1">Copyright &copy; {{ new Date().getFullYear() }} <a
