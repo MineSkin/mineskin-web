@@ -223,11 +223,14 @@ export const cookieConsentConfig = {
 const bannerLocales = ['de', ...Object.keys(translations)];
 
 // The banner follows the site locale from the URL prefix (i18n strategy prefix_and_default; no prefix = en).
+// On mineskin.org the consent cookie goes on .mineskin.org, where CookieScript kept it; elsewhere (localhost,
+// previews) it stays host-only.
 // The guard keeps a second execution of this script from initializing the library again.
 const initScript = `(function(){
 var c=${ JSON.stringify(cookieConsentConfig).replace(/</g, '\\u003c') };
 var m=location.pathname.match(/^\\/(${ bannerLocales.join('|') })(?=\\/|$)/);
 c.language=m?m[1]:'en';
+if(/(^|\\.)mineskin\\.org$/.test(location.hostname))c.cookie={domain:'.mineskin.org'};
 if(window.CookieConsent&&!window.__mskCookieConsent){window.__mskCookieConsent=true;window.CookieConsent.init(c);}
 })();`;
 
