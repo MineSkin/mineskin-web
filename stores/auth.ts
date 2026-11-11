@@ -54,6 +54,10 @@ export const useAuthStore = defineStore('auth', () => {
                         authenticated: false
                     } as AuthStatus;
                 })
+                .finally(() => {
+                    // signed out (or no ad_free grant) counts as not ad-free once the check is done
+                    publishAdFree(!!(authed.value && grants.value?.ad_free));
+                })
         }
         return await _authCheckPromise;
     }
@@ -211,12 +215,20 @@ export const useAuthStore = defineStore('auth', () => {
         lastWebTokenRefresh.value = 0;
     }
 
+    // Tells public/google-offerwall-check.js whether to show Google's Privacy & messaging messages.
+    // The value is kept on window, because Google may ask before or after the app knows it.
+    function publishAdFree(adFree: boolean) {
+        if (typeof window === 'undefined') return;
+        const win = window as any;
+        win.grantAdFreeResult = adFree;
+        if (typeof win.grantAdFreePromiseResolve === 'function') {
+            win.grantAdFreePromiseResolve(adFree);
+        }
+    }
+
     watch(grants, (newGrants) => {
         if (!newGrants || !('ad_free' in newGrants)) return;
-        const win = window as any;
-        if ('grantAdFreePromiseResolve' in win && typeof win.grantAdFreePromiseResolve === 'function') {
-            win.grantAdFreePromiseResolve(newGrants?.ad_free || false);
-        }
+        publishAdFree(!!newGrants.ad_free);
     }, {immediate: true})
 
     return {

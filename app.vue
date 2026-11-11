@@ -64,13 +64,16 @@ useHead({
         {
             src: '/google-offerwall-check.js',
             async: true,
-            'data-cookie-consent': 'functional',
             tagPosition: 'head'
         },
+        // Google Analytics: blocked until the visitor allows performance cookies (cookie consent library,
+        // see util/cookieConsent.ts). Client-only, so the library activates each tag once.
         {
             src: 'https://www.googletagmanager.com/gtag/js?id=G-5GVV9RF5HZ',
             async: true,
-            'data-cookie-consent': 'tracking',
+            type: 'text/plain',
+            'data-cookiescript': 'accepted',
+            'data-cookiecategory': 'performance',
             tagPosition: 'head'
         },
         {
@@ -81,15 +84,10 @@ useHead({
 
             gtag('config', 'G-5GVV9RF5HZ');
             `,
-            'data-cookie-consent': 'tracking',
+            type: 'text/plain',
+            'data-cookiescript': 'accepted',
+            'data-cookiecategory': 'performance',
             tagPosition: 'head'
-        },
-        {
-            innerHTML: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-            })(window,document,'script','dataLayer','GTM-5KV5S2GC');`
         },
         {
             type: 'application/ld+json',

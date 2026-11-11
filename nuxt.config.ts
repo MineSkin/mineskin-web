@@ -1,4 +1,5 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import { cookieConsentHead } from './util/cookieConsent';
 
 const CACHE_VARIES = ['host', 'accept-encoding', 'user-agent', 'sec-ch-viewport-height', 'sec-ch-viewport-width'];
 
@@ -24,7 +25,10 @@ export default defineNuxtConfig({
                     rel: 'dns-prefetch',
                     href: 'https://api.mineskin.org/'
                 }
-            ]
+            ],
+            // cookie consent library + init, before any Google tag
+            script: cookieConsentHead.script,
+            style: cookieConsentHead.style
         }
     },
     ssr: process.env.NODE_ENV !== 'development',
