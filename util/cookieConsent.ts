@@ -1,4 +1,4 @@
-// Cookie consent banner (self-hosted cookie-script-diy, public/js/cookie-consent.min.js).
+// Cookie consent banner (self-hosted cookie consent library, public/js/cookie-consent.min.js).
 // nuxt.config.ts renders the library and its init into the SSR <head> (see cookieConsentHead below),
 // so Consent Mode defaults are set before any Google tag loads.
 // Where GDPR applies, Google's own consent message (AdSense "Privacy & messaging") is the only popup and the
