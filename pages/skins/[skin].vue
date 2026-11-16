@@ -12,7 +12,7 @@
                 </back-link>
                 <h2 class="flex-grow-1 text-truncate">
                     {{ skinNameDisplay }}
-                    <v-tooltip v-if="useRandomName" text="Random Name">
+                    <v-tooltip v-if="useRandomName" :text="$t('Random Name')">
                         <template v-slot:activator="{ props }">
                             <span v-bind="props">*</span>
                         </template>
@@ -46,6 +46,16 @@
                         {{ $t("Back to Gallery") }}
                     </v-btn>
                 </back-link>
+            </v-col>
+        </v-row>
+        <v-row v-else-if="skinLoadFailed" justify="center" class="my-8">
+            <v-col cols="12" md="6" class="text-center">
+                <v-alert type="error" variant="tonal">
+                    {{ $t("This skin could not be loaded. Please check your connection and try again.") }}
+                </v-alert>
+                <v-btn class="mt-4" color="primary" prepend-icon="mdi-refresh" @click="refreshSkin()">
+                    {{ $t("Try again") }}
+                </v-btn>
             </v-col>
         </v-row>
         <template v-else>
@@ -91,7 +101,7 @@
                     <div class="text-grey-darken-2">
                     <span class="mx-1">
                         {{ skin?.uuid }}
-                        <v-tooltip location="left" text="Skin ID" activator="parent" open-on-click/>
+                        <v-tooltip location="left" :text="$t('Skin ID')" activator="parent" open-on-click/>
                     </span>
                         <CopyBtn
                             :text="skin?.uuid"
@@ -103,7 +113,7 @@
                     <div class="text-grey-darken-3">
                     <span class="mx-1">
                         {{ skin?.texture?.hash?.skin }}
-                        <v-tooltip location="left" text="Texture Hash" activator="parent" open-on-click/>
+                        <v-tooltip location="left" :text="$t('Texture Hash')" activator="parent" open-on-click/>
                     </span>
                         <CopyBtn
                             :text="skin?.texture?.hash?.skin"
@@ -203,6 +213,11 @@ const {
 
 const skinNotFound = computed(() => {
     return skinStatus.value === 'success' && !skin.value;
+});
+
+// the request itself failed (e.g. offline), as opposed to the API answering that there is no such skin
+const skinLoadFailed = computed(() => {
+    return skinStatus.value === 'error';
 });
 
 const {
@@ -427,7 +442,7 @@ onMounted(async () => {
     if (skinId.value) {
         if (skinId.value.length !== 32 && skinId.value.length !== 36 && skinId.value.length !== 8) {
             $notify({
-                text: "Invalid skin ID",
+                text: $t("Invalid skin ID"),
                 color: "error"
             })
         }

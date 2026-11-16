@@ -7,7 +7,7 @@
         </v-row>
         <v-row v-if="!authStore.authed" justify="center">
             <v-col cols="auto">
-                <v-alert type="warning" text="Sign in to export your skins"></v-alert>
+                <v-alert type="warning" :text="$t('Sign in to export your skins')"></v-alert>
             </v-col>
         </v-row>
         <v-row >

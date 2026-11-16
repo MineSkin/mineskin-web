@@ -73,7 +73,7 @@
                     {{ $t('for bigger collections') }}
                 </template>
             </v-alert>
-            <v-infinite-scroll :items="skins" :onLoad="load" style="overflow: hidden">
+            <v-infinite-scroll :items="skins" :onLoad="onLoad" style="overflow: hidden">
                 <v-row justify="center" dense>
                     <template v-for="item in skins" :key="item.uuid">
                         <v-col
@@ -103,9 +103,18 @@
                     </template>
                 </v-row>
                 <template v-slot:empty>
-                    <div class="text-center">{{ $t('No more results') }}</div>
+                    <div v-if="skins.length === 0" class="text-center my-8">
+                        <v-icon icon="mdi-folder-open-outline" size="48" class="text-medium-emphasis mb-2"/>
+                        <div class="text-h6">{{ $t('This collection is empty') }}</div>
+                        <template v-if="collection.owned">
+                            <div class="text-medium-emphasis">{{ $t('Add skins from My Skins, or from the page of any skin.') }}</div>
+                            <v-btn :to="localePath('/my-skins')" color="primary" class="mt-4">{{ $t('My Skins') }}</v-btn>
+                        </template>
+                    </div>
+                    <div v-else class="text-center text-medium-emphasis">{{ $t('No more results') }}</div>
                 </template>
             </v-infinite-scroll>
+            <skin-load-error v-if="loadFailed" :loading="retrying" @retry="retry"/>
             <v-dialog v-if="collection.owned" v-model="deleteDialog" max-width="600">
                 <v-card :title="$t('Delete collection?')">
                     <v-card-text>
@@ -150,6 +159,8 @@ import type { ListedSkin } from "~/types/SkinListResponse";
 import CollectionEditDialog from "~/components/collection/CollectionEditDialog.vue";
 import CopyBtn from "~/components/CopyBtn.vue";
 import ActionLink from "~/components/ActionLink.vue";
+import SkinLoadError from "~/components/skin/SkinLoadError.vue";
+import { useRetryableLoad } from "~/util/infiniteLoad";
 
 definePageMeta({
     key: route => route.params.collection as string
@@ -222,6 +233,8 @@ async function load({done}: { done: (status: 'ok' | 'empty' | 'error') => void }
     hasNext.value = !!after.value;
     done(hasNext.value ? 'ok' : 'empty');
 }
+
+const {onLoad, retry, failed: loadFailed, retrying} = useRetryableLoad(load);
 
 const removing = ref<string>();
 async function removeSkin(skin: string) {
