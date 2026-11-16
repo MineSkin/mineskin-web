@@ -99,15 +99,14 @@
         </v-row>
         <v-row v-if="!authStore.authed" justify="center">
             <v-col cols="auto">
-                <v-alert type="warning" @click.prevent="loginRedirect">
-                    <template #text>
-                        <a href="https://account.mineskin.org" class="text-blue-lighten-4">Sign in</a> to view your
-                        skins
+                <v-alert type="warning" :text="$t('Sign in to view your skins')">
+                    <template #append>
+                        <v-btn variant="outlined" @click="loginRedirect">{{ $t("Sign In") }}</v-btn>
                     </template>
                 </v-alert>
             </v-col>
         </v-row>
-        <v-infinite-scroll v-else-if="!showLocal" :items="skins" :onLoad="load" style="overflow: hidden">
+        <v-infinite-scroll v-else-if="!showLocal" :items="skins" :onLoad="onLoad" style="overflow: hidden">
             <v-item-group v-model="selected" multiple>
                 <v-row justify="center" dense>
                     <template v-for="(item, index) in skins" :key="item">
@@ -171,6 +170,7 @@
                 </div>
             </template>
         </v-infinite-scroll>
+        <skin-load-error v-if="authStore.authed && !showLocal && loadFailed" :loading="retrying" @retry="retry"/>
         <v-row v-if="showLocal && (legacySkins || mySkins)" class="mt-4">
             <v-divider class="my-2"/>
             <v-col cols="12" md="6" v-if="legacySkins && legacySkins.length > 0">
@@ -215,6 +215,8 @@ import { useSkinStore } from "#imports";
 import { computed, onMounted } from "vue";
 import ActionLink from "~/components/ActionLink.vue";
 import CollectionEditDialog from "~/components/collection/CollectionEditDialog.vue";
+import SkinLoadError from "~/components/skin/SkinLoadError.vue";
+import { useRetryableLoad } from "~/util/infiniteLoad";
 import type { CollectionListResponse, ListedCollection } from "~/types/Collection";
 import type { ListedSkin } from "~/types/SkinListResponse";
 import { SkinVisibility2 } from "@mineskin/types";
@@ -331,7 +333,11 @@ async function api() {
     if (!hasNext.value) return [];
     const response = await $mineskin.me.skins(after.value);
     console.debug(response);
-    const skins = response?.skins || [];
+    if (!Array.isArray(response?.skins)) {
+        // a failed request (the API client already showed its error), not the end of the list
+        throw new Error('Skin list request failed');
+    }
+    const skins = response.skins;
     hasNext.value = skins.length >= 16;
     if (hasNext.value) {
         let nextAfter = skins[skins.length - 1].uuid!;
@@ -360,10 +366,7 @@ async function load({done}) {
         res = await api();
     } catch (e) {
         console.error('Failed to load skins', e);
-        $notify({
-            text: $t("Failed to load skins. Please try again."),
-            color: "error"
-        });
+        // shown in the page, with a button to try again
         done('error');
         return;
     }
@@ -376,6 +379,8 @@ async function load({done}) {
 
     done('ok')
 }
+
+const {onLoad, retry, failed: loadFailed, retrying} = useRetryableLoad(load);
 
 onMounted(async () => {
     if (process.client) {

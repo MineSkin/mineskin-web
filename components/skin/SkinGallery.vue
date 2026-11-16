@@ -53,7 +53,7 @@
             </template>
         </ad-info-wrapper>
     </v-row>
-    <v-infinite-scroll v-if="!searchBlocked" :items="skins" :onLoad="load" style="overflow: hidden">
+    <v-infinite-scroll v-if="!searchBlocked" :items="skins" :onLoad="onLoad" style="overflow: hidden">
         <v-row justify="center" dense>
             <template v-for="(item0, index) in skins" :key="item0">
                 <!--                    <v-col cols="4" sm="3" md="2">-->
@@ -104,8 +104,24 @@
         </v-row>
         <template v-slot:loading>
         </template>
+        <template v-slot:empty>
+            <div v-if="skins.length === 0" class="text-center my-8">
+                <v-icon icon="mdi-image-search-outline" size="48" class="text-medium-emphasis mb-2"/>
+                <div class="text-h6">
+                    {{ displayFilter ? $t('No skins found for "{term}"', {term: displayFilter}) : $t('No skins found') }}
+                </div>
+                <template v-if="displayFilter">
+                    <div class="text-medium-emphasis">{{ $t("Try a different search term, or browse the latest skins.") }}</div>
+                    <v-btn class="mt-4" color="primary" prepend-icon="mdi-close" @click="clearFilter()">
+                        {{ $t("Clear search") }}
+                    </v-btn>
+                </template>
+            </div>
+            <div v-else class="text-center text-medium-emphasis">{{ $t("No more results") }}</div>
+        </template>
     </v-infinite-scroll>
-    <v-row justify="center" dense v-if="hasNext && !searchBlocked">
+    <skin-load-error v-if="loadFailed && !searchBlocked" :loading="retrying" @retry="retry"/>
+    <v-row justify="center" dense v-if="hasNext && !searchBlocked && !loadFailed">
         <v-col v-for="n in 20" :key="n"
                cols="5"
                xs="5"
@@ -144,11 +160,13 @@ import AdInfoWrapper from "~/components/ad/AdInfoWrapper.vue";
 import { computed } from "vue";
 import { capitalizeFirstLetter } from "~/util/misc";
 import AdManagerWrappper from "~/components/ad/AdManagerWrappper.vue";
+import SkinLoadError from "~/components/skin/SkinLoadError.vue";
+import { useRetryableLoad } from "~/util/infiniteLoad";
 
 const router = useRouter();
 const {xl, lg, md, sm, xs, name: breakpoint, mdAndUp} = useDisplay();
 
-const {$mineskin, $flags, $notify} = useNuxtApp();
+const {$mineskin, $flags} = useNuxtApp();
 const {t: $t} = useI18n();
 
 const authStore = useAuthStore();
@@ -363,10 +381,12 @@ async function api() {
         hasNext.value = false;
         return [];
     }
-    if (Array.isArray(response?.skins)) {
-        firstPageLoaded.value = true;
+    if (!Array.isArray(response?.skins)) {
+        // a failed request (the API client already showed its error), not the end of the gallery
+        throw new Error('Skin list request failed');
     }
-    const skins = response?.skins || [];
+    firstPageLoaded.value = true;
+    const skins = response.skins;
     hasNext.value = skins.length >= toLoad;
     if (hasNext.value) {
         let nextAfter = skins[skins.length - 1].uuid!;
@@ -393,22 +413,13 @@ async function load({done}) {
         res = await api();
     } catch (e) {
         console.error('Failed to load skins', e);
-        $notify({
-            text: $t("Failed to load skins. Please try again."),
-            color: "error"
-        });
+        // shown in the page, with a button to try again
         done('error');
         return;
     }
     if (res.length === 0) {
+        // the scroller's empty slot says whether nothing was found or the list just ended
         done('empty');
-        // a blocked search shows its own message instead
-        if (pageIndex.value === 0 && !searchBlocked.value) {
-            $notify({
-                text: $t("No more skins found"),
-                color: "info"
-            })
-        }
         return;
     }
 
@@ -454,6 +465,8 @@ async function load({done}) {
 
     done('ok')
 }
+
+const {onLoad, retry, failed: loadFailed, retrying} = useRetryableLoad(load);
 
 const inlineAdRate = computed(() => Number($flags.getValue('web.ads.gallery_inline_rate', {
     fallback: .6
