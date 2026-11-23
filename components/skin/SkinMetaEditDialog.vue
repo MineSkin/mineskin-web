@@ -1,7 +1,7 @@
 <template>
-    <v-dialog max-width="500">
+    <v-dialog v-model="dialog" max-width="500">
         <template v-slot:activator="{ props: activatorProps }">
-            <v-tooltip text="Edit Skin" location="bottom">
+            <v-tooltip :text="$t('Edit Skin')" location="bottom">
                 <template v-slot:activator="{ props: tooltipProps }">
                     <v-btn
                         v-bind="mergeProps(activatorProps, tooltipProps)"
@@ -9,14 +9,14 @@
                         :icon="!!editFail ? 'mdi-pencil-off' : 'mdi-pencil'"
                         variant="text"
                         density="compact"
-                        aria-label="Edit Skin"
+                        :aria-label="$t('Edit Skin')"
                     ></v-btn>
                 </template>
             </v-tooltip>
         </template>
 
         <template v-slot:default="{ isActive }">
-            <v-card title="Edit Skin">
+            <v-card :title="$t('Edit Skin')">
                 <v-card-text>
                     <v-row>
                         <v-col>
@@ -31,9 +31,9 @@
                                         target="_blank"
                                         class="upgrade-text-gradient"
                                     >
-                                        ✨ Upgrade
+                                        {{ $t("✨ Upgrade") }}
                                     </action-link>
-                                    to edit skins for longer
+                                    {{ $t("to edit skins for longer") }}
                                 </div>
                             </div>
                             <div v-else>
@@ -42,9 +42,9 @@
 
                                 <v-btn
                                     color="primary"
-                                    text="Update Skin"
+                                    :text="$t('Update Skin')"
                                     @click="apply"
-                                    :disabled="!!editFail||saving"
+                                    :disabled="!!editFail||saving||!changed"
                                     :loading="saving"
                                 ></v-btn>
                             </div>
@@ -64,12 +64,12 @@
                                         target="_blank"
                                         class="upgrade-text-gradient"
                                     >
-                                        ✨ Upgrade
+                                        {{ $t("✨ Upgrade") }}
                                     </action-link>
-                                    to delete skins for longer
+                                    {{ $t("to delete skins for longer") }}
                                 </div>
                                 <div>
-                                    <span class="text-body-2 text-medium-emphasis">*You can always manually request deletion of your skin.</span>
+                                    <span class="text-body-2 text-medium-emphasis">*{{ $t("You can always manually request deletion of your skin.") }}</span>
                                 </div>
                             </div>
                             <div class="mt-2">
@@ -83,7 +83,7 @@
                     <v-spacer></v-spacer>
 
                     <v-btn
-                        text="Cancel"
+                        :text="$t('Cancel')"
                         variant="text"
                         @click="isActive.value = false"
                     ></v-btn>
@@ -102,6 +102,9 @@ import SkinDeleteConfirmDialog from "~/components/skin/SkinDeleteConfirmDialog.v
 import ActionLink from "~/components/ActionLink.vue";
 
 const {$mineskin, $notify} = useNuxtApp();
+const {t: $t} = useI18n();
+
+const dialog = ref(false);
 
 const authStore = useAuthStore();
 const {user} = storeToRefs(authStore);
@@ -123,12 +126,12 @@ const editFailClean = computed(() => {
     switch (props.editFail) {
         case 'edit_duration_expired': {
             if (user.value?.grants?.skin_edit_duration) {
-                return `You can only edit skins for ${ user.value.grants.skin_edit_duration } hours after upload`;
+                return $t('You can only edit skins for {hours} hours after upload', {hours: user.value.grants.skin_edit_duration});
             }
-            return 'You can no longer edit this skin';
+            return $t('You can no longer edit this skin');
         }
         case 'max_edits_reached': {
-            return 'You have reached the maximum number of edits for this skin';
+            return $t('You have reached the maximum number of edits for this skin');
         }
     }
     return props.editFail;
@@ -138,9 +141,9 @@ const deleteFailClean = computed(() => {
     switch (props.deleteFail) {
         case 'delete_duration_expired': {
             if (user.value?.grants?.skin_delete_duration) {
-                return `You can only delete skins for ${ user.value.grants.skin_delete_duration } hours after upload`;
+                return $t('You can only delete skins for {hours} hours after upload', {hours: user.value.grants.skin_delete_duration});
             }
-            return 'You can no longer delete this skin';
+            return $t('You can no longer delete this skin');
         }
     }
     return props.deleteFail;
@@ -152,10 +155,13 @@ const prevVisibility = ref<SkinVisibility2>(props.skin.visibility);
 const name = ref<string>(props.skin.name || '');
 const visibility = ref<SkinVisibility2>(props.skin.visibility);
 
+// "Update Skin" stays disabled until there is something to save, instead of silently doing nothing
+const changed = computed(() => name.value !== prevName.value || visibility.value !== prevVisibility.value);
+
 const saving = ref(false);
 const apply = async () => {
     if (saving.value) return;
-    if (name.value === prevName.value && visibility.value === prevVisibility.value) return;
+    if (!changed.value) return;
     saving.value = true;
     try {
         let allSucceeded = true;
@@ -185,14 +191,15 @@ const apply = async () => {
         }
         if (allSucceeded) {
             $notify({
-                text: 'Skin updated',
+                text: $t('Skin updated'),
                 color: 'success'
             });
+            dialog.value = false;
         }
     } catch (e) {
         console.error(e);
         $notify({
-            text: 'Failed to update skin. Please try again.',
+            text: $t('Failed to update skin. Please try again.'),
             color: 'error'
         });
     } finally {

@@ -13,13 +13,13 @@
                     size="small"
                     prepend-icon="mdi-flag"
                     v-bind="activatorProps"
-                >Report Skin
+                >{{ $t("Report Skin") }}
                 </v-btn>
             </template>
 
             <v-card
                 prepend-icon="mdi-flag"
-                title="Report Skin"
+                :title="$t('Report Skin')"
             >
                 <v-card-text>
                     <v-row dense>
@@ -29,7 +29,7 @@
                                 :items="reportReasons"
                                 item-title="text"
                                 item-value="value"
-                                label="Report Reason"
+                                :label="$t('Report Reason')"
                                 required
                             ></v-select>
                         </v-col>
@@ -43,14 +43,14 @@
                       <InvisibleTurnstile v-if="skin && reportTurnstile" v-model:token="reportTurnstileToken" action="report-skin"/>
 
                     <v-btn
-                        text="Cancel"
+                        :text="$t('Cancel')"
                         variant="plain"
                         @click="dialog = false"
                     ></v-btn>
 
                     <v-btn
                         color="warning"
-                        text="Submit Report"
+                        :text="$t('Submit Report')"
                         variant="tonal"
                         :disabled="!authed||!reason||reporting"
                         :loading="reporting"
@@ -74,6 +74,7 @@ const props = defineProps<{
 const dialog = ref(false);
 
 const {$mineskin, $notify} = useNuxtApp();
+const {t: $t} = useI18n();
 
 const authStore = useAuthStore();
 const {authed} = storeToRefs(authStore);
@@ -81,11 +82,11 @@ const {authed} = storeToRefs(authStore);
 const reportTurnstile = ref(true);
 const reportTurnstileToken: Ref<string|null> = ref(null);
 
-const reportReasons = [
-    {text: "Inappropriate Skin", value: "skin"},
-    {text: "Inappropriate Name", value: "name"},
-    {text: "Inappropriate Tags", value: "tags"},
-];
+const reportReasons = computed(() => [
+    {text: $t("Inappropriate Skin"), value: "skin"},
+    {text: $t("Inappropriate Name"), value: "name"},
+    {text: $t("Inappropriate Tags"), value: "tags"},
+]);
 const reason = ref<string | null>(null);
 
 const reporting = ref(false);
@@ -97,12 +98,16 @@ const submitReport = async () => {
         console.log(`Reporting skin ${ props.skin.uuid } for ${ reason.value }`);
         const token = await until(reportTurnstileToken).not.toBeNull({timeout: 5000});
         reportTurnstile.value = false;
-        await $mineskin.skins.reportSkin(props.skin.uuid, reason.value, token);
+        const res = await $mineskin.skins.reportSkin(props.skin.uuid, reason.value, token);
+        // the API client already shows the server's confirmation / error message;
+        // only close when the report actually went through, so a rejected one can be retried
+        if (res?.success === false) return;
         dialog.value = false;
+        reason.value = null;
     } catch (e) {
         console.error(e);
         $notify({
-            text: 'Failed to submit report. Please try again.',
+            text: $t('Failed to submit report. Please try again.'),
             color: 'error'
         });
     } finally {
