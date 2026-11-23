@@ -13,6 +13,7 @@ import { isCompletedJobRes } from "~/types/CompletedJob";
 import { useGenerateStore } from "~/stores/generate";
 import type { FileJson } from "~/util/file";
 import type { RateLimitInfo } from "~/types/misc";
+import { jobSourceName } from "~/util/job";
 
 export const useQueueStore = defineStore('queue', () => {
     /**@deprecated**/
@@ -37,7 +38,7 @@ export const useQueueStore = defineStore('queue', () => {
     let updateTimer: any;
 
     const localePath = useLocalePath();
-    const {$mineskin, $notify} = useNuxtApp();
+    const {$mineskin, $notify, $i18n} = useNuxtApp();
 
     const router = useRouter();
     const authStore = useAuthStore();
@@ -136,6 +137,10 @@ export const useQueueStore = defineStore('queue', () => {
             if (isCompletedJobRes(jobRes)) {
                 wrappedJob.skin = jobRes.skin;
             }
+            if (wrappedJob.job.status === 'failed' && jobRes.errors?.length) {
+                // keep the reason around, so the job list can still show it after the toast is gone
+                wrappedJob.error = jobRes.errors.map(error => error.message).filter(message => !!message).join(' ') || undefined;
+            }
         }
 
         checkJobStatusChange(wrappedJob, prevJob);
@@ -231,13 +236,26 @@ export const useQueueStore = defineStore('queue', () => {
         const prev = wrappedPrev?.job;
         if (prev?.status === now.status) return;
         console.debug(`${ now.id } ${ prev?.status } -> ${ now.status }`);
-        $notify({
-            text: `Job ${ now.id ? now.id : '' } is ${ now.status }`,
-            color: now.status === 'completed' ? 'success' : now.status === 'failed' ? 'error' : 'info',
-            timeout: (now.status === 'completed' || now.status === 'failed') ? 2000 : 1400,
-            actionLabel: now.status === 'completed' ? 'View' : undefined,
-            actionLink: now.status === 'completed' && now.result ? `/skins/${ now.result }` : undefined
-        });
+        // only finished jobs get a toast - progress is already visible below the inputs and in the job list
+        const name = jobSourceName(wrappedNow);
+        if (now.status === 'completed') {
+            $notify({
+                text: name ? $i18n.t('Generated {name}', {name}) : $i18n.t('Skin generated'),
+                color: 'success',
+                // long enough to actually reach the "View" button
+                timeout: 5000,
+                actionLabel: now.result ? $i18n.t('View') : undefined,
+                actionLink: now.result ? `/skins/${ now.result }` : undefined
+            });
+        } else if (now.status === 'failed') {
+            const text = name ? $i18n.t('Failed to generate {name}', {name}) : $i18n.t('Failed to generate skin');
+            $notify({
+                text: wrappedNow.error ? `${ text }: ${ wrappedNow.error }` : text,
+                color: 'error',
+                // give users enough time to actually read why generation failed
+                timeout: 8000
+            });
+        }
         if (now.status === 'completed' && now.result) {
             skinStore.addSkin(now.result);
             setTimeout(() => {

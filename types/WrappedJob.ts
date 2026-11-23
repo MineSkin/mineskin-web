@@ -7,6 +7,8 @@ export interface WrappedJob {
 
     image?: string;
     skin?: SkinInfo2;
+    /** reason the job failed, if known */
+    error?: string;
 
     check: JobStatusCheck;
 }

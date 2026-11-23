@@ -7,36 +7,38 @@
             prepend-icon="mdi-delete"
             @click="dialog = true"
         >
-            Delete Skin
+            {{ $t("Delete Skin") }}
         </v-btn>
         <v-dialog v-model="dialog" max-width="600">
             <template v-slot:default="{ isActive }">
-                <v-card title="Delete Skin?">
+                <v-card :title="$t('Delete Skin?')">
                     <v-card-text>
                         <v-row>
                             <v-col>
-                                Are you sure you want to delete this skin? This action is irreversible and will
-                                remove
-                                the
-                                skin from your account permanently.
+                                {{ $t("Are you sure you want to delete this skin? This action is irreversible and will remove the skin from your account permanently.") }}
                                 <br/>
-                                Alternatively, you can set the visibility to "Private" or "Unlisted" to hide the
-                                skin
-                                from
-                                public view without deleting it.
+                                {{ $t('Alternatively, you can set the visibility to "Private" or "Unlisted" to hide the skin from public view without deleting it.') }}
                             </v-col>
                         </v-row>
                         <v-row>
                             <v-col>
-                                Please type <strong>delete</strong> in the field below to confirm deletion.
-                                <v-text-field v-model="confirmText" density="compact" required></v-text-field>
+                                <v-text-field
+                                    v-model="confirmText"
+                                    :label="$t('Type delete to confirm deletion')"
+                                    density="compact"
+                                    autofocus
+                                    autocomplete="off"
+                                    hide-details
+                                    required
+                                    @keydown.enter="actuallyDelete()"
+                                ></v-text-field>
                             </v-col>
                         </v-row>
                     </v-card-text>
 
                     <v-card-actions>
                         <v-btn
-                            text="Confirm Deletion"
+                            :text="$t('Confirm Deletion')"
                             color="error"
                             variant="text"
                             :disabled="!confirmed||deleting"
@@ -47,7 +49,7 @@
                         <v-spacer></v-spacer>
 
                         <v-btn
-                            text="Cancel"
+                            :text="$t('Cancel')"
                             variant="text"
                             @click="dialog = false"
                         ></v-btn>
@@ -62,6 +64,8 @@ import type { SkinInfo2 } from "@mineskin/types";
 import { storeToRefs } from "pinia";
 
 const {$mineskin, $notify} = useNuxtApp();
+const {t: $t} = useI18n();
+const localePath = useLocalePath();
 
 const authStore = useAuthStore();
 const {user} = storeToRefs(authStore);
@@ -78,7 +82,7 @@ const dialog = ref(false);
 
 const confirmText = ref('');
 const confirmed = computed(() => {
-    return confirmText.value.toLowerCase() === 'delete';
+    return confirmText.value.trim().toLowerCase() === 'delete';
 });
 
 
@@ -95,17 +99,17 @@ const actuallyDelete = async () => {
         if (res.success) {
             confirmText.value = '';
             dialog.value = false;
-            router.push('/my-skins');
+            router.push(localePath('/my-skins'));
         } else {
             $notify({
-                text: 'Failed to delete skin. Please try again.',
+                text: $t('Failed to delete skin. Please try again.'),
                 color: 'error'
             });
         }
     } catch (e) {
         console.error(e);
         $notify({
-            text: 'Failed to delete skin. Please try again.',
+            text: $t('Failed to delete skin. Please try again.'),
             color: 'error'
         });
     } finally {

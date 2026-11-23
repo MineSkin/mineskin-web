@@ -9,12 +9,15 @@
             <nuxt-link v-if="skin" :to="localePath('/skins/'+skin.uuid)" class="text-decoration-none">
                 {{ jobDisplayName }}
             </nuxt-link>
-            <span v-else>{{ wrappedJob.job?.id?.substring(0, 8) }}</span>
+            <span v-else>{{ jobDisplayName }}</span>
         </template>
         <template v-slot:subtitle>
             <DateLocal class="float-end" :date="wrappedJob.job?.timestamp"></DateLocal>
         </template>
         <JobProgressBar :job="wrappedJob.job" height="20"/>
+        <div v-if="wrappedJob.job?.status === 'failed' && wrappedJob.error" class="text-caption text-error mt-1">
+            {{ wrappedJob.error }}
+        </div>
         <v-divider/>
     </v-list-item>
 </template>
@@ -27,8 +30,9 @@ import { sleep } from "~/util/misc";
 import { storeToRefs } from "pinia";
 import JobProgressBar from "~/components/job/JobProgressBar.vue";
 import type { WrappedJob } from "~/types/WrappedJob";
+import { jobSourceName } from "~/util/job";
 
-const {$mineskin, $notify} = useNuxtApp();
+const {$mineskin} = useNuxtApp();
 
 const props = defineProps<{
     id: string
@@ -57,19 +61,10 @@ const skin = computed<SkinInfo2 | undefined>(() => wrappedJob.value?.skin);
 const refreshCounter = ref(0);
 
 const jobDisplayName = computed(() => {
-    if (wrappedJob.value?.source) {
-        let name = wrappedJob.value.source.name;
-        if (wrappedJob.value.source.type === 'url') {
-            // url basename
-            name = name.split('/').pop() || '';
-        }
-        // remove extension
-        name = name.split('.')[0];
-        // limit length
-        name = name.substring(0, 32);
-
-        return `${ name } (${ wrappedJob.value.job?.id?.substring(0, 8) })`;
-    }
+    const shortId = wrappedJob.value?.job?.id?.substring(0, 8);
+    const name = jobSourceName(wrappedJob.value);
+    // jobs that weren't submitted from this browser don't have a source name
+    return name ? `${ name } (${ shortId })` : shortId;
 })
 
 const jobTexture = computed<string | null>(() => {
@@ -82,7 +77,11 @@ const jobTexture = computed<string | null>(() => {
     return null;
 });
 
+let unmounted = false;
+let refreshTimer: ReturnType<typeof setTimeout> | undefined;
+
 const tryJobRefresh = async () => {
+    if (unmounted) return;
     if (refreshCounter.value > 40) return;
     if (wrappedJob.value) {
         if (wrappedJob.value?.job?.status !== 'waiting' && wrappedJob.value?.job?.status !== 'processing' && skin.value) {
@@ -96,6 +95,7 @@ const tryJobRefresh = async () => {
     let oldStatus = wrappedJob.value?.job?.status;
 
     await sleep(500 + Math.random() * 800);
+    if (unmounted) return;
 
     try {
         //await refreshJob();
@@ -109,18 +109,9 @@ const tryJobRefresh = async () => {
                 wrappedJob.value = wrapped;
             }
 
+            // the store notifies about status changes, including the reason a job failed
             if (oldStatus && oldStatus !== job?.status) {
                 console.log('status changed', oldStatus, job?.status)
-                if (job.status === 'failed' && jobRes?.errors) {
-                    for (let error of jobRes.errors) {
-                        $notify({
-                            text: error.message,
-                            color: 'error',
-                            // give users enough time to actually read why generation failed
-                            timeout: 8000
-                        });
-                    }
-                }
             }
         }
     } catch (e) {
@@ -130,8 +121,14 @@ const tryJobRefresh = async () => {
 
     refreshCounter.value++;
 
-    setTimeout(() => tryJobRefresh(), Math.min(600 + Math.random() * 600 + refreshCounter.value * 200, 6000));
+    refreshTimer = setTimeout(() => tryJobRefresh(), Math.min(600 + Math.random() * 600 + refreshCounter.value * 200, 6000));
 }
+
+onBeforeUnmount(() => {
+    // stop polling once the job is no longer in the list
+    unmounted = true;
+    clearTimeout(refreshTimer);
+});
 
 onMounted(async () => {
     await tryJobRefresh();
